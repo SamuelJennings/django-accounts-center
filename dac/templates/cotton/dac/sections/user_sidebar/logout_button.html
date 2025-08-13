@@ -1,0 +1,15 @@
+{% load i18n %}
+
+<form action="{% url "account_logout" %}"
+      method="post"
+      class="mb-0">
+  {% csrf_token %}
+  <c-bs5.button class="w-100"
+                type="submit"
+                style="danger"
+                text="{% trans "Logout" %}">
+    <c-slot name="icon">
+      <c-icons.logout class="svg-inline--fa" />
+    </c-slot>
+  </c-bs5.button>
+</form>

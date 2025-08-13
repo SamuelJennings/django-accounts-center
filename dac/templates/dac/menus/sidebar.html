@@ -1,0 +1,10 @@
+<c-dac.components.menu>
+  {% for heading in menu %}
+    {% if heading.visible %}
+      <c-dac.components.menu.group-heading text="{{ heading.label }}" />
+      <c-dac.components.menu.group>
+        {% for item in heading %}<c-dac.components.menu.item :item="item" />{% endfor %}
+      </c-dac.components.menu.group>
+    {% endif %}
+  {% endfor %}
+</c-dac.components.menu>

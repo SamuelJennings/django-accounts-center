@@ -1,0 +1,13 @@
+{% load i18n %}
+
+<c-dac.full-screen-card style="height: 100vh;">
+  <div class="p-3 p-md-none col-12 col-md-9 mx-auto"
+       style="min-height: 100%">
+    <c-dac.title text="{% trans "Choose a plan" %}" />
+    <c-dac.text text="{% trans "Select one of the following plans that best suits your needs." %}" />
+  </div>
+  <script async
+          src="https://js.stripe.com/v3/pricing-table.js"></script>
+  <stripe-pricing-table pricing-table-id="{{ stripe_pricing_table_id }}" publishable-key="{{ stripe_public_key }}" />
+  {% comment %} <c-stripe.pricing-table public_key="{{ stripe_public_key }}" table_id="{{ stripe_pricing_table_id }}" /> {% endcomment %}
+</c-dac.full-screen>

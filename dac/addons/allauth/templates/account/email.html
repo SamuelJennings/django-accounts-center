@@ -1,0 +1,122 @@
+{% extends "account/email.html" %}
+{% load i18n easy_icons dac %}
+
+{% block content %}
+  <style>
+    table.allauth-email td.align-center,
+    th.align-center {
+      text-align: center;
+      vertical-align: middle;
+    }
+  </style>
+  <c-dac.title text="{% trans "Email Addresses" %}" />
+  {% if not emailaddresses %}
+    <c-dac.components.alert style="danger">
+      {% include "account/snippets/warn_no_email.html" %}
+    </c-dac.components.alert>
+  {% endif %}
+  {% comment %} PRIMARY EMAIL SELECT {% endcomment %}
+  {% url 'account_email' as email_url %}
+  <c-dac.card title="{% trans "Primary email" %}"
+              help_text="{% trans "This is the email we will use to contact you regarding your account with us." %}">
+    <form hx-post="{{ email_url }}"
+          hx-indicator="previous .htmx-indicator"
+          id="add-email-form">
+      {% csrf_token %}
+      <select id="add_email_form_select"
+              name="email"
+              class="form-select"
+              aria-label="Default select example">
+        {% for radio in emailaddress_radios %}
+          {% with email=radio.emailaddress %}
+            <option value="{{ email.email }}"
+                    {% if email.primary %}selected{% endif %}>{{ email.email }}</option>
+          {% endwith %}
+        {% endfor %}
+      </select>
+    </form>
+    <c-slot name="actions">
+      <c-dac.action style="primary"
+                    type="submit"
+                    form="add-email-form"
+                    name="action_primary"
+                    text="{% trans "Confirm" %}" />
+    </c-slot>
+  </c-dac.card>
+  {% comment %} EMAIL MANAGEMENT {% endcomment %}
+  {% if emailaddresses %}
+    <c-dac.card title="{% trans "Manage linked emails" %}"
+                help_text="{% trans "The following email addresses are associated with your account:" %}">
+      <c-dac.components.table class="allauth-email">
+        <thead>
+          <th>{% trans "Email" %}</th>
+          <th class="align-center">{% trans "Verified" %}</th>
+          <th class="align-center">{% trans "Remove" %}</th>
+        </thead>
+        {% for radio in emailaddress_radios %}
+          {% with email=radio.emailaddress %}
+            <tr>
+              <td>{{ email.email }}</td>
+              <td class="align-center">
+                {% if email.verified %}
+                  {% icon "check_circle" style="height: 1em" class="text-success" fill="currentColor" %}
+                {% else %}
+                  <form hx-post="{{ email_url }}">
+                    {% csrf_token %}
+                    <input type="text"
+                           name="email"
+                           readonly
+                           hidden
+                           aria-label="{% trans "Email" %}"
+                           value="{{ email.email }}" />
+                    <c-dac.action style="secondary"
+                                  type="submit"
+                                  size="sm"
+                                  name="action_send"
+                                  text="{% trans "Resend Email" %}" />
+                  </form>
+                {% endif %}
+              </td>
+              <td class="align-center">
+                <form hx-post="{{ email_url }}">
+                  {% csrf_token %}
+                  <input type="text"
+                         name="email"
+                         readonly
+                         hidden
+                         aria-label="{% trans "Email" %}"
+                         value="{{ email.email }}" />
+                  {% if email.primary %}
+                    <span title="{% trans "You cannot remove your primary email address." %}"
+                          class="text-secondary">{% icon "lock" height="1em" fill="currentColor" %}</span>
+                  {% else %}
+                    <c-dac.action style="icon"
+                                  type="submit"
+                                  name="action_remove"
+                                  icon="delete"
+                                  class="text-danger" />
+                  {% endif %}
+                </form>
+              </td>
+            </tr>
+          {% endwith %}
+        {% endfor %}
+      </c-dac.components.table>
+    </c-dac.card>
+  {% endif %}
+  {% comment %} ADD EMAIL{% endcomment %}
+  {% if can_add_email %}
+    {% url 'account_email' as action_url %}
+    <c-dac.card title="{% trans "Add Email Address" %}"
+                help_text="{% trans "Use this form to add a new email address to your account." %}">
+      {% render_form form action=action_url hx_post=action_url %}
+      <c-slot name="actions">
+        <c-dac.action style="primary"
+                      type="submit"
+                      name="action_add"
+                      form="{{ form.helper.form_id }}"
+                      text="{% trans "Submit" %}" />
+      </c-slot>
+    </c-dac.card>
+  {% endif %}
+{% endblock content %}

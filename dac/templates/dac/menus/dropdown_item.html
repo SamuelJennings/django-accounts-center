@@ -1,0 +1,8 @@
+<c-bs5.dropdown.item href="{{ item.url }}"
+                     class="{{ item.css_class }}"
+                     icon="{{ item.icon }}">
+  <c-slot name="text">
+    {% icon item.icon width="1em" %}
+    <span class="ms-2">{{ item.label }}</span>
+  </c-slot>
+</c-bs5.dropdown.item>

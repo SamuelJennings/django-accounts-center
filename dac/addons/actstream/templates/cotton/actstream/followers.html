@@ -1,0 +1,29 @@
+{% load i18n %}
+
+<c-dac>
+  <c-dac.intro title="{% trans "Your followers" %}" />
+  <div class="container my-4">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      {% for action in followers %}
+        <div class="col">
+          <div class="card shadow-sm h-100">
+            <div class="card-body">
+              <h5 class="card-title mb-1">{{ action.actor }}</h5>
+              <p class="card-text mb-2 text-muted">
+                {{ action.verb }}
+                {% if action.target %}{{ action.target }}{% endif %}
+              </p>
+              <p class="card-text">
+                <small class="text-muted">{{ action.timestamp|date:"M d, Y H:i" }}</small>
+              </p>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <div class="col-12">
+          <div class="alert alert-secondary text-center">No followers found.</div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</c-dac>

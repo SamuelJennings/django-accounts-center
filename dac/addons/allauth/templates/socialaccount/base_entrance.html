@@ -1,0 +1,12 @@
+{% extends "allauth/layouts/entrance.html" %}
+{% load easy_icons %}
+
+{% block wrapper_class %}
+  text-center
+{% endblock wrapper_class %}
+
+{% block pre_content %}
+  {% if provider %}
+    <div class="provider-login-icon-wrapper">{% icon provider.name height="5em" %}</div>
+  {% endif %}
+{% endblock pre_content %}

@@ -1,0 +1,18 @@
+<c-bd.nav.links>
+  {% for section in menu %}
+    {% if section.visible and section.children %}
+      <c-bd.nav.links.group :heading="section.label" :icon="section.icon">
+        {% for item in section.children %}
+          {% if item.visible %}
+            <c-bd.nav.links.list-item :href="item.url"
+                                      :label="item.label"
+                                      :description="item.description"
+                                      :icon="item.icon" />
+            {% comment %} {% firstof section.template as template %} {% endcomment %}
+            {% comment %} {% include section.template %} {% endcomment %}
+          {% endif %}
+        {% endfor %}
+      </c-bd.nav.links.group>
+    {% endif %}
+  {% endfor %}
+</c-bd.nav.links>

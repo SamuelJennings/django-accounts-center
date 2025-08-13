@@ -1,0 +1,10 @@
+<c-vars style="primary" />
+{% if href %}
+  <c-component is="dac.action.{{ style }}"
+               element="a"
+               :attrs="attrs" />
+{% else %}
+  <c-component is="dac.action.{{ style }}"
+               element="button"
+               :attrs="attrs" />
+{% endif %}

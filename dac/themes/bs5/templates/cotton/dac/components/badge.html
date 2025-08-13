@@ -1,0 +1,14 @@
+{% comment %} {% load allauth %}
+{% setvar variant %}
+    {% if "warning" in attrs.tags %}
+        warning
+    {% elif "danger" in attrs.tags %}
+        danger
+    {% elif "success" in attrs.tags %}
+        success
+    {% else %}
+        primary
+    {% endif %}
+{% endsetvar %} {% endcomment %}
+<c-vars style />
+<span class="badge text-bg-{{ style }}">{{ slot }}</span>

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load i18n compress %}
+
+{% block css %}
+  {{ block.super }}
+  <title>{% trans "Account Center" %}</title>
+  <meta charset="utf-8" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1" />
+{% endblock css %}
+
+{% block body %}
+  {{ block.super }}
+  {% block extra_body %}
+  {% endblock extra_body %}
+{% endblock body %}

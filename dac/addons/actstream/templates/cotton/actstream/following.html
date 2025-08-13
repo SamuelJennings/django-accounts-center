@@ -1,0 +1,10 @@
+{% load i18n %}
+
+<c-dac>
+  <c-dac.intro title="{% trans "Following" %}" />
+  {% for user in following %}
+    <c-dac.actstream.follower />
+  {% empty %}
+    {% trans "You are not following anything yet." %}
+  {% endfor %}
+</c-dac>

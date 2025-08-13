@@ -1,0 +1,8 @@
+#accountManagementForm > h1 {
+    font-weight: 400;
+}
+
+#accountManagementForm > h2 {
+    font-weight: 350;
+    /* font-size: var(--bs-body-font-size); */
+}

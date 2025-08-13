@@ -1,0 +1,11 @@
+{% load dac %}
+
+<c-vars class />
+{% avatar_url request.user as user_thumbnail_url %}
+{% if user_thumbnail_url %}
+  <img src="{{ user_thumbnail_url }}"
+       class="{{ class }}"
+       :attrs="attrs" />
+{% else %}
+  <c-icons.anon-user class="svg-inline--fa {{ class }}" :attrs="attrs" />
+{% endif %}

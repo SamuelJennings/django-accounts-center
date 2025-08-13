@@ -1,0 +1,245 @@
+[tool.poetry]
+name = "django-accounts-center"
+version = "0.1.0"
+description = "Tools for managing django user accounts."
+authors = ["Sam <samuel.scott.jennings@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "dac"}]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<4.0"
+django-flex-menus = {git = "https://github.com/SamuelJennings/django-flex-menus"}
+django-easy-icons = {git = "https://github.com/SamuelJennings/django-easy-icons"}
+cotton-bs5 = {git = "https://github.com/SamuelJennings/cotton-bs5"}
+django-crispy-forms = "^2.3"
+
+[tool.poetry.group.dev.dependencies]
+Django = ">5.0"
+django-allauth = {extras = ["mfa", "socialaccount"], version = "*"}
+crispy-bootstrap5 = "^2024.2"
+djlint = "^1.34.1"
+django-debug-toolbar = "^5.0.1"
+stripe = "<12"
+python-dotenv = "^1.1.0"
+drf-stripe-subscription = "^1.2.2"
+django-activity-stream = "^2.0.0"
+django-compressor = "^4.5.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+target-version = "py311"
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+    "*/migrations/*.py",
+    "staticfiles/*",
+    "docs/",
+]
+line-length = 120
+fix = true
+
+[tool.ruff.lint]
+select = [
+    # flake8-2020
+    "YTT",
+    # flake8-bandit
+    "S",
+    # flake8-bugbear
+    "B",
+    # flake8-builtins
+    "A",
+    # flake8-comprehensions
+    "C4",
+    # flake8-debugger
+    "T10",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+    # mccabe
+    "C90",
+    # pycodestyle
+    "E", "W",
+    # pyflakes
+    "F",
+    # pygrep-hooks
+    "PGH",
+    # pyupgrade
+    "UP",
+    # ruff
+    "RUF",
+    # tryceratops
+    "TRY",
+]
+ignore = [
+    # LineTooLong
+    "E501",
+    # DoNotAssignLambda
+    "E731",
+    # ClassAttributesShouldBeAnnotated
+    "RUF012",
+    "TRY003",
+
+    "A003",
+    "F403",
+    "F405",
+    "C901",
+]
+exclude = [
+]
+[tool.ruff.lint.per-file-ignores]
+"**/tests/*" = ["S101","S105"]
+
+[tool.ruff.format]
+docstring-code-format = true
+docstring-code-line-length = 88
+line-ending = "lf"
+exclude = [
+    "*/migrations/*.py",
+]
+
+[tool.djlint]
+blank_line_after_tag="load,endpartialdef,endblock"
+close_void_tags=true
+custom_blocks="addtoblock"
+custom_html="django-formset,c-[\\w.-]+,swiper-container,swiper-slide"
+format_js=true
+format_css=true
+indent=2
+max_attribute_length=50
+max_blank_lines=0
+max_line_length=119
+ignore="H016,H030,H031,H021,D018,H037"
+format_attribute_template_tags=false
+
+[tool.djlint.css]
+indent_size=2
+
+
+[tool.djlint.js]
+indent_size=2
+
+
+[tool.mypy]
+files = ["geoluminate"]
+disallow_untyped_defs = "False"
+disallow_any_unimported = "False"
+ignore_missing_imports = "True"
+no_implicit_optional = "True"
+check_untyped_defs = "False"
+warn_return_any = "True"
+warn_unused_ignores = "True"
+follow_imports = "skip"
+pretty = "True"
+exclude = [
+    "docs/",
+    "migrations/",
+    "tests/settings.py",
+    "geoluminate/conf/*",
+    "geoluminate/contrib/user/forms/*",
+    ]
+mypy_path = "./geoluminate/"
+plugins = ["mypy_django_plugin.main"]
+
+[[tool.mypy.overrides]]
+module = "geoluminate.models"
+disable_error_code = [
+    "var-annotated",
+]
+
+[[tool.mypy.overrides]]
+module = "geoluminate.db.gis.base"
+disable_error_code = [
+    "var-annotated",
+]
+
+[[tool.mypy.overrides]]
+module = "geoluminate.models"
+disable_error_code = [
+    "var-annotated",
+]
+
+[tool.django-stubs]
+django_settings_module = "tests.settings"
+
+
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "tests.settings"
+python_files = ["test_*.py"]
+filterwarnings = [
+    "ignore",
+    "default:::keywords",
+]
+addopts = "--cov --cov-report html"
+
+[tool.coverage.report]
+skip_empty = true
+show_missing = "true"
+
+[tool.coverage.run]
+branch = "true"
+omit = [
+    "*site-packages*",
+    "*/tests/*",
+    "*.tox*",
+    "*__init__.py",
+    "*/migrations/*"
+    ]
+
+
+[tool.deptry]
+extend_exclude = [
+    "tasks.py",
+    "docs",
+    ".*tests",
+]
+ignore_transitive = [
+    "toml",
+]
+
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+skipsdist = true
+envlist = py310, py311
+
+[gh-actions]
+python =
+    3.10: py310
+    3.11: py311
+
+[testenv]
+passenv = PYTHON_VERSION
+allowlist_externals = poetry
+commands =
+    poetry install -v --without docs
+    pytest --doctest-modules tests --cov --cov-config=pyproject.toml --cov-report=xml
+    mypy
+"""
+

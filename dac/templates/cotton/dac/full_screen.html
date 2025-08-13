@@ -1,0 +1,9 @@
+{% extends "dac/base.html" %}
+{% load i18n flex_menu %}
+
+{% block body %}
+  <div class="container-fluid container-xxl w-100">
+    {{ slot }}
+    {% comment %} <div class="row">{{ slot }}</div> {% endcomment %}
+  </div>
+{% endblock body %}

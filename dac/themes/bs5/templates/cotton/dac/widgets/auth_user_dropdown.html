@@ -1,0 +1,13 @@
+{% load flex_menu %}
+
+<div class="dropdown drop-left {{ class }}">
+  <a type="button"
+     data-bs-toggle="dropdown"
+     aria-expanded="false">
+    <c-dac.components.avatar class="rounded-circle shadow" />
+    <span class="visually-hidden">{% trans user_menu_label %}</span>
+  </a>
+  <ul class="dropdown-menu dropdown-menu-end">
+    {% render_menu "AuthenticatedUserDropdown" %}
+  </ul>
+</div>
