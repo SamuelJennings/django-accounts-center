@@ -1,42 +1,50 @@
-{% extends "socialaccount/base_manage.html" %}
-{% load i18n allauth %}
+{% load i18n socialaccount %}
 
-{% block content %}
-  <c-dac.title text="{% trans "Connected Accounts" %}" />
-  {% if form.accounts %}
-    <c-dac.text text="{% trans "You can sign in to your account using any of the following third-party accounts:" %}" />
-    {% url 'socialaccount_connections' as action_url %}
-    <form action="{{ action_url }}" method="post">
-      {% csrf_token %}
-      {% for acc in form.fields.account.choices %}
-        {% with account=acc.0.instance.get_provider_account %}
-          {% setvar radio_id %}
-          id_account_{{ account.account.pk }}
-        {% endsetvar %}
-        {% setvar tags %}
-        socialaccount,{{ account.account.provider }}
-      {% endsetvar %}
-      {% element field id=radio_id type="radio" name="account" value=account.account.pk %}
-      {% slot label %}
-      {{ account }}
-      {% element badge tags=tags %}
-      {{ account.get_brand.name }}
-    {% endelement %}
-  {% endslot %}
-{% endelement %}
-{% endwith %}
-{% endfor %}
-<c-dac.action style="primary"
-              style="danger"
-              type="submit"
-              text="{% trans "Remove" %}" />
-</form>
-{% else %}
-<c-dac.text text="{% trans "You currently have no third-party accounts connected to this account." %}" />
-{% endif %}
-<c-dac.card title="{% trans "Add a Third-Party Account" %}"
-            help_text="{% trans "After connecting your account, you will be able to login with the connected service." %}">
-  {% include "socialaccount/snippets/provider_list.html" with process="connect" %}
-  {% include "socialaccount/snippets/login_extra.html" %}
-</c-dac.card>
-{% endblock content %}
+<c-dac.layout.standard title="{% trans "Account Connections" %}">
+    <c-dac.card title="{% trans "Account Connections" %}">
+        {% if form.accounts %}
+            <p class="text-sm text-gray-600 mb-4">
+                {% blocktrans %}You can sign in to your account using any of the following third-party accounts:{% endblocktrans %}
+            </p>
+            {% url "socialaccount_connections" as action_url %}
+            <form method="post"
+                  action="{{ action_url }}"
+                  class="space-y-6">
+                {% csrf_token %}
+                <div class="space-y-4">
+                    {% for acc in form.fields.account.choices %}
+                        {% with account=acc.0.instance.get_provider_account %}
+                            <div class="flex items-center space-x-3 p-4 border border-gray-200 rounded-lg">
+                                <input type="radio"
+                                       name="account"
+                                       value="{{ account.account.pk }}"
+                                       id="{{ radio_id }}"
+                                       class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300" />
+                                <label for="{{ radio_id }}"
+                                       class="flex-1 flex items-center justify-between">
+                                    <span class="text-sm text-gray-900">{{ account }}</span>
+                                    <c-dac.badge style="primary">
+                                        {{ account.get_brand.name }}
+                                    </c-dac.badge>
+                                </label>
+                            </div>
+                        {% endwith %}
+                    {% endfor %}
+                </div>
+                <c-dac.action variant="danger"
+                              type="submit"
+                              text="{% trans "Remove" %}"
+                              class="inline-flex items-center" />
+            </form>
+        {% else %}
+            <p class="text-sm text-gray-600">
+                {% trans "You currently have no third-party accounts connected to this account." %}
+            </p>
+        {% endif %}
+    </c-dac.card>
+    <c-dac.card title="{% trans "Connect Account" %}">
+        {% get_providers as socialaccount_providers %}
+        {% include "socialaccount/provider_list.html" with process="connect" %}
+        {% providers_media_js %}
+    </c-dac.card>
+</c-dac.layout.standard>

@@ -1,0 +1,32 @@
+{% load dac %}
+
+{# 
+  Component: avatar.html
+  Slots:
+    - None (renders user avatar)
+  Improved: Removed inline styles, using only Bootstrap classes for better consistency
+#}
+<c-vars class />
+{% if user.image %}
+  <img src="{{ user.image.url }}"
+       class="rounded-circle {{ class }}"
+       width="32"
+       height="32"
+       style="width: 2rem;
+              height: 2rem;
+              object-fit: cover"
+       alt="{{ user.get_full_name|default:user.username }}"
+       {{ attrs }} />
+{% else %}
+  <div class="rounded-circle bg-secondary d-inline-flex align-items-center justify-content-center {{ class }}"
+       style="width: 2rem;
+              height: 2rem">
+    <svg class="text-light"
+         width="16"
+         height="16"
+         fill="currentColor"
+         viewBox="0 0 20 20">
+      <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+    </svg>
+  </div>
+{% endif %}

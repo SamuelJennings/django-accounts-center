@@ -1,122 +1,75 @@
-{% extends "account/email.html" %}
-{% load i18n easy_icons dac %}
+{% load static i18n dac %}
 
-{% block content %}
-  <style>
-    table.allauth-email td.align-center,
-    th.align-center {
-      text-align: center;
-      vertical-align: middle;
-    }
-  </style>
-  <c-dac.title text="{% trans "Email Addresses" %}" />
-  {% if not emailaddresses %}
-    <c-dac.components.alert style="danger">
+<c-dac.layout.standard title="{% trans "Email Addresses" %}">
+  <c-dac.card title="{% trans "Email Addresses" %}">
+    {% if emailaddresses %}
+      <c-dac.card.text text="{% trans "The following email addresses are associated with your account:" %}" />
+      {% comment %} This is a custom component to the allauth addon {% endcomment %}
+      <c-dac.manage-email-group :emails="emailaddress_radios" />
+    {% else %}
       {% include "account/snippets/warn_no_email.html" %}
-    </c-dac.components.alert>
-  {% endif %}
-  {% comment %} PRIMARY EMAIL SELECT {% endcomment %}
-  {% url 'account_email' as email_url %}
-  <c-dac.card title="{% trans "Primary email" %}"
-              help_text="{% trans "This is the email we will use to contact you regarding your account with us." %}">
-    <form hx-post="{{ email_url }}"
-          hx-indicator="previous .htmx-indicator"
-          id="add-email-form">
-      {% csrf_token %}
-      <select id="add_email_form_select"
-              name="email"
-              class="form-select"
-              aria-label="Default select example">
-        {% for radio in emailaddress_radios %}
-          {% with email=radio.emailaddress %}
-            <option value="{{ email.email }}"
-                    {% if email.primary %}selected{% endif %}>{{ email.email }}</option>
-          {% endwith %}
-        {% endfor %}
-      </select>
-    </form>
-    <c-slot name="actions">
-      <c-dac.action style="primary"
-                    type="submit"
-                    form="add-email-form"
-                    name="action_primary"
-                    text="{% trans "Confirm" %}" />
-    </c-slot>
+    {% endif %}
   </c-dac.card>
-  {% comment %} EMAIL MANAGEMENT {% endcomment %}
-  {% if emailaddresses %}
-    <c-dac.card title="{% trans "Manage linked emails" %}"
-                help_text="{% trans "The following email addresses are associated with your account:" %}">
-      <c-dac.components.table class="allauth-email">
-        <thead>
-          <th>{% trans "Email" %}</th>
-          <th class="align-center">{% trans "Verified" %}</th>
-          <th class="align-center">{% trans "Remove" %}</th>
-        </thead>
-        {% for radio in emailaddress_radios %}
-          {% with email=radio.emailaddress %}
-            <tr>
-              <td>{{ email.email }}</td>
-              <td class="align-center">
-                {% if email.verified %}
-                  {% icon "check_circle" style="height: 1em" class="text-success" fill="currentColor" %}
-                {% else %}
-                  <form hx-post="{{ email_url }}">
-                    {% csrf_token %}
-                    <input type="text"
-                           name="email"
-                           readonly
-                           hidden
-                           aria-label="{% trans "Email" %}"
-                           value="{{ email.email }}" />
-                    <c-dac.action style="secondary"
-                                  type="submit"
-                                  size="sm"
-                                  name="action_send"
-                                  text="{% trans "Resend Email" %}" />
-                  </form>
-                {% endif %}
-              </td>
-              <td class="align-center">
-                <form hx-post="{{ email_url }}">
-                  {% csrf_token %}
-                  <input type="text"
-                         name="email"
-                         readonly
-                         hidden
-                         aria-label="{% trans "Email" %}"
-                         value="{{ email.email }}" />
-                  {% if email.primary %}
-                    <span title="{% trans "You cannot remove your primary email address." %}"
-                          class="text-secondary">{% icon "lock" height="1em" fill="currentColor" %}</span>
-                  {% else %}
-                    <c-dac.action style="icon"
-                                  type="submit"
-                                  name="action_remove"
-                                  icon="delete"
-                                  class="text-danger" />
-                  {% endif %}
-                </form>
-              </td>
-            </tr>
-          {% endwith %}
-        {% endfor %}
-      </c-dac.components.table>
-    </c-dac.card>
-  {% endif %}
-  {% comment %} ADD EMAIL{% endcomment %}
   {% if can_add_email %}
-    {% url 'account_email' as action_url %}
     <c-dac.card title="{% trans "Add Email Address" %}"
-                help_text="{% trans "Use this form to add a new email address to your account." %}">
-      {% render_form form action=action_url hx_post=action_url %}
+                help_text="">
+      <c-dac.form id="addEmailForm"
+                  action="{% url "account_email" %}"
+                  :form="form" />
       <c-slot name="actions">
-        <c-dac.action style="primary"
-                      type="submit"
+        <c-dac.action type="submit"
+                      form="addEmailForm"
                       name="action_add"
-                      form="{{ form.helper.form_id }}"
-                      text="{% trans "Submit" %}" />
+                      text="{% trans "Add Email" %}" />
       </c-slot>
     </c-dac.card>
   {% endif %}
-{% endblock content %}
+  <!-- Alpine.js for dropdown functionality -->
+  <script defer
+          src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="{% static "account/js/account.js" %}"></script>
+  <script src="{% static "account/js/onload.js" %}"></script>
+  <script data-allauth-onload="allauth.account.forms.manageEmailForm" type="application/json">
+    {
+      "i18n": {
+        "confirmDelete": "{% trans "
+        Do you really want to remove the selected email address ? " %}"
+      }
+    }
+  </script>
+  <style>
+    [x-cloak] {
+      display: none !important;
+    }
+
+    /* Ensure dropdown appears above other elements */
+    .dropdown-menu {
+      position: absolute !important;
+      z-index: 9999 !important;
+      background: white !important;
+      border: 1px solid #e5e7eb !important;
+      border-radius: 0.375rem !important;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+    }
+
+    /* Ensure all card-related components don't clip dropdowns */
+    .c-dac-card,
+    .c-dac-card>*,
+    [class*="c-dac"],
+    [class*="card"] {
+      overflow: visible !important;
+    }
+
+    /* Specific overrides for common clipping elements */
+    .border,
+    .rounded-md,
+    .mt-4 {
+      overflow: visible !important;
+    }
+
+    /* Force the dropdown to appear on top of everything */
+    .dropdown-container {
+      position: static !important;
+    }
+  </style>
+</c-dac.layout.standard>

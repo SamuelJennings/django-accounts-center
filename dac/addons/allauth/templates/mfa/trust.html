@@ -1,0 +1,28 @@
+{% load i18n dac %}
+
+<c-dac.layout.entrance title="{% trans "Trust this Browser?" %}"
+                       subtitle="{% trans "If you choose to trust this browser, you will not be asked for a verification code the next time you sign in." %}">
+    {% url "mfa_trust" as action_url %}
+    {% render_form form action=action_url %}
+    <c-dac.action-group vstack>
+        <c-dac.action name="action"
+                      value="trust"
+                      type="submit"
+                      form="{{ form.helper.form_id }}">
+            {% blocktranslate with period=trust_until|timeuntil:trust_from %}Trust for {{ period }}{% endblocktranslate %}
+        </c-dac.action>
+        <c-dac.action variant="secondary"
+                      name="action"
+                      value="skip"
+                      type="submit"
+                      form="{{ form.helper.form_id }}">
+            {% trans "Don't Trust" %}
+        </c-dac.action variant="secondary">
+    </c-dac.action-group>
+    <c-dac.card.text small center>
+        action="{% url "account_logout" %}"
+        method="post"
+        csrf>
+        <input type="hidden" value="{% url "account_login" %}" />
+    </c-dac.card.text>
+</c-dac.layout.entrance>

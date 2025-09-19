@@ -1,0 +1,7 @@
+{% load easy_icons %}
+
+<a href="{{ url }}"
+   class="list-group-item list-group-item-action d-flex align-items-center gap-2 border-0 small {% if is_selected %}bg-secondary-subtle rounded-1{% endif %}">
+  <span style="min-width: 20px">{% icon icon %}</span>
+  <span class="flex-grow-1 fw-medium">{{ menu.name }}</span>
+</a>

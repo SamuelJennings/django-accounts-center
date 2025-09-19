@@ -1,0 +1,20 @@
+{% load i18n %}
+
+<c-dac.layout.standard title="{% trans "Remove Security Key" %}">
+    <c-dac.card title="{% trans "Remove Security Key" %}"
+                subtitle="{% trans "Are you sure you want to remove this security key?" %}">
+        <form method="post"
+              action="{% url "mfa_remove_webauthn" pk=authenticator.pk %}">
+            {% csrf_token %}
+            <c-slot name="actions">
+                <c-dac.action variant="danger" type="submit">
+                    {% trans "Remove" %}
+                </c-dac.action variant="danger">
+                <c-dac.action variant="secondary"
+                              href="{% url "mfa_list_webauthn" %}">
+                    {% trans "Cancel" %}
+                </c-dac.action variant="secondary">
+            </c-slot>
+        </form>
+    </c-dac.card>
+</c-dac.layout.standard>

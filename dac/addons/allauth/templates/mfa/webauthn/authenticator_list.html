@@ -1,0 +1,76 @@
+{% load i18n static humanize %}
+
+<c-dac.layout.standard title="{% trans "Security Keys" %}">
+    <div class="max-w-4xl mx-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold text-gray-900">{% trans "Security Keys" %}</h1>
+            <c-dac.action href="{% url "mfa_add_webauthn" %}">
+                {% trans "Add" %}
+            </c-dac.action>
+        </div>
+        {% if authenticators|length == 0 %}
+            <c-dac.card>
+                <c-dac.card.text text="{% trans "No security keys have been added." %}" />
+            </c-dac.card>
+        {% else %}
+            <c-dac.card>
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{% trans "Key" %}</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{% trans "Usage" %}</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{% trans "Actions" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody class=" divide-y divide-gray-200">
+                        {% for authenticator in authenticators %}
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div>
+                                            <div class="text-sm font-medium text-gray-900">{{ authenticator }}</div>
+                                            <div class="mt-1">
+                                                {% if authenticator.wrap.is_passwordless is True %}
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                        {% trans "Passkey" %}
+                                                    </span>
+                                                {% elif authenticator.wrap.is_passwordless is False %}
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                                        {% trans "Security key" %}
+                                                    </span>
+                                                {% else %}
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"
+                                                          title="{% trans "This key does not indicate whether it is a passkey." %}">
+                                                        {% trans "Unspecified" %}
+                                                    </span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    <div>
+                                        {% blocktranslate with created_at=authenticator.created_at|date:"SHORT_DATE_FORMAT" %}Added on {{ created_at }}{% endblocktranslate %}.
+                                    </div>
+                                    <div class="text-xs text-gray-500">
+                                        {% if authenticator.last_used_at %}
+                                            {% blocktranslate with last_used=authenticator.last_used_at|naturaltime %}Last used {{ last_used }}{% endblocktranslate %}
+                                        {% else %}
+                                            {% trans "Not used." %}
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <a href="{% url "mfa_edit_webauthn" pk=authenticator.pk %}"
+                                       class="text-indigo-600 hover:text-indigo-900 mr-4">{% trans "Edit" %}</a>
+                                    <a href="{% url "mfa_remove_webauthn" pk=authenticator.pk %}"
+                                       class="text-red-600 hover:text-red-900">{% trans "Remove" %}</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </c-dac.card>
+        {% endif %}
+    </div>
+</c-dac.layout.standard>

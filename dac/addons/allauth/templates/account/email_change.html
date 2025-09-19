@@ -1,0 +1,71 @@
+{% load i18n allauth %}
+
+<c-dac.layout.standard title="{% trans "Email Address" %}">
+    <c-dac.card>
+        <c-dac.title text="{% trans "Email Address" %}" />
+        {% if not emailaddresses %}
+            {% include "account/snippets/warn_no_email.html" %}
+        {% endif %}
+        <c-dac.form method="post" action="{% url "account_email" %}">
+            {% if current_emailaddress %}
+                <c-dac.form.field name="current_email"
+                                  field_id="current_email"
+                                  label="{% trans "Current email" %}:"
+                                  input_type="email"
+                                  value="{{ current_emailaddress.email }}" />
+            {% endif %}
+            {% if new_emailaddress %}
+                <div class="space-y-1">
+                    <label class="block text-sm font-medium text-gray-700">
+                        {% if not current_emailaddress %}
+                            {% trans "Current email" %}:
+                        {% else %}
+                            {% trans "Changing to" %}:
+                        {% endif %}
+                    </label>
+                    <input type="email"
+                           value="{{ new_emailaddress.email }}"
+                           disabled
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-50 text-gray-500 sm:text-sm" />
+                    <div class="mt-2 space-y-2">
+                        <c-dac.card.text text="{% trans "Your email address is still pending verification." %}" />
+                        <div class="flex space-x-2">
+                            <c-dac.action variant="secondary"
+                                          form="pending-email"
+                                          type="submit"
+                                          name="action_send"
+                                          text="{% trans "Re-send Verification" %}" />
+                            {% if current_emailaddress %}
+                                <c-dac.action variant="danger"
+                                              form="pending-email"
+                                              type="submit"
+                                              name="action_remove"
+                                              text="{% trans "Cancel Change" %}" />
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            <c-dac.form.field name="email"
+                              field_id="{{ form.email.auto_id }}"
+                              label="{% trans "Change to" %}:"
+                              input_type="email"
+                              :value="form.email.value"
+                              :errors="form.email.errors" />
+            <c-dac.action type="submit"
+                          name="action_add"
+                          text="{% trans "Change Email" %}" />
+        </c-dac.form>
+        {% if new_emailaddress %}
+            <form style="display: none"
+                  id="pending-email"
+                  method="post"
+                  action="{% url "account_email" %}">
+                {% csrf_token %}
+                <input type="hidden"
+                       name="email"
+                       value="{{ new_emailaddress.email }}" />
+            </form>
+        {% endif %}
+    </c-dac.card>
+</c-dac.layout.standard>

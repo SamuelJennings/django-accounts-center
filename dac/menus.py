@@ -1,62 +1,55 @@
+"""
+Django Account Center Menu Definitions
+
+This module defines menu classes and instances for the django-accounts-center package.
+It integrates with django-flex-menus to provide structured navigation for account management.
+"""
+
 import flex_menu
 from django.utils.translation import gettext_lazy as _
 
 
-class DacMainMenu(flex_menu.Menu):
+class MainMenuItem(flex_menu.MenuLink):
+    """Individual menu item for the main account center menu."""
+
+    template_name = "cotton/dac/menu/item.html"
+
+
+class MainMenuGroup(flex_menu.MenuGroup):
+    """Menu group for organizing main menu items."""
+
+    template_name = "cotton/dac/menu/group.html"
+    allowed_children = [MainMenuItem]
+
+
+class DacMainMenu(flex_menu.MenuGroup):
     """
-    This is the main menu for django-account-management which is displayed as a sidebar when editing user related
-    information.
-    """
-
-    root_template = "dac/menus/sidebar.html"
-    allowed_children = ("MainMenuGroup", "MainMenuItem")
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for child in self.children:
-            if child.__class__.__name__ not in self.allowed_children:
-                raise ValueError(f"Child {child.__class__.__name__} is not allowed in {self.__class__.__name__}")
-
-
-class MainMenuGroup(flex_menu.Menu):
-    pass
-
-
-class MainMenuItem(flex_menu.MenuItem):
-    pass
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-
-class DropdownMenu(flex_menu.Menu):
-    """
-    A menu that can be used in a dropdown.
+    Main menu for django-account-center displayed as a sidebar
+    when editing user-related information.
     """
 
-    root_template = "dac/menus/dropdown.html"
-    allowed_children = ("DropdownMenuItem",)
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for child in self.children:
-            if child.__class__.__name__ not in self.allowed_children:
-                raise ValueError(f"Child {child.__class__.__name__} is not allowed in {self.__class__.__name__}")
+    template_name = "dac/menus/sidebar.html"
+    allowed_children = [MainMenuGroup]
 
 
-class DropdownMenuItem(flex_menu.MenuItem):
-    """
-    A menu item that can be used in a dropdown menu.
-    """
+class DropdownMenuItem(flex_menu.MenuLink):
+    """Menu item that can be used in a dropdown menu."""
 
-    root_template = "dac/menus/dropdown_item.html"
+    template_name = "dac/menus/dropdown_item.html"
 
 
-# This is the main menu for django-account-management which is displayed as a sidebar when editing user related
-# information.
+class DropdownMenu(flex_menu.MenuGroup):
+    """Menu container for dropdown menu items."""
+
+    template_name = "dac/menus/dropdown.html"
+    allowed_children = [DropdownMenuItem]
+
+
+# Main menu instance for django-account-center
+# Displayed as a sidebar when editing user-related information
 MainMenu = DacMainMenu("Main Menu")
 
-# This is the floating offcanvas menu which can be made available on any page
+# Floating offcanvas menu available on any page
 AuthenticatedUserDropdown = DropdownMenu(
     "AuthenticatedUserDropdown",
     children=[
@@ -64,9 +57,8 @@ AuthenticatedUserDropdown = DropdownMenu(
     ],
 )
 
-
-# Groups all django-account-management menus under a single menu
-AccountManagement = flex_menu.Menu(
+# Groups all django-account-center menus under a single menu
+AccountManagement = flex_menu.MenuGroup(
     "Django Account Center",
     children=[MainMenu, AuthenticatedUserDropdown],
 )

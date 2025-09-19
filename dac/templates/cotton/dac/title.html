@@ -1,2 +1,9 @@
+{# 
+  Component: title.html
+  Slots:
+    - slot: additional title content
+  Improved: Enhanced title styling with better typography hierarchy
+#}
 <c-vars text />
-<h1 {{ attrs }}>{{ text }}</h1>
+<h1 class="fs-2 fw-bold mb-4 text-dark" {{ attrs }}>{{ text }} {{ slot }}
+</h1>

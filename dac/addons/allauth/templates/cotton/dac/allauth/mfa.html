@@ -1,0 +1,6 @@
+{% load i18n %}
+
+<c-dac.layout.standard :breadcrumbs="[{'label': '{% trans "MFA" %}', 'href': '{% url 'mfa_index' %}'}]"
+                       :attrs="attrs">
+  {{ slot }}
+</c-dac.layout.standard>

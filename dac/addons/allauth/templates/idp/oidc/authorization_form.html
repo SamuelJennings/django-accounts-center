@@ -1,0 +1,27 @@
+{% load i18n allauth cotton dac %}
+
+<c-dac.layout.entrance title="{% trans "Authorize" %}">
+    <c-slot name="subtitle">
+        {% blocktranslate with client_name=client.name site_name=site.name %}{{ client_name }} wants to access your {{ site_name }} account.{% endblocktranslate %}
+    </c-slot>
+    <form method="post"
+          action="{% url "idp:openid_connect:authorize" %}">
+        {% csrf_token %}
+        {{ form }}
+        <div class="flex space-x-3 mt-6">
+            <c-dac.action type="submit"
+                          name="action"
+                          value="grant"
+                          class="flex-1">
+                {% trans "Authorize" %}
+            </c-dac.action>
+            <c-dac.action variant="secondary"
+                          type="submit"
+                          name="action"
+                          value="cancel"
+                          class="flex-1">
+                {% trans "Cancel" %}
+            </c-dac.action variant="secondary">
+        </div>
+    </form>
+</c-dac.layout.entrance>

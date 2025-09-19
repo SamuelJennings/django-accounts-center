@@ -1,0 +1,9 @@
+{% load i18n %}
+
+<c-dac.layout.entrance title="{% trans "Login Cancelled" %}"
+                       type="warning">
+    {% url "account_login" as login_url %}
+    <c-slot name="subtitle">
+        {% blocktrans %}You decided to cancel logging in to our site using one of your existing accounts. If this was a mistake, please proceed to <a href="{{login_url}}">sign in</a>.{% endblocktrans %}
+    </c-slot>
+</c-dac.layout.entrance>

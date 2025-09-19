@@ -1,0 +1,30 @@
+{% load i18n allauth cotton dac %}
+
+<c-dac.layout.entrance title="{% trans "Confirm Device" %}"
+                       subtitle="{% blocktranslate with client_name=client.name %}Please confirm the code shown on your {{ client_name }} to authorize this device.{% endblocktranslate %}">
+    <div class="mb-6">
+        <label class="block text-sm font-medium text-gray-700 mb-2">{% trans "Code" %}</label>
+        <input type="text"
+               value="{{ user_code }}"
+               disabled
+               class="block w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-500 text-center text-lg font-mono tracking-widest" />
+    </div>
+    <form method="post" action="{{ authorization_url }}">
+        {{ form }}
+        <div class="flex space-x-3">
+            <c-dac.action type="submit"
+                          name="action"
+                          value="confirm"
+                          class="flex-1">
+                {% trans "Confirm" %}
+            </c-dac.action>
+            <c-dac.action variant="secondary"
+                          type="submit"
+                          name="action"
+                          value="deny"
+                          class="flex-1">
+                {% trans "Deny" %}
+            </c-dac.action variant="secondary">
+        </div>
+    </form>
+</c-dac.layout.entrance>

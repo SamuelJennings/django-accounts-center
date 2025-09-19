@@ -1,78 +1,68 @@
-{% extends "mfa/base_manage.html" %}
-{% comment %} {% load allauth %} {% endcomment %}
 {% load i18n %}
 
-{% block content %}
-  <c-dac.title text="{% trans "Two-Factor Authentication" %}" />
-  {% if "totp" in MFA_SUPPORTED_TYPES %}
-    <c-dac.card title="{% trans "Authenticator App" %}">
-      {% if authenticators.totp %}
-        <c-dac.text text="{% trans "Authentication using an authenticator app is active." %}" />
-      {% else %}
-        <c-dac.text text="{% trans "An authenticator app is not active." %}" />
-      {% endif %}
-      <c-slot name="actions">
-        {% if authenticators.totp %}
-          <c-dac.action style="primary"
-                        href="{% url "mfa_deactivate_totp" %}"
-                        text="{% trans "Deactivate" %}" />
-        {% else %}
-          <c-dac.action style="primary"
-                        href="{% url "mfa_activate_totp" %}"
-                        text="{% trans "Activate" %}" />
-        {% endif %}
-      </c-slot>
-    </c-dac.card>
-  {% endif %}
-  {% if "webauthn" in MFA_SUPPORTED_TYPES %}
-    <c-dac.card title="{% trans "Security Keys" %}">
-      {% if authenticators.webauthn|length %}
-        <c-dac.text>
-          <c-slot name="text">
-            {% blocktrans count count=authenticators.webauthn|length %}You have added {{ count }} security key.{% plural %}You have added {{ count }} security keys.{% endblocktrans %}
-          </c-slot>
-        </c-dac.text>
-      {% else %}
-        <c-dac.text text="{% trans "No security keys have been added." %}" />
-      {% endif %}
-      <c-slot name="actions">
-        {% if authenticators.webauthn|length %}
-          {% url 'mfa_list_webauthn' as webauthn_list_url %}
-          <a href="{{ webauthn_list_url }}">{% trans "Manage" %}</a>
-        {% else %}
-          {% url 'mfa_add_webauthn' as webauthn_add_url %}
-          <a href="{{ webauthn_add_url }}">{% trans "Add" %}</a>
-        {% endif %}
-      </c-slot>
-    </c-dac.card>
-  {% endif %}
-  {% if "recovery_codes" in MFA_SUPPORTED_TYPES %}
-    {% with total_count=authenticators.recovery_codes.generate_codes|length unused_count=authenticators.recovery_codes.get_unused_codes|length %}
-      <c-dac.card title="{% trans "Recovery Codes" %}">
-        {% if authenticators.recovery_codes %}
-          <c-dac.text>
-            <c-slot name="text">
-              {% blocktrans count unused_count=unused_count %}There is {{ unused_count }} out of {{ total_count }} recovery codes available.{% plural %}There are {{ unused_count }} out of {{ total_count }} recovery codes available.{% endblocktrans %}
-            </c-slot>
-          </c-dac.text>
-        {% else %}
-          <c-dac.text text="{% trans "No recovery codes set up." %}" />
-        {% endif %}
-        {% if is_mfa_enabled %}
-          {% if authenticators.recovery_codes %}
-            {% if unused_count > 0 %}
-              <c-slot name="actions">
-                {% url 'mfa_view_recovery_codes' as view_url %}
-                <a href="{% url 'mfa_view_recovery_codes' %}">{% trans "View" %}</a>
-                <a href="{% url 'mfa_download_recovery_codes' %}">{% trans "Download" %}</a>
-              </c-slot>
+<c-dac.layout.standard title="{% trans "MFA" %}">
+    {% if "totp" in MFA_SUPPORTED_TYPES %}
+        <c-dac.card title="{% trans "Authenticator App" %}">
+            {% if authenticators.totp %}
+                <c-dac.card.text text="{% trans "Authentication using an authenticator app is active." %}" />
+            {% else %}
+                <c-dac.card.text text="{% trans "You have not activated an authenticator app yet." %}" />
             {% endif %}
-          {% endif %}
-          <c-slot name="actions">
-            <a href="{% url 'mfa_generate_recovery_codes' %}">{% trans "Generate" %}</a>
-          </c-slot>
-        {% endif %}
-      </c-dac.card>
-    {% endwith %}
-  {% endif %}
-{% endblock content %}
+            <c-slot name="actions">
+                {% if authenticators.totp %}
+                    <c-dac.action variant="danger"
+                                  href="{% url "mfa_deactivate_totp" %}"
+                                  text="{% trans "Deactivate" %}" />
+                {% else %}
+                    <c-dac.action href="{% url "mfa_activate_totp" %}"
+                                  text="{% trans "Activate" %}" />
+                {% endif %}
+            </c-slot>
+        </c-dac.card>
+    {% endif %}
+    {% if "webauthn" in MFA_SUPPORTED_TYPES %}
+        <c-dac.card title="{% trans "Security Keys" %}">
+            {% if authenticators.webauthn|length %}
+                <c-dac.card.text>
+                    {% blocktranslate count count=authenticators.webauthn|length %}
+                    You have added {{ count }} security key.{% plural %}You have added {{ count }} security keys.
+                    {% endblocktranslate %}
+                </c-dac.card.text>
+                <c-slot name="actions">
+                    <c-dac.action href="{% url "mfa_list_webauthn" %}"
+                                  text="{% trans "Manage" %}" />
+                </c-slot>
+            {% else %}
+                <c-dac.card.text text="{% trans "No security keys have been added." %}" />
+                <c-slot name="actions">
+                    <c-dac.action href="{% url "mfa_add_webauthn" %}"
+                                  text="{% trans "Add key" %}" />
+                </c-slot>
+            {% endif %}
+        </c-dac.card>
+    {% endif %}
+    {% if "recovery_codes" in MFA_SUPPORTED_TYPES %}
+        {% with total_count=authenticators.recovery_codes.generate_codes|length unused_count=authenticators.recovery_codes.get_unused_codes|length %}
+            <c-dac.card title="{% trans "Recovery Codes" %}">
+                <c-dac.card.text>
+                    {% if authenticators.recovery_codes %}
+                        {% blocktranslate count unused_count=unused_count %}There is {{ unused_count }} out of {{ total_count }} recovery codes available.{% plural %}There are {{ unused_count }} out of {{ total_count }} recovery codes available.{% endblocktranslate %}
+                    {% else %}
+                        {% trans "No recovery codes set up." %}
+                    {% endif %}
+                </c-dac.card.text>
+                <c-slot name="actions">
+                    {% if authenticators.recovery_codes and unused_count > 0 %}
+                        <c-dac.action href="{% url "mfa_view_recovery_codes" %}"
+                                      text="{% trans "View" %}" />
+                        <c-dac.action variant="secondary"
+                                      href="{% url "mfa_download_recovery_codes" %}"
+                                      text="{% trans "Download" %}" />
+                    {% endif %}
+                    <c-dac.action href="{% url "mfa_generate_recovery_codes" %}"
+                                  text="{% trans "Generate" %}" />
+                </c-slot>
+            </c-dac.card>
+        {% endwith %}
+    {% endif %}
+</c-dac.layout.standard>

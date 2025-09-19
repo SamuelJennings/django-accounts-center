@@ -1,9 +1,0 @@
-{% load easy_icons %}
-
-<a href="{{ item.url }}"
-   hx-get="{{ item.url }}"
-   hx-push-url="true"
-   class="list-group-item {% if item.selected %}bg-primary-subtle fw-bold dac-selected{% endif %}">
-  {% icon item.icon style="min-width: 24px;" %}
-  <span>{{ item.label }}</span>
-</a>

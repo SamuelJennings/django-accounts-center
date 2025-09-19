@@ -1,0 +1,39 @@
+{% load i18n static dac %}
+
+<c-dac.layout.entrance title="{% trans "Create Passkey" %}"
+                       subtitle="{% trans "You are about to create a passkey for your account. As you can add additional keys later on, you can use a descriptive name to tell the keys apart." %}">
+  {% url "mfa_signup_webauthn" as action_url %}
+  {% render_form form action=action_url %}
+  <c-dac.entrance.action text="{% trans "Create" %}"
+                         type="button"
+                         id="mfa_webauthn_signup"
+                         form="{{ form.helper.form_id }}">
+  </c-dac.entrance.action>
+  <c-dac.card.text small center>
+    <form id="logout-from-stage"
+          method="post"
+          action="{% url "account_logout" %}"
+          style="display: inline">
+      <input type="hidden"
+             name="next"
+             value="{% url "account_login" %}" />
+      {% csrf_token %}
+      <c-dac.link onclick="document.getElementById('logout-from-stage').submit(); return false;"
+                  text="{% trans "Cancel" %}" />
+    </form>
+  </c-dac.card.text>
+</c-dac.layout.entrance>
+{% block extra_body %}
+  {{ block.super }}
+  {% include "mfa/webauthn/snippets/scripts.html" %}
+  {{ js_data|json_script:"js_data" }}
+  <script data-allauth-onload="allauth.webauthn.forms.signupForm" type="application/json">
+    {
+      "ids": {
+        "signup": "mfa_webauthn_signup",
+        "credential": "{{ form.credential.auto_id }}",
+        "data": "js_data"
+      }
+    }
+  </script>
+{% endblock extra_body %}

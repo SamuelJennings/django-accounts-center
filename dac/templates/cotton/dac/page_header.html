@@ -1,0 +1,12 @@
+{# 
+  Component: page_header.html
+  Slots:
+    - slot: additional header content
+  Improved: Enhanced typography and spacing for better visual hierarchy
+#}
+<c-vars title description centered="true" />
+<div class="{% if centered == 'true' %}text-center {% endif %}mb-4 pb-3 border-bottom">
+  <h1 class="h3 fw-bold mb-3 text-dark">{{ title }}</h1>
+  {% if description %}<p class="text-muted fs-5 mb-0 lh-sm">{{ description }}</p>{% endif %}
+  {% if slot %}<div class="mt-3">{{ slot }}</div>{% endif %}
+</div>

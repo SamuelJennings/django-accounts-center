@@ -1,0 +1,8 @@
+<div class="mb-4">
+  {% if has_visible_children %}
+    <c-dac.menu.group-heading text="{{ menu.name }}" />
+    <div class="ms-2">
+      {% for child in children %}{{ child.render }}{% endfor %}
+    </div>
+  {% endif %}
+</div>

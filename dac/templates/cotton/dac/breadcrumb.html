@@ -1,0 +1,8 @@
+<li class="breadcrumb-item{% if not href %} active fw-medium{% endif %}"
+    {% if not href %}aria-current="page"{% endif %}>
+  {% if href %}
+    <a class="text-decoration-none" {{ attrs }}>{{ label }}</a>
+  {% else %}
+    {{ label }}
+  {% endif %}
+</li>

@@ -1,0 +1,15 @@
+{% load cotton %}
+
+{# 
+  Component: dropdown item.html
+  Slots:
+    - slot: additional item content
+  Improved: Enhanced dropdown item styling with better hover effects
+#}
+<c-vars confirm="" style="default" />
+{# djlint:off #}
+
+<{% if href %}a{% else %}button{% endif %}
+class="dropdown-item d-flex align-items-center gap-2 {% if style == 'danger' %}text-danger{% endif %}"
+{{ attrs }}>{{ text }}{{ slot }}</{% if href %}a{% else %}button{% endif %}>
+{# djlint:on #}

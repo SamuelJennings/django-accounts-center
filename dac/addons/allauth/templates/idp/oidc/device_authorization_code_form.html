@@ -1,0 +1,15 @@
+{% load i18n dac %}
+
+<c-dac.layout.entrance title="{% trans "Enter Device Code" %}"
+                       subtitle="{% trans "Enter the code displayed on your device." %}">
+    <form method="get"
+          action="{{ authorization_url }}"
+          class="space-y-4">
+        {% for field in form %}<c-dac.form-field field=field unlabeled=True />{% endfor %}
+        <div class="flex justify-end">
+            <c-dac.action type="submit">
+                {% trans "Continue" %}
+            </c-dac.action>
+        </div>
+    </form>
+</c-dac.layout.entrance>

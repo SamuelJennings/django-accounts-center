@@ -1,0 +1,36 @@
+{% load i18n dac %}
+
+<c-dac.layout.entrance title="{% trans "Confirm Access" %}"
+                       subtitle="{% trans "Please reauthenticate to safeguard your account." %}">
+  {% url "mfa_reauthenticate_webauthn" as action_url %}
+  {% render_form form action=action_url %}
+  <c-dac.entrance.action text="{% trans "Use a security key" %}"
+                         type="submit"
+                         id="mfa_webauthn_reauthenticate"
+                         form="{{ form.helper.form_id }}">
+    <c-slot name="icon">
+      <c-icons.security_key />
+    </c-slot>
+  </c-dac.entrance.action>
+  {{ js_data|json_script:"js_data" }}
+  {% include "mfa/webauthn/snippets/scripts.html" %}
+  <script data-allauth-onload="allauth.webauthn.forms.authenticateForm" type="application/json">
+    {
+      "ids": {
+        "authenticate": "mfa_webauthn_reauthenticate",
+        "credential": "{{ form.credential.auto_id }}",
+        "data": "js_data"
+      }
+    }
+  </script>
+  {% if reauthentication_alternatives %}
+    <c-dac.card.divider text="{% trans "Alternative options" %}" />
+    <c-dac.action-group>
+      {% for alt in reauthentication_alternatives %}
+        <c-dac.action variant="secondary" href="{{ alt.url }}">
+          {{ alt.description }}
+        </c-dac.action variant="secondary">
+      {% endfor %}
+    </c-dac.action-group>
+  {% endif %}
+</c-dac.layout.entrance>

@@ -1,0 +1,9 @@
+{% load dac %}
+
+<c-vars method="post" form />
+<form method="{{ method }}" {{ attrs }}>
+  {% if form %}
+    {% render_form form form_tag=False %}
+  {% endif %}
+  {{ slot }}
+</form>

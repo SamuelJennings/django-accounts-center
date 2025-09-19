@@ -1,0 +1,5 @@
+{% load i18n %}
+
+<c-dac.layout.entrance title="{% trans "Device Authorized" %}"
+                       subtitle="{% blocktranslate with client_name=client.name %}You successfully authorized your {{ client_name }} device.{% endblocktranslate %}">
+</c-dac.layout.entrance>

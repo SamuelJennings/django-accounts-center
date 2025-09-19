@@ -1,5 +1,21 @@
-{% load flex_menu %}
+{% load i18n cotton dac flex_menu %}
 
-<c-sections.sidebar>
-  {% render_menu "Main Menu" %}
-</c-sections.sidebar>
+{# 
+  Component: sidebar.html
+  Slots:
+    - None (renders menu from context)
+  Improved: Enhanced styling with subtle shadows and better spacing
+#}
+<!-- Main Navigation Sidebar -->
+<aside class=" border-end h-100 shadow-sm overflow-auto">
+  <div class="d-flex flex-column h-100">
+    <!-- Sidebar Header -->
+    <c-dac.sidebar.header />
+    <!-- Navigation Menu -->
+    <nav class="flex-fill px-3 py-2">
+      {% render_menu "Main Menu" %}
+    </nav>
+    <!-- Sidebar Footer -->
+    <c-dac.sidebar.footer />
+  </div>
+</aside>

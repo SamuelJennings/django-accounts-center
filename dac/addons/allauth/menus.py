@@ -4,12 +4,13 @@ from dac.menus import AuthenticatedUserDropdown, DropdownMenuItem, MainMenu, Mai
 
 AllAuthMenu = MainMenuGroup(
     _("Account"),
+    extra_context={"label": _("Account")},
     children=[
-        MainMenuItem(_("Email"), view_name="account_email", icon="email"),
-        MainMenuItem(_("Connected Accounts"), view_name="socialaccount_connections", icon="link"),
-        MainMenuItem(_("Sessions"), view_name="usersessions_list", icon="sessions"),
-        MainMenuItem(_("Password"), view_name="account_change_password", icon="password_change"),
-        MainMenuItem(_("MFA"), view_name="mfa_index", icon="mfa"),
+        MainMenuItem(_("Email"), view_name="account_email", extra_context={"icon": "email"}),
+        MainMenuItem(_("Connected Accounts"), view_name="socialaccount_connections", extra_context={"icon": "link"}),
+        MainMenuItem(_("Sessions"), view_name="usersessions_list", extra_context={"icon": "sessions"}),
+        MainMenuItem(_("Password"), view_name="account_change_password", extra_context={"icon": "password"}),
+        MainMenuItem(_("MFA"), view_name="mfa_index", extra_context={"icon": "mfa"}),
     ],
 )
 

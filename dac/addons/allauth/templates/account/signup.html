@@ -1,0 +1,38 @@
+{% load i18n socialaccount dac %}
+
+<c-dac.layout.entrance title="{% trans "Create Account" %}"
+                       subtitle="{% trans "Join us today and get started" %}">
+  {% get_providers as socialaccount_providers %}
+  <c-dac.action-group vstack>
+    {% if socialaccount_providers %}
+      {% include "socialaccount/provider_list.html" %}
+    {% endif %}
+    {% if PASSKEY_SIGNUP_ENABLED %}
+      <c-dac.entrance.action.secondary href="{{ signup_by_passkey_url }}"
+                                       text="{% trans "Sign up with passkey" %}"
+                                       icon="passkey"
+                                       :visible="PASSKEY_SIGNUP_ENABLED" />
+    {% endif %}
+  </c-dac.action-group>
+  {% if not SOCIALACCOUNT_ONLY %}
+    <c-dac.card.divider text="{% trans "Or continue with email" %}" />
+  {% endif %}
+  {% if not SOCIALACCOUNT_ONLY %}
+    <c-dac.form method="post"
+                action="{% url "account_signup" %}"
+                :form="form">
+      {{ redirect_field }}
+      <c-dac.entrance.action.primary text="{% trans "Create Account" %}"
+                                     type="submit"
+                                     form="{{ form.helper.form_id }}"
+                                     icon="lock" />
+    </c-dac.form>
+  {% endif %}
+  {% if not SOCIALACCOUNT_ONLY %}
+    <c-dac.card.text small center>
+      {% trans "Already have an account?" %}
+      <c-dac.link href="{{ login_url }}"
+                  text="{% trans "Sign in" %}" />
+    </c-dac.card.text>
+  {% endif %}
+</c-dac.layout.entrance>

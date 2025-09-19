@@ -1,0 +1,8 @@
+{% load i18n %}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb mb-0 px-3">
+    {% for breadcrumb in breadcrumbs %}<c-dac.breadcrumb :attrs="breadcrumb" />{% endfor %}
+    <c-dac.breadcrumb label="{{ title }}" />
+  </ol>
+</nav>
