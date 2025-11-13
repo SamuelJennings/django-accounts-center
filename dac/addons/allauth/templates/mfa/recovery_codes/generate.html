@@ -1,0 +1,31 @@
+{% load i18n %}
+
+<c-dac.allauth.mfa title="{% trans "Generate Recovery Codes" %}">
+    <c-dac.card title="{% trans "Generate Recovery Codes" %}"
+                help_text="{% trans "You are about to generate a new set of recovery codes for your account." %}">
+        {% if unused_code_count %}
+            <c-dac.alert variant="warning">
+                <strong>{% trans "Warning:" %}</strong>
+                {% trans "This action will invalidate your existing codes." %}
+            </c-dac.alert>
+        {% endif %}
+        <c-dac.card.text text="{% trans "Are you sure?" %}" />
+        {% url "mfa_generate_recovery_codes" as action_url %}
+        <form method="post" action="{{ action_url }}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <c-slot name="actions">
+                {% if unused_code_count %}
+                    <c-dac.action variant="danger"
+                                  type="submit"
+                                  text="{% trans "Generate" %}" />
+                {% else %}
+                    <c-dac.action type="submit" text="{% trans "Generate" %}" />
+                {% endif %}
+                <c-dac.action variant="secondary"
+                              href="{% url "mfa_view_recovery_codes" %}"
+                              text="{% trans "Cancel" %}" />
+            </c-slot>
+        </form>
+    </c-dac.card>
+</c-dac.allauth.mfa>

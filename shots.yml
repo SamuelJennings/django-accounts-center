@@ -1,0 +1,18 @@
+# Settings - Heat Flow Models
+- output: test.png
+  url: http://127.0.0.1:5500/test.html
+  javascript: |
+    const settingsBtn = document.querySelector('#SettingsnavBarBtn');
+    if (settingsBtn) {
+      // Create and dispatch a click event
+      const clickSettingsNavBarBtnEvent = new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+        view: window
+      });
+      // click settings btn to open the settings panel
+      settingsBtn.dispatchEvent(clickSettingsNavBarBtnEvent);
+    }
+  wait-for: document.querySelector('#heatFlowModels-accordion-item')
+  selector: "#heatFlowModels-accordion-item"
+  

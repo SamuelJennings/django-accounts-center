@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    {% load i18n %}
+
+    <head>
+        <title>{% trans "Sign In" %} | {{ provider }}</title>
+        <meta http-equiv="refresh"
+              content="0;URL={{ redirect_to }}" />
+    </head>
+    <body>
+        <p>
+            <c-dac.link href="{{ redirect_to }}">
+                {% trans "Continue" %}
+            </c-dac.link>
+        </p>
+    </body>
+</html>

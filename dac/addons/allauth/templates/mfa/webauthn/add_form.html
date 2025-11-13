@@ -1,0 +1,26 @@
+{% load i18n static dac %}
+
+<c-dac.allauth.mfa title="{% trans "Add Security Key" %}">
+  <c-dac.card title="{% trans "Add Security Key" %}">
+    {% url "mfa_add_webauthn" as action_url %}
+    {% render_form form action=action_url %}
+    <c-slot name="actions">
+      <c-dac.action text="{% trans "Add key" %}"
+                    type="button"
+                    id="mfa_webauthn_add"
+                    form="{{ form.helper.form_id }}" />
+    </c-slot>
+  </c-dac.card>
+  {% include "mfa/webauthn/snippets/scripts.html" %}
+  {{ js_data|json_script:"js_data" }}
+  <script data-allauth-onload="allauth.webauthn.forms.addForm" type="application/json">
+    {
+      "ids": {
+        "add": "mfa_webauthn_add",
+        "passwordless": "{{ form.passwordless.auto_id }}",
+        "credential": "{{ form.credential.auto_id }}",
+        "data": "js_data"
+      }
+    }
+  </script>
+</c-dac.allauth.mfa>

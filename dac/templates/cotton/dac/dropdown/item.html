@@ -1,0 +1,12 @@
+{% load easy_icons %}
+
+<c-vars confirm="" style="default" text="" href="" />
+{# djlint:off #}
+
+<{% if href or url %}a{% else %}button{% endif %}
+{% if href %}href="{{ href }}"{% elif url %}href="{{ url }}"{% endif %}
+class="dropdown-item d-flex align-items-center gap-2 {% if style == 'danger' %}text-danger{% endif %}"
+{{ attrs }}>
+{% if icon %}<span>{% icon icon %}</span>{% endif %}
+{% if text %}{{ text }}{% else %}{{ label }}{% endif %}{{ slot }}</{% if href or url %}a{% else %}button{% endif %}>
+{# djlint:on #}

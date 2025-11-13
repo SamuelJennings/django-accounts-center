@@ -1,0 +1,43 @@
+{% load i18n %}
+
+<div class="mb-3">
+  {% if errors %}
+    <div class="mb-2">
+      {% for error in errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+    </div>
+  {% endif %}
+  <label for="{{ field_id }}"
+         class="form-label mb-2 fw-medium">
+    {{ label }}
+    {% if required %}<span class="text-danger ms-1">*</span>{% endif %}
+  </label>
+  <div class="position-relative">
+    <input type="{{ input_type|default:'text' }}"
+           name="{{ name }}"
+           id="{{ field_id }}"
+           {% if value %}value="{{ value }}"{% endif %}
+           {% if required %}required{% endif %}
+           {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
+           class="form-control form-control-lg shadow-sm{% if errors %} is-invalid{% endif %}" />
+    {% if show_password_toggle and input_type == 'password' %}
+      <div class="position-absolute top-50 end-0 translate-middle-y pe-3">
+        <button type="button"
+                class="btn btn-link text-muted p-0 border-0"
+                data-bs-toggle="button"
+                aria-label="{% trans "Toggle password visibility" %}">
+          <svg width="20"
+               height="20"
+               fill="none"
+               stroke="currentColor"
+               viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+            </path>
+          </svg>
+        </button>
+      </div>
+    {% endif %}
+    {% if icon %}<div class="position-absolute top-50 end-0 translate-middle-y pe-3">{{ icon }}</div>{% endif %}
+  </div>
+  {% if help_text %}<div class="form-text text-muted">{{ help_text }}</div>{% endif %}
+</div>

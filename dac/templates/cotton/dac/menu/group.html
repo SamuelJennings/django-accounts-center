@@ -1,0 +1,12 @@
+{% load flex_menu %}
+
+<div class="mb-4">
+  {% if children %}
+    <c-dac.menu.group-heading text="{{ label }}" />
+    <div class="ms-2">
+      {% for child in children %}
+        {% render_item child renderer=renderer %}
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>

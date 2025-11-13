@@ -1,0 +1,24 @@
+{# djlint:off #}
+<c-vars variant="default"
+        :variant_dict="{
+                'default': 'btn-primary',
+                'secondary': 'btn-outline-secondary',
+                'danger': 'btn-danger'}"
+        size="default"
+        :size_dict="{
+                'default': '',
+                'small': 'btn-sm',
+                'large': 'btn-lg'}"
+        icon text />
+
+<{% if href %}a{% else %}button{% endif %}
+        class="btn {{ variant_dict|get_item:variant }} {{ size_dict|get_item:size }} {{ class }}{% if block %} w-100{% endif %} d-inline-flex align-items-center justify-content-center gap-2 shadow-sm"
+        {{ attrs }}>
+        {% if icon %}
+                <c-dac.icon name="{{ icon }}" class="flex-shrink-0" />
+        {% endif %}
+        {% if text %}
+                <span class="text-truncate">{{ text }}</span>
+        {% endif %}
+</{% if href %}a{% else %}button{% endif %}>
+{# djlint:on #}

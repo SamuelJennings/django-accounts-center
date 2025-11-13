@@ -1,0 +1,53 @@
+{% load i18n allauth account %}
+
+<c-dac.entrance title="{% trans "Enter Email Verification Code" %}"
+                subtitle="{% blocktranslate with recipient=email %}We've sent a code to {{ recipient }}. The code expires shortly, so please enter it soon.{% endblocktranslate %}">
+    {% url "account_email_verification_sent" as action_url %}
+    {% render_form verify_form action=action_url %}
+    <c-dac.entrance.action text="{% trans "Confirm" %}"
+                           type="submit"
+                           form="{{ verify_form.helper.form_id }}" />
+    {% if can_resend %}
+        <c-dac.card.text small center>
+            <form id="resend"
+                  method="post"
+                  action="{{ action_url }}"
+                  style="display: inline">
+                <input type="hidden" name="action" value="resend" />
+                {% csrf_token %}
+                <c-dac.link onclick="document.getElementById('resend').submit(); return false;"
+                            text="{% trans "Request new code" %}" />
+            </form>
+        </c-dac.card.text>
+    {% endif %}
+    {% if cancel_url %}
+        <c-dac.card.text small center>
+            <c-dac.link href="{{ cancel_url }}"
+                        text="{% trans "Cancel" %}" />
+        </c-dac.card.text>
+    {% else %}
+        <c-dac.card.text small center>
+            <form id="logout-from-stage"
+                  method="post"
+                  action="{% url "account_logout" %}"
+                  style="display: inline">
+                <input type="hidden"
+                       name="next"
+                       value="{% url "account_login" %}" />
+                {% csrf_token %}
+                <c-dac.link onclick="document.getElementById('logout-from-stage').submit(); return false;"
+                            text="{% trans "Cancel" %}" />
+            </form>
+        </c-dac.card.text>
+    {% endif %}
+    {% if can_change %}
+        <c-dac.card.divider text="{% trans "Use a different email address" %}" />
+        {% render_form change_form action=action_url %}
+        <div>
+            <c-dac.entrance.action text="{% trans "Change" %}"
+                                   type="submit"
+                                   form="{{ change_form.helper.form_id }}">
+            </c-dac.entrance.action>
+        </div>
+    {% endif %}
+</c-dac.entrance>
