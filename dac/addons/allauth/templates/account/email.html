@@ -1,6 +1,6 @@
 {% load static i18n dac %}
 
-<c-dac.layout.standard title="{% trans "Email Addresses" %}">
+<c-dac.page title="{% trans "Email Addresses" %}">
   <c-dac.card title="{% trans "Email Addresses" %}">
     {% if emailaddresses %}
       <c-dac.card.text text="{% trans "The following email addresses are associated with your account:" %}" />
@@ -32,8 +32,7 @@
   <script data-allauth-onload="allauth.account.forms.manageEmailForm" type="application/json">
     {
       "i18n": {
-        "confirmDelete": "{% trans "
-        Do you really want to remove the selected email address ? " %}"
+        "confirmDelete": "{% trans "Do you really want to remove the selected email address?" %}"
       }
     }
   </script>
@@ -72,4 +71,4 @@
       position: static !important;
     }
   </style>
-</c-dac.layout.standard>
+</c-dac.page>

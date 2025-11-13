@@ -1,8 +1,7 @@
 {% load i18n allauth %}
 
-<c-dac.layout.standard title="{% trans "Email Address" %}">
-    <c-dac.card>
-        <c-dac.title text="{% trans "Email Address" %}" />
+<c-dac.page title="{% trans "Email Address" %}">
+    <c-dac.card title="{% trans "Email Address" %}">
         {% if not emailaddresses %}
             {% include "account/snippets/warn_no_email.html" %}
         {% endif %}
@@ -68,4 +67,4 @@
             </form>
         {% endif %}
     </c-dac.card>
-</c-dac.layout.standard>
+</c-dac.page>

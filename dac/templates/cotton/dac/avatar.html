@@ -1,11 +1,5 @@
 {% load dac %}
 
-{# 
-  Component: avatar.html
-  Slots:
-    - None (renders user avatar)
-  Improved: Removed inline styles, using only Bootstrap classes for better consistency
-#}
 <c-vars class />
 {% if user.image %}
   <img src="{{ user.image.url }}"

@@ -1,7 +1,7 @@
 {% load i18n account %}
 
-<c-dac.layout.entrance title="{% trans "Enter Sign-In Code" %}"
-                       subtitle="{% if email %}{% blocktranslate with recipient=email %}We've sent a code to {{ recipient }}. The code expires shortly, so please enter it soon.{% endblocktranslate %}{% else %}{% blocktranslate with recipient=phone %}We've sent a code to {{ recipient }}. The code expires shortly, so please enter it soon.{% endblocktranslate %}{% endif %}">
+<c-dac.entrance title="{% trans "Enter Sign-In Code" %}"
+                subtitle="{% if email %}{% blocktranslate with recipient=email %}We've sent a code to {{ recipient }}. The code expires shortly, so please enter it soon.{% endblocktranslate %}{% else %}{% blocktranslate with recipient=phone %}We've sent a code to {{ recipient }}. The code expires shortly, so please enter it soon.{% endblocktranslate %}{% endif %}">
     {% url "account_confirm_login_code" as action_url %}
     {% render_form verify_form action=action_url %}
     <c-dac.entrance.action text="{% trans "Confirm" %}"
@@ -50,4 +50,4 @@
             </c-dac.entrance.action>
         </div>
     {% endif %}
-</c-dac.layout.entrance>
+</c-dac.entrance>

@@ -1,6 +1,6 @@
 {% load i18n socialaccount %}
 
-<c-dac.layout.standard title="{% trans "Account Connections" %}">
+<c-dac.page title="{% trans "Account Connections" %}">
     <c-dac.card title="{% trans "Account Connections" %}">
         {% if form.accounts %}
             <p class="text-sm text-gray-600 mb-4">
@@ -47,4 +47,4 @@
         {% include "socialaccount/provider_list.html" with process="connect" %}
         {% providers_media_js %}
     </c-dac.card>
-</c-dac.layout.standard>
+</c-dac.page>

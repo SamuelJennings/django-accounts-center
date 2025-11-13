@@ -1,6 +1,6 @@
 {% load i18n allauth cotton dac %}
 
-<c-dac.layout.entrance title="{% trans "Authorize" %}">
+<c-dac.entrance title="{% trans "Authorize" %}">
     <c-slot name="subtitle">
         {% blocktranslate with client_name=client.name site_name=site.name %}{{ client_name }} wants to access your {{ site_name }} account.{% endblocktranslate %}
     </c-slot>
@@ -24,4 +24,4 @@
             </c-dac.action variant="secondary">
         </div>
     </form>
-</c-dac.layout.entrance>
+</c-dac.entrance>

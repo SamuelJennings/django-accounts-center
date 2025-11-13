@@ -50,7 +50,7 @@ class TestLayoutDetection:
 
         # Should use standard layout
         assert 'id="dac-standard-layout"' in content
-        assert 'id="mainMenu"' in content
+        assert 'id="AccountCenterMenu"' in content
 
     def test_email_management_uses_standard_layout(self, authenticated_client):
         """Test that email management page uses standard layout."""
@@ -60,7 +60,7 @@ class TestLayoutDetection:
 
         # Should use standard layout
         assert 'id="dac-standard-layout"' in content
-        assert 'id="mainMenu"' in content
+        assert 'id="AccountCenterMenu"' in content
 
     def test_password_change_uses_standard_layout(self, authenticated_client):
         """Test that password change page uses standard layout."""
@@ -91,7 +91,7 @@ class TestLayoutDetection:
         entrance_content = entrance_response.content.decode()
 
         assert 'id="dac-entrance-layout"' in entrance_content
-        assert 'id="mainMenu"' not in entrance_content  # Should not have sidebar
+        assert 'id="AccountCenterMenu"' not in entrance_content  # Should not have sidebar
         assert "offcanvas-md" not in entrance_content
 
         # Test standard layout excludes entrance components
@@ -130,7 +130,7 @@ class TestComponentRendering:
         content = response.content.decode()
 
         # Should include sidebar elements
-        assert 'id="mainMenu"' in content
+        assert 'id="AccountCenterMenu"' in content
         assert "offcanvas-md offcanvas-start" in content
 
     def test_form_rendering_in_layouts(self, client):

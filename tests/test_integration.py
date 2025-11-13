@@ -21,7 +21,7 @@ class TestCompleteAuthenticationFlow:
         # 1. Visit signup page
         signup_response = client.get("/account/signup/")
         assert signup_response.status_code == 200
-        assert "c-dac.layout.entrance" in signup_response.content.decode()
+        assert "c-dac.entrance" in signup_response.content.decode()
 
         # 2. Submit signup form
         signup_data = {"email": "testflow@example.com", "password1": "testpassword123", "password2": "testpassword123"}
@@ -31,7 +31,7 @@ class TestCompleteAuthenticationFlow:
         # 3. Visit login page
         login_response = client.get("/account/login/")
         assert login_response.status_code == 200
-        assert "c-dac.layout.entrance" in login_response.content.decode()
+        assert "c-dac.entrance" in login_response.content.decode()
 
         # 4. Submit login form
         login_data = {"login": "testflow@example.com", "password": "testpassword123"}
@@ -43,7 +43,7 @@ class TestCompleteAuthenticationFlow:
         # 1. Visit password reset page
         reset_response = client.get("/account/password/reset/")
         assert reset_response.status_code == 200
-        assert "c-dac.layout.entrance" in reset_response.content.decode()
+        assert "c-dac.entrance" in reset_response.content.decode()
 
         # 2. Submit password reset form
         reset_data = {"email": user.email}
@@ -71,7 +71,7 @@ class TestAccountManagementFlow:
         email_response = authenticated_client.get("/account/email/")
         assert email_response.status_code == 200
         content = email_response.content.decode()
-        assert "c-dac.layout.standard" in content
+        assert "c-dac.page" in content
 
         # 2. Add new email
         add_email_data = {"action_add": "", "email": "newemail@example.com"}
@@ -84,7 +84,7 @@ class TestAccountManagementFlow:
         change_response = authenticated_client.get("/account/password/change/")
         assert change_response.status_code == 200
         content = change_response.content.decode()
-        assert "c-dac.layout.standard" in content
+        assert "c-dac.page" in content
 
         # 2. Submit password change form
         change_data = {"oldpassword": "testpass123", "password1": "newpassword123", "password2": "newpassword123"}
@@ -97,7 +97,7 @@ class TestAccountManagementFlow:
         connections_response = authenticated_client.get("/account/connected-accounts/")
         assert connections_response.status_code == 200
         content = connections_response.content.decode()
-        assert "c-dac.layout.standard" in content
+        assert "c-dac.page" in content
 
     def test_user_sessions_flow(self, authenticated_client):
         """Test user sessions management flow."""
@@ -105,7 +105,7 @@ class TestAccountManagementFlow:
         sessions_response = authenticated_client.get("/account/sessions/")
         assert sessions_response.status_code == 200
         content = sessions_response.content.decode()
-        assert "c-dac.layout.standard" in content
+        assert "c-dac.page" in content
 
 
 @pytest.mark.django_db
@@ -118,7 +118,7 @@ class TestSocialAuthenticationFlow:
         login_response = client.get("/account/login/")
         assert login_response.status_code == 200
         content = login_response.content.decode()
-        assert "c-dac.layout.entrance" in content
+        assert "c-dac.entrance" in content
 
         # Should show social providers when available
         assert "provider" in content.lower() or login_response.status_code == 200
@@ -132,7 +132,7 @@ class TestSocialAuthenticationFlow:
         content = login_response.content.decode()
 
         # Should use entrance layout
-        assert "c-dac.layout.entrance" in content
+        assert "c-dac.entrance" in content
 
         # Should not show email/password forms prominently
 
@@ -147,7 +147,7 @@ class TestMFAFlow:
         mfa_response = authenticated_client.get("/account/mfa/")
         assert mfa_response.status_code == 200
         content = mfa_response.content.decode()
-        assert "c-dac.layout.standard" in content
+        assert "c-dac.page" in content
 
     def test_mfa_authentication_flow(self, authenticated_client):
         """Test MFA authentication flow."""
@@ -169,7 +169,7 @@ class TestErrorHandlingIntegration:
         if invalid_login.status_code == 200:
             content = invalid_login.content.decode()
             # Should maintain entrance layout even with errors
-            assert "c-dac.layout.entrance" in content
+            assert "c-dac.entrance" in content
 
     def test_validation_errors_with_components(self, client):
         """Test validation errors display properly with components."""
@@ -181,7 +181,7 @@ class TestErrorHandlingIntegration:
         if invalid_signup.status_code == 200:
             content = invalid_signup.content.decode()
             # Should maintain layout and show errors
-            assert "c-dac.layout.entrance" in content
+            assert "c-dac.entrance" in content
 
     def test_permission_errors_redirect_properly(self, client):
         """Test that permission errors redirect to appropriate templates."""
@@ -193,7 +193,7 @@ class TestErrorHandlingIntegration:
         login_response = client.get(response.url)
         if login_response.status_code == 200:
             content = login_response.content.decode()
-            assert "c-dac.layout.entrance" in content
+            assert "c-dac.entrance" in content
 
 
 @pytest.mark.django_db
@@ -207,7 +207,7 @@ class TestComponentInteractionIntegration:
         content = login_response.content.decode()
 
         # Should have form component within entrance layout
-        assert "c-dac.layout.entrance" in content
+        assert "c-dac.entrance" in content
         assert "c-dac.form" in content or "<form" in content
 
     def test_alert_component_integration(self, authenticated_client):
@@ -217,7 +217,7 @@ class TestComponentInteractionIntegration:
         content = response.content.decode()
 
         # Should have standard layout ready for alerts
-        assert "c-dac.layout.standard" in content
+        assert "c-dac.page" in content
 
     def test_navigation_component_integration(self, authenticated_client):
         """Test navigation components work properly with standard layout."""
@@ -225,7 +225,7 @@ class TestComponentInteractionIntegration:
         content = response.content.decode()
 
         # Should have navigation components
-        assert "c-dac.layout.standard" in content
+        assert "c-dac.page" in content
         assert "c-dac.sidebar" in content
         assert "c-dac.header" in content
 

@@ -1,11 +1,1 @@
-{% load cotton %}
-
-{# djlint:off #}
-<c-vars variant="primary"
-        :variant_dict="{ 
-              'primary': 'bg-primary text-bg-primary', 
-              'secondary': 'text-bg-secondary',
-              'success': 'text-bg-success',
-              'danger': 'text-bg-danger'}" />
-{# djlint:on #}
-<span class="badge rounded-pill {{ variant_dict|get_item:variant }}">{{ text }}{{ slot }}</span>
+<c-badge :variant="variant" pill />

@@ -28,51 +28,65 @@
             integrity="sha512-fD9DI5bZwQxOi7MhYWnnNPlvXdp/2Pj3XSTRrFs5FQa4mizyGLnJcN6tuvUS6LbmgN1ut+XGSABKvjN0H6Aoow=="
             crossorigin="anonymous"
             referrerpolicy="no-referrer"></script>
-    <!-- Alpine.js for interactive components -->
-    <script defer
-            src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <!-- HTMX for dynamic content -->
     <script src="https://unpkg.com/htmx.org@2.0.1"
             integrity="sha384-QWGpdj554B4ETpJJC9z+ZHJcA/i59TyjxEPXiiUgN2WmTyV5OEZWCD6gQhgkdpB/"
             crossorigin="anonymous"></script>
-    <!-- Custom styles -->
-    <style>
-      /* Desktop sidebar width and main offset */
-      @media (min-width: 992px) {
-        .sidebar-desktop {
-          width: 16rem;
-        }
-
-        .with-sidebar {
-          padding-left: 16rem;
-        }
-      }
-
-      /* Mobile overlay backdrop */
-      .overlay-backdrop {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.5);
-      }
-    </style>
     {% block extra_head %}
     {% endblock extra_head %}
 
+    <style>
+      @media (min-width: 992px) {
+        #sidebar {
+          height: 100vh;
+          position: sticky;
+          top: 0;
+        }
+      }
+    </style>
   </head>
-  <body class="vh-100" x-data="{ sidebarOpen: false }">
+  <body>
     {% block body %}
-      <!-- Static sidebar for desktop -->
-      <div class="offcanvas-md offcanvas-start">
-        <c-dac.sidebar />
-      </div>
-      <!-- Main content -->
-      <div class="d-flex flex-column min-vh-100">
-        <!-- Top navigation with page header -->
-        <c-dac.header />
-        <!-- Page content -->
-        {% block content %}
-        {% endblock content %}
+      <div class="container-fluid">
+        <div class="row">
+          <!-- Responsive Offcanvas Sidebar - offcanvas on mobile, visible sidebar on desktop (lg+) -->
+          <div class="offcanvas-lg offcanvas-start col-lg-3 p-0"
+               tabindex="-1"
+               id="sidebar"
+               aria-labelledby="sidebarLabel">
+            <div class="d-flex flex-column h-100">
+              <c-dac.sidebar />
+            </div>
+          </div>
+          <!-- Main Content Area -->
+          <div class="col-12 col-lg-9 p-0">
+            <!-- Mobile Navbar - visible only on mobile (below lg) -->
+            <c-dac.navbar />
+            {% for message in messages %}
+              <c-dac.alert variant="{{ message.tags }}"
+                           message="{{ message }}"
+                           dismissable />
+            {% endfor %}
+            <!-- Main Content -->
+            <main class="container-fluid p-4">
+              <!-- Breadcrumbs -->
+              {% if breadcrumbs is not False %}
+                <c-breadcrumbs class="mb-3">
+                  <c-breadcrumbs.item text="{% trans "Account Center" %}"
+                                      :href="{% url "account-center" %}" />
+                  {% for breadcrumb in breadcrumbs %}<c-breadcrumbs.item :attrs="breadcrumb" />{% endfor %}
+                  <c-breadcrumbs.item text="{{ title }}" />
+                </c-breadcrumbs>
+              {% endif %}
+              <!-- Page Content -->
+              <div>
+                {% block content %}
+                {% endblock content %}
 
+              </div>
+            </main>
+          </div>
+        </div>
       </div>
     {% endblock body %}
 

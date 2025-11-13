@@ -1,5 +1,5 @@
-<c-dac.layout.entrance title="{% trans "Two-Factor Authentication" %}"
-                       subtitle="{% trans "Your account is protected by two-factor authentication. Please enter an authenticator code:" %}">
+<c-dac.entrance title="{% trans "Two-Factor Authentication" %}"
+                subtitle="{% trans "Your account is protected by two-factor authentication. Please enter an authenticator code:" %}">
   {% url "mfa_authenticate" as action_url %}
   {% render_form form action=action_url %}
   <c-dac.entrance.action text="{% trans "Sign In" %}"
@@ -73,4 +73,4 @@
       {% csrf_token %}
     </form>
   {% endif %}
-</c-dac.layout.entrance>
+</c-dac.entrance>

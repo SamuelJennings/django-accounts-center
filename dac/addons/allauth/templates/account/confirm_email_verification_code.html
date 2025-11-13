@@ -1,7 +1,7 @@
 {% load i18n allauth account %}
 
-<c-dac.layout.entrance title="{% trans "Enter Email Verification Code" %}"
-                       subtitle="{% blocktranslate with recipient=email %}We've sent a code to {{ recipient }}. The code expires shortly, so please enter it soon.{% endblocktranslate %}">
+<c-dac.entrance title="{% trans "Enter Email Verification Code" %}"
+                subtitle="{% blocktranslate with recipient=email %}We've sent a code to {{ recipient }}. The code expires shortly, so please enter it soon.{% endblocktranslate %}">
     {% url "account_email_verification_sent" as action_url %}
     {% render_form verify_form action=action_url %}
     <c-dac.entrance.action text="{% trans "Confirm" %}"
@@ -50,4 +50,4 @@
             </c-dac.entrance.action>
         </div>
     {% endif %}
-</c-dac.layout.entrance>
+</c-dac.entrance>

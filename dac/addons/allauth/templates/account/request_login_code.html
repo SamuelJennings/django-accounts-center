@@ -1,7 +1,7 @@
 {% load i18n dac %}
 
-<c-dac.layout.entrance title="{% trans "Request sign-in code" %}"
-                       subtitle="{% trans "We will send you a special code that allows you to sign in without a password." %}">
+<c-dac.entrance title="{% trans "Request sign-in code" %}"
+                subtitle="{% trans "We will send you a special code that allows you to sign in without a password." %}">
     <c-dac.form method="post"
                 action="{% url "account_request_login_code" %}"
                 :form="form">
@@ -14,4 +14,4 @@
         <c-dac.link href="{% url "account_login" %}"
                     text="{% trans "Other sign-in options" %}" />
     </c-dac.card.text>
-</c-dac.layout.entrance>
+</c-dac.entrance>

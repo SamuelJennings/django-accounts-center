@@ -1,7 +1,7 @@
 {% load i18n %}
 
-<c-dac.layout.entrance title="{% trans "Confirm Access" %}"
-                       subtitle="{% trans "Please reauthenticate to safeguard your account." %}">
+<c-dac.entrance title="{% trans "Confirm Access" %}"
+                subtitle="{% trans "Please reauthenticate to safeguard your account." %}">
     <c-dac.card.text text="{% trans "Enter an authenticator code:" %}" />
     <c-dac.form method="post"
                 action="{% url "mfa_reauthenticate" %}"
@@ -21,4 +21,4 @@
             {% endfor %}
         </div>
     {% endif %}
-</c-dac.layout.entrance>
+</c-dac.entrance>

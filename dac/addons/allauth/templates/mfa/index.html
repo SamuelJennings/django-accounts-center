@@ -1,6 +1,6 @@
 {% load i18n %}
 
-<c-dac.layout.standard title="{% trans "MFA" %}">
+<c-dac.page title="{% trans "MFA" %}">
     {% if "totp" in MFA_SUPPORTED_TYPES %}
         <c-dac.card title="{% trans "Authenticator App" %}">
             {% if authenticators.totp %}
@@ -65,4 +65,4 @@
             </c-dac.card>
         {% endwith %}
     {% endif %}
-</c-dac.layout.standard>
+</c-dac.page>

@@ -1,7 +1,7 @@
 {% load i18n dac %}
 
-<c-dac.layout.entrance title="{% trans "Confirm Access" %}"
-                       subtitle="{% trans "Please reauthenticate to safeguard your account." %}">
+<c-dac.entrance title="{% trans "Confirm Access" %}"
+                subtitle="{% trans "Please reauthenticate to safeguard your account." %}">
   {% url "mfa_reauthenticate_webauthn" as action_url %}
   {% render_form form action=action_url %}
   <c-dac.entrance.action text="{% trans "Use a security key" %}"
@@ -33,4 +33,4 @@
       {% endfor %}
     </c-dac.action-group>
   {% endif %}
-</c-dac.layout.entrance>
+</c-dac.entrance>

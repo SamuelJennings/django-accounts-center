@@ -278,7 +278,7 @@ class TestLayoutConditionals:
             content = response.content.decode()
 
             # Should use entrance layout
-            assert "c-dac.layout.entrance" in content or response.status_code == 200
+            assert "c-dac.entrance" in content or response.status_code == 200
 
     def test_standard_layout_conditionals(self, authenticated_client):
         """Test conditionals that trigger standard layout."""
@@ -289,7 +289,7 @@ class TestLayoutConditionals:
             content = response.content.decode()
 
             # Should use standard layout
-            assert "c-dac.layout.standard" in content or response.status_code == 200
+            assert "c-dac.page" in content or response.status_code == 200
 
 
 @pytest.mark.django_db

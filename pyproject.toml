@@ -9,10 +9,15 @@ packages = [{include = "dac"}]
 
 [tool.poetry.dependencies]
 python = ">=3.10,<4.0"
-cotton-bs5 = {git = "https://github.com/SamuelJennings/cotton-bs5"}
 django-crispy-forms = "^2.3"
-django-flex-menus = "^0.3.2"
-django-easy-icons = "^0.2.4"
+django-flex-menus = "^0.4.0"
+django-cotton = ">=2.3.1"
+django-cotton-bs5 = {version = "^0.3.1", optional = true}
+django-easy-icons = {version = "^0.3.0", optional = true}
+
+[tool.poetry.extras]
+bootstrap5 = ["django-cotton-bs5"]
+easy-icons = ["django-easy-icons"]
 
 [tool.poetry.group.dev.dependencies]
 Django = ">5.0"
@@ -31,6 +36,8 @@ pytest-cov = "^4.1.0"
 django-extensions = "^4.1"
 crispy-tailwind = "^1.0.3"
 shot-scraper = "^1.8"
+django-easy-icons = "^0.3.0"
+django-cotton-bs5 = "^0.3.1"
 
 
 [build-system]

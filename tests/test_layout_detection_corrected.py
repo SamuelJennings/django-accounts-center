@@ -107,7 +107,7 @@ class TestStandardLayoutDetection:
 
         # Should use standard layout for authenticated features
         assert 'data-layout="standard"' in content
-        assert 'id="mainMenu"' in content  # Sidebar navigation
+        assert 'id="AccountCenterMenu"' in content  # Sidebar navigation
         assert "offcanvas-md offcanvas-start" in content  # Responsive sidebar
         assert response.status_code == 200
 
@@ -118,7 +118,7 @@ class TestStandardLayoutDetection:
 
         # Should use standard layout for account management
         assert 'data-layout="standard"' in content
-        assert 'id="mainMenu"' in content
+        assert 'id="AccountCenterMenu"' in content
         assert response.status_code == 200
 
     def test_social_connections_uses_standard_layout(self, authenticated_client):
@@ -128,7 +128,7 @@ class TestStandardLayoutDetection:
 
         # Should use standard layout for account features
         assert 'data-layout="standard"' in content
-        assert 'id="mainMenu"' in content
+        assert 'id="AccountCenterMenu"' in content
         assert response.status_code == 200
 
     def test_user_sessions_uses_standard_layout(self, authenticated_client):
@@ -138,7 +138,7 @@ class TestStandardLayoutDetection:
 
         # Should use standard layout for session management
         assert 'data-layout="standard"' in content
-        assert 'id="mainMenu"' in content
+        assert 'id="AccountCenterMenu"' in content
         assert response.status_code == 200
 
     def test_mfa_management_uses_standard_layout(self, authenticated_client):
@@ -148,7 +148,7 @@ class TestStandardLayoutDetection:
 
         # Should use standard layout for MFA management
         assert 'data-layout="standard"' in content
-        assert 'id="mainMenu"' in content
+        assert 'id="AccountCenterMenu"' in content
         assert response.status_code == 200
 
 
@@ -230,7 +230,7 @@ class TestLayoutComponents:
         # Standard layout should include these rendered components
         expected_elements = [
             'data-layout="standard"',
-            'id="mainMenu"',  # Sidebar menu
+            'id="AccountCenterMenu"',  # Sidebar menu
             "offcanvas-md offcanvas-start",  # Responsive sidebar
             "container-fluid",  # Main content container
             "border-end",  # Sidebar border
@@ -246,7 +246,7 @@ class TestLayoutComponents:
 
         # Entrance layout should not include navigation
         excluded_elements = [
-            'id="mainMenu"',  # Sidebar navigation
+            'id="AccountCenterMenu"',  # Sidebar navigation
             "offcanvas-md",  # Responsive navigation
             "border-end",  # Sidebar border
         ]

@@ -1,8 +1,5 @@
-{# 
-  Component: dropdown.html
-  Slots:
-    - slot: dropdown menu items
-#}
+{% load flex_menu %}
+
 <c-vars class="btn btn-outline-secondary btn-sm" label="" />
 <!-- Actions dropdown using Bootstrap -->
 <div class="dropdown">
@@ -10,14 +7,22 @@
           type="button"
           data-bs-toggle="dropdown"
           aria-expanded="false"
-          {% if label %}aria-label="{{ label }}"{% endif %}>
+          aria-label="{{ label }}">
     <svg width="16"
          height="16"
          fill="currentColor"
          viewBox="0 0 16 16">
       <path d="M8 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM1.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm13 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" />
     </svg>
-    {% if label %}<span class="visually-hidden">{{ label }}</span>{% endif %}
+    <span class="visually-hidden">{{ label }}</span>
   </button>
-  <div class="dropdown-menu dropdown-menu-end">{{ slot }}</div>
+  <div class="dropdown-menu dropdown-menu-end">
+    {% if slot %}
+      {{ slot }}
+    {% else %}
+      {% for child in children %}
+        {% render_item child renderer=renderer %}
+      {% endfor %}
+    {% endif %}
+  </div>
 </div>

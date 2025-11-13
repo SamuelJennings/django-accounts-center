@@ -13,8 +13,6 @@ from .allauth_settings import *
 
 load_dotenv()
 
-FLEX_MENU_LOG_URL_FAILURES = True
-
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 
 SECRET_KEY = "=bodvqgkt@)emfe2!($i#1zd(x27@u!9*9+)^$8bu#sqsmm^*n"
@@ -54,7 +52,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "flex_menu",
     "django_cotton",
-    # "cotton_bs5",
+    "cotton_bs5",
     "rest_framework",
     "drf_stripe",
     "django_extensions",
@@ -208,6 +206,7 @@ EASY_ICONS = {
             "github": "fab fa-github",
             "google": "fab fa-google",
             "orcid": "fab fa-orcid",
+            "logout": "fas fa-sign-out-alt",
         },
     },
     # Font Awesome for common UI icons
@@ -224,4 +223,13 @@ EASY_ICONS = {
             "account_center": "dac",
         },
     },
+}
+
+
+FLEX_MENUS = {
+    "renderers": {
+        "dac_sidebar": "dac.renderers.SidebarRenderer",
+        "dac_dropdown": "dac.renderers.DropdownRenderer",
+    },
+    "log_url_failures": DEBUG,
 }

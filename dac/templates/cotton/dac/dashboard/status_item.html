@@ -1,16 +1,9 @@
 {% load i18n %}
 
-{# 
-  Component: dashboard status item.html
-  Slots:
-    - None (renders status item)
-  Improved: Enhanced status item styling with better spacing and alignment
-#}
 <div class="d-flex align-items-center justify-content-between py-3 border-bottom">
-  <span class="fw-medium text-dark">{{ label }}</span>
+  <span class="fw-medium">{{ label }}</span>
   {% if badge_style %}
-    <c-dac.badge style="{{ badge_style }}">
-      {{ badge_text }}
-    </c-dac.badge>
+    <c-dac.badge variant="{{ badge_style }}"
+                 text="{{ badge_text }}" />
   {% endif %}
 </div>

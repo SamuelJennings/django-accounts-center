@@ -1,7 +1,7 @@
 {% load i18n %}
 
-<c-dac.layout.entrance title="{% trans "Signup" %}"
-                       subtitle="{% trans "Passkey Sign Up" %}">
+<c-dac.entrance title="{% trans "Signup" %}"
+                subtitle="{% trans "Passkey Sign Up" %}">
     <c-dac.form method="post"
                 action="{% url "account_signup_by_passkey" %}"
                 :form="form">
@@ -15,4 +15,4 @@
         <c-dac.link href="{{ signup_url }}"
                     text="{% trans "Other options" %}" />
     </c-dac.card.text>
-</c-dac.layout.entrance>
+</c-dac.entrance>

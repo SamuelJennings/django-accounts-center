@@ -1,6 +1,6 @@
 {% load i18n humanize dac %}
 
-<c-dac.layout.standard title="{% trans "Sessions" %}">
+<c-dac.page title="{% trans "Sessions" %}">
   <c-dac.card title="{% trans "Sessions" %}">
     {% if session_count > 1 %}
       {% url "usersessions_list" as action_url %}
@@ -56,4 +56,4 @@
       {% endif %}
     </c-slot>
   </c-dac.card>
-</c-dac.layout.standard>
+</c-dac.page>

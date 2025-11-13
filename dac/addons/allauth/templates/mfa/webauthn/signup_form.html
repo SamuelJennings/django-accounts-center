@@ -1,7 +1,7 @@
 {% load i18n static dac %}
 
-<c-dac.layout.entrance title="{% trans "Create Passkey" %}"
-                       subtitle="{% trans "You are about to create a passkey for your account. As you can add additional keys later on, you can use a descriptive name to tell the keys apart." %}">
+<c-dac.entrance title="{% trans "Create Passkey" %}"
+                subtitle="{% trans "You are about to create a passkey for your account. As you can add additional keys later on, you can use a descriptive name to tell the keys apart." %}">
   {% url "mfa_signup_webauthn" as action_url %}
   {% render_form form action=action_url %}
   <c-dac.entrance.action text="{% trans "Create" %}"
@@ -22,7 +22,7 @@
                   text="{% trans "Cancel" %}" />
     </form>
   </c-dac.card.text>
-</c-dac.layout.entrance>
+</c-dac.entrance>
 {% block extra_body %}
   {{ block.super }}
   {% include "mfa/webauthn/snippets/scripts.html" %}

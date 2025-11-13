@@ -102,7 +102,7 @@ class TestEntranceLayoutTemplates:
 
         # Check that entrance layout components are present
         content = response.content.decode()
-        assert "c-dac.layout.entrance" in content
+        assert "c-dac.entrance" in content
         assert "c-dac.entrance.card" in content
         assert "c-dac.entrance.brand-logo" in content
 
@@ -112,7 +112,7 @@ class TestEntranceLayoutTemplates:
         assert response.status_code == 200
 
         content = response.content.decode()
-        assert "c-dac.layout.entrance" in content
+        assert "c-dac.entrance" in content
         assert "c-dac.entrance.card" in content
 
     def test_password_reset_uses_entrance_layout(self, client):
@@ -121,7 +121,7 @@ class TestEntranceLayoutTemplates:
         assert response.status_code == 200
 
         content = response.content.decode()
-        assert "c-dac.layout.entrance" in content
+        assert "c-dac.entrance" in content
 
     @override_settings(ACCOUNT_EMAIL_VERIFICATION="mandatory")
     def test_email_confirm_uses_entrance_layout(self, client, user):
@@ -134,7 +134,7 @@ class TestEntranceLayoutTemplates:
         assert response.status_code == 200
 
         content = response.content.decode()
-        assert "c-dac.layout.entrance" in content
+        assert "c-dac.entrance" in content
 
 
 @pytest.mark.django_db
@@ -147,7 +147,7 @@ class TestStandardLayoutTemplates:
         assert response.status_code == 200
 
         content = response.content.decode()
-        assert "c-dac.layout.standard" in content
+        assert "c-dac.page" in content
         assert "c-dac.sidebar" in content
         assert "c-dac.header" in content
 
@@ -157,7 +157,7 @@ class TestStandardLayoutTemplates:
         assert response.status_code == 200
 
         content = response.content.decode()
-        assert "c-dac.layout.standard" in content
+        assert "c-dac.page" in content
 
     def test_social_connections_uses_standard_layout(self, authenticated_client):
         """Test social connections page uses standard layout."""
@@ -165,7 +165,7 @@ class TestStandardLayoutTemplates:
         assert response.status_code == 200
 
         content = response.content.decode()
-        assert "c-dac.layout.standard" in content
+        assert "c-dac.page" in content
 
     def test_user_sessions_uses_standard_layout(self, authenticated_client):
         """Test user sessions page uses standard layout."""
@@ -173,7 +173,7 @@ class TestStandardLayoutTemplates:
         assert response.status_code == 200
 
         content = response.content.decode()
-        assert "c-dac.layout.standard" in content
+        assert "c-dac.page" in content
 
     def test_mfa_index_uses_standard_layout(self, authenticated_client):
         """Test MFA index page uses standard layout."""
@@ -181,7 +181,7 @@ class TestStandardLayoutTemplates:
         assert response.status_code == 200
 
         content = response.content.decode()
-        assert "c-dac.layout.standard" in content
+        assert "c-dac.page" in content
 
 
 @pytest.mark.django_db

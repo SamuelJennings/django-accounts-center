@@ -1,6 +1,6 @@
 {% load i18n %}
 
-<c-dac.layout.standard title="{% trans "Change Phone" %}">
+<c-dac.page title="{% trans "Change Phone" %}">
     <c-dac.card title="{% trans "Change Phone" %}">
         {% url "account_change_phone" as action_url %}
         <form method="post" action="{{ action_url }}">
@@ -56,4 +56,4 @@
             <input type="hidden" name="action" value="verify" />
         </form>
     {% endif %}
-</c-dac.layout.standard>
+</c-dac.page>

@@ -21,7 +21,7 @@ class TestLayoutComponents:
         content = response.content.decode()
 
         # Verify entrance layout structure
-        assert "c-dac.layout.entrance" in content
+        assert "c-dac.entrance" in content
         assert "c-dac.entrance.brand-logo" in content
         assert "c-dac.entrance.card" in content
 
@@ -31,7 +31,7 @@ class TestLayoutComponents:
         content = response.content.decode()
 
         # Verify standard layout structure
-        assert "c-dac.layout.standard" in content
+        assert "c-dac.page" in content
         assert "c-dac.sidebar" in content
         assert "c-dac.header" in content
         assert "c-dac.breadcrumbs" in content
@@ -201,7 +201,7 @@ class TestComponentComposition:
         content = response.content.decode()
 
         # Should have nested component structure
-        assert "c-dac.layout.entrance" in content
+        assert "c-dac.entrance" in content
         assert "c-dac.entrance.card" in content
         assert "c-dac.entrance.action" in content
 
@@ -211,7 +211,7 @@ class TestComponentComposition:
         content = response.content.decode()
 
         # Should have proper component hierarchy
-        assert "c-dac.layout.standard" in content
+        assert "c-dac.page" in content
         assert "c-dac.card" in content
 
     def test_slot_composition(self, authenticated_client):

@@ -1,6 +1,6 @@
 {% load i18n static dac %}
 
-<c-dac.layout.standard title="{% trans "Edit Security Key" %}">
+<c-dac.page title="{% trans "Edit Security Key" %}">
     <c-dac.card title="{% trans "Edit Security Key" %}">
         {% url "mfa_edit_webauthn" as action_url %}
         {% render_form form action=action_url %}
@@ -12,4 +12,4 @@
             </c-dac.action>
         </c-slot>
     </c-dac.card>
-</c-dac.layout.standard>
+</c-dac.page>

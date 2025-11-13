@@ -1,7 +1,7 @@
 {% load i18n socialaccount dac %}
 
-<c-dac.layout.entrance title="{% trans "Welcome" %}"
-                       subtitle="{% trans "Sign in using your preferred method below" %}">
+<c-dac.entrance title="{% trans "Welcome" %}"
+                subtitle="{% trans "Sign in using your preferred method below" %}">
   {% get_providers as socialaccount_providers %}
   <c-dac.action-group vstack>
     {% if socialaccount_providers %}
@@ -49,4 +49,4 @@
   {% if PASSKEY_LOGIN_ENABLED %}
     {% include "mfa/webauthn/snippets/login_script.html" with button_id="passkey_login" %}
   {% endif %}
-</c-dac.layout.entrance>
+</c-dac.entrance>

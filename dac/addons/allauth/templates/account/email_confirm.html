@@ -1,7 +1,7 @@
 {% load i18n account %}
 
 {% if confirmation %}
-    <c-dac.layout.entrance title="{% trans "Confirm Email Address" %}">
+    <c-dac.entrance title="{% trans "Confirm Email Address" %}">
         {% user_display confirmation.email_address.user as user_display %}
         {% if can_confirm %}
             <c-slot name="subtitle">
@@ -17,13 +17,13 @@
                 {% blocktrans %}Unable to confirm {{ email }} because it is already confirmed by a different account.{% endblocktrans %}
             </c-slot>
         {% endif %}
-    </c-dac.layout.entrance>
+    </c-dac.entrance>
 {% else %}
-    <c-dac.layout.entrance title="{% trans "Link Expired" %}"
-                           type="warning"
-                           subtitle="{% trans "This email confirmation link has expired or is invalid. Please issue a new email confirmation request" %}">
+    <c-dac.entrance title="{% trans "Link Expired" %}"
+                    type="warning"
+                    subtitle="{% trans "This email confirmation link has expired or is invalid. Please issue a new email confirmation request" %}">
         <c-dac.entrance.action.primary href="{% url "account_email" %}"
                                        icon="message"
                                        text="{% trans "Resend Link" %}" />
-    </c-dac.layout.entrance>
+    </c-dac.entrance>
 {% endif %}
