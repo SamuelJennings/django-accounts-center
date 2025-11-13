@@ -1,0 +1,28 @@
+{% load i18n account socialaccount %}
+
+<c-dac.action-group vstack>
+  {% for provider in socialaccount_providers %}
+    {% if provider.id == "openid_connect" %}
+      {% for brand in provider.get_brands %}
+        <c-dac.entrance.action.secondary href="{% provider_login_url provider.id openid=brand.openid_url process="login" %}"
+                                         text="{% blocktrans with provider_name=brand.name %}Continue with {{ provider_name }}{% endblocktrans %}">
+          {% if brand.icon_url %}
+            <c-slot name="icon">
+              <img src="{{ brand.icon_url }}"
+                   alt="{{ brand.name }}"
+                   class="w-5 h-5" />
+            </c-slot>
+          {% endif %}
+        </c-dac.entrance.action.secondary>
+      {% endfor %}
+    {% else %}
+      <form method="post"
+            action="{% provider_login_url provider.id %}">
+        {% csrf_token %}
+        <c-dac.entrance.action.secondary type="submit"
+                                         icon="{{ provider.id }}"
+                                         text="{% blocktrans with provider_name=provider.name %}Continue with {{ provider_name }}{% endblocktrans %}" />
+      </form>
+    {% endif %}
+  {% endfor %}
+</c-dac.action-group>

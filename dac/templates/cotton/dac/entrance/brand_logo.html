@@ -1,0 +1,13 @@
+{% load i18n static %}
+
+<c-vars max_height="4rem" />
+<div class="d-flex justify-content-center align-items-center py-2">
+  <div class="w-75 d-flex align-items-center">
+    <img src="{% static "dac/logo/dac_bg_transparent.svg" %}"
+         class="img-fluid"
+         alt="{% trans "Account Center" %}"
+         style="max-height: {{ max_height }}"
+         width="600"
+         height="200" />
+  </div>
+</div>

@@ -1,0 +1,24 @@
+{% load i18n %}
+
+<c-dac.entrance title="{% trans "Confirm Access" %}"
+                subtitle="{% trans "Please reauthenticate to safeguard your account." %}">
+    <c-dac.card.text text="{% trans "Enter an authenticator code:" %}" />
+    <c-dac.form method="post"
+                action="{% url "mfa_reauthenticate" %}"
+                :form="False">
+        {% csrf_token %}
+        <c-dac.form-field field=form.code unlabeled=True />
+        {{ redirect_field }}
+        <c-dac.action type="submit" text="{% trans "Confirm" %}" />
+    </c-dac.form>
+    {% if reauthentication_alternatives %}
+        <c-dac.card.divider text="{% trans "Alternative options" %}" />
+        <div class="space-y-3">
+            {% for alt in reauthentication_alternatives %}
+                <c-dac.action variant="secondary" href="{{ alt.url }}">
+                    {{ alt.description }}
+                </c-dac.action variant="secondary">
+            {% endfor %}
+        </div>
+    {% endif %}
+</c-dac.entrance>

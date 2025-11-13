@@ -1,5 +1,15 @@
-{% load flex_menu %}
+{% load i18n cotton dac flex_menu %}
 
-<c-sections.sidebar>
-  {% render_menu "Main Menu" %}
-</c-sections.sidebar>
+<!-- Main Navigation Sidebar -->
+<aside class="border-end h-100 shadow-sm overflow-auto">
+  <div class="d-flex flex-column h-100">
+    <!-- Sidebar Header -->
+    <c-dac.sidebar.header />
+    <!-- Navigation Menu -->
+    <nav class="flex-fill px-3 py-2">
+      {% render_menu "Account Center Menu" renderer="dac_sidebar" %}
+    </nav>
+    <!-- Sidebar Footer -->
+    <c-dac.sidebar.footer />
+  </div>
+</aside>

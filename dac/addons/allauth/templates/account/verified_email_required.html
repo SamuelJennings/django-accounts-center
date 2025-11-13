@@ -1,0 +1,32 @@
+{% load i18n %}
+
+<c-dac.page title="{% trans "Verify Your Email Address" %}">
+    <c-dac.card title="{% trans "Verify Your Email Address" %}">
+        <div class="text-center mb-6">
+            <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto">
+                <c-icons.message />
+            </div>
+        </div>
+        {% url "account_email" as email_url %}
+        <div class="space-y-4">
+            <c-dac.card.text>
+                {% blocktrans %}This part of the site requires us to verify that
+you are who you claim to be. For this purpose, we require that you
+verify ownership of your email address.{% endblocktrans %}
+            </c-dac.card.text>
+            <c-dac.card.text>
+                {% blocktrans %}We have sent an email to you for
+verification. Please click on the link inside that email. If you do not see the verification email in your main inbox, check your spam folder. Otherwise
+contact us if you do not receive it within a few minutes.{% endblocktrans %}
+            </c-dac.card.text>
+            <c-dac.card.text>
+                {% blocktrans %}<strong>Note:</strong> you can still <a href="{{ email_url }}" class="text-indigo-600 hover:text-indigo-500">change your email address</a>.{% endblocktrans %}
+            </c-dac.card.text>
+        </div>
+        <c-slot name="actions">
+            <c-dac.action href="{{ email_url }}">
+                {% trans "Manage Email Addresses" %}
+            </c-dac.action>
+        </c-slot>
+    </c-dac.card>
+</c-dac.page>

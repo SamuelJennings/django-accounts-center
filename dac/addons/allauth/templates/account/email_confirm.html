@@ -1,0 +1,29 @@
+{% load i18n account %}
+
+{% if confirmation %}
+    <c-dac.entrance title="{% trans "Confirm Email Address" %}">
+        {% user_display confirmation.email_address.user as user_display %}
+        {% if can_confirm %}
+            <c-slot name="subtitle">
+                {% blocktrans with confirmation.email_address.email as email %}Please confirm that <a href="mailto:{{ email }}">{{ email }}</a> is an email address for user {{ user_display }}.{% endblocktrans %}
+            </c-slot>
+            <c-dac.form method="post"
+                        action="{% url "account_confirm_email" confirmation.key %}">
+                {{ redirect_field }}
+                <c-dac.entrance.action.primary type="submit" text="{% trans "Confirm" %}" />
+            </c-dac.form>
+        {% else %}
+            <c-slot name="subtitle">
+                {% blocktrans %}Unable to confirm {{ email }} because it is already confirmed by a different account.{% endblocktrans %}
+            </c-slot>
+        {% endif %}
+    </c-dac.entrance>
+{% else %}
+    <c-dac.entrance title="{% trans "Link Expired" %}"
+                    type="warning"
+                    subtitle="{% trans "This email confirmation link has expired or is invalid. Please issue a new email confirmation request" %}">
+        <c-dac.entrance.action.primary href="{% url "account_email" %}"
+                                       icon="message"
+                                       text="{% trans "Resend Link" %}" />
+    </c-dac.entrance>
+{% endif %}

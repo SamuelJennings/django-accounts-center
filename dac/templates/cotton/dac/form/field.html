@@ -1,0 +1,14 @@
+<div class="mb-3">
+    {% if errors %}<div class="invalid-feedback d-block mb-2">{{ errors }}</div>{% endif %}
+    {% if label %}
+        <label for="{{ field_id }}"
+               class="form-label fw-medium mb-2">{{ label }}</label>
+    {% endif %}
+    <input type="{{ input_type|default:'text' }}"
+           name="{{ name }}"
+           id="{{ field_id }}"
+           {% if value %}value="{{ value }}"{% endif %}
+           {% if required %}required{% endif %}
+           class="form-control shadow-sm{% if errors %} is-invalid{% endif %}" />
+    {% if help_text %}<div class="form-text text-muted">{{ help_text }}</div>{% endif %}
+</div>

@@ -1,0 +1,10 @@
+{% load i18n dac %}
+
+<c-dac.entrance title="OpenID {% trans "Sign In" %}">
+    {% url "openid_login" as action_url %}
+    {% render_form form action=action_url %}
+    <c-dac.entrance.action text="{% trans "Sign In" %}"
+                           type="submit"
+                           form="{{ form.helper.form_id }}">
+    </c-dac.entrance.action>
+</c-dac.entrance>

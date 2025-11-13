@@ -9,10 +9,15 @@ packages = [{include = "dac"}]
 
 [tool.poetry.dependencies]
 python = ">=3.10,<4.0"
-django-flex-menus = {git = "https://github.com/SamuelJennings/django-flex-menus"}
-django-easy-icons = {git = "https://github.com/SamuelJennings/django-easy-icons"}
-cotton-bs5 = {git = "https://github.com/SamuelJennings/cotton-bs5"}
 django-crispy-forms = "^2.3"
+django-flex-menus = "^0.4.0"
+django-cotton = ">=2.3.1"
+django-cotton-bs5 = {version = "^0.3.1", optional = true}
+django-easy-icons = {version = "^0.3.0", optional = true}
+
+[tool.poetry.extras]
+bootstrap5 = ["django-cotton-bs5"]
+easy-icons = ["django-easy-icons"]
 
 [tool.poetry.group.dev.dependencies]
 Django = ">5.0"
@@ -25,6 +30,14 @@ python-dotenv = "^1.1.0"
 drf-stripe-subscription = "^1.2.2"
 django-activity-stream = "^2.0.0"
 django-compressor = "^4.5.1"
+pytest = "^8.0.0"
+pytest-django = "^4.8.0"
+pytest-cov = "^4.1.0"
+django-extensions = "^4.1"
+crispy-tailwind = "^1.0.3"
+shot-scraper = "^1.8"
+django-easy-icons = "^0.3.0"
+django-cotton-bs5 = "^0.3.1"
 
 
 [build-system]
@@ -184,12 +197,12 @@ disable_error_code = [
 ]
 
 [tool.django-stubs]
-django_settings_module = "tests.settings"
+django_settings_module = "example.settings"
 
 
 
 [tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = "tests.settings"
+DJANGO_SETTINGS_MODULE = "example.settings"
 python_files = ["test_*.py"]
 filterwarnings = [
     "ignore",

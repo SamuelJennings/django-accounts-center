@@ -1,0 +1,9 @@
+{% load easy_icons %}
+
+<c-vars name inline svg />
+{% comment %} {% if svg %}
+  {% icon name render="svg" %}
+{% else %}
+  {% icon name height="1.25em" width="1.25em" %}
+{% endif %} {% endcomment %}
+{% comment %} <c-component is="icons.{{ name }}" :attrs="attrs" height="1.25em" width="1.25em" class="d-inline-block" /> {% endcomment %}

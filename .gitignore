@@ -17,6 +17,9 @@
 .DS_Store
 stripe.exe
 .vscode
+screenshots/*
+COMPREHENSIVE_TESTING_STRATEGY.md
+.github/instructions/
 
 # Project files
 .ropeproject

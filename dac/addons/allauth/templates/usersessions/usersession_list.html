@@ -1,40 +1,24 @@
-{% extends "usersessions/base_manage.html" %}
-{% load i18n humanize %}
+{% load i18n humanize dac %}
 
-{% block head_title %}
-  {% trans "Sessions" %}
-{% endblock head_title %}
-
-{% block content %}
-  <style>
-    table.allauth-sessions td.align-center,
-    th.align-center {
-      text-align: center;
-      vertical-align: middle;
-
-    }
-  </style>
-  {% if session_count > 1 %}
-    {% url 'usersessions_list' as action_url %}
-  {% else %}
-    {% url 'account_logout' as action_url %}
-  {% endif %}
-  <c-dac.title text="{% trans "Sessions" %}" />
-  <form action="{{ action_url }}" method="post">
-    <c-dac.card no_padding>
+<c-dac.page title="{% trans "Sessions" %}">
+  <c-dac.card title="{% trans "Sessions" %}">
+    {% if session_count > 1 %}
+      {% url "usersessions_list" as action_url %}
+    {% else %}
+      {% url "account_logout" as action_url %}
+    {% endif %}
+    <c-dac.form method="post" action="{{ action_url }}">
       {% csrf_token %}
-      <c-dac.components.table class="allauth-sessions" :tags='["sessions"]'>
+      <c-dac.table>
         <thead>
           <tr>
-            <th>{% trans "Started" %}</th>
+            <th>{% trans "Started At" %}</th>
             <th>{% trans "IP Address" %}</th>
             <th>{% trans "Browser" %}</th>
-            <th class="align-center">{% trans "Current" %}</th>
-          </tr>
-          <tr>
             {% if show_last_seen_at %}
               <th>{% trans "Last seen at" %}</th>
             {% endif %}
+            <th>{% trans "Status" %}</th>
           </tr>
         </thead>
         <tbody>
@@ -50,26 +34,26 @@
                   <span title="{{ session.last_seen_at }}">{{ session.last_seen_at|naturaltime }}</span>
                 </td>
               {% endif %}
-              <td class="align-center">
+              <td>
                 {% if session.is_current %}
-                  {% icon "check_circle" style="height: 1em" class="text-success" fill="currentColor" %}
+                  <c-dac.badge style="success">
+                    {% trans "Current" %}
+                  </c-dac.badge>
                 {% endif %}
               </td>
             </tr>
           {% endfor %}
         </tbody>
-      </c-dac.components.table>
-      <c-slot name="actions">
-        {% if session_count > 1 %}
-          <c-dac.action style="primary"
-                        type="submit"
-                        text="{% trans "Sign Out Other Sessions" %}" />
-        {% else %}
-          <c-dac.action style="primary"
-                        type="submit"
-                        text="{% trans "Sign Out" %}" />
-        {% endif %}
-      </c-slot>
-    </c-dac.card>
-  </form>
-{% endblock content %}
+      </c-dac.table>
+    </c-dac.form>
+    <c-slot name="actions">
+      {% if session_count > 1 %}
+        <c-dac.action variant="secondary"
+                      type="submit"
+                      text="{% trans "Sign out other sessions" %}" />
+      {% else %}
+        <c-dac.action type="submit" text="{% trans "Sign Out" %}" />
+      {% endif %}
+    </c-slot>
+  </c-dac.card>
+</c-dac.page>

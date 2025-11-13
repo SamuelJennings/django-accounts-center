@@ -1,0 +1,5 @@
+{% load i18n %}
+
+<c-dac.entrance title="{% trans "Device Denied" %}"
+                subtitle="{% blocktranslate with client_name=client.name %}Authorization for your {{ client_name }} device has been denied.{% endblocktranslate %}">
+</c-dac.entrance>

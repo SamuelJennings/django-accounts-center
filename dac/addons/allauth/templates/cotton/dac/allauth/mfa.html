@@ -1,0 +1,7 @@
+{% load i18n %}
+
+{% trans "MFA" as var %}
+<c-dac.page :breadcrumbs="[{'text': '{{ var }}', 'href': '{% url 'mfa_index' %}'}]"
+            :attrs="attrs">
+  {{ slot }}
+</c-dac.page>

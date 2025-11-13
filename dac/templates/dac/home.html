@@ -1,9 +1,136 @@
 {% load i18n %}
 
-<c-dac>
-  <c-dac.title text="{% trans "Account Center" %}" />
-  <c-dac.text text="Here you can view and manage your personal details, security preferences, and account settings. Use the menu on the left to explore your options, and keep an eye on your dashboard for important updates and shortcuts to common tasks." />
-  <c-dac.action href="/"
-                style="primary"
-                text="{% trans "Return to site" %}" />
-</c-dac>
+<c-dac.page title="{% trans "Account Center" %}"
+            :breadcrumbs="False">
+  <div class="row g-2 px-0">
+    <!-- Account status card -->
+    <div class="col-12 col-sm-6 col-lg-3">
+      <c-dac.card>
+        <div class="d-flex align-items-center">
+          <div class="flex-shrink-0 text-success">
+            <svg width="24"
+                 height="24"
+                 fill="none"
+                 viewBox="0 0 24 24"
+                 stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div class="ms-3 flex-grow-1">
+            <div class="small text-muted text-truncate">{% trans "Account Status" %}</div>
+            <div class="fs-5 fw-semibold">{% trans "Active" %}</div>
+          </div>
+        </div>
+      </c-dac.card>
+    </div>
+    <!-- Profile completion card -->
+    <div class="col-12 col-sm-6 col-lg-3">
+      <c-dac.card>
+        <div class="d-flex align-items-center">
+          <div class="flex-shrink-0 text-primary">
+            <svg width="24"
+                 height="24"
+                 fill="none"
+                 viewBox="0 0 24 24"
+                 stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+          </div>
+          <div class="ms-3 flex-grow-1">
+            <div class="small text-muted text-truncate">{% trans "Profile" %}</div>
+            <div class="fs-5 fw-semibold">85% {% trans "Complete" %}</div>
+          </div>
+        </div>
+      </c-dac.card>
+    </div>
+    <!-- Security score card -->
+    <div class="col-12 col-sm-6 col-lg-3">
+      <c-dac.card>
+        <div class="d-flex align-items-center">
+          <div class="flex-shrink-0 text-warning">
+            <svg width="24"
+                 height="24"
+                 fill="none"
+                 viewBox="0 0 24 24"
+                 stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+          </div>
+          <div class="ms-3 flex-grow-1">
+            <div class="small text-muted text-truncate">{% trans "Security Score" %}</div>
+            <div class="fs-5 fw-semibold">{% trans "Good" %}</div>
+          </div>
+        </div>
+      </c-dac.card>
+    </div>
+    <!-- Last login card -->
+    <div class="col-12 col-sm-6 col-lg-3">
+      <c-dac.card>
+        <div class="d-flex align-items-center">
+          <div class="flex-shrink-0 text-secondary">
+            <svg width="24"
+                 height="24"
+                 fill="none"
+                 viewBox="0 0 24 24"
+                 stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div class="ms-3 flex-grow-1">
+            <div class="small text-muted text-truncate">{% trans "Last Login" %}</div>
+            <div class="fs-5 fw-semibold">{{ request.user.last_login|date:"M d, Y" }}</div>
+          </div>
+        </div>
+      </c-dac.card>
+    </div>
+  </div>
+  <!-- Security Settings -->
+  <c-dac.card title="Security and Privacy"
+              help_text="Manage your password, two-factor authentication, and privacy settings">
+    <c-dac.dashboard.status-item label="{% trans "Password" %}"
+                                 badge_style="success"
+                                 badge_text="{% trans "Strong" %}" />
+    <c-dac.dashboard.status-item label="{% trans "Two-Factor Auth" %}"
+                                 badge_style="warning"
+                                 badge_text="{% trans "Not Set" %}" />
+    <c-slot name="actions">
+      <c-dac.action text="{% trans "Security Settings" %}"
+                    href="{% url "account_change_password" %}" />
+    </c-slot>
+  </c-dac.card>
+  <!-- Account Activity -->
+  <c-dac.card title="Recent Activity"
+              help_text="View your recent account activity and login sessions">
+    <div class="d-flex align-items-center gap-3">
+      <div class="flex-shrink-0">
+        <span class="d-inline-block rounded-circle bg-success"
+              style="width: .5rem;
+                     height: .5rem"></span>
+      </div>
+      <div class="flex-grow-1 min-w-0">
+        <p class="mb-1 small">{% trans "Login successful" %}</p>
+        <p class="mb-0 text-muted small">{{ request.user.last_login|timesince }} {% trans "ago" %}</p>
+      </div>
+    </div>
+    <c-slot name="actions">
+      <c-dac.action text="{% trans "View All Activity" %}" href="#" />
+    </c-slot>
+  </c-dac.card>
+  <c-dac.card title="Quick Actions"
+              help_text="Common tasks and shortcuts">
+    <div class="d-grid gap-2">
+      <c-dac.action variant="secondary"
+                    text="{% trans "Download Data" %}"
+                    href="#"
+                    class="w-100 justify-content-center" />
+      <c-dac.action variant="secondary"
+                    text="{% trans "Support Center" %}"
+                    href="#"
+                    class="w-100 justify-content-center" />
+      <c-dac.action variant="danger"
+                    text="{% trans "Delete Account" %}"
+                    href="#"
+                    class="w-100 justify-content-center" />
+    </div>
+  </c-dac.card>
+</c-dac.page>

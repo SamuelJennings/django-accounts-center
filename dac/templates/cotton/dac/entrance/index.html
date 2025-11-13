@@ -1,0 +1,36 @@
+{% extends "dac/base.html" %}
+{% block title %}
+  {{ title }}
+{% endblock title %}
+
+{% block body %}
+  <div id="dac-entrance-layout"
+       class="min-vh-100 d-flex align-items-center justify-content-center py-5">
+    <div class="w-100" style="max-width: 28rem;">
+      <div class="d-grid gap-4">
+        <c-dac.entrance.brand-logo max_height="7rem" />
+        <c-dac.entrance.card>
+          <div class="text-center">
+            {% if type %}
+              <c-dac.icon :name="type"
+                          class="d-flex align-items-center justify-content-center mx-auto mb-3 text-primary"
+                          style="font-size: 2.5rem" />
+            {% endif %}
+            <h1 class="h4 fw-bold mb-2">{{ title }}</h1>
+            {% if subtitle %}<p class="text-muted mb-0 lh-sm">{{ subtitle }}</p>{% endif %}
+          </div>
+          {% if messages %}
+            <div class="mb-4">
+              {% for message in messages %}
+                <c-dac.alert variant="{{ message.tags }}"
+                             message="{{ message }}" />
+              {% endfor %}
+            </div>
+          {% endif %}
+          {{ slot }}
+        </c-dac.entrance.card>
+        <c-dac.entrance.footer />
+      </div>
+    </div>
+  </div>
+{% endblock body %}

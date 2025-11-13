@@ -1,0 +1,10 @@
+{% extends "dac/base.html" %}
+{% block title %}
+  {{ title }}
+{% endblock title %}
+
+{% block content %}
+  <h1 class="my-3">{{ title }}</h1>
+  {% if description %}<p class="text-muted fs-5 mb-0 lh-sm">{{ description }}</p>{% endif %}
+  <div class="d-flex flex-column gap-3">{{ slot }}</div>
+{% endblock content %}

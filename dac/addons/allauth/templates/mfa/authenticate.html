@@ -1,0 +1,76 @@
+<c-dac.entrance title="{% trans "Two-Factor Authentication" %}"
+                subtitle="{% trans "Your account is protected by two-factor authentication. Please enter an authenticator code:" %}">
+  {% url "mfa_authenticate" as action_url %}
+  {% render_form form action=action_url %}
+  <c-dac.entrance.action text="{% trans "Sign In" %}"
+                         type="submit"
+                         form="{{ form.helper.form_id }}">
+  </c-dac.entrance.action>
+  {% if "webauthn" not in MFA_SUPPORTED_TYPES %}
+    <c-dac.card.text small center>
+      <form id="logout-from-stage"
+            method="post"
+            action="{% url 'account_logout' %}"
+            style="display: inline">
+        <input type="hidden"
+               name="next"
+               value="{% url 'account_login' %}" />
+        {% csrf_token %}
+        <c-dac.link onclick="document.getElementById('logout-from-stage').submit(); return false;"
+                    text="{% trans "Cancel" %}" />
+      </form>
+    </c-dac.card.text>
+  {% endif %}
+  {% if "webauthn" in MFA_SUPPORTED_TYPES %}
+    <c-dac.card.divider text="{% trans "Alternative options" %}" />
+    <c-dac.action-group>
+      <c-dac.action variant="secondary"
+                    form="webauthn_form"
+                    id="mfa_webauthn_authenticate"
+                    type="button">
+        <c-slot name="icon">
+          <c-icons.mobile />
+        </c-slot>
+        {% trans "Receive a code via SMS" %}
+      </c-dac.action variant="secondary">
+      <form id="logout-from-stage-alt"
+            method="post"
+            action="{% url 'account_logout' %}">
+        <input type="hidden"
+               name="next"
+               value="{% url 'account_login' %}" />
+        {% csrf_token %}
+        <c-dac.action variant="secondary" type="submit">
+          {% trans "Cancel" %}
+        </c-dac.action variant="secondary">
+      </form>
+    </c-dac.action-group>
+    <form id="webauthn_form"
+          method="post"
+          action="{{ action_url }}"
+          style="display: none">
+      {% csrf_token %}
+      {% for field in webauthn_form %}{{ field.as_widget }}{% endfor %}
+    </form>
+    {{ js_data|json_script:"js_data" }}
+    {% include "mfa/webauthn/snippets/scripts.html" %}
+    <script data-allauth-onload="allauth.webauthn.forms.authenticateForm" type="application/json">
+      {
+        "ids": {
+          "authenticate": "mfa_webauthn_authenticate",
+          "credential": "{{ webauthn_form.credential.auto_id }}",
+          "data": "js_data"
+        }
+      }
+    </script>
+    <form id="logout-from-stage"
+          method="post"
+          action="{% url 'account_logout' %}"
+          style="display: none">
+      <input type="hidden"
+             name="next"
+             value="{% url 'account_login' %}" />
+      {% csrf_token %}
+    </form>
+  {% endif %}
+</c-dac.entrance>

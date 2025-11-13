@@ -9,6 +9,8 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+from .allauth_settings import *
+
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -32,10 +34,9 @@ INSTALLED_APPS = [
     "django.contrib.humanize",
     "compressor",
     "example",
-    "dac.themes.bs5",
     "dac",
     "dac.addons.allauth",
-    "dac.addons.stripe",
+    # "dac.addons.stripe",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
@@ -47,12 +48,14 @@ INSTALLED_APPS = [
     "easy_icons",
     "crispy_forms",
     "crispy_bootstrap5",
+    # "crispy_tailwind",
     "debug_toolbar",
     "flex_menu",
     "django_cotton",
     "cotton_bs5",
     "rest_framework",
     "drf_stripe",
+    "django_extensions",
     # "actstream",
 ]
 
@@ -111,25 +114,11 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_ALLOWED_TEMPLATE_PACKS = ["bootstrap5", "tailwind"]
 
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+# CRISPY_TEMPLATE_PACK = "tailwind"
 
-SOCIALACCOUNT_PROVIDERS = {
-    "orcid": {
-        "BASE_DOMAIN": "sandbox.orcid.org",  # for the sandbox API
-    },
-    "github": {"VERIFIED_EMAIL": True},
-    "google": {
-        "SCOPE": [
-            "profile",
-            "email",
-        ],
-        "AUTH_PARAMS": {
-            "access_type": "online",
-        },
-    },
-}
 
 INTERNAL_IPS = [
     "127.0.0.1",
@@ -186,16 +175,61 @@ STRIPE_PUBLIC_KEY = "pk_test_51RGyRcQrz3Ww3AL29Iwcjvz650cLcZ87ZEHpPLyLocWmWHvfjH
 LOGIN_URL = "/"
 LOGIN_REDIRECT_URL = "/account-center/"
 
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+if SOCIALACCOUNT_ONLY:
+    INSTALLED_APPS.remove("allauth.mfa")
+    ACCOUNT_EMAIL_VERIFICATION = "none"
+
+
 EASY_ICONS = {
-    "aliases": {
-        "github": "fab fa-github",
-        "google": "fab fa-google",
-        "orcid": "fab fa-orcid",
-        "delete": "delete.svg",
-        "lock": "lock.svg",
-        "check_circle": "check_circle.svg",
-        "account_center": "dac.svg",
+    # Default renderer - used when no renderer specified
+    "default": {
+        "renderer": "easy_icons.renderers.ProviderRenderer",
+        "config": {"tag": "i"},
+        "icons": {
+            "home": "fas fa-home",
+            "email": "fas fa-envelope",
+            "user": "fas fa-user",
+            "settings": "fas fa-cog",
+            "edit": "fas fa-edit",
+            "delete": "fas fa-trash",
+            "link": "fas fa-link",
+            "sessions": "fas fa-desktop",
+            "password": "fas fa-lock",
+            "password_change": "fas fa-key",
+            "mfa": "fas fa-shield-alt",
+            "success": "fas fa-check-circle",
+            "info": "fas fa-info-circle",
+            "warning": "fas fa-exclamation-triangle",
+            "error": "fas fa-times-circle",
+            "github": "fab fa-github",
+            "google": "fab fa-google",
+            "orcid": "fab fa-orcid",
+            "logout": "fas fa-sign-out-alt",
+        },
+    },
+    # Font Awesome for common UI icons
+    "svg": {
+        "renderer": "easy_icons.renderers.SvgRenderer",
+        "config": {"default_attrs": {"fill": "currentColor"}},
+        "icons": {
+            "github": "github.svg",
+            "google": "google.svg",
+            "orcid": "orcid.svg",
+            "dac": "dac.svg",
+            "entrance_check": "check.svg",
+            "entrance_warning": "warning.svg",
+            "account_center": "dac",
+        },
     },
 }
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+FLEX_MENUS = {
+    "renderers": {
+        "dac_sidebar": "dac.renderers.SidebarRenderer",
+        "dac_dropdown": "dac.renderers.DropdownRenderer",
+    },
+    "log_url_failures": DEBUG,
+}
