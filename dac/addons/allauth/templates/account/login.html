@@ -32,12 +32,11 @@
                                      type="submit"
                                      icon="lock" />
     </c-dac.form>
-    {% if form.password %}
+    {% comment %} {% if form.password %}
       <c-dac.card.text small>
-        <c-dac.link href="{% url "account_reset_password" %}"
-                    text="{% trans "Forgot your password?" %}" />
+        <c-dac.link href="{% url "account_reset_password" %}" text="{% trans "Forgot your password?" %}" />
       </c-dac.card.text>
-    {% endif %}
+    {% endif %} {% endcomment %}
   {% endif %}
   {% if not SOCIALACCOUNT_ONLY %}
     <c-dac.card.text small center>
