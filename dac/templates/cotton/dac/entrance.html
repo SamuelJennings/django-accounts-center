@@ -1,0 +1,30 @@
+{% extends "mvp/entrance.html" %}
+{% load i18n static %}
+
+{% block title %}
+  {{ title }}
+{% endblock title %}
+
+{% block content %}
+  {% if messages %}
+    <div class="mb-4">
+      {% for message in messages %}<c-alert variant="{{ message.tags }}" text="{{ message }}" />{% endfor %}
+    </div>
+  {% endif %}
+  <div class="container {% if not wide %}col-md-9 col-lg-5{% endif %} py-3 d-flex flex-column justify-content-center">
+    <c-card.wrapper class="p-4 pb-5" only>
+      <div class="text-center">
+        <img src="{% static "brand/logo.svg" %}"
+             class="img-fluid mb-2"
+             alt="{% trans "Account Center" %}"
+             style="max-height: 6rem"
+             width="auto"
+             height="auto" />
+      </div>
+      {% if title %}<h5 class="text-center">{{ title }}</h5>{% endif %}
+      {% if help %}<p class="text-muted text-center">{{ help }}</p>{% endif %}
+      {{ slot }}
+    </c-card.wrapper>
+    {{ footer }}
+  </div>
+{% endblock content %}
