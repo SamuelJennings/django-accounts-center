@@ -35,7 +35,9 @@ INSTALLED_APPS = [
     "compressor",
     "example",
     "dac",
+    # "dac.theme",
     "dac.addons.allauth",
+    "mvp",
     # "dac.addons.stripe",
     "allauth",
     "allauth.account",
@@ -56,6 +58,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "drf_stripe",
     "django_extensions",
+    "django_browser_reload",
+    "dj_urls_panel",
     # "actstream",
 ]
 
@@ -71,6 +75,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "allauth.account.middleware.AccountMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
+    "django_browser_reload.middleware.BrowserReloadMiddleware",
 ]
 
 ROOT_URLCONF = "example.urls"
@@ -187,32 +192,34 @@ EASY_ICONS = {
     "default": {
         "renderer": "easy_icons.renderers.ProviderRenderer",
         "config": {"tag": "i"},
+        "packs": ["mvp.utils.BS5_ICONS"],
         "icons": {
-            "home": "fas fa-home",
-            "email": "fas fa-envelope",
-            "user": "fas fa-user",
-            "settings": "fas fa-cog",
-            "edit": "fas fa-edit",
-            "delete": "fas fa-trash",
-            "link": "fas fa-link",
-            "sessions": "fas fa-desktop",
-            "password": "fas fa-lock",
-            "password_change": "fas fa-key",
-            "mfa": "fas fa-shield-alt",
-            "success": "fas fa-check-circle",
-            "info": "fas fa-info-circle",
-            "warning": "fas fa-exclamation-triangle",
-            "error": "fas fa-times-circle",
-            "github": "fab fa-github",
-            "google": "fab fa-google",
-            "orcid": "fab fa-orcid",
-            "logout": "fas fa-sign-out-alt",
+            "arrow-left": "bi bi-arrow-left",
+            "refresh": "bi bi-arrow-clockwise",
+            "cancel": "bi bi-x-circle",
+            "delete": "bi bi-trash-fill",
+            "add": "bi bi-plus-lg",
+            "edit": "bi bi-pencil-fill",
+            "email": "bi bi-envelope-fill",
+            "error": "bi bi-x-circle-fill",
+            "info": "bi bi-info-circle-fill",
+            "link": "bi bi-link-45deg",
+            "login": "bi bi-box-arrow-in-right",
+            "logout": "bi bi-box-arrow-right",
+            "mfa": "bi bi-shield-fill-check",
+            "password_change": "bi bi-key-fill",
+            "password": "bi bi-lock-fill",
+            "sessions": "bi bi-display",
+            "success": "bi bi-check-circle-fill",
+            "warning": "bi bi-exclamation-triangle-fill",
+            "passkey": "bi bi-key-fill",
+            "passcode": "bi bi-braces-asterisk",
         },
     },
     # Font Awesome for common UI icons
     "svg": {
         "renderer": "easy_icons.renderers.SvgRenderer",
-        "config": {"default_attrs": {"fill": "currentColor"}},
+        "config": {"default_attrs": {"fill": "currentColor", "height": "1em"}},
         "icons": {
             "github": "github.svg",
             "google": "google.svg",
@@ -226,10 +233,23 @@ EASY_ICONS = {
 }
 
 
+# settings.py
+DJ_URLS_PANEL_SETTINGS = {
+    # Exclude specific URL patterns
+    "EXCLUDE_URLS": [
+        r"^admin/",  # Exclude admin URLs
+        r"^__debug__/",  # Exclude debug toolbar
+    ],
+    # Enable/disable URL testing interface
+    "ENABLE_TESTING": True,  # Set to False in production
+    # Whitelist hosts for URL testing (SSRF protection)
+    "ALLOWED_HOSTS": None,  # or ['yourdomain.com']
+}
+
+
 FLEX_MENUS = {
     "renderers": {
-        "dac_sidebar": "dac.renderers.SidebarRenderer",
-        "dac_dropdown": "dac.renderers.DropdownRenderer",
+        "adminlte": "mvp.renderers.AdminLTERenderer",
     },
     "log_url_failures": DEBUG,
 }
