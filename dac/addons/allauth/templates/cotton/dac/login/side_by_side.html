@@ -1,0 +1,49 @@
+{% load i18n static mvp %}
+
+<c-vars message />
+{% slot_exists social_providers passcode passkey as left_column %}
+{% slot_exists login_form as right_column %}
+{% slot_exists passcode passkey as alt_methods %}
+<c-dac.entrance :wide="{% if left_column and right_column %}True{% endif %}">
+  <div class="container">
+    <div class="d-flex flex-column flex-md-row gap-5">
+      {% if left_column %}
+        <c-grid.col class="col-12 col-md">
+          <c-vstack>
+            {% if not social_providers|slot_is_empty %}
+              <p class="text-center fw-semibold mb-0">{% trans "3rd Party Providers" %}</p>
+              {{ social_providers }}
+            {% endif %}
+            {% if alt_methods %}
+              <p class="text-center fw-semibold mt-3 mb-0">{% trans "Alternative methods" %}</p>
+              {{ passcode }}
+              {{ passkey }}
+            {% endif %}
+          </c-vstack>
+        </c-grid.col>
+      {% endif %}
+      {% if left_column and right_column %}
+        <hr class="d-md-none" />
+        <div class="d-none d-md-block vr"></div>
+      {% endif %}
+      {% if right_column %}
+        <c-grid.col class="col-12 col-md">
+          <p class="text-center fw-semibold mb-0">{% trans "Login Form" %}</p>
+          {{ login_form }}
+        </c-grid.col>
+      {% endif %}
+    </div>
+  </div>
+  <c-slot name="footer">
+    <div class="w-100 text-center my-3">
+      <c-link href="/"
+              underline-opacity="0"
+              underline-hover-opacity="75">
+        <c-slot name="text">
+          {% trans "Return to Site" %}
+          <c-icon name="arrow-right" />
+        </c-slot>
+      </c-link>
+    </div>
+  </c-slot>
+</c-dac.entrance>

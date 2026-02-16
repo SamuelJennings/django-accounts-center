@@ -7,44 +7,51 @@
       <!-- Email badges -->
       <div class="d-flex gap-1">
         {% if email.primary %}
-          <c-dac.badge text="{% trans "Primary" %}" />
+          <c-badge text="{% trans "Primary" %}" />
         {% endif %}
         {% if email.verified %}
-          <c-dac.badge variant="success" text="{% trans "Verified" %}" />
+          <c-badge variant="success" text="{% trans "Verified" %}" />
         {% else %}
-          <c-dac.badge variant="secondary"
-                       text="{% trans "Unverified" %}" />
+          <c-badge variant="secondary"
+                   text="{% trans "Unverified" %}" />
         {% endif %}
       </div>
     </div>
     {% if email.primary %}
-      <div class="mt-1 text-sm text-gray-600">
+      <div class="mt-1 small text-muted">
         {% trans "This email address is the default for notifications and account-related activity." %}
       </div>
     {% endif %}
   </div>
-  <!-- Actions dropdown -->
-  <c-dac.dropdown label="{% trans "Manage email" %} {{ email.email }}">
+  <c-dropdown label="{% trans "Manage email" %} {{ email.email }}">
+    <c-slot name="button">
+      <c-button icon="settings"
+                class="hide-action-text"
+                text="Manage Email"
+                data-bs-toggle="dropdown"
+                aria-expanded="false" />
+    </c-slot>
     <form action="{% url "account_email" %}" method="post">
       {% csrf_token %}
       <input type="hidden"
              name="email"
              value="{{ email.email }}" />
       {% if not email.primary %}
-        <c-dac.dropdown.item type="submit"
-                             name="action_primary"
-                             text="{% trans "Make Primary" %}" />
+        <c-dropdown.item type="submit"
+                         name="action_primary"
+                         text="{% trans "Make Primary" %}" />
       {% endif %}
       {% if not email.verified %}
-        <c-dac.dropdown.item type="submit"
-                             name="action_send"
-                             text="{% trans "Re-send Verification" %}" />
+        <c-dropdown.item type="submit"
+                         name="action_send"
+                         text="{% trans "Re-send Verification" %}" />
       {% endif %}
-      <c-dac.dropdown.item type="submit"
-                           style="danger"
-                           name="action_remove"
-                           text="{% trans "Delete" %}"
-                           confirm="{% trans "Are you sure you want to remove this email address from your account?" %}" />
+      <c-dropdown.item type="submit"
+                       class="link-danger"
+                       icon="delete"
+                       name="action_remove"
+                       text="{% trans "Delete" %}"
+                       confirm="{% trans "Are you sure you want to remove this email address from your account?" %}" />
     </form>
-  </c-dac.dropdown>
+  </c-dropdown>
 </li>

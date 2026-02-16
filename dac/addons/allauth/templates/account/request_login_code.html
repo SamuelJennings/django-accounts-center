@@ -2,16 +2,17 @@
 
 <c-dac.entrance title="{% trans "Request sign-in code" %}"
                 subtitle="{% trans "We will send you a special code that allows you to sign in without a password." %}">
-    <c-dac.form method="post"
-                action="{% url "account_request_login_code" %}"
-                :form="form">
-        {{ redirect_field }}
-        <c-dac.entrance.action.primary text="{% trans "Request Code" %}"
-                                       type="submit"
-                                       form="{{ form.helper.form_id }}" />
-    </c-dac.form>
-    <c-dac.card.text small center>
-        <c-dac.link href="{% url "account_login" %}"
-                    text="{% trans "Other sign-in options" %}" />
-    </c-dac.card.text>
+  <c-dac.form method="post"
+              action="{% url "account_request_login_code" %}"
+              :form="form">
+    {{ redirect_field }}
+    <c-button variant="primary"
+              text="{% trans "Request Code" %}"
+              type="submit"
+              form="{{ form.helper.form_id }}" />
+  </c-dac.form>
+  <p class="text-center small">
+    <c-link href="{% url "account_login" %}"
+            text="{% trans "Other sign-in options" %}" />
+  </p>
 </c-dac.entrance>

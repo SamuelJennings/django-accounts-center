@@ -2,10 +2,13 @@
 
 <c-dac.entrance title="{% trans "Authentication required" %}"
                 subtitle="{% trans "For security, please re-enter your password" %}">
-    <c-dac.form method="post"
-                action="{% url "account_reauthenticate" %}"
-                :form="form">
-        {{ redirect_field }}
-        <c-dac.entrance.action.primary text="{% trans "Confirm" %}" type="submit" />
-    </c-dac.form>
+  <c-dac.form method="post"
+              action="{% url "account_reauthenticate" %}"
+              :form="form">
+    {{ redirect_field }}
+    <c-button variant="primary"
+              class="w-100"
+              text="{% trans "Confirm" %}"
+              type="submit" />
+  </c-dac.form>
 </c-dac.entrance>

@@ -1,0 +1,11 @@
+<section id="{{ title|slugify }}">
+  {% if heading %}<h2>{{ title }}</h2>{% endif %}
+  <c-grid>
+    <c-grid.col md="8">
+      {{ slot }}
+    </c-grid.col>
+    <c-grid.col md="4">
+      {{ aside }}
+    </c-grid.col>
+  </c-grid>
+</section>

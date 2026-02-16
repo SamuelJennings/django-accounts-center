@@ -1,50 +1,56 @@
 {% load i18n socialaccount %}
 
 <c-dac.page title="{% trans "Account Connections" %}">
-    <c-dac.card title="{% trans "Account Connections" %}">
-        {% if form.accounts %}
-            <p class="text-sm text-gray-600 mb-4">
-                {% blocktrans %}You can sign in to your account using any of the following third-party accounts:{% endblocktrans %}
-            </p>
-            {% url "socialaccount_connections" as action_url %}
-            <form method="post"
-                  action="{{ action_url }}"
-                  class="space-y-6">
-                {% csrf_token %}
-                <div class="space-y-4">
-                    {% for acc in form.fields.account.choices %}
-                        {% with account=acc.0.instance.get_provider_account %}
-                            <div class="flex items-center space-x-3 p-4 border border-gray-200 rounded-lg">
-                                <input type="radio"
-                                       name="account"
-                                       value="{{ account.account.pk }}"
-                                       id="{{ radio_id }}"
-                                       class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300" />
-                                <label for="{{ radio_id }}"
-                                       class="flex-1 flex items-center justify-between">
-                                    <span class="text-sm text-gray-900">{{ account }}</span>
-                                    <c-dac.badge style="primary">
-                                        {{ account.get_brand.name }}
-                                    </c-dac.badge>
-                                </label>
-                            </div>
-                        {% endwith %}
-                    {% endfor %}
+  <c-page.form-section>
+    <c-card title="{% trans "Account Connections" %}"
+            icon="link">
+      {% if form.accounts %}
+        <p class="text-sm text-gray-600 mb-4">
+          {% blocktrans %}You can sign in to your account using any of the following third-party accounts:{% endblocktrans %}
+        </p>
+        {% url "socialaccount_connections" as action_url %}
+        <form method="post"
+              action="{{ action_url }}"
+              class="space-y-6"
+              id="accountConnectionsForm">
+          {% csrf_token %}
+          <div class="space-y-4">
+            {% for acc in form.fields.account.choices %}
+              {% with account=acc.0.instance.get_provider_account %}
+                <div class="flex items-center space-x-3 p-4 border border-gray-200 rounded-lg">
+                  <input type="radio"
+                         name="account"
+                         value="{{ account.account.pk }}"
+                         id="{{ radio_id }}"
+                         class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300" />
+                  <label for="{{ radio_id }}"
+                         class="flex-1 flex items-center justify-between">
+                    <span class="text-sm text-gray-900">{{ account }}</span>
+                    <c-badge style="primary">
+                      {{ account.get_brand.name }}
+                    </c-badge>
+                  </label>
                 </div>
-                <c-dac.action variant="danger"
-                              type="submit"
-                              text="{% trans "Remove" %}"
-                              class="inline-flex items-center" />
-            </form>
-        {% else %}
-            <p class="text-sm text-gray-600">
-                {% trans "You currently have no third-party accounts connected to this account." %}
-            </p>
-        {% endif %}
-    </c-dac.card>
-    <c-dac.card title="{% trans "Connect Account" %}">
-        {% get_providers as socialaccount_providers %}
-        {% include "socialaccount/provider_list.html" with process="connect" %}
-        {% providers_media_js %}
-    </c-dac.card>
+              {% endwith %}
+            {% endfor %}
+          </div>
+        </form>
+        <c-slot name="footer_end">
+          <c-button variant="danger"
+                    type="submit"
+                    form="accountConnectionsForm"
+                    text="{% trans "Remove" %}" />
+        </c-slot>
+      {% else %}
+        <p class="text-sm text-gray-600">
+          {% trans "You currently have no third-party accounts connected to this account." %}
+        </p>
+      {% endif %}
+    </c-card>
+  </c-page.form-section>
+  <c-card title="{% trans "Connect Account" %}">
+    {% get_providers as socialaccount_providers %}
+    {% include "socialaccount/provider_list.html" with process="connect" %}
+    {% providers_media_js %}
+  </c-card>
 </c-dac.page>

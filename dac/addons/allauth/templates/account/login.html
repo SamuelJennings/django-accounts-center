@@ -1,52 +1,49 @@
 {% load i18n socialaccount dac %}
 
-<c-dac.entrance title="{% trans "Welcome" %}"
-                subtitle="{% trans "Sign in using your preferred method below" %}">
-  {% get_providers as socialaccount_providers %}
-  <c-dac.action-group vstack>
+{% get_providers as socialaccount_providers %}
+<c-component is="dac.login.side-by-side"
+             help="{% trans "Login to your account using the method you signed up with" %}">
+  <c-slot name="social_providers">
     {% if socialaccount_providers %}
       {% include "socialaccount/provider_list.html" %}
     {% endif %}
-    {% if LOGIN_BY_CODE_ENABLED or PASSKEY_LOGIN_ENABLED %}
-      <c-dac.entrance.action.secondary href="{{ request_login_code_url }}"
-                                       text="{% trans "Sign in with a code" %}"
-                                       icon="passcode"
-                                       :visible="LOGIN_BY_CODE_ENABLED" />
-      <c-dac.entrance.action.secondary text="{% trans "Sign in with passkey" %}"
-                                       type="submit"
-                                       form="mfa_login"
-                                       id="passkey_login"
-                                       icon="passkey"
-                                       :visible="PASSKEY_LOGIN_ENABLED" />
-    {% endif %}
-  </c-dac.action-group>
+  </c-slot>
+  <c-slot name="passkey">
+    <c-button text="{% trans "Sign in with passkey" %}"
+              class="p-2 w-100 border-secondary-subtle justify-content-center align-items-center"
+              type="submit"
+              form="mfa_login"
+              id="passkey_login"
+              icon="passkey"
+              :condition="PASSKEY_LOGIN_ENABLED" />
+  </c-slot>
+  <c-slot name="passcode">
+    <c-button href="{{ request_login_code_url }}"
+              class="p-2 w-100 border-secondary-subtle justify-content-center align-items-center"
+              text="{% trans "Sign in with a code" %}"
+              icon="passcode"
+              :condition="LOGIN_BY_CODE_ENABLED" />
+  </c-slot>
   {% if not SOCIALACCOUNT_ONLY %}
-    <c-dac.card.divider text="{% trans "Or continue with email" %}" />
-  {% endif %}
-  {% if not SOCIALACCOUNT_ONLY %}
-    <c-dac.form method="post"
-                action="{% url "account_login" %}"
-                :form="form">
-      {{ redirect_field }}
-      <c-dac.entrance.action.primary text="{% trans "Sign In" %}"
-                                     type="submit"
-                                     icon="lock" />
-    </c-dac.form>
-    {% if form.password %}
-      <c-dac.card.text small>
-        <c-dac.link href="{% url "account_reset_password" %}"
-                    text="{% trans "Forgot your password?" %}" />
-      </c-dac.card.text>
-    {% endif %}
-  {% endif %}
-  {% if not SOCIALACCOUNT_ONLY %}
-    <c-dac.card.text small center>
-      {% trans "Don't have an account?" %}
-      <c-dac.link href="{{ signup_url }}"
-                  text="{% trans "Sign up now" %}" />
-    </c-dac.card.text>
+    <c-slot name="login_form">
+      <c-dac.form method="post"
+                  action="{% url "account_login" %}"
+                  :form="form">
+        {{ redirect_field }}
+        <c-button text="{% trans "Sign In" %}"
+                  class="p-2 w-100 justify-content-center align-items-center"
+                  variant="primary"
+                  type="submit"
+                  icon="login" />
+      </c-dac.form>
+      <p class="text-center small mt-2">
+        {% trans "Don't have an account?" %}
+        <c-link href="{{ signup_url }}"
+                text="{% trans "Sign up now" %}" />
+      </p>
+    </c-slot>
   {% endif %}
   {% if PASSKEY_LOGIN_ENABLED %}
     {% include "mfa/webauthn/snippets/login_script.html" with button_id="passkey_login" %}
   {% endif %}
-</c-dac.entrance>
+</c-component>

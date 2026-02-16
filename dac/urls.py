@@ -9,7 +9,7 @@ urlpatterns = [
 ]
 
 if "dac.addons.allauth" in settings.INSTALLED_APPS:
-    urlpatterns.append(path("account/", include("dac.addons.allauth.urls")))
+    # urlpatterns.append(path("account/", include("dac.addons.allauth.urls")))
     urlpatterns.append(path("", include("allauth.urls")))
 if "dac.addons.stripe" in settings.INSTALLED_APPS:
     urlpatterns.append(path("", include("dac.addons.stripe.urls")))
