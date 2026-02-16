@@ -1,9 +1,8 @@
-from django.conf import settings
 from django.urls import include, path
+from mvp.utils import app_is_installed
+
+ALLAUTH = app_is_installed("allauth")
 
 urlpatterns = []
-if "dac.addons.allauth" in settings.INSTALLED_APPS:
+if ALLAUTH:
     urlpatterns.append(path("", include("allauth.urls")))
-
-if "dac.addons.actstream" in settings.INSTALLED_APPS:
-    urlpatterns.append(path("activity/", include("dac.addons.actstream.urls")))

@@ -1,0 +1,51 @@
+{% load static i18n %}
+
+<c-vars show_name="md" />
+<li class="nav-item dropdown user-menu">
+  <a href="#"
+     class="nav-link dropdown-toggle"
+     data-bs-toggle="dropdown"
+     aria-expanded="false">
+    <img src="{% static "dac/demo-profile.jpg" %}"
+         class="user-image rounded-circle shadow"
+         alt="User Image" />
+    <span class="d-none d-{{ show_name }}-inline">{{ user }}</span>
+  </a>
+  <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end"
+      data-bs-popper="static">
+    <li class="user-header text-bg-primary">
+      <img src="{% static "dac/demo-profile.jpg" %}"
+           class="rounded-circle shadow"
+           alt="User Image" />
+      <p>
+        {{ user }}
+        <small>Member since {{ user.date_joined|date:"M. Y" }}</small>
+      </p>
+    </li>
+    {% comment %} <li class="user-body">
+      <div class="row">
+        <div class="col-4 text-center">
+          <a href="#">Followers</a>
+        </div>
+        <div class="col-4 text-center">
+          <a href="#">Sales</a>
+        </div>
+        <div class="col-4 text-center">
+          <a href="#">Friends</a>
+        </div>
+      </div>
+    </li> {% endcomment %}
+    <!--begin::Menu Footer-->
+    <li class="user-footer">
+      <a href="{% url "account-center" %}"
+         class="btn btn-default btn-flat">{% trans "Account Center" %}</a>
+      <form action="{% url "account_logout" %}"
+            method="POST"
+            class="float-end">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-default btn-flat ">{% trans "Sign out" %}</button>
+      </form>
+    </li>
+    <!--end::Menu Footer-->
+  </ul>
+</li>

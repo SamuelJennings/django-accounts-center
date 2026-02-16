@@ -1,20 +1,20 @@
 {% load i18n cotton dac allauth %}
 
 <c-dac.allauth.mfa title="{% trans "Deactivate Authenticator App" %}">
-    <c-dac.card title="{% trans "Deactivate Authenticator App" %}">
-        <c-dac.card.text text="{% trans "You are about to deactivate authenticator app based authentication. Are you sure?" %}" />
-        {% url "mfa_deactivate_totp" as action_url %}
-        <form method="post" action="{{ action_url }}">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <c-slot name="actions">
-                <c-dac.action variant="danger" type="submit">
-                    {% trans "Deactivate" %}
-                </c-dac.action variant="danger">
-                <c-dac.action variant="secondary" href="{% url "mfa_index" %}">
-                    {% trans "Cancel" %}
-                </c-dac.action variant="secondary">
-            </c-slot>
-        </form>
-    </c-dac.card>
+  <c-card title="{% trans "Deactivate Authenticator App" %}">
+    <p>{% trans "You are about to deactivate authenticator app based authentication. Are you sure?" %}</p>
+    {% url "mfa_deactivate_totp" as action_url %}
+    <form method="post" action="{{ action_url }}">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <c-slot name="actions">
+        <c-button variant="danger" type="submit">
+          {% trans "Deactivate" %}
+        </c-button variant="danger">
+        <c-button variant="secondary" href="{% url "mfa_index" %}">
+          {% trans "Cancel" %}
+        </c-button variant="secondary">
+      </c-slot>
+    </form>
+  </c-card>
 </c-dac.allauth.mfa>

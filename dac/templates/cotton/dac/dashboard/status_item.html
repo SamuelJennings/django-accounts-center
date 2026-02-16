@@ -1,9 +1,0 @@
-{% load i18n %}
-
-<div class="d-flex align-items-center justify-content-between py-3 border-bottom">
-  <span class="fw-medium">{{ label }}</span>
-  {% if badge_style %}
-    <c-dac.badge variant="{{ badge_style }}"
-                 text="{{ badge_text }}" />
-  {% endif %}
-</div>

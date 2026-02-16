@@ -1,0 +1,28 @@
+<c-dac.entrance>
+  <div class="w-100 py-3" style="max-width: 28rem;">
+    <div class="vstack gap-4">
+      <c-card.wrapper class="p-3" only>
+        {% comment %} <c-dac.entrance.brand-logo max_height="7rem" /> {% endcomment %}
+        {% if subtitle %}
+          <div class="text-center mb-4">
+            <p class="text-muted mb-0 lh-sm">{{ subtitle }}</p>
+          </div>
+        {% endif %}
+        <c-vstack>
+          {{ social_providers }}
+          {{ passcode }}
+          {{ passkey }}
+        </c-vstack>
+        {% if not SOCIALACCOUNT_ONLY %}
+          <c-card.divider text="{% trans "Or continue with email" %}" />
+        {% endif %}
+        {{ login_form }}
+      </c-card.wrapper>
+      <div class="text-center pt-4">
+        <p class="text-muted mb-0">
+          <a class="fw-medium text-decoration-none" href="/">{% trans "Return to Site" %}</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</c-dac.entrance>

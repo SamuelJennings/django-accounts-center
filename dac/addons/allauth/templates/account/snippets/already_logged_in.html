@@ -1,6 +1,6 @@
 {% load i18n account %}
 
 {% user_display user as user_display %}
-<c-dac.alert variant="info">
-    {% blocktranslate %}<strong>Note:</strong> You are already logged in as {{ user_display }}.{% endblocktranslate %}
-</c-dac.alert>
+<c-alert variant="info">
+  {% blocktranslate %}<strong>Note:</strong> You are already logged in as {{ user_display }}.{% endblocktranslate %}
+</c-alert>
