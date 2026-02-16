@@ -145,6 +145,7 @@ EASY_ICONS = {
         "renderer": "easy_icons.renderers.ProviderRenderer",
         "config": {"tag": "i"},
         "icons": {
+            "arrow-left": "fas fa-arrow-left",
             "home": "fas fa-home",
             "email": "fas fa-envelope",
             "user": "fas fa-user",

@@ -13,6 +13,8 @@ urlpatterns = [
         UpdateView.as_view(model=get_user_model(), fields=["username", "first_name", "last_name"]),
         name="profile-edit",
     ),
+    path("admin/dj-urls-panel/", include("dj_urls_panel.urls")),
     path("admin/", admin.site.urls),
+    path("__reload__/", include("django_browser_reload.urls")),
     *debug_toolbar_urls(),
 ]
