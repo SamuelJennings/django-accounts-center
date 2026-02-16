@@ -1,59 +1,75 @@
 {% load i18n humanize dac %}
 
+<style>
+  th {
+    white-space: nowrap;
+  }
+</style>
 <c-dac.page title="{% trans "Sessions" %}">
-  <c-dac.card title="{% trans "Sessions" %}">
-    {% if session_count > 1 %}
-      {% url "usersessions_list" as action_url %}
-    {% else %}
-      {% url "account_logout" as action_url %}
-    {% endif %}
-    <c-dac.form method="post" action="{{ action_url }}">
-      {% csrf_token %}
-      <c-dac.table>
-        <thead>
-          <tr>
-            <th>{% trans "Started At" %}</th>
-            <th>{% trans "IP Address" %}</th>
-            <th>{% trans "Browser" %}</th>
-            {% if show_last_seen_at %}
-              <th>{% trans "Last seen at" %}</th>
-            {% endif %}
-            <th>{% trans "Status" %}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for session in sessions %}
-            <tr>
-              <td>
-                <span title="{{ session.created_at }}">{{ session.created_at|naturaltime }}</span>
-              </td>
-              <td>{{ session.ip }}</td>
-              <td>{{ session.user_agent }}</td>
-              {% if show_last_seen_at %}
-                <td>
-                  <span title="{{ session.last_seen_at }}">{{ session.last_seen_at|naturaltime }}</span>
-                </td>
-              {% endif %}
-              <td>
-                {% if session.is_current %}
-                  <c-dac.badge style="success">
-                    {% trans "Current" %}
-                  </c-dac.badge>
-                {% endif %}
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </c-dac.table>
-    </c-dac.form>
-    <c-slot name="actions">
+  <c-page.form-section>
+    <c-card title="{% trans "Sessions" %}" icon="sessions">
       {% if session_count > 1 %}
-        <c-dac.action variant="secondary"
-                      type="submit"
-                      text="{% trans "Sign out other sessions" %}" />
+        {% url "usersessions_list" as action_url %}
       {% else %}
-        <c-dac.action type="submit" text="{% trans "Sign Out" %}" />
+        {% url "account_logout" as action_url %}
       {% endif %}
-    </c-slot>
-  </c-dac.card>
+      <c-dac.form method="post"
+                  action="{{ action_url }}"
+                  id="sessionForm">
+        {% csrf_token %}
+        <div class="table-responsive">
+          <table class="table table-hover align-middle border-0">
+            <thead>
+              <tr>
+                <th>{% trans "Started At" %}</th>
+                <th>{% trans "IP Address" %}</th>
+                <th>{% trans "Browser" %}</th>
+                {% if show_last_seen_at %}
+                  <th>{% trans "Last seen at" %}</th>
+                {% endif %}
+                <th>{% trans "Status" %}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for session in sessions %}
+                <tr>
+                  <td>
+                    <span title="{{ session.created_at }}">{{ session.created_at|naturaltime }}</span>
+                  </td>
+                  <td>{{ session.ip }}</td>
+                  <td>{{ session.user_agent }}</td>
+                  {% if show_last_seen_at %}
+                    <td>
+                      <span title="{{ session.last_seen_at }}">{{ session.last_seen_at|naturaltime }}</span>
+                    </td>
+                  {% endif %}
+                  <td>
+                    {% if session.is_current %}
+                      <c-badge style="success">
+                        {% trans "Current" %}
+                      </c-badge>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </c-dac.form>
+      <c-slot name="footer_end">
+        {% if session_count > 1 %}
+          <c-button variant="secondary"
+                    type="submit"
+                    form="sessionForm"
+                    text="{% trans "Sign Out All" %}" />
+        {% else %}
+          <c-button type="submit"
+                    variant="secondary"
+                    form="sessionForm"
+                    icon="logout"
+                    text="{% trans "Sign Out" %}" />
+        {% endif %}
+      </c-slot>
+    </c-card>
+  </c-page.form-section>
 </c-dac.page>

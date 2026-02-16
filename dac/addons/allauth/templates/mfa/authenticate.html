@@ -1,13 +1,14 @@
 <c-dac.entrance title="{% trans "Two-Factor Authentication" %}"
-                subtitle="{% trans "Your account is protected by two-factor authentication. Please enter an authenticator code:" %}">
+                help="{% trans "Your account is protected by two-factor authentication. Please enter an authenticator code:" %}">
   {% url "mfa_authenticate" as action_url %}
   {% render_form form action=action_url %}
-  <c-dac.entrance.action text="{% trans "Sign In" %}"
-                         type="submit"
-                         form="{{ form.helper.form_id }}">
-  </c-dac.entrance.action>
+  <c-button variant="primary"
+            text="{% trans "Sign In" %}"
+            type="submit"
+            form="{{ form.helper.form_id }}">
+  </c-button variant="primary">
   {% if "webauthn" not in MFA_SUPPORTED_TYPES %}
-    <c-dac.card.text small center>
+    <p class="text-center small">
       <form id="logout-from-stage"
             method="post"
             action="{% url 'account_logout' %}"
@@ -16,23 +17,23 @@
                name="next"
                value="{% url 'account_login' %}" />
         {% csrf_token %}
-        <c-dac.link onclick="document.getElementById('logout-from-stage').submit(); return false;"
-                    text="{% trans "Cancel" %}" />
+        <c-link onclick="document.getElementById('logout-from-stage').submit(); return false;"
+                text="{% trans "Cancel" %}" />
       </form>
-    </c-dac.card.text>
+    </p>
   {% endif %}
   {% if "webauthn" in MFA_SUPPORTED_TYPES %}
-    <c-dac.card.divider text="{% trans "Alternative options" %}" />
-    <c-dac.action-group>
-      <c-dac.action variant="secondary"
-                    form="webauthn_form"
-                    id="mfa_webauthn_authenticate"
-                    type="button">
+    <c-card.divider text="{% trans "Alternative options" %}" />
+    <c-hstack>
+      <c-button variant="secondary"
+                form="webauthn_form"
+                id="mfa_webauthn_authenticate"
+                type="button">
         <c-slot name="icon">
           <c-icons.mobile />
         </c-slot>
         {% trans "Receive a code via SMS" %}
-      </c-dac.action variant="secondary">
+      </c-button variant="secondary">
       <form id="logout-from-stage-alt"
             method="post"
             action="{% url 'account_logout' %}">
@@ -40,11 +41,11 @@
                name="next"
                value="{% url 'account_login' %}" />
         {% csrf_token %}
-        <c-dac.action variant="secondary" type="submit">
+        <c-button variant="secondary" type="submit">
           {% trans "Cancel" %}
-        </c-dac.action variant="secondary">
+        </c-button variant="secondary">
       </form>
-    </c-dac.action-group>
+    </c-hstack>
     <form id="webauthn_form"
           method="post"
           action="{{ action_url }}"

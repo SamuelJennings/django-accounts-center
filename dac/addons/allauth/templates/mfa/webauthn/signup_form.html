@@ -1,15 +1,16 @@
 {% load i18n static dac %}
 
 <c-dac.entrance title="{% trans "Create Passkey" %}"
-                subtitle="{% trans "You are about to create a passkey for your account. As you can add additional keys later on, you can use a descriptive name to tell the keys apart." %}">
+                help="{% trans "You are about to create a passkey for your account. As you can add additional keys later on, you can use a descriptive name to tell the keys apart." %}">
   {% url "mfa_signup_webauthn" as action_url %}
   {% render_form form action=action_url %}
-  <c-dac.entrance.action text="{% trans "Create" %}"
-                         type="button"
-                         id="mfa_webauthn_signup"
-                         form="{{ form.helper.form_id }}">
-  </c-dac.entrance.action>
-  <c-dac.card.text small center>
+  <c-button variant="primary"
+            text="{% trans "Create" %}"
+            type="button"
+            id="mfa_webauthn_signup"
+            form="{{ form.helper.form_id }}">
+  </c-button variant="primary">
+  <p class="text-center small">
     <form id="logout-from-stage"
           method="post"
           action="{% url "account_logout" %}"
@@ -18,10 +19,10 @@
              name="next"
              value="{% url "account_login" %}" />
       {% csrf_token %}
-      <c-dac.link onclick="document.getElementById('logout-from-stage').submit(); return false;"
-                  text="{% trans "Cancel" %}" />
+      <c-link onclick="document.getElementById('logout-from-stage').submit(); return false;"
+              text="{% trans "Cancel" %}" />
     </form>
-  </c-dac.card.text>
+  </p>
 </c-dac.entrance>
 {% block extra_body %}
   {{ block.super }}

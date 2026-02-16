@@ -1,59 +1,65 @@
 {% load i18n %}
 
 <c-dac.page title="{% trans "Change Phone" %}">
-    <c-dac.card title="{% trans "Change Phone" %}">
-        {% url "account_change_phone" as action_url %}
-        <form method="post" action="{{ action_url }}">
-            {% csrf_token %}
-            {% if phone %}
-                <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">{% trans "Current phone" %}:</label>
-                    <input type="tel"
-                           value="{{ phone }}"
-                           disabled
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-500" />
-                    {% if not phone_verified %}
-                        <c-dac.alert variant="warning">
-                            {% trans "Your phone number is still pending verification." %}
-                            <c-dac.action variant="secondary"
-                                          form="verify-phone"
-                                          type="submit"
-                                          size="small"
-                                          variant="link">
-                                {% trans "Re-send Verification" %}
-                            </c-dac.action variant="secondary">
-                        </c-dac.alert>
-                    {% endif %}
-                </div>
+  <c-page.form-section>
+    <c-card title="{% trans "Change Phone" %}" icon="phone">
+      {% url "account_change_phone" as action_url %}
+      <form method="post"
+            action="{{ action_url }}"
+            id="changePhoneForm">
+        {% csrf_token %}
+        {% if phone %}
+          <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-700 mb-2">{% trans "Current phone" %}:</label>
+            <input type="tel"
+                   value="{{ phone }}"
+                   disabled
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-500" />
+            {% if not phone_verified %}
+              <c-alert variant="warning">
+                {% trans "Your phone number is still pending verification." %}
+                <c-button variant="secondary"
+                          form="verify-phone"
+                          type="submit"
+                          size="small"
+                          variant="link">
+                  {% trans "Re-send Verification" %}
+                </c-button>
+              </c-alert>
             {% endif %}
-            <div class="mb-6">
-                <label for="{{ form.phone.auto_id }}"
-                       class="block text-sm font-medium text-gray-700 mb-2">{% trans "Change to" %}:</label>
-                <input type="tel"
-                       id="{{ form.phone.auto_id }}"
-                       name="phone"
-                       value="{{ form.phone.value|default:"" }}"
-                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" />
-                {% if form.phone.errors %}
-                    <div class="mt-2 text-sm text-red-600">
-                        {% for error in form.phone.errors %}<p>{{ error }}</p>{% endfor %}
-                    </div>
-                {% endif %}
+          </div>
+        {% endif %}
+        <div class="mb-6">
+          <label for="{{ form.phone.auto_id }}"
+                 class="block text-sm font-medium text-gray-700 mb-2">{% trans "Change to" %}:</label>
+          <input type="tel"
+                 id="{{ form.phone.auto_id }}"
+                 name="phone"
+                 value="{{ form.phone.value|default:"" }}"
+                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" />
+          {% if form.phone.errors %}
+            <div class="mt-2 text-sm text-red-600">
+              {% for error in form.phone.errors %}<p>{{ error }}</p>{% endfor %}
             </div>
-            <c-slot name="actions">
-                <c-dac.action type="submit" name="action_add">
-                    {% trans "Change Phone" %}
-                </c-dac.action>
-            </c-slot>
-        </form>
-    </c-dac.card>
-    {% if not phone_verified %}
+          {% endif %}
+        </div>
+      </form>
+      {% if not phone_verified %}
         <form style="display: none"
               id="verify-phone"
               method="post"
               action="{{ action_url }}">
-            {% csrf_token %}
-            <input type="hidden" name="action" value="verify" />
+          {% csrf_token %}
+          <input type="hidden" name="action" value="verify" />
         </form>
-    {% endif %}
+      {% endif %}
+      <c-slot name="footer_end">
+        <c-button type="submit"
+                  form="changePhoneForm"
+                  name="action_add"
+                  variant="primary"
+                  text="{% trans "Change Phone" %}" />
+      </c-slot>
+    </c-card>
+  </c-page.form-section>
 </c-dac.page>

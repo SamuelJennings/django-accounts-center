@@ -1,20 +1,24 @@
 {% load i18n %}
 
 <c-dac.page title="{% trans "Remove Security Key" %}">
-    <c-dac.card title="{% trans "Remove Security Key" %}"
-                subtitle="{% trans "Are you sure you want to remove this security key?" %}">
-        <form method="post"
-              action="{% url "mfa_remove_webauthn" pk=authenticator.pk %}">
-            {% csrf_token %}
-            <c-slot name="actions">
-                <c-dac.action variant="danger" type="submit">
-                    {% trans "Remove" %}
-                </c-dac.action variant="danger">
-                <c-dac.action variant="secondary"
-                              href="{% url "mfa_list_webauthn" %}">
-                    {% trans "Cancel" %}
-                </c-dac.action variant="secondary">
-            </c-slot>
-        </form>
-    </c-dac.card>
+  <c-page.form-section>
+    <c-card title="{% trans "Remove Security Key" %}"
+            icon="delete">
+      <p>{% trans "Are you sure you want to remove this security key?" %}</p>
+      <form method="post"
+            action="{% url "mfa_remove_webauthn" pk=authenticator.pk %}"
+            id="removeSecurityKeyForm">
+        {% csrf_token %}
+      </form>
+      <c-slot name="footer_end">
+        <c-button variant="secondary"
+                  href="{% url "mfa_list_webauthn" %}"
+                  text="{% trans "Cancel" %}" />
+        <c-button variant="danger"
+                  type="submit"
+                  form="removeSecurityKeyForm"
+                  text="{% trans "Remove" %}" />
+      </c-slot>
+    </c-card>
+  </c-page.form-section>
 </c-dac.page>
