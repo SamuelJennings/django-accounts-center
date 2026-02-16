@@ -3,8 +3,12 @@
   {{ title }}
 {% endblock title %}
 
-{% block content %}
-  <h1 class="my-3">{{ title }}</h1>
-  {% if description %}<p class="text-muted fs-5 mb-0 lh-sm">{{ description }}</p>{% endif %}
-  <div class="d-flex flex-column gap-3">{{ slot }}</div>
-{% endblock content %}
+{% block main %}
+  <c-page>
+    <c-page.content class="container pt-4 pb-4">
+      <c-page.header header="{{ title }}" class="mb-3" />
+      {% if description %}<p class="text-muted fs-5 mb-0 lh-sm">{{ description }}</p>{% endif %}
+      <div class="d-flex flex-column gap-3">{{ slot }}</div>
+    </c-page.content>
+  </c-page>
+{% endblock main %}
