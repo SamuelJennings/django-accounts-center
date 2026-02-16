@@ -1,13 +1,17 @@
 {% load i18n %}
 
 <c-dac.page title="{% trans "Sign Out" %}">
-    <c-dac.card.text>
-        {% trans "Are you sure you want to sign out?" %}
-    </c-dac.card.text>
-    <c-dac.form method="post" action="{% url "account_logout" %}">
+  <c-page.form-section>
+    <c-card title="{% trans "Sign Out" %}" icon="logout">
+      <p>{% trans "Are you sure you want to sign out?" %}</p>
+      <c-dac.form method="post" action="{% url "account_logout" %}">
         {{ redirect_field }}
-        <c-dac.action type="submit"
-                      text="{% trans "Sign Out" %}"
-                      class="inline-flex items-center" />
-    </c-dac.form>
+      </c-dac.form>
+      <c-slot name="footer_end">
+        <c-button type="submit"
+                  variant="primary"
+                  text="{% trans "Sign Out" %}" />
+      </c-slot>
+    </c-card>
+  </c-page.form-section>
 </c-dac.page>

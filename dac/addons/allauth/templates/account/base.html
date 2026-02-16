@@ -1,0 +1,11 @@
+{% comment %} {% extends "dac/base.html" %} {% endcomment %}
+{% load i18n %}
+
+{% comment %} {% block main %} {% endcomment %}
+<c-dac.page title="{% block header %}{% endblock header %}
+   ">
+  {% block content %}
+  {% endblock content %}
+
+</c-dac.page>
+{% comment %} {% endblock main %} {% endcomment %}

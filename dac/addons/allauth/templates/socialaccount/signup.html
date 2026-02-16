@@ -1,14 +1,14 @@
 {% load i18n %}
 
 <c-dac.entrance title="{% trans "Sign Up" %}"
-                subtitle="{% blocktrans with provider_name=account.get_provider.name site_name=site.name %}You are about to use your {{provider_name}} account to login to {{site_name}}. As a final step, please complete the following form:{% endblocktrans %}">
-    <c-dac.form method="post"
-                action="{% url "socialaccount_signup" %}"
-                :form="form">
-        {{ redirect_field }}
-        {% comment %} {% for field in form %}
+                help="{% blocktrans with provider_name=account.get_provider.name site_name=site.name %}You are about to use your {{provider_name}} account to login to {{site_name}}. As a final step, please complete the following form:{% endblocktrans %}">
+  <c-dac.form method="post"
+              action="{% url "socialaccount_signup" %}"
+              :form="form">
+    {{ redirect_field }}
+    {% comment %} {% for field in form %}
             <c-dac.form.field name="{{ field.name }}" field_id="{{ field.id_for_label }}" label="{{ field.label }}" input_type="{{ field.field.widget.input_type|default:'text' }}" :value="field.value" :required="field.field.required" :errors="field.errors" :subtitle="field.help_text" />
-        {% endfor %} {% endcomment %}
-        <c-dac.action type="submit" text="{% trans "Sign Up" %}" />
-    </c-dac.form>
+    {% endfor %} {% endcomment %}
+    <c-button type="submit" text="{% trans "Sign Up" %}" />
+  </c-dac.form>
 </c-dac.entrance>
