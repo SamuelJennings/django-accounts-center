@@ -1,0 +1,11 @@
+{% load cotton_bs5 %}
+
+<c-vars variant
+        opacity
+        opacity-hover
+        underline
+        offset
+        underline-opacity
+        underline-hover-opacity />
+<a class="{{ variant|prefix:"link" }} {{ opacity|prefix:"link-opacity" }} {{ opacity_hover|prefix:"link-opacity"|postfix:"hover" }} {{ underline|prefix:"link-underline" }} {{ offset|prefix:"link-offset" }} {{ underline_opacity|prefix:"link-underline-opacity" }} {{ underline_hover_opacity|prefix:"link-underline-opacity"|postfix:"hover" }} {% if underline_opacity or underline_hover_opacity %}link-underline{% endif %}"
+   {{ attrs }}>{{ text }}{{ slot }}</a>
