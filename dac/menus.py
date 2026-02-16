@@ -26,7 +26,6 @@ AuthenticatedUserMenu = Menu(
     ],
 )
 
-# Groups all django-account-center menus under a single menu
 AccountManagement = Menu(
     name=_("Django Account Center"),
     children=[AccountCenterMenu, AuthenticatedUserMenu],
