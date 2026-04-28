@@ -9,7 +9,7 @@ authors = [{ name = "Sam", email = "samuel.scott.jennings@gmail.com" }]
 requires-python = ">=3.12,<4.0"
 dependencies = [
     "django (>5.2,<6.0)",
-    "django-mvp @ git+https://github.com/SamuelJennings/django-mvp",
+    "django-mvp @ file:///D:/coding/django/django-mvp",
 ]
 
 [tool.poetry]
