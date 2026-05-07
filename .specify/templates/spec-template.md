@@ -8,19 +8,21 @@
 ## User Scenarios & Testing *(mandatory)*
 
 <!--
-  IMPORTANT: User stories should be PRIORITIZED as user journeys ordered by importance.
-  Each user story/journey must be INDEPENDENTLY TESTABLE - meaning if you implement just ONE of them,
-  you should still have a viable MVP (Minimum Viable Product) that delivers value.
-  
-  Assign priorities (P1, P2, P3, etc.) to each story, where P1 is the most critical.
-  Think of each story as a standalone slice of functionality that can be:
-  - Developed independently
-  - Tested independently
-  - Deployed independently
-  - Demonstrated to users independently
+  IMPORTANT: User stories MUST represent BOTH developer and end-user audiences
+  (Principle XI). At least one [Developer] story and one [End User] story are
+  required for the spec to be considered complete.
+
+  - [Developer] stories: integrator experience — configuring addons, wiring URLs,
+    overriding templates, understanding the public API.
+  - [End User] stories: runtime experience of a logged-in user managing their account.
+
+  Stories should be PRIORITIZED as user journeys ordered by importance.
+  Each user story/journey must be INDEPENDENTLY TESTABLE.
+
+  Assign priorities (P1, P2, P3, etc.) where P1 is the most critical.
 -->
 
-### User Story 1 - [Brief Title] (Priority: P1)
+### User Story 1 - [Brief Title] (Priority: P1) **[Developer | End User]**
 
 [Describe this user journey in plain language]
 
@@ -35,7 +37,7 @@
 
 ---
 
-### User Story 2 - [Brief Title] (Priority: P2)
+### User Story 2 - [Brief Title] (Priority: P2) **[Developer | End User]**
 
 [Describe this user journey in plain language]
 
@@ -49,7 +51,7 @@
 
 ---
 
-### User Story 3 - [Brief Title] (Priority: P3)
+### User Story 3 - [Brief Title] (Priority: P3) **[Developer | End User]**
 
 [Describe this user journey in plain language]
 

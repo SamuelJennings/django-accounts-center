@@ -56,39 +56,24 @@ specs/[###-feature]/
 -->
 
 ```text
-# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
-src/
-├── models/
-├── services/
-├── cli/
-└── lib/
+# Django Accounts Center project layout
+dac/
+├── views/          # or views.py for simple features
+├── forms.py
+├── menus.py
+├── urls.py
+├── addons/
+│   └── <package_name>/   # isolated addon per third-party integration
+└── templates/
+    ├── cotton/     # custom Cotton components (last resort — see Principle IX)
+    └── dac/        # view templates and third-party template overrides
 
 tests/
-├── contract/
-├── integration/
-└── unit/
-
-# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
-backend/
-├── src/
-│   ├── models/
-│   ├── services/
-│   └── api/
-└── tests/
-
-frontend/
-├── src/
-│   ├── components/
-│   ├── pages/
-│   └── services/
-└── tests/
-
-# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
-api/
-└── [same as backend above]
-
-ios/ or android/
-└── [platform-specific structure: feature modules, UI flows, platform tests]
+├── test_components/  # Cotton component tests grouped by top-level cotton dir
+├── test_views.py     # (or test_views/ directory)
+├── test_forms.py
+└── test_addons/
+    └── test_<package_name>/
 ```
 
 **Structure Decision**: [Document the selected structure and reference the real

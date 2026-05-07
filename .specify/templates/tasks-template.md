@@ -20,10 +20,11 @@ description: "Task list template for feature implementation"
 
 ## Path Conventions
 
-- **Single project**: `src/`, `tests/` at repository root
-- **Web app**: `backend/src/`, `frontend/src/`
-- **Mobile**: `api/src/`, `ios/src/` or `android/src/`
-- Paths shown below assume single project - adjust based on plan.md structure
+- **Package source**: `dac/` at repository root (views, forms, menus, urls, addons)
+- **Addon source**: `dac/addons/<package_name>/` per isolated third-party integration
+- **Templates**: `dac/templates/dac/` for view templates; `dac/templates/cotton/` for custom Cotton components
+- **Tests**: `tests/` mirroring the `dac/` source tree; Cotton component tests under `tests/test_components/`
+- Adjust paths based on `plan.md` structure for the specific feature
 
 <!-- 
   ============================================================================
@@ -96,6 +97,9 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] T017 [US1] Add logging for user story 1 operations
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
+
+- [ ] TVAL-1 [US1] Run `python manage.py check` — MUST pass with no errors
+- [ ] TVAL-2 [US1] Run `poetry run pytest tests/` for the touched area — MUST pass
 
 ---
 
