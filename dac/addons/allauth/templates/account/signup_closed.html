@@ -1,5 +1,12 @@
+{% extends "account/base_entrance.html" %}
 {% load i18n %}
 
-<c-dac.entrance title="{% trans "Sign Up Closed" %}"
-                subtitle="{% trans "We are sorry, but the sign up is currently closed." %}"
-                type="warning" />
+{% block title %}
+  {% trans "Sign Up Closed" %}
+{% endblock title %}
+
+{% block content %}
+  <c-entrance.text lead>
+    {% trans "Sign up for this site is currently closed." %}
+  </c-entrance.text>
+{% endblock content %}

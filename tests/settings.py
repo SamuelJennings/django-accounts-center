@@ -10,6 +10,8 @@ when testing optional features like passkeys, MFA, or social login.
 
 from pathlib import Path
 
+from example.settings import EASY_ICONS, FLEX_MENUS  # noqa: F401
+
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 
 SECRET_KEY = "test-secret-key-for-testing-only"
@@ -34,9 +36,12 @@ INSTALLED_APPS = [
     "example",
     "dac",
     "dac.addons.allauth",
+    "mvp",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
+    "allauth.socialaccount.providers.github",
     "allauth.mfa",
     "allauth.usersessions",
     "easy_icons",
@@ -60,7 +65,7 @@ MIDDLEWARE = [
     "allauth.account.middleware.AccountMiddleware",
 ]
 
-ROOT_URLCONF = "example.urls"
+ROOT_URLCONF = "tests.urls"
 
 TEMPLATES = [
     {
@@ -87,7 +92,7 @@ DATABASES = {
 AUTH_PASSWORD_VALIDATORS = []
 
 STATIC_URL = "/static/"
-STATIC_ROOT = str(BASE_DIR / "test_static")
+STATIC_ROOT = str(BASE_DIR / "static")
 
 STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.FileSystemFinder",
@@ -103,6 +108,16 @@ STORAGES = {
 
 COMPRESS_ENABLED = False
 COMPRESS_OFFLINE = False
+COMPRESS_PRECOMPILERS = (("text/x-scss", "django_libsass.SassCompiler"),)
+COMPRESS_FILTERS = {
+    "css": [
+        "compressor.filters.css_default.CssAbsoluteFilter",
+        "compressor.filters.cssmin.rCSSMinFilter",
+    ],
+    "js": ["compressor.filters.jsmin.JSMinFilter"],
+}
+COMPRESS_OUTPUT_DIR = "CACHE"
+COMPRESS_STORAGE = "compressor.storage.CompressorFileStorage"
 
 CACHES = {
     "default": {
@@ -130,7 +145,11 @@ ACCOUNT_EMAIL_VERIFICATION = "none"
 
 # Disable optional features by default (enable in specific tests)
 MFA_PASSKEY_LOGIN_ENABLED = False
+MFA_PASSKEY_SIGNUP_ENABLED = True
+MFA_SUPPORTED_TYPES = ["totp", "webauthn", "recovery_codes"]
+MFA_WEBAUTHN_ALLOW_INSECURE_ORIGIN = True
 ACCOUNT_LOGIN_BY_CODE_ENABLED = False
+
 
 # Email backend for testing
 EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
@@ -139,48 +158,4 @@ EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
 LOGIN_URL = "/"
 LOGIN_REDIRECT_URL = "/account-center/"
 
-# Easy Icons configuration
-EASY_ICONS = {
-    "default": {
-        "renderer": "easy_icons.renderers.ProviderRenderer",
-        "config": {"tag": "i"},
-        "icons": {
-            "arrow-left": "fas fa-arrow-left",
-            "home": "fas fa-home",
-            "email": "fas fa-envelope",
-            "user": "fas fa-user",
-            "settings": "fas fa-cog",
-            "edit": "fas fa-edit",
-            "delete": "fas fa-trash",
-            "link": "fas fa-link",
-            "sessions": "fas fa-desktop",
-            "password": "fas fa-lock",
-            "password_change": "fas fa-key",
-            "mfa": "fas fa-shield-alt",
-            "success": "fas fa-check-circle",
-            "info": "fas fa-info-circle",
-            "warning": "fas fa-exclamation-triangle",
-            "error": "fas fa-times-circle",
-            "logout": "fas fa-sign-out-alt",
-        },
-    },
-    "svg": {
-        "renderer": "easy_icons.renderers.SvgRenderer",
-        "config": {"default_attrs": {"fill": "currentColor"}},
-        "icons": {
-            "dac": "dac.svg",
-            "entrance_check": "check.svg",
-            "entrance_warning": "warning.svg",
-            "account_center": "dac",
-        },
-    },
-}
-
-# Flex Menu configuration
-FLEX_MENUS = {
-    "renderers": {
-        "dac_sidebar": "dac.renderers.SidebarRenderer",
-        "dac_dropdown": "dac.renderers.DropdownRenderer",
-    },
-    "log_url_failures": DEBUG,
-}
+# EASY_ICONS and FLEX_MENUS are imported from example.settings at the top of this file.

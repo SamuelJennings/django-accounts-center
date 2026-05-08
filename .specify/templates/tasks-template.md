@@ -24,7 +24,27 @@ description: "Task list template for feature implementation"
 - **Addon source**: `dac/addons/<package_name>/` per isolated third-party integration
 - **Templates**: `dac/templates/dac/` for view templates; `dac/templates/cotton/` for custom Cotton components
 - **Tests**: `tests/` mirroring the `dac/` source tree; Cotton component tests under `tests/test_components/`
+- **Screenshots**: `docs/_static/desktop/` and `docs/_static/mobile/` for persisted viewport artifacts;
+  screenshot tests live in root `screenshots/` (excluded from normal `pytest` runs; run with `pytest screenshots/`)
 - Adjust paths based on `plan.md` structure for the specific feature
+
+## UI Screenshot Tasks (Principle XIII)
+
+Any phase that modifies visible UI MUST include screenshot-capture tasks following
+this pattern. Add one task per page affected, with a sub-task per settings
+permutation when the page has multiple visual states:
+
+```
+- [ ] TXXX [Story] Capture viewport screenshots for <page-name>
+      - Add/update pytest-playwright screenshot test in `screenshots/`
+        (e.g., `screenshots/test_<page-name>_screenshots.py`)
+      - Run with `pytest screenshots/` to generate files at desktop (1440×900),
+        tablet (768×1024), and mobile (390×844)
+      - Save to docs/_static/{desktop,tablet,mobile}/<page-name>.png
+      - If page has settings permutations, capture each:
+          docs/_static/desktop/<page-name>-<config-slug>.png (+ tablet, mobile)
+      - Commit both the screenshot test file and generated PNG files
+```
 
 <!-- 
   ============================================================================

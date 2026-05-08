@@ -1,31 +1,34 @@
+{% extends "mfa/recovery_codes/base.html" %}
 {% load i18n %}
+{% load allauth %}
 
-<c-dac.allauth.mfa title="{% trans "Generate Recovery Codes" %}">
-  <c-card title="{% trans "Generate Recovery Codes" %}"
-          help_text="{% trans "You are about to generate a new set of recovery codes for your account." %}">
-    {% if unused_code_count %}
-      <c-alert variant="warning">
-        <strong>{% trans "Warning:" %}</strong>
-        {% trans "This action will invalidate your existing codes." %}
-      </c-alert>
-    {% endif %}
-    <p>{% trans "Are you sure?" %}</p>
-    {% url "mfa_generate_recovery_codes" as action_url %}
-    <form method="post" action="{{ action_url }}">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <c-slot name="actions">
-        {% if unused_code_count %}
-          <c-button variant="danger"
-                    type="submit"
-                    text="{% trans "Generate" %}" />
-        {% else %}
-          <c-button type="submit" text="{% trans "Generate" %}" />
-        {% endif %}
-        <c-button variant="secondary"
-                  href="{% url "mfa_view_recovery_codes" %}"
-                  text="{% trans "Cancel" %}" />
-      </c-slot>
-    </form>
-  </c-card>
-</c-dac.allauth.mfa>
+{% block content %}
+  {% element h1 %}
+  {% translate "Recovery Codes" %}
+{% endelement %}
+{% element p %}
+{% blocktranslate %}You are about to generate a new set of recovery codes for your account.{% endblocktranslate %}
+{% if unused_code_count %}
+  {% blocktranslate %}This action will invalidate your existing codes.{% endblocktranslate %}
+{% endif %}
+{% blocktranslate %}Are you sure?{% endblocktranslate %}
+{% endelement %}
+{% url 'mfa_generate_recovery_codes' as action_url %}
+{% element form method="post" action=action_url no_visible_fields=True %}
+{% slot body %}
+{% csrf_token %}
+{{ form.as_p }}
+{% endslot %}
+{% slot actions %}
+{% setvar tags %}
+{% if unused_code_count %}
+  danger
+{% else %}
+{% endif %}
+{% endsetvar %}
+{% element button type="submit" tags=tags %}
+{% trans "Generate" %}
+{% endelement %}
+{% endslot %}
+{% endelement %}
+{% endblock content %}

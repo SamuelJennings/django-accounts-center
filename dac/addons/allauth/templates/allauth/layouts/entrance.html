@@ -1,0 +1,23 @@
+{% extends "allauth/layouts/base.html" %}
+{% load i18n %}
+
+{% block app %}
+  <body>
+    <c-messages dismissible animate />
+    <c-entrance cols="12" md="8" lg="5">
+      <c-slot name="title">
+        {% block title %}
+        {% endblock title %}
+
+      </c-slot>
+      {% block content %}
+      {% endblock content %}
+
+      <c-slot name="footer">
+        {% block footer %}
+        {% endblock footer %}
+
+      </c-slot>
+    </c-entrance>
+  </body>
+{% endblock app %}

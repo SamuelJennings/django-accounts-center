@@ -16,7 +16,7 @@ auto_commit:
     enabled: false
     message: "[Spec Kit] Save progress before clarification"
   before_plan:
-    enabled: false
+    enabled: true
     message: "[Spec Kit] Save progress before planning"
   before_tasks:
     enabled: false
@@ -37,16 +37,16 @@ auto_commit:
     enabled: true
     message: "[Spec Kit] Add project constitution"
   after_specify:
-    enabled: true
+    enabled: false
     message: "[Spec Kit] Add specification"
   after_clarify:
-    enabled: true
+    enabled: false
     message: "[Spec Kit] Clarify specification"
   after_plan:
     enabled: true
     message: "[Spec Kit] Add implementation plan"
   after_tasks:
-    enabled: true
+    enabled: false
     message: "[Spec Kit] Add tasks"
   after_implement:
     enabled: true

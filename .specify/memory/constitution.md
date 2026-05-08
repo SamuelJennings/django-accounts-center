@@ -1,5 +1,61 @@
 <!--
 Sync Impact Report
+- Version change: 1.1.1 → 1.1.2
+- Change type: PATCH — Clarified Principle XIII to document that screenshot tests
+  MUST live in the root `screenshots/` directory (not inside `tests/`), are excluded
+  from normal pytest runs via `testpaths = ["tests"]`, and are regenerated explicitly
+  with `pytest screenshots/`. No structural principle changes; this formalises the
+  existing project layout convention.
+- Modified principles:
+  - Principle XIII: added "Screenshot test location & invocation" bullet to
+    Implementation Rules
+- Added sections: none
+- Removed sections: none
+- Templates requiring updates:
+  - .specify/templates/tasks-template.md ✅ Updated Path Conventions and screenshot
+    task pattern to reference `screenshots/` directory and `pytest screenshots/`
+  - .specify/templates/plan-template.md ✅ Added `screenshots/` to project structure
+  - .specify/templates/spec-template.md — no update required
+- Deferred items: none
+
+--- Previous Report (v1.1.1, 2026-05-07) ---
+- Version change: 1.1.0 → 1.1.1
+- Change type: PATCH — Clarified Principle XIII to add mandatory agent visual
+  verification step. Implementing agents MUST inspect generated screenshot files
+  (not merely run the tests) before closing any UI task. No structural changes;
+  intent of the principle is unchanged.
+- Modified principles:
+  - Principle XIII: added "Agent visual verification" bullet to Implementation Rules
+- Added sections: none
+- Removed sections: none
+- Templates requiring updates:
+  - .specify/templates/plan-template.md — no update required
+  - .specify/templates/tasks-template.md — no update required
+  - .specify/templates/spec-template.md — no update required
+- Deferred items: none
+
+--- Previous Report (v1.1.0, 2026-05-07) ---
+- Version change: 1.0.0 → 1.1.0
+- Change type: MINOR — Added Principle XIII (Multi-Viewport Screenshot Coverage).
+  This principle mandates that all UI-modifying tasks must be accompanied by
+  pytest-playwright screenshot tests capturing two canonical viewport sizes
+  (desktop 1440×900, tablet 768×1024, mobile 390×844) and persisting them under
+  docs/_static/{desktop,tablet,mobile}/. Settings-permutation screenshots are
+  required for any page whose visual output varies by configuration.
+- Modified principles: none
+- Added sections:
+  - Principle XIII: Multi-Viewport Screenshot Coverage (NON-NEGOTIABLE)
+- Removed sections: none
+- Templates requiring updates:
+  - .specify/templates/plan-template.md ✅ Updated project structure to include
+    docs/_static/ screenshot directories
+  - .specify/templates/tasks-template.md ✅ Added screenshot capture task note
+    for UI-modifying phases
+  - .specify/templates/spec-template.md — no update required (screenshot
+    requirements are implementation-phase concerns, not spec-level)
+- Deferred items: none
+
+--- Previous Report (v1.0.0, 2026-05-07) ---
 - Version change: (blank template) → 1.0.0
 - Change type: MAJOR — Initial ratification of the Django Accounts Center constitution
   from blank speckit template. All twelve principles authored from scratch,
@@ -335,6 +391,87 @@ quality gate and a knowledge-transfer artifact.
   an agent can determine all available knobs and extension points without reading
   every parent class.
 
+### XIII. Multi-Viewport Screenshot Coverage (NON-NEGOTIABLE)
+
+All tasks that modify UI MUST be accompanied by automated Playwright tests that
+capture screenshots at three canonical viewport sizes and persist them as visual
+documentation artifacts under `docs/_static/`.
+
+**Viewport Sizes** (MUST be used consistently across all screenshot tests):
+
+| Tier    | Width | Height | Representative device   |
+|---------|-------|--------|-------------------------|
+| Desktop | 1440  | 900    | 13″ laptop / wide monitor |
+| Tablet  | 768   | 1024   | iPad portrait            |
+| Mobile  | 390   | 844    | iPhone 12 / 13 portrait  |
+
+**Storage Convention**:
+
+Screenshots MUST be saved under `docs/_static/` partitioned by viewport tier:
+
+```
+docs/_static/
+├── desktop/<page-name>.png
+└── mobile/<page-name>.png
+```
+
+Where `<page-name>` is the lowercase-kebab slug of the page being captured
+(e.g., `signup-page`, `account-settings`, `login-page`).
+
+**Settings-Permutation Requirement** (NON-NEGOTIABLE):
+
+For any page whose visual output varies based on Django or package settings (e.g.,
+whether social accounts are enabled, MFA is active, or a specific addon is installed),
+a full set of three viewport screenshots MUST be captured for **each distinct visible
+configuration**. Permutation screenshots MUST follow the naming pattern
+`<page-name>-<config-slug>.png`. Examples:
+
+```
+docs/_static/desktop/signup-page-social-enabled.png
+docs/_static/desktop/signup-page-social-disabled.png
+docs/_static/desktop/signup-page-social-only.png
+...
+```
+
+All reachable settings permutations that produce a visually distinct page state MUST
+be documented with screenshots. A permutation is "visually distinct" if it adds,
+removes, or materially rearranges any visible UI element.
+
+**Implementation Rules**:
+
+- Screenshot capture MUST be implemented as pytest-playwright tests (see Principle
+  VIII), NOT as one-off scripts or manual captures.
+- Screenshot tests MUST live under the root `screenshots/` directory (e.g.,
+  `screenshots/test_signup_screenshots.py`), NOT inside the `tests/` tree. Because
+  `pyproject.toml` sets `testpaths = ["tests"]`, a plain `pytest` invocation never
+  discovers the `screenshots/` directory, keeping normal test runs fast. To
+  regenerate screenshots explicitly, run `pytest screenshots/`.
+- Tests MUST use `@pytest.mark.parametrize` or a viewport fixture to switch across
+  all three sizes without duplicating assertion logic.
+- Screenshots MUST be committed to the repository alongside the code change that
+  introduces the UI modification; a PR that changes UI without updated screenshots
+  MUST NOT be merged.
+- CI MUST execute the screenshot tests so screenshots are regenerated on each run and
+  any visual regression that produces a diff causes a deliberate review step.
+- Screenshots are **living documentation**; stale screenshots (not updated when the
+  UI changes) constitute a quality failure equivalent to a failing test.
+- The `docs/_static/desktop/` and `docs/_static/mobile/`
+  directories MUST be created before the first screenshot test runs; if they do not
+  exist, the test setup MUST create them.
+- **Agent visual verification (NON-NEGOTIABLE)**: Implementing agents MUST visually
+  inspect the screenshots produced by the playwright screenshot tests/scripts before
+  marking any UI task complete. Running the tests is not sufficient — the agent MUST
+  open and review the generated screenshot files to confirm the rendered output
+  matches the acceptance criteria. Any discrepancy observed in a screenshot MUST be
+  resolved before the task is closed.
+
+**Rationale**: Account management UIs must remain coherent across device categories.
+Visual regressions on tablet and mobile viewports are routinely invisible to developers
+working only on desktop. Persisted screenshots provide reviewers, project maintainers,
+and future agents with an authoritative visual reference for every page state and
+settings permutation, reducing the risk of silent regressions and misaligned
+integrations.
+
 ## Quality Gates
 
 The following gates MUST pass for every pull request that changes runtime behavior:
@@ -345,7 +482,11 @@ The following gates MUST pass for every pull request that changes runtime behavi
 - Documentation is updated when public behavior changes.
 - `python manage.py check` passes with no errors.
 
-If a change affects UI output or interaction, add or update pytest-playwright coverage.
+If a change affects UI output or interaction:
+
+- Add or update pytest-playwright coverage (Principle VIII).
+- Capture and commit viewport screenshots for all three tiers (desktop, tablet,
+  mobile) and all distinct settings permutations (Principle XIII).
 
 ## Development Workflow
 
@@ -379,4 +520,4 @@ conventions.
 - MINOR: Adds a principle/section or materially expands guidance.
 - PATCH: Clarifies wording or fixes typos without changing intent.
 
-**Version**: 1.0.0 | **Ratified**: 2026-05-07 | **Last Amended**: 2026-05-07
+**Version**: 1.1.2 | **Ratified**: 2026-05-07 | **Last Amended**: 2026-05-08

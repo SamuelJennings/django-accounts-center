@@ -18,6 +18,8 @@
 stripe.exe
 .vscode
 screenshots/*
+!screenshots/README.md
+!screenshots/*.py
 COMPREHENSIVE_TESTING_STRATEGY.md
 .github/instructions/
 

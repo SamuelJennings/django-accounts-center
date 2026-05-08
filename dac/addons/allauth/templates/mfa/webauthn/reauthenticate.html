@@ -1,37 +1,31 @@
-{% load i18n dac %}
+{% extends "account/base_reauthenticate.html" %}
+{% load i18n %}
+{% load allauth %}
 
-<c-dac.entrance title="{% trans "Confirm Access" %}"
-                help="{% trans "Please reauthenticate to safeguard your account." %}">
-  {% url "mfa_reauthenticate_webauthn" as action_url %}
-  {% render_form form action=action_url %}
-  <c-button variant="primary"
-            text="{% trans "Use a security key" %}"
-            type="submit"
-            id="mfa_webauthn_reauthenticate"
-            form="{{ form.helper.form_id }}">
-    <c-slot name="icon">
-      <c-icons.security_key />
-    </c-slot>
-  </c-button variant="primary">
-  {{ js_data|json_script:"js_data" }}
-  {% include "mfa/webauthn/snippets/scripts.html" %}
-  <script data-allauth-onload="allauth.webauthn.forms.authenticateForm" type="application/json">
-    {
-      "ids": {
-        "authenticate": "mfa_webauthn_reauthenticate",
-        "credential": "{{ form.credential.auto_id }}",
-        "data": "js_data"
-      }
+{% block reauthenticate_content %}
+  {% url 'mfa_reauthenticate_webauthn' as action_url %}
+  {% element form form=form method="post" action=action_url %}
+  {% slot body %}
+  {% csrf_token %}
+  {% element fields form=form unlabeled=True %}
+{% endelement %}
+{{ redirect_field }}
+{% endslot %}
+{% slot actions %}
+{% element button id="mfa_webauthn_reauthenticate" type="submit" tags="primary,mfa,login" %}
+{% trans "Use a security key" %}
+{% endelement %}
+{% endslot %}
+{% endelement %}
+{{ js_data|json_script:"js_data" }}
+{% include "mfa/webauthn/snippets/scripts.html" %}
+<script data-allauth-onload="allauth.webauthn.forms.authenticateForm" type="application/json">
+  {
+    "ids": {
+      "authenticate": "mfa_webauthn_reauthenticate",
+      "credential": "{{ form.credential.auto_id }}",
+      "data": "js_data"
     }
-  </script>
-  {% if reauthentication_alternatives %}
-    <c-card.divider text="{% trans "Alternative options" %}" />
-    <c-hstack>
-      {% for alt in reauthentication_alternatives %}
-        <c-button variant="secondary" href="{{ alt.url }}">
-          {{ alt.description }}
-        </c-button variant="secondary">
-      {% endfor %}
-    </c-hstack>
-  {% endif %}
-</c-dac.entrance>
+  }
+</script>
+{% endblock %}

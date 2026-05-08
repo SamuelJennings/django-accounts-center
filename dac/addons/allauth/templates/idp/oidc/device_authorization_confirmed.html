@@ -1,5 +1,16 @@
+{% extends "idp/oidc/base.html" %}
 {% load i18n %}
+{% load allauth %}
 
-<c-dac.entrance title="{% trans "Device Authorized" %}"
-                help="{% blocktranslate with client_name=client.name %}You successfully authorized your {{ client_name }} device.{% endblocktranslate %}">
-</c-dac.entrance>
+{% block head_title %}
+  {% trans "Authorize" %}
+{% endblock head_title %}
+
+{% block content %}
+  {% element h1 %}
+  {% trans "Device Authorized" %}
+{% endelement %}
+{% element p %}
+{% blocktranslate with client_name=client.name %}You successfully authorized your {{ client_name }} device.{% endblocktranslate %}
+{% endelement %}
+{% endblock %}

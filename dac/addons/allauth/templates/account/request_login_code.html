@@ -1,18 +1,32 @@
-{% load i18n dac %}
+{% extends "account/base_entrance.html" %}
+{% load i18n %}
+{% load allauth account %}
 
-<c-dac.entrance title="{% trans "Request sign-in code" %}"
-                subtitle="{% trans "We will send you a special code that allows you to sign in without a password." %}">
-  <c-dac.form method="post"
-              action="{% url "account_request_login_code" %}"
-              :form="form">
-    {{ redirect_field }}
-    <c-button variant="primary"
-              text="{% trans "Request Code" %}"
-              type="submit"
-              form="{{ form.helper.form_id }}" />
-  </c-dac.form>
-  <p class="text-center small">
-    <c-link href="{% url "account_login" %}"
-            text="{% trans "Other sign-in options" %}" />
-  </p>
-</c-dac.entrance>
+{% block head_title %}
+  {% translate "Sign In" %}
+{% endblock head_title %}
+
+{% block content %}
+  {% element h1 %}
+  {% translate "Send me a sign-in code" %}
+{% endelement %}
+{% element p %}
+{% blocktranslate %}You will receive a special code for a password-free sign-in.{% endblocktranslate %}
+{% endelement %}
+{% element form form=form method="post" action=request_login_code_url tags="entrance,login" %}
+{% slot body %}
+{% csrf_token %}
+{% element fields form=form unlabeled=True %}
+{% endelement %}
+{{ redirect_field }}
+{% endslot %}
+{% slot actions %}
+{% element button type="submit" tags="prominent,login" %}
+{% translate "Request Code" %}
+{% endelement %}
+{% endslot %}
+{% endelement %}
+{% element button href=login_url tags="link" %}
+{% translate "Other sign-in options" %}
+{% endelement %}
+{% endblock content %}

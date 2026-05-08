@@ -1,19 +1,26 @@
+{% extends "account/base_entrance.html" %}
 {% load i18n %}
 
-<c-dac.entrance title="{% trans "Signup" %}"
-                subtitle="{% trans "Passkey Sign Up" %}">
-  <c-dac.form method="post"
-              action="{% url "account_signup_by_passkey" %}"
-              :form="form">
+{% block title %}
+  {% trans "Sign up with a passkey" %}
+{% endblock title %}
+
+{% block content %}
+  <c-form method="post"
+          action="{% url "account_signup_by_passkey" %}">
+    <c-form.crispy />
     {{ redirect_field }}
-    <c-button variant="primary"
-              text="{% trans "Sign Up" %}"
-              type="submit"
-              form="{{ form.helper.form_id }}" />
-  </c-dac.form>
-  <c-card.divider text="{% trans "Or" %}" />
-  <p class="text-center small">
-    <c-link href="{{ signup_url }}"
-            text="{% trans "Other options" %}" />
-  </p>
-</c-dac.entrance>
+    <c-button.stack class="mt-4">
+      <c-button text="{% trans "Create passkey" %}"
+                icon="passkey"
+                size="lg"
+                type="submit"
+                variant="primary" />
+    </c-button.stack>
+  </c-form>
+  <c-entrance.text class="mt-4 mb-0">
+    {% if signup_url %}
+      <a href="{{ signup_url }}">{% trans "Sign up with alternative method" %}</a>
+    {% endif %}
+  </c-entrance.text>
+{% endblock content %}

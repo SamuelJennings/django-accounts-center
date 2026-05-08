@@ -35,10 +35,8 @@ INSTALLED_APPS = [
     "compressor",
     "example",
     "dac",
-    # "dac.theme",
     "dac.addons.allauth",
     "mvp",
-    # "dac.addons.stripe",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
@@ -50,7 +48,6 @@ INSTALLED_APPS = [
     "easy_icons",
     "crispy_forms",
     "crispy_bootstrap5",
-    # "crispy_tailwind",
     "debug_toolbar",
     "flex_menu",
     "django_cotton",
@@ -60,7 +57,6 @@ INSTALLED_APPS = [
     "django_extensions",
     "django_browser_reload",
     "dj_urls_panel",
-    # "actstream",
 ]
 
 SITE_ID = 1
@@ -139,7 +135,6 @@ STATIC_URL = COMPRESS_URL = "/static/"
 STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-    # other finders..
     "compressor.finders.CompressorFinder",
 )
 
@@ -187,6 +182,27 @@ if SOCIALACCOUNT_ONLY:
     ACCOUNT_EMAIL_VERIFICATION = "none"
 
 
+# settings.py
+DJ_URLS_PANEL_SETTINGS = {
+    # Exclude specific URL patterns
+    "EXCLUDE_URLS": [
+        r"^admin/",  # Exclude admin URLs
+        r"^__debug__/",  # Exclude debug toolbar
+    ],
+    # Enable/disable URL testing interface
+    "ENABLE_TESTING": True,  # Set to False in production
+    # Whitelist hosts for URL testing (SSRF protection)
+    "ALLOWED_HOSTS": None,  # or ['yourdomain.com']
+}
+
+
+FLEX_MENUS = {
+    "renderers": {
+        "adminlte": "mvp.renderers.AdminLTERenderer",
+    },
+    "log_url_failures": DEBUG,
+}
+
 EASY_ICONS = {
     # Default renderer - used when no renderer specified
     "default": {
@@ -230,26 +246,4 @@ EASY_ICONS = {
             "account_center": "dac",
         },
     },
-}
-
-
-# settings.py
-DJ_URLS_PANEL_SETTINGS = {
-    # Exclude specific URL patterns
-    "EXCLUDE_URLS": [
-        r"^admin/",  # Exclude admin URLs
-        r"^__debug__/",  # Exclude debug toolbar
-    ],
-    # Enable/disable URL testing interface
-    "ENABLE_TESTING": True,  # Set to False in production
-    # Whitelist hosts for URL testing (SSRF protection)
-    "ALLOWED_HOSTS": None,  # or ['yourdomain.com']
-}
-
-
-FLEX_MENUS = {
-    "renderers": {
-        "adminlte": "mvp.renderers.AdminLTERenderer",
-    },
-    "log_url_failures": DEBUG,
 }

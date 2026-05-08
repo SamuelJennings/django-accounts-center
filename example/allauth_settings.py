@@ -1,3 +1,15 @@
+MFA_PASSKEY_LOGIN_ENABLED = True
+MFA_SUPPORTED_TYPES = ["totp", "webauthn", "recovery_codes"]
+MFA_WEBAUTHN_ALLOW_INSECURE_ORIGIN = True
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_SIGNUP_FIELDS = ("first_name", "last_name", "password1*", "password2*", "email*")
+ACCOUNT_LOGIN_METHODS = ("username", "email")
+
+# Uncomment to disable signups
+# ACCOUNT_ADAPTER = "tests.test_addons.test_allauth.adapters.ClosedSignupAdapter"
+
+# Social account settings
+SOCIALACCOUNT_ENABLED = True
 SOCIALACCOUNT_ONLY = False
 SOCIALACCOUNT_PROVIDERS = {
     "orcid": {
@@ -38,13 +50,10 @@ c3ts3cr3t
     },
 }
 
-if not SOCIALACCOUNT_ONLY:
-    ACCOUNT_LOGIN_BY_CODE_ENABLED = True
 
+# Login by code settings
+ACCOUNT_LOGIN_BY_CODE_ENABLED = True
 
-MFA_PASSKEY_LOGIN_ENABLED = True
-MFA_SUPPORTED_TYPES = ["totp", "webauthn", "recovery_codes"]
-MFA_WEBAUTHN_ALLOW_INSECURE_ORIGIN = True
-ACCOUNT_AUTHENTICATION_METHOD = "username_email"  # Allow login with username or email
-ACCOUNT_EMAIL_VERIFICATION = "mandatory"
-ACCOUNT_SIGNUP_FIELDS = ("first_name", "last_name", "password1*", "password2*", "email*")
+# To enable passkey signups, both of these must be True
+MFA_PASSKEY_SIGNUP_ENABLED = True
+ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED = True

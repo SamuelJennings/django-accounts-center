@@ -1,17 +1,15 @@
 <!DOCTYPE html>
 <html>
-  {% load i18n %}
+  {% load i18n allauth %}
 
   <head>
-    <title>{% trans "Sign In" %} | {{ provider }}</title>
+    <title>{% translate "Sign In" %} | {{ provider }}</title>
     <meta http-equiv="refresh"
-          content="0;URL={{ redirect_to }}" />
+          content="0;URL='{{ redirect_to }}'" />
   </head>
   <body>
-    <p>
-      <c-link href="{{ redirect_to }}">
-        {% trans "Continue" %}
-      </c-link>
-    </p>
-  </body>
+    {% element p %}
+    <a href="{{ redirect_to }}">{% translate "Continue" %}</a>
+  {% endelement %}
+</body>
 </html>

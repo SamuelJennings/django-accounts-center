@@ -1,27 +1,33 @@
-{% load i18n allauth cotton dac %}
+{% extends "idp/oidc/base.html" %}
+{% load i18n %}
+{% load allauth %}
 
-<c-dac.entrance title="{% trans "Authorize" %}">
-  <c-slot name="subtitle">
-    {% blocktranslate with client_name=client.name site_name=site.name %}{{ client_name }} wants to access your {{ site_name }} account.{% endblocktranslate %}
-  </c-slot>
-  <form method="post"
-        action="{% url "idp:openid_connect:authorize" %}">
-    {% csrf_token %}
-    {{ form }}
-    <div class="flex space-x-3 mt-6">
-      <c-button type="submit"
-                name="action"
-                value="grant"
-                class="flex-1">
-        {% trans "Authorize" %}
-      </c-button>
-      <c-button variant="secondary"
-                type="submit"
-                name="action"
-                value="cancel"
-                class="flex-1">
-        {% trans "Cancel" %}
-      </c-button variant="secondary">
-    </div>
-  </form>
-</c-dac.entrance>
+{% block head_title %}
+  {% trans "Authorize" %}
+{% endblock head_title %}
+
+{% block content %}
+  {% element h1 %}
+  {% trans "Authorize" %} {{ client.name }}
+{% endelement %}
+{% element p %}
+{% blocktranslate with client_name=client.name site_name=site.name %}{{ client_name }} wants to access your {{ site_name }} account.{% endblocktranslate %}
+{% endelement %}
+{% url 'idp:openid_connect:authorize' as authorize_url %}
+{% element form method="post" action=authorize_url %}
+{% slot body %}
+{% csrf_token %}
+{{ form }}
+{% endslot %}
+{% slot actions %}
+{% element button_group %}
+{% element button name="action" value="grant" type="submit" tags="primary,consent" %}
+{% translate "Authorize" %}
+{% endelement %}
+{% element button name="action" value="cancel" type="submit" tags="outline,consent" %}
+{% translate "Cancel" %}
+{% endelement %}
+{% endelement %}
+{% endslot %}
+{% endelement %}
+{% endblock %}

@@ -1,11 +1,26 @@
-{% load i18n dac %}
+{% extends "openid/base.html" %}
+{% load i18n %}
+{% load allauth %}
 
-<c-dac.entrance title="OpenID {% trans "Sign In" %}">
-  {% url "openid_login" as action_url %}
-  {% render_form form action=action_url %}
-  <c-button variant="primary"
-            text="{% trans "Sign In" %}"
-            type="submit"
-            form="{{ form.helper.form_id }}">
-  </c-button variant="primary">
-</c-dac.entrance>
+{% block head_title %}
+  OpenID {% translate "Sign In" %}
+{% endblock head_title %}
+
+{% block content %}
+  {% element h1 %}
+  OpenID {% trans 'Sign In' %}
+{% endelement %}
+{% url 'openid_login' as action_url %}
+{% element form method="post" action=action_url %}
+{% slot body %}
+{% csrf_token %}
+{% element fields form=form unlabeled=True %}
+{% endelement %}
+{% endslot %}
+{% slot actions %}
+{% element button type="submit" %}
+{% translate "Sign In" %}
+{% endelement %}
+{% endslot %}
+{% endelement %}
+{% endblock content %}

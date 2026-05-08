@@ -1,5 +1,5 @@
-{% load i18n %}
+{% load i18n allauth %}
 
-<c-alert variant="warning">
-  <strong>{% trans "Warning:" %}</strong> {% trans "You currently do not have any email address set up. You should really add an email address so you can receive notifications, reset your password, etc." %}
-</c-alert>
+{% element p %}
+<strong>{% trans 'Warning:' %}</strong> {% trans "You currently do not have any email address set up. You should really add an email address so you can receive notifications, reset your password, etc." %}
+{% endelement %}

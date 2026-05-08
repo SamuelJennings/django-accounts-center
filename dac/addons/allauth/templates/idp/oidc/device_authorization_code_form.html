@@ -1,15 +1,27 @@
-{% load i18n dac %}
+{% extends "idp/oidc/base.html" %}
+{% load i18n %}
+{% load allauth %}
 
-<c-dac.entrance title="{% trans "Enter Device Code" %}"
-                help="{% trans "Enter the code displayed on your device." %}">
-  <form method="get"
-        action="{{ authorization_url }}"
-        class="space-y-4">
-    {% for field in form %}<c-dac.form-field field=field unlabeled=True />{% endfor %}
-    <div class="flex justify-end">
-      <c-button type="submit">
-        {% trans "Continue" %}
-      </c-button>
-    </div>
-  </form>
-</c-dac.entrance>
+{% block head_title %}
+  {% trans "Authorize" %}
+{% endblock head_title %}
+
+{% block content %}
+  {% element h1 %}
+  {% trans "Enter Device Code" %}
+{% endelement %}
+{% element p %}
+{% blocktranslate %}Enter the code displayed on your device.{% endblocktranslate %}
+{% endelement %}
+{% element form method="get" action=authorization_url %}
+{% slot body %}
+{% element fields form=form unlabeled=True %}
+{% endelement %}
+{% endslot %}
+{% slot actions %}
+{% element button type="submit" tags="primary" %}
+{% translate "Continue" %}
+{% endelement %}
+{% endslot %}
+{% endelement %}
+{% endblock %}

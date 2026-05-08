@@ -1,0 +1,25 @@
+{% load i18n socialaccount %}
+
+{% get_providers as socialaccount_providers %}
+{% if socialaccount_providers %}
+  <c-button.stack>
+    {% for provider in socialaccount_providers %}
+      {% if provider.id == "openid" %}
+        {% for brand in provider.get_brands %}
+          {% provider_login_url provider openid=brand.openid_url process=process as href %}
+          <c-button text="{{ brand.name }}"
+                    icon="login"
+                    href="{{ href }}"
+                    class="border-light-subtle" />
+        {% endfor %}
+      {% else %}
+        {% provider_login_url provider process=process as href %}
+        <c-button text="{{ provider.name }}"
+                  icon="{{ provider.id }}"
+                  href="{{ href }}"
+                  size="lg"
+                  class="border-light-subtle" />
+      {% endif %}
+    {% endfor %}
+  </c-button.stack>
+{% endif %}

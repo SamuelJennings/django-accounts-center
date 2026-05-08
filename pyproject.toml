@@ -7,10 +7,7 @@ dynamic = ["version"]
 readme = "README.md"
 authors = [{ name = "Sam", email = "samuel.scott.jennings@gmail.com" }]
 requires-python = ">=3.12,<4.0"
-dependencies = [
-    "django (>5.2,<6.0)",
-    "django-mvp (>=0.1.1,<0.2.0)",
-]
+dependencies = ["django (>5.2,<6.0)", "django-mvp (>=0.1.1,<0.2.0)"]
 
 [tool.poetry]
 version = "0.1.0"
@@ -27,7 +24,8 @@ django-extensions = "^4.1"
 beautifulsoup4 = "^4.14.3"
 fairdm-dev-tools = { git = "https://github.com/FAIR-DM/dev-tools" }
 dj-urls-panel = "^0.2.0"
-django-mvp = {path = "../django-mvp", develop = true}
+django-mvp = { path = "../django-mvp", develop = true }
+pytest-playwright = "^0.7.2"
 
 
 [tool.poetry.dependencies]
@@ -186,11 +184,14 @@ django_settings_module = "example.settings"
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "tests.settings"
 python_files = ["test_*.py"]
+testpaths = ["tests"]
 filterwarnings = ["ignore", "default:::keywords"]
 addopts = "--cov --cov-report html"
 # Playwright browser configuration
 playwright_browser_type = "chromium"
 playwright_launch_args = ["--headless"]
+# Allow Django synchronous DB operations inside pytest-playwright's async event loop
+env = ["DJANGO_ALLOW_ASYNC_UNSAFE=1"]
 
 [tool.coverage.report]
 skip_empty = true

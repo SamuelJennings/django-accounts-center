@@ -1,77 +1,78 @@
-<c-dac.entrance title="{% trans "Two-Factor Authentication" %}"
-                help="{% trans "Your account is protected by two-factor authentication. Please enter an authenticator code:" %}">
-  {% url "mfa_authenticate" as action_url %}
-  {% render_form form action=action_url %}
-  <c-button variant="primary"
-            text="{% trans "Sign In" %}"
-            type="submit"
-            form="{{ form.helper.form_id }}">
-  </c-button variant="primary">
-  {% if "webauthn" not in MFA_SUPPORTED_TYPES %}
-    <p class="text-center small">
-      <form id="logout-from-stage"
-            method="post"
-            action="{% url 'account_logout' %}"
-            style="display: inline">
-        <input type="hidden"
-               name="next"
-               value="{% url 'account_login' %}" />
-        {% csrf_token %}
-        <c-link onclick="document.getElementById('logout-from-stage').submit(); return false;"
-                text="{% trans "Cancel" %}" />
-      </form>
-    </p>
-  {% endif %}
-  {% if "webauthn" in MFA_SUPPORTED_TYPES %}
-    <c-card.divider text="{% trans "Alternative options" %}" />
-    <c-hstack>
-      <c-button variant="secondary"
-                form="webauthn_form"
-                id="mfa_webauthn_authenticate"
-                type="button">
-        <c-slot name="icon">
-          <c-icons.mobile />
-        </c-slot>
-        {% trans "Receive a code via SMS" %}
-      </c-button variant="secondary">
-      <form id="logout-from-stage-alt"
-            method="post"
-            action="{% url 'account_logout' %}">
-        <input type="hidden"
-               name="next"
-               value="{% url 'account_login' %}" />
-        {% csrf_token %}
-        <c-button variant="secondary" type="submit">
-          {% trans "Cancel" %}
-        </c-button variant="secondary">
-      </form>
-    </c-hstack>
-    <form id="webauthn_form"
-          method="post"
-          action="{{ action_url }}"
-          style="display: none">
-      {% csrf_token %}
-      {% for field in webauthn_form %}{{ field.as_widget }}{% endfor %}
-    </form>
-    {{ js_data|json_script:"js_data" }}
-    {% include "mfa/webauthn/snippets/scripts.html" %}
-    <script data-allauth-onload="allauth.webauthn.forms.authenticateForm" type="application/json">
-      {
-        "ids": {
-          "authenticate": "mfa_webauthn_authenticate",
-          "credential": "{{ webauthn_form.credential.auto_id }}",
-          "data": "js_data"
-        }
-      }
-    </script>
-    <form id="logout-from-stage"
-          method="post"
-          action="{% url 'account_logout' %}"
-          style="display: none">
-      <input type="hidden"
-             name="next"
-             value="{% url 'account_login' %}" />
-      {% csrf_token %}
-    </form>
-  {% endif %}
-</c-dac.entrance>
+{% extends "mfa/base_entrance.html" %}
+{% load i18n %}
+{% load allauth %}
+{% load allauth static %}
+
+{% block head_title %}
+  {% trans "Sign In" %}
+{% endblock head_title %}
+
+{% block content %}
+  {% element h1 %}
+  {% trans "Two-Factor Authentication" %}
+{% endelement %}
+{% element p %}
+{% blocktranslate %}Your account is protected by two-factor authentication. Please enter an authenticator code:{% endblocktranslate %}
+{% endelement %}
+{% url 'mfa_authenticate' as action_url %}
+{% element form form=form method="post" action=action_url %}
+{% slot body %}
+{% csrf_token %}
+{% element fields form=form unlabeled=True %}
+{% endelement %}
+{% endslot %}
+{% slot actions %}
+{% element button type="submit" tags="primary,mfa,login" %}
+{% trans "Sign In" %}
+{% endelement %}
+{% if "webauthn" not in MFA_SUPPORTED_TYPES %}
+  {% element button type="submit" form="logout-from-stage" tags="link,mfa,cancel" %}
+  {% trans "Cancel" %}
+{% endelement %}
+{% endif %}
+{% endslot %}
+{% endelement %}
+{% if "webauthn" in MFA_SUPPORTED_TYPES %}
+  {% element hr %}
+{% endelement %}
+{% element h2 %}
+{% translate "Alternative options" %}
+{% endelement %}
+{% element button_group vertical=True %}
+{% element button form="webauthn_form" id="mfa_webauthn_authenticate" type="button" tags="outline,primary" %}
+{% trans "Use a security key" %}
+{% endelement %}
+{% element button type="submit" form="logout-from-stage" tags="outline,primary,mfa,cancel" %}
+{% trans "Cancel" %}
+{% endelement %}
+{% endelement %}
+{% if "webauthn" in MFA_SUPPORTED_TYPES %}
+  {% element form id="webauthn_form" form=webauthn_form method="post" action=action_url no_visible_fields=True %}
+  {% slot body %}
+  {% csrf_token %}
+  {% element fields form=webauthn_form %}
+{% endelement %}
+{% endslot %}
+{% endelement %}
+{{ js_data|json_script:"js_data" }}
+{% include "mfa/webauthn/snippets/scripts.html" %}
+<script data-allauth-onload="allauth.webauthn.forms.authenticateForm" type="application/json">
+  {
+    "ids": {
+      "authenticate": "mfa_webauthn_authenticate",
+      "credential": "{{ webauthn_form.credential.auto_id }}",
+      "data": "js_data"
+    }
+  }
+</script>
+{% endif %}
+{% endif %}
+<form id="logout-from-stage"
+      method="post"
+      action="{% url 'account_logout' %}">
+  <input type="hidden"
+         name="next"
+         value="{% url 'account_login' %}" />
+  {% csrf_token %}
+</form>
+{% endblock content %}

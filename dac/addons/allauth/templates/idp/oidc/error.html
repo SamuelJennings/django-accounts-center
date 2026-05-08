@@ -1,6 +1,20 @@
+{% extends "idp/oidc/base.html" %}
 {% load i18n %}
+{% load allauth %}
 
-<c-dac.entrance title="{% trans "Error" %}"
-                help="{% trans "Something went wrong" %}">
-  <p>{{ error.description }}</p>
-</c-dac.entrance>
+{% block head_title %}
+  {% trans "Error" %}
+{% endblock head_title %}
+
+{% block content %}
+  {% element h1 %}
+  {% trans "Error" %}
+{% endelement %}
+{% if error_form %}
+  {{ error_form.errors }}
+{% else %}
+  {% element p %}
+  {{ error.description }}
+{% endelement %}
+{% endif %}
+{% endblock %}

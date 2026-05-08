@@ -74,6 +74,14 @@ tests/
 ├── test_forms.py
 └── test_addons/
     └── test_<package_name>/
+
+screenshots/          # pytest-playwright screenshot tests (Principle XIII)
+                      # excluded from normal `pytest` runs (testpaths = ["tests"])
+                      # run explicitly with: pytest screenshots/
+
+docs/_static/         # persisted viewport screenshots (Principle XIII)
+├── desktop/          # 1440×900 screenshots
+└── mobile/           # 390×844 screenshots
 ```
 
 **Structure Decision**: [Document the selected structure and reference the real

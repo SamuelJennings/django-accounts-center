@@ -1,17 +1,27 @@
-{% load i18n %}
+{% extends "account/base_manage.html" %}
+{% load allauth i18n %}
 
-<c-dac.page title="{% trans "Sign Out" %}">
-  <c-page.form-section>
-    <c-card title="{% trans "Sign Out" %}" icon="logout">
-      <p>{% trans "Are you sure you want to sign out?" %}</p>
-      <c-dac.form method="post" action="{% url "account_logout" %}">
-        {{ redirect_field }}
-      </c-dac.form>
-      <c-slot name="footer_end">
-        <c-button type="submit"
-                  variant="primary"
-                  text="{% trans "Sign Out" %}" />
-      </c-slot>
-    </c-card>
-  </c-page.form-section>
-</c-dac.page>
+{% block head_title %}
+  {% trans "Sign Out" %}
+{% endblock head_title %}
+
+{% block content %}
+  {% element h1 %}
+  {% trans "Sign Out" %}
+{% endelement %}
+{% element p %}
+{% trans 'Are you sure you want to sign out?' %}
+{% endelement %}
+{% url 'account_logout' as action_url %}
+{% element form method="post" action=action_url no_visible_fields=True %}
+{% slot body %}
+{% csrf_token %}
+{{ redirect_field }}
+{% endslot %}
+{% slot actions %}
+{% element button type="submit" %}
+{% trans 'Sign Out' %}
+{% endelement %}
+{% endslot %}
+{% endelement %}
+{% endblock content %}

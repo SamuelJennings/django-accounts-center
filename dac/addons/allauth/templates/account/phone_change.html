@@ -1,65 +1,53 @@
+{% extends "account/base_manage_phone.html" %}
 {% load i18n %}
+{% load allauth %}
 
-<c-dac.page title="{% trans "Change Phone" %}">
-  <c-page.form-section>
-    <c-card title="{% trans "Change Phone" %}" icon="phone">
-      {% url "account_change_phone" as action_url %}
-      <form method="post"
-            action="{{ action_url }}"
-            id="changePhoneForm">
-        {% csrf_token %}
-        {% if phone %}
-          <div class="mb-6">
-            <label class="block text-sm font-medium text-gray-700 mb-2">{% trans "Current phone" %}:</label>
-            <input type="tel"
-                   value="{{ phone }}"
-                   disabled
-                   class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-500" />
-            {% if not phone_verified %}
-              <c-alert variant="warning">
-                {% trans "Your phone number is still pending verification." %}
-                <c-button variant="secondary"
-                          form="verify-phone"
-                          type="submit"
-                          size="small"
-                          variant="link">
-                  {% trans "Re-send Verification" %}
-                </c-button>
-              </c-alert>
-            {% endif %}
-          </div>
-        {% endif %}
-        <div class="mb-6">
-          <label for="{{ form.phone.auto_id }}"
-                 class="block text-sm font-medium text-gray-700 mb-2">{% trans "Change to" %}:</label>
-          <input type="tel"
-                 id="{{ form.phone.auto_id }}"
-                 name="phone"
-                 value="{{ form.phone.value|default:"" }}"
-                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" />
-          {% if form.phone.errors %}
-            <div class="mt-2 text-sm text-red-600">
-              {% for error in form.phone.errors %}<p>{{ error }}</p>{% endfor %}
-            </div>
-          {% endif %}
-        </div>
-      </form>
-      {% if not phone_verified %}
-        <form style="display: none"
-              id="verify-phone"
-              method="post"
-              action="{{ action_url }}">
-          {% csrf_token %}
-          <input type="hidden" name="action" value="verify" />
-        </form>
-      {% endif %}
-      <c-slot name="footer_end">
-        <c-button type="submit"
-                  form="changePhoneForm"
-                  name="action_add"
-                  variant="primary"
-                  text="{% trans "Change Phone" %}" />
-      </c-slot>
-    </c-card>
-  </c-page.form-section>
-</c-dac.page>
+{% block head_title %}
+  {% trans "Change Phone" %}
+{% endblock head_title %}
+
+{% block content %}
+  {% element h1 %}
+  {% trans "Change Phone" %}
+{% endelement %}
+{% url 'account_change_phone' as action_url %}
+{% element form method="post" action=action_url %}
+{% slot body %}
+{% csrf_token %}
+{% if phone %}
+  {% element field id="current_phone" disabled=True type="tel" value=phone %}
+  {% slot label %}
+  {% translate "Current phone" %}:
+{% endslot %}
+{% if not phone_verified %}
+  {% slot help_text %}
+  {% blocktranslate %}Your phone number is still pending verification.{% endblocktranslate %}
+  {% element button form="verify-phone" type="submit" tags="minor,secondary" %}
+  {% trans 'Re-send Verification' %}
+{% endelement %}
+{% endslot %}
+{% endif %}
+{% endelement %}
+{% endif %}
+{% element field id=form.phone.auto_id name="phone" value=form.phone.value errors=form.phone.errors type="tel" %}
+{% slot label %}
+{% translate "Change to" %}:
+{% endslot %}
+{% endelement %}
+{% endslot %}
+{% slot actions %}
+{% element button name="action_add" type="submit" %}
+{% translate "Change Phone" context "action" %}
+{% endelement %}
+{% endslot %}
+{% endelement %}
+{% if not phone_verified %}
+  <form style="display: none"
+        id="verify-phone"
+        method="post"
+        action="{{ action_url }}">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="verify" />
+  </form>
+{% endif %}
+{% endblock content %}
