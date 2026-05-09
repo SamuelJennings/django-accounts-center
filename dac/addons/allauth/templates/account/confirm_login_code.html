@@ -1,25 +1,61 @@
-{% extends "account/base_confirm_code.html" %}
+{% extends "account/base_entrance.html" %}
 {% load i18n %}
-{% load allauth account %}
 
 {% block head_title %}
-  {% translate "Sign In" %}
+  {% trans "Enter Sign-In Code" %}
 {% endblock head_title %}
 
 {% block title %}
-  {% translate "Enter Sign-In Code" %}
-{% endblock %}
+  {% trans "Enter Sign-In Code" %}
+{% endblock title %}
 
-{% block recipient %}
-  {% if email %}
-    <a href="mailto:{{ email }}">{{ email }}</a>
-  {% else %}
-    <a href="tel:{{ phone }}">{{ phone }}</a>
+{% block content %}
+  <c-entrance.text class="mb-3">
+    {% if email %}
+      {% blocktrans %}We sent a code to <a href="mailto:{{ email }}">{{ email }}</a>.{% endblocktrans %}
+    {% elif phone %}
+      {% blocktrans %}We sent a code to <a href="tel:{{ phone }}">{{ phone }}</a>.{% endblocktrans %}
+    {% endif %}
+  </c-entrance.text>
+  {% if can_resend %}
+    <form id="resend" method="post">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="resend" />
+    </form>
   {% endif %}
-{% endblock %}
-
-{% block action_url %}
-  {% url 'account_confirm_login_code' %}
-{% endblock %}
-
-{% block extra_tags %}login{% endblock %}
+  {% if not cancel_url %}
+    <form id="logout-from-stage" method="post">
+      {% csrf_token %}
+    </form>
+  {% endif %}
+  <c-form method="post" action=".">
+    <c-form.crispy form=verify_form />
+    {{ redirect_field }}
+    <c-button.stack class="mt-4">
+      <c-button text="Confirm"
+                icon="check-circle"
+                type="submit"
+                variant="primary"
+                size="lg" />
+      {% if can_resend %}
+        <c-button type="submit"
+                  form="resend"
+                  text="Resend Code"
+                  icon="arrow-repeat"
+                  class="border-light-subtle" />
+      {% endif %}
+      {% if cancel_url %}
+        <c-button href="{{ cancel_url }}"
+                  text="Cancel"
+                  icon="x-circle"
+                  class="border-light-subtle" />
+      {% else %}
+        <c-button type="submit"
+                  form="logout-from-stage"
+                  text="Cancel"
+                  icon="x-circle"
+                  class="border-light-subtle" />
+      {% endif %}
+    </c-button.stack>
+  </c-form>
+{% endblock content %}

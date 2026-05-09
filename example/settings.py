@@ -230,6 +230,10 @@ EASY_ICONS = {
             "warning": "bi bi-exclamation-triangle-fill",
             "passkey": "bi bi-key-fill",
             "passcode": "bi bi-braces-asterisk",
+            "send": "bi bi-send-fill",
+            "check-circle": "bi bi-check-circle",
+            "arrow-repeat": "bi bi-arrow-repeat",
+            "x-circle": "bi bi-x-circle",
         },
     },
     # Font Awesome for common UI icons

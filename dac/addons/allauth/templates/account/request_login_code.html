@@ -1,32 +1,31 @@
 {% extends "account/base_entrance.html" %}
 {% load i18n %}
-{% load allauth account %}
 
 {% block head_title %}
-  {% translate "Sign In" %}
+  {% trans "Request Sign-In Code" %}
 {% endblock head_title %}
 
+{% block title %}
+  {% trans "Send me a sign-in code" %}
+{% endblock title %}
+
 {% block content %}
-  {% element h1 %}
-  {% translate "Send me a sign-in code" %}
-{% endelement %}
-{% element p %}
-{% blocktranslate %}You will receive a special code for a password-free sign-in.{% endblocktranslate %}
-{% endelement %}
-{% element form form=form method="post" action=request_login_code_url tags="entrance,login" %}
-{% slot body %}
-{% csrf_token %}
-{% element fields form=form unlabeled=True %}
-{% endelement %}
-{{ redirect_field }}
-{% endslot %}
-{% slot actions %}
-{% element button type="submit" tags="prominent,login" %}
-{% translate "Request Code" %}
-{% endelement %}
-{% endslot %}
-{% endelement %}
-{% element button href=login_url tags="link" %}
-{% translate "Other sign-in options" %}
-{% endelement %}
+  <c-entrance.text class="mb-3">
+    {% blocktrans %}You will receive a special code for a password-free sign-in.{% endblocktrans %}
+  </c-entrance.text>
+  <c-form method="post"
+          action="{{ request_login_code_url }}">
+    <c-form.crispy />
+    {{ redirect_field }}
+    <c-button.stack class="mt-4">
+      <c-button text="Send Code"
+                icon="send"
+                type="submit"
+                variant="primary"
+                size="lg" />
+    </c-button.stack>
+  </c-form>
+  <c-entrance.text class="mt-3 mb-0">
+    <a href="{{ login_url }}">{% trans "Other sign-in options" %}</a>
+  </c-entrance.text>
 {% endblock content %}
