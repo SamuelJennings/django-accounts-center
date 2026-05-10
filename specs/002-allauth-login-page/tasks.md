@@ -1,3 +1,5 @@
+**Propagated**: 2026-05-09 — Updated from spec.md refinement (FR-016 / User Story 7: socialaccount templates added to scope)
+
 # Tasks: Allauth Login Page
 
 **Input**: Design documents from `specs/002-allauth-login-page/`
@@ -150,6 +152,45 @@ All shared infrastructure from spec 001 is in place. No foundational tasks neede
 
 ---
 
+## Phase 8: US7 — Social OAuth Confirmation Pages (Priority: P2)
+
+**Goal**: The three `socialaccount` entrance templates (`socialaccount/login.html`, `socialaccount/login_cancelled.html`, `socialaccount/login_redirect.html`) are rewritten using Cotton components, replacing all `{% element %}` syntax. All three are existing placeholder overrides added in FR-016 (spec.md refined 2026-05-09).
+
+**Independent Test**: Configure a social provider, initiate an OAuth flow that triggers the confirmation step, and confirm `socialaccount/login.html` renders with the `<c-entrance>` shell. Cancel an OAuth flow and confirm `socialaccount/login_cancelled.html` renders cleanly with a sign-in link. Visit `socialaccount/login_redirect.html` and confirm the meta-refresh redirect fires correctly.
+
+- [X] T012 [P] [US7] Rewrite dac/addons/allauth/templates/socialaccount/login.html using Cotton components:
+      - `{% extends "socialaccount/base_entrance.html" %}` + `{% load i18n %}`
+      - `{% block head_title %}{% trans "Sign In" %}{% endblock head_title %}`
+      - `{% block title %}` — conditional: `{% if process == "connect" %}{% blocktrans with provider.name as provider %}Connect {{ provider }}{% endblocktrans %}{% else %}{% blocktrans with provider.name as provider %}Sign In Via {{ provider }}{% endblocktrans %}{% endif %}` `{% endblock title %}`
+      - `{% block content %}`: `<c-entrance.text class="mb-3">` — conditional description text (connect vs sign-in blurb using `{% blocktrans %}`) `</c-entrance.text>` → `<c-form method="post" action=".">` + `{% csrf_token %}` + `{{ redirect_field }}` + `<c-button.stack class="mt-4">` + `<c-button text="{% trans "Continue" %}" icon="login" type="submit" variant="primary" size="lg" />` + `</c-button.stack></c-form>`
+- [X] T013 [P] [US7] Rewrite dac/addons/allauth/templates/socialaccount/login_cancelled.html using Cotton components:
+      - `{% extends "socialaccount/base_entrance.html" %}` + `{% load i18n %}`
+      - `{% block head_title %}{% trans "Login Cancelled" %}{% endblock head_title %}`
+      - `{% block title %}{% trans "Login Cancelled" %}{% endblock title %}`
+      - `{% block content %}`: `{% url 'account_login' as login_url %}` → `<c-entrance.text class="mb-4">{% blocktrans %}You decided to cancel logging in to our site using one of your existing accounts. If this was a mistake, please proceed to <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</c-entrance.text>` → `<c-button.stack>` + `<c-button href="{{ login_url }}" text="{% trans "Sign in" %}" icon="login" variant="primary" size="lg" />` + `</c-button.stack>`
+- [X] T014 [P] [US7] Rewrite dac/addons/allauth/templates/socialaccount/login_redirect.html — minimal rewrite preserving meta-refresh:
+      - Standalone HTML (does NOT extend any base template — ephemeral redirect page, no `<c-entrance>` shell per FR-016)
+      - Preserve `<meta http-equiv="refresh" content="0;URL='{{ redirect_to }}'" />`
+      - Replace `{% element %}` link with plain `<a href="{{ redirect_to }}">{% trans "Continue" %}</a>`
+      - Remove all `{% load allauth %}` and `{% element %}` tags; keep `{% load i18n %}`
+- [X] T015 [P] [US7] Write US7 tests in tests/test_addons/test_allauth/test_login_view.py covering:
+      - `socialaccount/login.html` renders (200 OK); no `{% element %}` tags; contains provider name; has Continue button
+      - `socialaccount/login.html` with `process="connect"` shows "Connect \{provider\}" in title
+      - `socialaccount/login.html` with `process="login"` shows "Sign In Via \{provider\}" in title
+      - `socialaccount/login_cancelled.html` renders (200 OK); no `{% element %}` tags; contains "Login Cancelled" and sign-in link
+      - `socialaccount/login_redirect.html` renders (200 OK); contains `http-equiv="refresh"`; no `{% element %}` tags
+- [X] T016 [US7] Update screenshots/test_login_screenshots.py to add 2 new permutations (socialaccount templates) and re-run:
+      - Add `socialaccount-login-confirm` — render `socialaccount/login.html` with a configured Google provider (`process="login"`)
+      - Add `socialaccount-login-cancelled` — render `socialaccount/login_cancelled.html`
+      - (`login_redirect.html` exempt from screenshots — ephemeral redirect page, per SC-005)
+      - Run full suite and visually inspect all 27 screenshot files (9 permutations × 3 viewports)
+
+**Checkpoint**: Phase 8 done when T012–T015 pass and 27 screenshots committed.
+
+- [X] TVAL-4 [US7] Run `poetry run pytest tests/test_addons/test_allauth/test_login_view.py` — MUST pass (original 23 tests + new US7 tests)
+
+---
+
 ## Final Phase: Screenshot Coverage & Polish
 
 **Goal**: All 7 settings permutations captured at 3 viewports = 21 PNG files committed to `docs/_static/`.
@@ -184,6 +225,11 @@ T005 [US4] request_login_code.html  ─┐ independent of T002
 T006 [US4] confirm_login_code.html  ─┤ independent of each other
 T007 [US4] login-by-code tests      ─┘ depends on T005 + T006
 
+T012 [US7] socialaccount/login.html       ─┐
+T013 [US7] login_cancelled.html            │ independent of each other
+T014 [US7] login_redirect.html             ├─ T015 [US7] tests (depends on T012 + T013 + T014)
+T012 + T013 → T016 (screenshots; login_redirect exempt)
+
 T002 + T005 + T006 → T010 → T011 (screenshots — all templates must exist first)
 ```
 
@@ -212,6 +258,7 @@ T005 (request_login_code.html)  ║  T006 (confirm_login_code.html)
 | US4 (P2) | T005, T006, T007 | request_login_code.html, confirm_login_code.html, test_login_view.py |
 | US5 (P3) | T009 | test_login_view.py |
 | US6 (P2) | T008 | test_login_view.py |
+| US7 (P2) | T012, T013, T014, T015, T016 | socialaccount/login.html, login_cancelled.html, login_redirect.html, test_login_view.py, screenshots/ |
 | Polish | T010, T011 | screenshots/test_login_screenshots.py, docs/_static/ |
 
-**Total tasks**: 11 implementation tasks + 3 validation checkpoints (TVAL-1, TVAL-2, TVAL-3)
+**Total tasks**: 16 implementation tasks + 4 validation checkpoints (TVAL-1, TVAL-2, TVAL-3, TVAL-4)

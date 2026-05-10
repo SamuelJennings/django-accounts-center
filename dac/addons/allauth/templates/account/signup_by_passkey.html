@@ -6,21 +6,23 @@
 {% endblock title %}
 
 {% block content %}
-  <c-form method="post"
-          action="{% url "account_signup_by_passkey" %}">
-    <c-form.crispy />
-    {{ redirect_field }}
-    <c-button.stack class="mt-4">
-      <c-button text="{% trans "Create passkey" %}"
-                icon="passkey"
-                size="lg"
-                type="submit"
-                variant="primary" />
-    </c-button.stack>
-  </c-form>
-  <c-entrance.text class="mt-4 mb-0">
-    {% if signup_url %}
+  <c-entrance.section>
+    <c-form method="post"
+            action="{% url "account_signup_by_passkey" %}">
+      <c-form.crispy />
+      {{ redirect_field }}
+      <c-button.stack>
+        <c-button text="{% trans "Create passkey" %}"
+                  icon="passkey"
+                  size="lg"
+                  type="submit"
+                  variant="primary" />
+      </c-button.stack>
+    </c-form>
+  </c-entrance.section>
+  {% if signup_url %}
+    <c-entrance.text small>
       <a href="{{ signup_url }}">{% trans "Sign up with alternative method" %}</a>
-    {% endif %}
-  </c-entrance.text>
+    </c-entrance.text>
+  {% endif %}
 {% endblock content %}

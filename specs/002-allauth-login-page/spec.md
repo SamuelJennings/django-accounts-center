@@ -3,6 +3,7 @@
 **Feature Branch**: `002-allauth-login-page`  
 **Created**: 2026-05-08  
 **Status**: Refined  
+**Refined**: 2026-05-09 — Added three `socialaccount` templates to scope: `socialaccount/login.html`, `socialaccount/login_cancelled.html`, and `socialaccount/login_redirect.html`. Each must be rewritten using Cotton components consistent with the rest of the entrance page suite.  
 **Refined**: 2026-05-08 — Four clarifications applied: (1) social buttons above email/password form (mirroring signup page); (2) passkey login in scope — FR-008 expanded, FR-015 added, User Story 6 added; (3) both login-by-code templates (`request_login_code.html` and `confirm_login_code.html`) require `<c-entrance>` shell — FR-013 updated, screenshot permutations split; (4) signup cross-link placed at bottom of card after all content. FR-012 restructured to group permutations by overridden template, making per-template screenshot coverage explicit.  
 **Input**: User description: "The login page is a critical page for any django project that allows users to create and manage accounts. The most used 3rd party authentication app is by far django-allauth. This spec is responsible for modernising the login template provided by django-allauth. The login form must be reactive to django-allauth settings provided by the developer (e.g. only shows social accounts when this app is available, shows a message when signup is not available, etc.). Django-allauth provides its own \"component-like\" syntax in its default templates, however, we will NOT be using this, instead opting to use the component system defined by django-cotton and the prebuilt component in the django-mvp package. See spec 001-allauth-signup-page for a similar spec that targetted the signup page."
 
@@ -106,6 +107,22 @@ A returning visitor who previously enrolled a passkey sees a "Sign in with a pas
 
 ---
 
+### User Story 7 - End User Is Redirected Through Social OAuth Confirmation Page (Priority: P2) **[End User]**
+
+When a social OAuth flow involves an intermediate confirmation step (`socialaccount/login.html` — shown when allauth needs the user to explicitly confirm connecting or signing in via a provider), or when the OAuth flow redirects through `socialaccount/login_redirect.html`, the user sees a page consistent with the `<c-entrance>` shell. If the user cancels the OAuth flow, `socialaccount/login_cancelled.html` informs them clearly with a link back to the login page.
+
+**Why this priority**: These three templates are part of the social login journey and are visible to end users when social authentication is in use. Leaving them with `{% element %}` syntax creates visual inconsistency between steps of the same flow.
+
+**Independent Test**: Can be fully tested by configuring a social provider, initiating an OAuth flow that triggers the confirmation page, completing or cancelling the flow, and verifying each page renders with the `<c-entrance>` shell.
+
+**Acceptance Scenarios**:
+
+1. **Given** a social login flow that requires explicit confirmation (e.g. connecting an account), **When** the `socialaccount/login.html` page renders, **Then** the page uses the `<c-entrance>` shell and Cotton components instead of `{% element %}` syntax.
+2. **Given** a social OAuth flow that uses a redirect-through page (`socialaccount/login_redirect.html`), **When** the page renders, **Then** a meta-refresh redirect fires immediately and the intermediate page is visually consistent with the entrance shell if displayed.
+3. **Given** a user who cancels a social OAuth flow, **When** `socialaccount/login_cancelled.html` renders, **Then** the page uses the `<c-entrance>` shell, displays a clear "Login Cancelled" message, and includes a link back to the sign-in page.
+
+---
+
 ### User Story 5 - Already Authenticated User Visits Login (Priority: P3) **[End User]**
 
 A logged-in user navigates to the login page (e.g. from a bookmark or stale tab). Instead of seeing the login form again, they are redirected away or shown a message indicating they are already signed in.
@@ -167,6 +184,11 @@ A logged-in user navigates to the login page (e.g. from a bookmark or stale tab)
   - `account/confirm_login_code.html` — the page where the user enters the code received by email. The DAC override MUST extend `account/base_entrance.html` **directly**, bypassing allauth's `account/base_confirm_code.html`. `base_confirm_code.html` is shared with other confirmation flows (email verification, phone verification) and still uses `{% element %}` syntax; modifying it is out of scope for this spec. The override must preserve the code-input form, resend capability, and inline error handling using Cotton components.
 - **FR-014**: The login page MUST redirect or gracefully handle the case where the requesting user is already authenticated, delegating entirely to allauth's standard redirect logic.
 - **FR-015**: When `PASSKEY_LOGIN_ENABLED` is `True`, the login page template MUST inject the allauth WebAuthn login script (`mfa/webauthn/snippets/login_script.html`) into the `extra_body` block with the passkey button's element ID. This MUST be done conditionally — the script MUST NOT be injected when `PASSKEY_LOGIN_ENABLED` is `False`, to avoid loading unnecessary JavaScript.
+- **FR-016**: Three `socialaccount` entrance templates MUST be rewritten using Cotton components, replacing all `{% element %}` syntax:
+  - `socialaccount/login.html` — the intermediate confirmation page shown when allauth requires the user to explicitly confirm signing in or connecting via a social provider. Extends `socialaccount/base_entrance.html`. Renders a confirmation form with a "Continue" submit button. Conditionally shows either a "Connect" or "Sign In Via" heading depending on the `process` context variable (`"connect"` vs `"login"`).
+  - `socialaccount/login_cancelled.html` — the page shown when a user cancels an OAuth flow. Extends `socialaccount/base_entrance.html`. Shows a "Login Cancelled" message and a link back to the sign-in page.
+  - `socialaccount/login_redirect.html` — the intermediate redirect page during an OAuth flow. Does NOT extend `socialaccount/base_entrance.html`; it is a standalone page with a meta-refresh redirect (`http-equiv="refresh"`). The page MUST preserve the meta-refresh redirect and use a minimal but visually consistent layout. No `<c-entrance>` shell is used here — the page is ephemeral and shown only for an instant before the redirect fires.
+  All three templates already exist as placeholder overrides in `dac/addons/allauth/templates/socialaccount/` and currently use `{% element %}` syntax; they MUST be fully rewritten by this spec.
 
 ### Key Entities *(include if feature involves data)*
 
@@ -189,7 +211,7 @@ A logged-in user navigates to the login page (e.g. from a bookmark or stale tab)
 - **SC-002**: The login page correctly adapts its identifier field label and form structure for all documented `ACCOUNT_AUTHENTICATION_METHOD` values (`"email"`, `"username"`, `"username_email"`) — verified by automated tests covering each value.
 - **SC-003**: A returning user can complete the full login flow (visit page → enter credentials → submit → land on destination) in under 30 seconds on a standard broadband connection.
 - **SC-004**: The login page renders without errors or visible layout defects across all allauth configuration permutations, including zero social providers, one provider, multiple providers, and login-by-code enabled — confirmed by both automated integration tests and committed viewport screenshots.
-- **SC-005**: A full set of pytest-playwright viewport screenshots (desktop 1440×900, tablet 768×1024, mobile 390×844) exists under `docs/_static/` for each of the seven visually distinct settings permutations defined in FR-012. All twenty-one screenshot files are committed to the repository alongside the implementation and remain non-stale on every subsequent UI-touching pull request.
+- **SC-005**: A full set of pytest-playwright viewport screenshots (desktop 1440×900, tablet 768×1024, mobile 390×844) exists under `docs/_static/` for each of the visually distinct settings permutations defined in FR-012 (original seven) plus the new permutations for FR-016 (`socialaccount/login.html` and `socialaccount/login_cancelled.html`). All viewport screenshot files are committed to the repository alongside the implementation and remain non-stale on every subsequent UI-touching pull request. (`socialaccount/login_redirect.html` is exempt from screenshot coverage as it is an ephemeral redirect-only page.)
 - **SC-006**: All Cotton component boundaries in the login page are documented, enabling developers to identify and override any sub-component within their own project templates.
 
 ## Assumptions
@@ -199,10 +221,12 @@ A logged-in user navigates to the login page (e.g. from a bookmark or stale tab)
 - The `<c-entrance>` shell component, `<c-entrance.background>`, and `<c-entrance.logo>` are fully implemented by spec 001 (Allauth Signup Page). This spec depends on those components existing and requires no further changes to them.
 - The `django-mvp` package is a dependency and its Cotton component library is available at render time.
 - django-cotton is installed and configured as a template engine in the host project's `TEMPLATES` setting.
-- The allauth layout template (`allauth/layouts/entrance.html`) is shared between the signup and login pages. No modifications to the layout template are required by this spec — only three page-level templates are new: `account/login.html`, `account/request_login_code.html`, and `account/confirm_login_code.html`.
+- The allauth layout template (`allauth/layouts/entrance.html`) is shared between the signup and login pages. No modifications to the layout template are required by this spec.
+- This spec covers six page-level template overrides in total: `account/login.html`, `account/request_login_code.html`, `account/confirm_login_code.html`, `socialaccount/login.html`, `socialaccount/login_cancelled.html`, and `socialaccount/login_redirect.html`. The first three were already implemented by the initial tasks; the last three are newly in-scope via this refinement (2026-05-09).
 - Multi-factor authentication (MFA) prompt after login is out of scope for this page; allauth redirects to the MFA challenge automatically post-login, and that page is a separate concern.
 - The reauthentication page (`account/reauthenticate.html`) is out of scope for this spec iteration; it is a distinct template with a distinct user flow and will be addressed in a separate spec.
-- Social account connection (linking a social account to an existing user after login) is out of scope for this spec.
+- Social account connection (linking a social account to an existing user after login) is out of scope for this spec, **except** for the `socialaccount/login.html` confirmation step which is already a placeholder override in `dac.addons.allauth` and must be rewritten as part of this spec (see FR-016).
+- Other `socialaccount` entrance templates not listed in FR-016 (`authentication_error.html`, `signup.html`) are out of scope for this spec iteration.
 - Rate limiting and brute-force protection for the login endpoint are delegated to allauth's built-in `ACCOUNT_RATE_LIMITS` mechanism and the host project's infrastructure. The login page component itself imposes no additional rate-limiting logic.
 - Accessibility (WCAG 2.1 AA) is assumed as a baseline but a detailed accessibility audit is out of scope for this spec iteration.
 - The developer is responsible for providing OAuth credentials for any social providers; the login page simply reflects what is configured.

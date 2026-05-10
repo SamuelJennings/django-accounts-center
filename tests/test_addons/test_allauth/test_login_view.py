@@ -341,3 +341,115 @@ def test_confirm_login_code_renders_code_field():
     # verify_form has a 'code' field
     assert "code" in content.lower()
     assert "<input" in content
+
+
+# ---------------------------------------------------------------------------
+# T015 / US7: socialaccount entrance templates
+# ---------------------------------------------------------------------------
+
+
+class _MockProvider:
+    """Minimal provider stub for template rendering tests."""
+
+    name = "Google"
+    id = "google"
+
+
+@pytest.mark.django_db
+def test_socialaccount_login_has_no_element_tags():
+    """socialaccount/login.html must not contain {% element %} tags in output."""
+    content = _render_template(
+        "socialaccount/login.html",
+        {"provider": _MockProvider(), "process": "login", "redirect_field": ""},
+    )
+    assert "{% element" not in content
+    assert "{% endelement" not in content
+
+
+@pytest.mark.django_db
+def test_socialaccount_login_process_login_shows_sign_in_via():
+    """socialaccount/login.html with process='login' shows 'Sign In Via' heading."""
+    content = _render_template(
+        "socialaccount/login.html",
+        {"provider": _MockProvider(), "process": "login", "redirect_field": ""},
+    )
+    assert "Sign In Via" in content
+    assert "Google" in content
+
+
+@pytest.mark.django_db
+def test_socialaccount_login_process_connect_shows_connect():
+    """socialaccount/login.html with process='connect' shows 'Connect' heading."""
+    content = _render_template(
+        "socialaccount/login.html",
+        {"provider": _MockProvider(), "process": "connect", "redirect_field": ""},
+    )
+    assert "Connect" in content
+    assert "Google" in content
+
+
+@pytest.mark.django_db
+def test_socialaccount_login_has_continue_button():
+    """socialaccount/login.html must contain a Continue submit button."""
+    content = _render_template(
+        "socialaccount/login.html",
+        {"provider": _MockProvider(), "process": "login", "redirect_field": ""},
+    )
+    assert "Continue" in content
+    assert 'type="submit"' in content
+
+
+@pytest.mark.django_db
+def test_socialaccount_login_cancelled_has_no_element_tags():
+    """socialaccount/login_cancelled.html must not contain {% element %} tags."""
+    content = _render_template(
+        "socialaccount/login_cancelled.html",
+        {},
+    )
+    assert "{% element" not in content
+    assert "{% endelement" not in content
+
+
+@pytest.mark.django_db
+def test_socialaccount_login_cancelled_shows_login_cancelled_title():
+    """socialaccount/login_cancelled.html must show 'Login Cancelled'."""
+    content = _render_template(
+        "socialaccount/login_cancelled.html",
+        {},
+    )
+    assert "Login Cancelled" in content
+
+
+@pytest.mark.django_db
+def test_socialaccount_login_cancelled_has_sign_in_link():
+    """socialaccount/login_cancelled.html must contain a link to the login page."""
+    content = _render_template(
+        "socialaccount/login_cancelled.html",
+        {},
+    )
+    login_url = reverse("account_login")
+    assert login_url in content
+    assert "sign in" in content.lower()
+
+
+@pytest.mark.django_db
+def test_socialaccount_login_redirect_has_no_element_tags():
+    """socialaccount/login_redirect.html must not contain {% element %} tags."""
+    content = _render_template(
+        "socialaccount/login_redirect.html",
+        {"provider": _MockProvider(), "redirect_to": "/accounts/google/login/?_redir="},
+    )
+    assert "{% element" not in content
+    assert "{% endelement" not in content
+
+
+@pytest.mark.django_db
+def test_socialaccount_login_redirect_has_meta_refresh():
+    """socialaccount/login_redirect.html must contain http-equiv='refresh' meta tag."""
+    redirect_url = "/accounts/google/login/?_redir="
+    content = _render_template(
+        "socialaccount/login_redirect.html",
+        {"provider": _MockProvider(), "redirect_to": redirect_url},
+    )
+    assert 'http-equiv="refresh"' in content
+    assert redirect_url in content

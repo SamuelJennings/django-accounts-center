@@ -1,2 +1,4 @@
-<c-vars lead class />
-<p class="{% if lead %}lead{% endif %} text-center text-muted small {{ class }}">{{ text }}{{ slot }}</p>
+<c-vars impact small class text />
+<p class="text-center text-muted{% if impact %} lead{% elif small %} small{% endif %} {{ class }}">
+  {{ text }}{{ slot }}
+</p>

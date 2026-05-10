@@ -1,3 +1,5 @@
+**Propagated**: 2026-05-09 — Updated from spec.md refinement (FR-016 / User Story 7: socialaccount templates added to scope)
+
 # Implementation Plan: Allauth Login Page
 
 **Branch**: `002-allauth-login-page` | **Date**: 2026-05-08 | **Spec**: [spec.md](spec.md)
@@ -6,6 +8,8 @@
 ## Summary
 
 Build a styled, modern allauth login page for django-accounts-center by rewriting three existing placeholder template overrides (`account/login.html`, `account/request_login_code.html`, `account/confirm_login_code.html`) to use Cotton components instead of allauth's `{% element %}` syntax. `confirm_login_code.html` extends `account/base_entrance.html` directly, bypassing `account/base_confirm_code.html` (which is shared with other confirmation flows and remains out of scope).
+
+Three additional `socialaccount` entrance templates are also rewritten in this spec (FR-016, added 2026-05-09): `socialaccount/login.html` (OAuth confirmation step), `socialaccount/login_cancelled.html` (cancellation message), and `socialaccount/login_redirect.html` (ephemeral meta-refresh redirect). All three already exist as placeholder overrides using `{% element %}` syntax and must be converted to Cotton.
 
 The `<c-entrance>` shell — centred card, logo, background, and visual framework — is **already implemented** from spec 001 and requires no changes. All entrance-page templates inherit it automatically via the existing template chain. This spec's work is entirely at the page-content level: replacing `{% element %}` calls inside `{% block content %}` with the appropriate Cotton components (`<c-form>`, `<c-form.crispy>`, `<c-button.stack>`, `<c-button>`, `<c-card.divider>`, `<c-entrance.text>`).
 
@@ -23,7 +27,7 @@ No new Python views, models, forms, or migrations are introduced. No new Cotton 
 **Project Type**: Reusable Django extension library
 **Performance Goals**: No additional database queries vs. allauth baseline
 **Constraints**: Must not monkey-patch allauth. Must degrade gracefully without `allauth.socialaccount`. All UI changes via template overrides only.
-**Scale/Scope**: 3 template files fully rewritten + 1 template restructured to bypass `base_confirm_code.html`
+**Scale/Scope**: 6 template files fully rewritten (3 `account/` + 3 `socialaccount/`) + 1 account template restructured to bypass `base_confirm_code.html`
 
 ## Constitution Check
 
@@ -45,7 +49,7 @@ No new Python views, models, forms, or migrations are introduced. No new Cotton 
 | X. Template Overrides Primary | ✅ PASS | Entire feature is template overrides. |
 | XI. Test Coverage | ✅ PASS | Integration tests cover all rendering paths; screenshot tests cover all permutations × 3 viewports. |
 | XII. Documentation | ✅ PASS | `quickstart.md` covers setup, configuration, and customisation. |
-| XIII. Multi-Viewport Screenshot Coverage | ✅ PASS | FR-012 mandates 7 permutations × 3 viewports = 21 files. Screenshot tests in `screenshots/test_login_screenshots.py`, written to `docs/_static/{desktop,tablet,mobile}/`. |
+| XIII. Multi-Viewport Screenshot Coverage | ✅ PASS | FR-012 + FR-016: 9 permutations × 3 viewports = 27 files (`login_redirect.html` exempt — ephemeral redirect). Screenshot tests in `screenshots/test_login_screenshots.py`, written to `docs/_static/{desktop,tablet,mobile}/`. |
 
 **Post-design re-check** (after Phase 1 artifacts):
 
@@ -84,10 +88,13 @@ dac/
             │   ├── login.html                   # REWRITE: Cotton (social top, form below, passkey/code, signup link)
             │   ├── request_login_code.html       # REWRITE: Cotton (description, form, back-to-login link)
             │   └── confirm_login_code.html       # RESTRUCTURE: extend base_entrance.html directly (bypass base_confirm_code.html)
-            └── (all other templates unchanged — already Cotton or out of scope)
+            └── socialaccount/
+                ├── login.html                   # REWRITE: Cotton (confirm social sign-in/connect — process=login|connect)
+                ├── login_cancelled.html          # REWRITE: Cotton (OAuth cancellation message + sign-in link)
+                └── login_redirect.html           # REWRITE: minimal meta-refresh, no <c-entrance> shell (ephemeral redirect)
 
 screenshots/
-└── test_login_screenshots.py                    # 7 permutations × 3 viewports = 21 files
+└── test_login_screenshots.py                    # 9 permutations × 3 viewports = 27 files (login_redirect exempt)
 
 docs/_static/
 ├── desktop/                                     # 1440×900 screenshots (auto-generated)

@@ -143,8 +143,13 @@ ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 # No email verification by default (tests can override)
 ACCOUNT_EMAIL_VERIFICATION = "none"
 
-# Disable optional features by default (enable in specific tests)
-MFA_PASSKEY_LOGIN_ENABLED = False
+# MFA_PASSKEY_LOGIN_ENABLED is True so that allauth.mfa.webauthn.urls registers
+# mfa_login_webauthn at import time (the URL list is built once on first import,
+# before any per-test settings override can take effect).
+# Tests that need passkey login *disabled* should still set
+# settings.MFA_PASSKEY_LOGIN_ENABLED = False, which controls runtime behaviour
+# (template rendering, view guards) even though the URL is always registered.
+MFA_PASSKEY_LOGIN_ENABLED = True
 MFA_PASSKEY_SIGNUP_ENABLED = True
 MFA_SUPPORTED_TYPES = ["totp", "webauthn", "recovery_codes"]
 MFA_WEBAUTHN_ALLOW_INSECURE_ORIGIN = True
