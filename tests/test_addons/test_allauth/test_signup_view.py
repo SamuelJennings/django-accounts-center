@@ -283,7 +283,7 @@ def test_signup_closed_shows_closed_message(client, settings):
     response = client.get(get_signup_url())
     assert response.status_code == 200
     content = response.content.decode()
-    assert "Sign Up Closed" in content
+    assert "Sign up closed" in content
     assert "currently closed" in content
 
 

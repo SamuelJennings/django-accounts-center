@@ -169,8 +169,8 @@ def test_login_page_email_form_hidden_when_socialaccount_only(client, settings):
 def test_login_page_passkey_and_code_hidden_when_socialaccount_only(client, settings):
     """Passkey and login-by-code buttons must be hidden when SOCIALACCOUNT_ONLY=True."""
     settings.SOCIALACCOUNT_ONLY = True
-    settings.PASSKEY_LOGIN_ENABLED = True
-    settings.LOGIN_BY_CODE_ENABLED = True
+    settings.MFA_PASSKEY_LOGIN_ENABLED = True
+    settings.ACCOUNT_LOGIN_BY_CODE_ENABLED = True
     response = client.get(get_login_url())
     content = response.content.decode()
     assert "passkey_login" not in content
@@ -185,7 +185,7 @@ def test_login_page_passkey_and_code_hidden_when_socialaccount_only(client, sett
 @pytest.mark.django_db
 def test_login_page_passkey_button_absent_when_disabled(client, settings):
     """Passkey button must not appear when PASSKEY_LOGIN_ENABLED=False."""
-    settings.PASSKEY_LOGIN_ENABLED = False
+    settings.MFA_PASSKEY_LOGIN_ENABLED = False
     response = client.get(get_login_url())
     content = response.content.decode()
     assert "passkey_login" not in content
@@ -195,7 +195,7 @@ def test_login_page_passkey_button_absent_when_disabled(client, settings):
 def test_login_page_passkey_button_absent_when_socialaccount_only(client, settings):
     """Passkey button must be absent when SOCIALACCOUNT_ONLY=True."""
     settings.SOCIALACCOUNT_ONLY = True
-    settings.PASSKEY_LOGIN_ENABLED = True
+    settings.MFA_PASSKEY_LOGIN_ENABLED = True
     response = client.get(get_login_url())
     content = response.content.decode()
     assert "passkey_login" not in content
@@ -368,12 +368,12 @@ def test_socialaccount_login_has_no_element_tags():
 
 @pytest.mark.django_db
 def test_socialaccount_login_process_login_shows_sign_in_via():
-    """socialaccount/login.html with process='login' shows 'Sign In Via' heading."""
+    """socialaccount/login.html with process='login' shows provider name in heading."""
     content = _render_template(
         "socialaccount/login.html",
         {"provider": _MockProvider(), "process": "login", "redirect_field": ""},
     )
-    assert "Sign In Via" in content
+    assert "Sign in using" in content
     assert "Google" in content
 
 

@@ -63,7 +63,7 @@
 
 {% block extra_js %}
   {{ block.super }}
-  {% if PASSKEY_LOGIN_ENABLED %}
+  {% if not SOCIALACCOUNT_ONLY and PASSKEY_LOGIN_ENABLED %}
     {% include "mfa/webauthn/snippets/login_script.html" with button_id="passkey_login" %}
   {% endif %}
 {% endblock extra_js %}
