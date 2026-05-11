@@ -30,7 +30,7 @@ plus integration tests. US3 and US4 are P2 stories that can follow independently
 
 **Purpose**: Create the integration test module skeleton.
 
-- [ ] T001 Create `tests/test_addons/test_allauth/test_email_verification_view.py` with empty test class structure and required imports (`pytest`, `@pytest.mark.django_db`, allauth URL names, `Client`, `override_settings`)
+- [X] T001 Create `tests/test_addons/test_allauth/test_email_verification_view.py` with empty test class structure and required imports (`pytest`, `@pytest.mark.django_db`, allauth URL names, `Client`, `override_settings`)
 
 ---
 
@@ -47,7 +47,7 @@ needed — user story implementation begins immediately in Phase 3.
 
 **Independent Test**: Navigate to `account_email_verification_sent` and assert the informational page renders with no form. Craft a valid confirmation key URL, follow it, and assert the confirm form renders. Then test an invalid key and assert the error branch appears with no form and with a link back to email management.
 
-- [ ] T002 [P] [US1] Rewrite `dac/addons/allauth/templates/account/verification_sent.html` — full Cotton rewrite of the existing `{% element %}`-based template. Template must:
+- [X] T002 [P] [US1] Rewrite `dac/addons/allauth/templates/account/verification_sent.html` — full Cotton rewrite of the existing `{% element %}`-based template. Template must:
       - `{% extends "account/base_entrance.html" %}` + `{% load i18n %}`
       - `{% block title %}{% trans "Verify Your Email Address" %}{% endblock title %}` (no `head_title` block — `base_entrance.html` derives it from `title`)
       - `{% block content %}`:
@@ -55,7 +55,7 @@ needed — user story implementation begins immediately in Phase 3.
       - Remove `{% load allauth %}` — no longer needed without `{% element %}` tags
       - Zero `{% element %}` tags
 
-- [ ] T003 [P] [US1] [US2] Rewrite `dac/addons/allauth/templates/account/email_confirm.html` — full Cotton rewrite covering all three conditional branches. Template must:
+- [X] T003 [P] [US1] [US2] Rewrite `dac/addons/allauth/templates/account/email_confirm.html` — full Cotton rewrite covering all three conditional branches. Template must:
       - `{% extends "account/base_entrance.html" %}` + `{% load i18n account %}`
       - `{% block title %}{% trans "Confirm Email Address" %}{% endblock title %}`
       - `{% block content %}` wrapping the outer `{% with email=confirmation.email_address.email %}…{% endwith %}` (so `{{ email }}` is available in Branch B):
@@ -73,13 +73,13 @@ needed — user story implementation begins immediately in Phase 3.
       - Zero `{% element %}` tags
       - Replicate the allauth original exactly: every element, paragraph, and conditional present in the source must appear in the Cotton version with no additions or omissions beyond the syntax change (FR-003)
 
-- [ ] T004 [P] [US1] [US5] Write US1 integration tests in `tests/test_addons/test_allauth/test_email_verification_view.py` covering:
+- [X] T004 [P] [US1] [US5] Write US1 integration tests in `tests/test_addons/test_allauth/test_email_verification_view.py` covering:
       - `account_email_verification_sent` renders HTTP 200 for anonymous user
       - `verification_sent.html` rendered output contains no `{% element %}` raw tags
       - `verification_sent.html` rendered output contains non-empty descriptive paragraph text inside the entrance shell
       - `verification_sent.html` rendered output contains no `<form>` element
 
-- [ ] T005 [P] [US1] [US2] [US5] Write US1 + US2 integration tests in `tests/test_addons/test_allauth/test_email_verification_view.py` covering:
+- [X] T005 [P] [US1] [US2] [US5] Write US1 + US2 integration tests in `tests/test_addons/test_allauth/test_email_verification_view.py` covering:
       - `email_confirm.html` with a valid key (`can_confirm=True`) renders HTTP 200
       - Valid-key branch contains a `<form>` element
       - Valid-key branch contains a submit button with **non-empty** button text (MUST NOT assert specific label string; MUST NOT assert `"Confirm"` explicitly)
@@ -90,7 +90,7 @@ needed — user story implementation begins immediately in Phase 3.
       - Invalid-key branch contains a link pointing to the `account_email` URL
       - Both branches contain no `{% element %}` raw tags in rendered output
 
-- [ ] TVAL-A [US1] [US2] Phase 3 quality gate:
+- [X] TVAL-A [US1] [US2] Phase 3 quality gate:
       - Run `poetry run python manage.py check` — MUST pass with no errors
       - Run `poetry run pytest tests/test_addons/test_allauth/test_email_verification_view.py --no-cov -q` — all Phase 3 tests MUST pass
 
@@ -104,7 +104,7 @@ needed — user story implementation begins immediately in Phase 3.
 
 **Independent Test**: Boot the example app and assert `account_inactive` URL returns HTTP 200 with a response body that contains the `<c-entrance>` wrapper and no `{% element %}` tags.
 
-- [ ] T006 [P] [US4] Rewrite `dac/addons/allauth/templates/account/account_inactive.html` — full Cotton rewrite. Template must:
+- [X] T006 [P] [US4] Rewrite `dac/addons/allauth/templates/account/account_inactive.html` — full Cotton rewrite. Template must:
       - Change `{% extends "allauth/layouts/entrance.html" %}` to `{% extends "account/base_entrance.html" %}`
       - `{% load i18n %}` (no `{% load allauth %}` — no longer needed)
       - `{% block title %}{% translate "Account Inactive" %}{% endblock title %}` (no `head_title` block)
@@ -112,13 +112,13 @@ needed — user story implementation begins immediately in Phase 3.
           1. `<c-entrance.text center>{% translate "This account is inactive." %}</c-entrance.text>`
       - Zero `{% element %}` tags
 
-- [ ] T007 [P] [US4] [US5] Write US4 integration test in `tests/test_addons/test_allauth/test_email_verification_view.py` covering:
+- [X] T007 [P] [US4] [US5] Write US4 integration test in `tests/test_addons/test_allauth/test_email_verification_view.py` covering:
       - `account_inactive` URL renders HTTP 200
       - Rendered output contains a non-empty explanatory message
       - Rendered output contains no `{% element %}` raw tags
       - Rendered output does NOT contain a `<form>` element
 
-- [ ] TVAL-B [US4] Phase 4 quality gate:
+- [X] TVAL-B [US4] Phase 4 quality gate:
       - Run `poetry run python manage.py check` — MUST pass with no errors
       - Run `poetry run pytest tests/test_addons/test_allauth/test_email_verification_view.py --no-cov -q` — all Phase 4 tests MUST pass
 
@@ -132,7 +132,7 @@ needed — user story implementation begins immediately in Phase 3.
 
 **Independent Test**: With `ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED = True`, navigate to the code-confirmation URL and assert HTTP 200 with a code-entry form rendered.
 
-- [ ] T008 [P] [US3] Fix `dac/addons/allauth/templates/account/confirm_email_verification_code.html` — corrective rewrite of the existing override. Template must:
+- [X] T008 [P] [US3] Fix `dac/addons/allauth/templates/account/confirm_email_verification_code.html` — corrective rewrite of the existing override. Template must:
       - `{% extends "account/base_confirm_code.html" %}` + `{% load i18n %}`
       - `{% block title_ %}{% translate "Enter Email Verification Code" %}{% endblock title_ %}` — MUST be `title_` (inner block), NOT `title` (outer base block)
       - `{% block recipient %}<a href="mailto:{{ email }}">{{ email }}</a>{% endblock recipient %}`
@@ -144,14 +144,14 @@ needed — user story implementation begins immediately in Phase 3.
       - Remove any `{% block title %}` and `{% block head_title %}` overrides from the current incorrect version
       - Zero `{% element %}` tags
 
-- [ ] T009 [P] [US3] [US5] Write US3 integration test in `tests/test_addons/test_allauth/test_email_verification_view.py` covering (using `@pytest.mark.override_settings(ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED=True)` or `override_settings`):
+- [X] T009 [P] [US3] [US5] Write US3 integration test in `tests/test_addons/test_allauth/test_email_verification_view.py` covering (using `@pytest.mark.override_settings(ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED=True)` or `override_settings`):
       - `confirm_email_verification_code.html` renders HTTP 200 when the code-based flow is enabled
       - Rendered output contains a code-entry `<input>` field
       - Rendered output contains no `{% element %}` raw tags
       - Template renders without exception even when `ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED = False` (fail-silent URL blocks)
       - POSTing an invalid code (with `ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED = True`) returns a response containing a non-empty inline error message (US3 acceptance scenario 3)
 
-- [ ] TVAL-C [US3] Phase 5 quality gate:
+- [X] TVAL-C [US3] Phase 5 quality gate:
       - Run `poetry run python manage.py check` — MUST pass with no errors
       - Run `poetry run pytest tests/test_addons/test_allauth/test_email_verification_view.py --no-cov -q` — all Phase 5 tests MUST pass
 
@@ -173,13 +173,13 @@ needed — user story implementation begins immediately in Phase 3.
 | `email-verification-code` | `confirm_email_verification_code.html` | code-entry form |
 | `account-inactive` | `account_inactive.html` | deactivated-account redirect |
 
-- [ ] T010 [US5] Write `screenshots/test_email_verification_screenshots.py` with parametrized pytest-playwright tests:
+- [X] T010 [US5] Write `screenshots/test_email_verification_screenshots.py` with parametrized pytest-playwright tests:
       - 5 page-state permutations (see table above)
       - 3 viewport sizes: desktop (1440×900), tablet (768×1024), mobile (390×844)
       - Follow the exact patterns established in `screenshots/test_password_reset_screenshots.py` (Spec 003)
       - Save screenshots to `docs/_static/{desktop,tablet,mobile}/<slug>.png`
 
-- [ ] T011 [US5] Run `poetry run pytest screenshots/test_email_verification_screenshots.py` — MUST pass; commit all 15 generated PNG files from `docs/_static/{desktop,tablet,mobile}/email-*.png` and `docs/_static/{desktop,tablet,mobile}/account-inactive.png`
+- [X] T011 [US5] Run `poetry run pytest screenshots/test_email_verification_screenshots.py` — MUST pass; commit all 15 generated PNG files from `docs/_static/{desktop,tablet,mobile}/email-*.png` and `docs/_static/{desktop,tablet,mobile}/account-inactive.png`
 
 - [ ] TPW-1 [US5] Playwright MCP browser verification — all five email-verification page states (Principle VI):
       - Start dev server: `poetry run python manage.py runserver`
@@ -193,9 +193,9 @@ needed — user story implementation begins immediately in Phase 3.
 
 ## Phase 7: Polish & Cross-Cutting Validation
 
-- [ ] TVAL-1 Run `poetry run pytest tests/test_addons/test_allauth/test_email_verification_view.py --no-cov -q` — MUST pass with all tests green
-- [ ] TVAL-2 Run `poetry run pytest tests/ --no-cov -q` — full suite MUST pass; zero regressions from previous specs
-- [ ] TVAL-3 [P] Inspect all 15 screenshots in `docs/_static/{desktop,tablet,mobile}/` — verify layout, typography, and spacing are consistent with the signup and login pages from Specs 001 and 002
+- [X] TVAL-1 Run `poetry run pytest tests/test_addons/test_allauth/test_email_verification_view.py --no-cov -q` — MUST pass with all tests green
+- [X] TVAL-2 Run `poetry run pytest tests/ --no-cov -q` — full suite MUST pass; zero regressions from previous specs
+- [X] TVAL-3 [P] Inspect all 15 screenshots in `docs/_static/{desktop,tablet,mobile}/` — verify layout, typography, and spacing are consistent with the signup and login pages from Specs 001 and 002
 
 ---
 
