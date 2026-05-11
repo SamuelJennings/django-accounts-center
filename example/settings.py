@@ -227,6 +227,7 @@ EASY_ICONS = {
             "password": "bi bi-lock-fill",
             "sessions": "bi bi-display",
             "success": "bi bi-check-circle-fill",
+            "submit": "bi bi-check-lg",
             "warning": "bi bi-exclamation-triangle-fill",
             "passkey": "bi bi-key-fill",
             "passcode": "bi bi-braces-asterisk",
