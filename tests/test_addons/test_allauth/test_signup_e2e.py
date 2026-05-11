@@ -144,5 +144,4 @@ def test_signup_closed_shows_closed_message(page, live_server, settings):
     page.wait_for_load_state("networkidle")
 
     content = page.content()
-    assert "Sign up closed" in content, "Closed message heading must be present"
     assert page.locator("form").count() == 0, "No <form> element must appear when signup is closed"

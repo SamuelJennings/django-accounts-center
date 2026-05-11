@@ -1,8 +1,14 @@
-{% extends "account/base_confirm_code.html" %}
+{% extends "account/base_entrance.html" %}
 {% load i18n %}
-{% block title_ %}{% translate "Enter Email Verification Code" %}{% endblock title_ %}
-{% block recipient %}<a href="mailto:{{ email }}">{{ email }}</a>{% endblock recipient %}
-{% block action_url %}{% url 'account_email_verification_sent' as u %}{{ u }}{% endblock action_url %}
-{% block action_url_resend %}{% url 'account_email_verification_sent' as u %}{{ u }}{% endblock action_url_resend %}
-{% block extra_tags %}email,verification{% endblock extra_tags %}
-{% block change_title %}{% translate "Use a different email address" %}{% endblock change_title %}
+
+{% block title %}
+  {% trans "Enter verification code" %}
+{% endblock title %}
+
+{% block content %}
+  <c-allauth.confirm-code recipient="{{ email }}"
+                          action="{% url 'account_email_verification_sent' %}"
+                          resend-url="{% url 'account_email_verification_sent' %}"
+                          change-title="{% trans "Use a different email address" %}"
+                          resend-supported />
+{% endblock content %}

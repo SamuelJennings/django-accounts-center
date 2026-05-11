@@ -12,7 +12,7 @@ or settings are introduced. The four templates are:
 
 1. `account/verification_sent.html` — informational page, no form; use `<c-entrance.text center>`
 2. `account/email_confirm.html` — three-branch page; valid key shows `<c-form>` + `<c-button>`; both invalid branches show `<c-entrance.text>`
-3. `account/confirm_email_verification_code.html` — block overrides on `base_confirm_code.html`; correct `title_` block and add fail-silent URL patterns
+3. `account/confirm_email_verification_code.html` — use `<c-allauth.confirm-code>` component with `resend-supported` and fail-silent URL patterns
 4. `account/account_inactive.html` — switch extends from `allauth/layouts/entrance.html` to `account/base_entrance.html`; use `<c-entrance.text center>`
 
 ## Technical Context
@@ -114,9 +114,9 @@ No new directories are needed.
 {% load i18n %}
 {% load allauth %}
 
-{% block head_title %}
+{% block title %}
   {% trans "Verify Your Email Address" %}
-{% endblock head_title %}
+{% endblock title %}
 
 {% block content %}
   {% element h1 %}
@@ -168,12 +168,12 @@ No new directories are needed.
 {% load i18n %}
 
 {% block title %}
-  {% translate "Account Inactive" %}
+  {% trans "Account Inactive" %}
 {% endblock title %}
 
 {% block content %}
   <c-entrance.text center>
-    {% translate "This account is inactive." %}
+    {% trans "This account is inactive." %}
   </c-entrance.text>
 {% endblock content %}
 ```
@@ -181,7 +181,7 @@ No new directories are needed.
 **Notes**:
 
 - Remove `{% load allauth %}` (no longer needed)
-- The `{% block head_title %}` override is removed; `base_entrance.html` defaults `head_title`
+- The `{% block title %}` override is removed; `base_entrance.html` defaults `head_title`
   to `title` block content
 
 ---
@@ -257,43 +257,31 @@ conditional branches exactly.
 
 ### Phase 4 — Template: `confirm_email_verification_code.html` (US3, US5)
 
-**Goal**: Correct the `title_` block name (was `title`), remove the `head_title` block
-override, and add `action_url_resend` with fail-silent pattern.
+**Goal**: Use `<c-allauth.confirm-code>` component (same as `confirm_login_code.html`),
+declare `resend-supported`, and use fail-silent URL patterns.
 
 **After**:
 
 ```django
-{% extends "account/base_confirm_code.html" %}
+{% extends "account/base_entrance.html" %}
 {% load i18n %}
 
-{% block title_ %}
-  {% translate "Enter Email Verification Code" %}
-{% endblock title_ %}
+{% block title %}{% trans "Enter verification code" %}{% endblock title %}
 
-{% block recipient %}<a href="mailto:{{ email }}">{{ email }}</a>{% endblock recipient %}
-
-{% block action_url %}
-  {% url 'account_email_verification_sent' as u %}{{ u }}
-{% endblock action_url %}
-
-{% block action_url_resend %}
-  {% url 'account_email_verification_sent' as u %}{{ u }}
-{% endblock action_url_resend %}
-
-{% block extra_tags %}email,verification{% endblock extra_tags %}
-
-{% block change_title %}
-  {% translate "Use a different email address" %}
-{% endblock change_title %}
+{% block content %}
+  <c-allauth.confirm-code recipient="{{ email }}"
+                          action="{% url 'account_email_verification_sent' as u %}{{ u }}"
+                          resend-url="{% url 'account_email_verification_sent' as u %}{{ u }}"
+                          change-title="{% trans \"Use a different email address\" %}"
+                          resend-supported />
+{% endblock content %}
 ```
 
 **Notes**:
 
-- Remove `{% load allauth account %}` if no longer needed (check base_confirm_code.html uses)
-- Remove `{% block head_title %}` override (per FR-004: head_title_ not overridden)
-- Change `{% block title %}` → `{% block title_ %}` to match base_confirm_code.html API
-- Add `{% block action_url_resend %}` with same URL as `action_url`
-- Fail-silent pattern: `{% url '...' as var %}{{ var }}` renders empty string if URL not registered
+- `resend-supported` enables the resend button+form; `can_resend` (from view context) controls enabled/disabled
+- Fail-silent `{% url ... as u %}{{ u }}` renders empty string when URL not registered (safe when `ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED = False`)
+- `base_confirm_code.html` no longer exists; `<c-allauth.confirm-code>` is the component equivalent
 
 ---
 

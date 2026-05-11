@@ -2,9 +2,9 @@
 {% load allauth %}
 {% load i18n %}
 
-{% block head_title %}
+{% block title %}
   {% trans "Two-Factor Authentication" %}
-{% endblock head_title %}
+{% endblock title %}
 
 {% block content %}
   {% element h1 tags="mfa,index" %}
@@ -13,16 +13,16 @@
 {% if "totp" in MFA_SUPPORTED_TYPES %}
   {% element panel %}
   {% slot title %}
-  {% translate "Authenticator App" %}
+  {% trans "Authenticator App" %}
 {% endslot %}
 {% slot body %}
 {% if authenticators.totp %}
   {% element p %}
-  {% translate "Authentication using an authenticator app is active." %}
+  {% trans "Authentication using an authenticator app is active." %}
 {% endelement %}
 {% else %}
 {% element p %}
-{% translate "An authenticator app is not active." %}
+{% trans "An authenticator app is not active." %}
 {% endelement %}
 {% endif %}
 {% endslot %}
@@ -31,11 +31,11 @@
 {% url 'mfa_activate_totp' as activate_url %}
 {% if authenticators.totp %}
   {% element button href=deactivate_url tags="danger,delete,panel" %}
-  {% translate "Deactivate" %}
+  {% trans "Deactivate" %}
 {% endelement %}
 {% else %}
 {% element button href=activate_url tags="panel" %}
-{% translate "Activate" %}
+{% trans "Activate" %}
 {% endelement %}
 {% endif %}
 {% endslot %}
@@ -44,7 +44,7 @@
 {% if "webauthn" in MFA_SUPPORTED_TYPES %}
   {% element panel %}
   {% slot title %}
-  {% translate "Security Keys" %}
+  {% trans "Security Keys" %}
 {% endslot %}
 {% slot body %}
 {% if authenticators.webauthn|length %}
@@ -53,7 +53,7 @@
 {% endelement %}
 {% else %}
 {% element p %}
-{% translate "No security keys have been added." %}
+{% trans "No security keys have been added." %}
 {% endelement %}
 {% endif %}
 {% endslot %}
@@ -61,12 +61,12 @@
 {% if authenticators.webauthn|length %}
   {% url 'mfa_list_webauthn' as webauthn_list_url %}
   {% element button href=webauthn_list_url %}
-  {% translate "Manage" %}
+  {% trans "Manage" %}
 {% endelement %}
 {% else %}
 {% url 'mfa_add_webauthn' as webauthn_add_url %}
 {% element button href=webauthn_add_url %}
-{% translate "Add" %}
+{% trans "Add" %}
 {% endelement %}
 {% endif %}
 {% endslot %}
@@ -76,7 +76,7 @@
   {% with total_count=authenticators.recovery_codes.generate_codes|length unused_count=authenticators.recovery_codes.get_unused_codes|length %}
     {% element panel %}
     {% slot title %}
-    {% translate "Recovery Codes" %}
+    {% trans "Recovery Codes" %}
   {% endslot %}
   {% slot body %}
   {% if authenticators.recovery_codes %}
@@ -85,7 +85,7 @@
   {% endelement %}
 {% else %}
   {% element p %}
-  {% translate "No recovery codes set up." %}
+  {% trans "No recovery codes set up." %}
 {% endelement %}
 {% endif %}
 {% endslot %}
@@ -95,13 +95,13 @@
       {% slot actions %}
       {% url 'mfa_view_recovery_codes' as view_url %}
       {% element button href=view_url tags="panel" %}
-      {% translate "View" %}
+      {% trans "View" %}
     {% endelement %}
   {% endslot %}
   {% slot actions %}
   {% url 'mfa_download_recovery_codes' as download_url %}
   {% element button href=download_url tags="secondary,panel" %}
-  {% translate "Download" %}
+  {% trans "Download" %}
 {% endelement %}
 {% endslot %}
 {% endif %}
@@ -109,7 +109,7 @@
 {% slot actions %}
 {% url 'mfa_generate_recovery_codes' as generate_url %}
 {% element button href=generate_url tags="secondary,panel" %}
-{% translate "Generate" %}
+{% trans "Generate" %}
 {% endelement %}
 {% endslot %}
 {% endif %}

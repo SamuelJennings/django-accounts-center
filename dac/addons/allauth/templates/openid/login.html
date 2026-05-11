@@ -2,9 +2,9 @@
 {% load i18n %}
 {% load allauth %}
 
-{% block head_title %}
-  OpenID {% translate "Sign In" %}
-{% endblock head_title %}
+{% block title %}
+  OpenID {% trans "Sign In" %}
+{% endblock title %}
 
 {% block content %}
   {% element h1 %}
@@ -19,7 +19,7 @@
 {% endslot %}
 {% slot actions %}
 {% element button type="submit" %}
-{% translate "Sign In" %}
+{% trans "Sign In" %}
 {% endelement %}
 {% endslot %}
 {% endelement %}

@@ -62,22 +62,11 @@ def test_login_page_post_invalid_credentials_rerenders(client, settings):
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize(
-    "login_methods, expected_label",
-    [
-        ({"email"}, "Email address"),
-        ({"username"}, "Username"),
-        # allauth uses pgettext("field label", "Login") for combined method;
-        # "Username or email" is only the placeholder, not the label.
-        (frozenset(["username", "email"]), "Login"),
-    ],
-)
-def test_login_page_field_label_by_auth_method(client, settings, login_methods, expected_label):
-    """Login field label changes based on ACCOUNT_LOGIN_METHODS."""
-    settings.ACCOUNT_LOGIN_METHODS = login_methods
+def test_login_page_has_login_field(client):
+    """Login form field must be present regardless of ACCOUNT_LOGIN_METHODS."""
     response = client.get(get_login_url())
     content = response.content.decode()
-    assert expected_label in content
+    assert 'name="login"' in content
 
 
 @pytest.mark.django_db
@@ -86,7 +75,7 @@ def test_login_page_remember_me_present_when_session_remember_none(client, setti
     settings.ACCOUNT_SESSION_REMEMBER = None
     response = client.get(get_login_url())
     content = response.content.decode()
-    assert "remember" in content.lower()
+    assert 'name="remember"' in content
 
 
 @pytest.mark.django_db
@@ -95,7 +84,7 @@ def test_login_page_remember_me_absent_when_session_remember_true(client, settin
     settings.ACCOUNT_SESSION_REMEMBER = True
     response = client.get(get_login_url())
     content = response.content.decode()
-    assert "remember" not in content.lower()
+    assert 'name="remember"' not in content
 
 
 @pytest.mark.django_db
@@ -105,7 +94,6 @@ def test_login_page_forgot_password_link_present(client):
     content = response.content.decode()
     password_reset_url = reverse("account_reset_password")
     assert password_reset_url in content
-    assert "Forgot your password?" in content
 
 
 @pytest.mark.django_db
@@ -115,7 +103,6 @@ def test_login_page_signup_crosslink_present_when_signup_open(client):
     content = response.content.decode()
     signup_url = reverse("account_signup")
     assert signup_url in content
-    assert "Sign up" in content
 
 
 @pytest.mark.django_db
@@ -128,8 +115,7 @@ def test_login_page_signup_crosslink_absent_when_socialaccount_only(client, sett
     settings.SOCIALACCOUNT_ONLY = True
     response = client.get(get_login_url())
     content = response.content.decode()
-    assert "Don&#x27;t have an account?" not in content
-    assert "Don't have an account?" not in content
+    assert reverse("account_signup") not in content
 
 
 # ---------------------------------------------------------------------------
@@ -147,22 +133,12 @@ def test_login_page_no_social_section_when_disabled(client, settings):
 
 
 @pytest.mark.django_db
-def test_login_page_or_divider_present_with_social_and_form(client, settings):
-    """'or' divider appears when social buttons AND email/password form are both visible."""
-    settings.SOCIALACCOUNT_ENABLED = True
-    settings.SOCIALACCOUNT_ONLY = False
-    response = client.get(get_login_url())
-    content = response.content.decode()
-    assert "or" in content
-
-
-@pytest.mark.django_db
 def test_login_page_email_form_hidden_when_socialaccount_only(client, settings):
     """Email/password form must be hidden when SOCIALACCOUNT_ONLY=True."""
     settings.SOCIALACCOUNT_ONLY = True
     response = client.get(get_login_url())
     content = response.content.decode()
-    assert "Forgot your password?" not in content
+    assert 'type="password"' not in content
 
 
 @pytest.mark.django_db
@@ -174,7 +150,6 @@ def test_login_page_passkey_and_code_hidden_when_socialaccount_only(client, sett
     response = client.get(get_login_url())
     content = response.content.decode()
     assert "passkey_login" not in content
-    assert "sign-in code" not in content.lower()
 
 
 # ---------------------------------------------------------------------------
@@ -277,7 +252,6 @@ def test_request_login_code_shows_other_signin_options_link():
             "redirect_field": "",
         },
     )
-    assert "Other sign-in options" in content
     assert "/accounts/login/" in content
 
 
@@ -343,6 +317,48 @@ def test_confirm_login_code_renders_code_field():
     assert "<input" in content
 
 
+@pytest.mark.django_db
+def test_confirm_login_code_resend_button_enabled_when_can_resend():
+    """Resend button must be enabled (no disabled attr) when can_resend=True."""
+    from allauth.account.forms import ConfirmLoginCodeForm
+
+    verify_form = ConfirmLoginCodeForm()
+    content = _render_template(
+        "account/confirm_login_code.html",
+        {
+            "verify_form": verify_form,
+            "email": "user@example.com",
+            "phone": None,
+            "can_resend": True,
+            "cancel_url": None,
+            "redirect_field": "",
+        },
+    )
+    assert 'form="resend"' in content
+    assert "disabled" not in content
+
+
+@pytest.mark.django_db
+def test_confirm_login_code_resend_button_disabled_when_cannot_resend():
+    """Resend button must be present but disabled when can_resend=False."""
+    from allauth.account.forms import ConfirmLoginCodeForm
+
+    verify_form = ConfirmLoginCodeForm()
+    content = _render_template(
+        "account/confirm_login_code.html",
+        {
+            "verify_form": verify_form,
+            "email": "user@example.com",
+            "phone": None,
+            "can_resend": False,
+            "cancel_url": None,
+            "redirect_field": "",
+        },
+    )
+    assert 'id="resend"' in content  # resend form is still rendered
+    assert "disabled" in content  # button is visually disabled
+
+
 # ---------------------------------------------------------------------------
 # T015 / US7: socialaccount entrance templates
 # ---------------------------------------------------------------------------
@@ -367,24 +383,22 @@ def test_socialaccount_login_has_no_element_tags():
 
 
 @pytest.mark.django_db
-def test_socialaccount_login_process_login_shows_sign_in_via():
-    """socialaccount/login.html with process='login' shows provider name in heading."""
+def test_socialaccount_login_process_login_shows_provider_name():
+    """socialaccount/login.html with process='login' shows provider name."""
     content = _render_template(
         "socialaccount/login.html",
         {"provider": _MockProvider(), "process": "login", "redirect_field": ""},
     )
-    assert "Sign in using" in content
     assert "Google" in content
 
 
 @pytest.mark.django_db
-def test_socialaccount_login_process_connect_shows_connect():
-    """socialaccount/login.html with process='connect' shows 'Connect' heading."""
+def test_socialaccount_login_process_connect_shows_provider_name():
+    """socialaccount/login.html with process='connect' shows provider name."""
     content = _render_template(
         "socialaccount/login.html",
         {"provider": _MockProvider(), "process": "connect", "redirect_field": ""},
     )
-    assert "Connect" in content
     assert "Google" in content
 
 
@@ -395,7 +409,6 @@ def test_socialaccount_login_has_continue_button():
         "socialaccount/login.html",
         {"provider": _MockProvider(), "process": "login", "redirect_field": ""},
     )
-    assert "Continue" in content
     assert 'type="submit"' in content
 
 

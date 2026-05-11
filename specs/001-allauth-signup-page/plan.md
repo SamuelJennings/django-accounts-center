@@ -127,7 +127,7 @@ screenshots/
 ```html
 {% extends "mvp/base.html" %}
 {% load i18n %}
-{% block title %}{% block head_title %}{% endblock %}{% endblock %}
+{% block title %}{% block title %}{% endblock %}{% endblock %}
 ```
 
 **Key**: Only the `title`/`head_title` block mapping is added. The `{% block app %}` block (which controls `<body>` rendering) is left to `allauth/layouts/entrance.html` and future manage layout templates to override.
@@ -311,7 +311,7 @@ screenshots/
 ```html
 {% extends "account/base_entrance.html" %}
 {% load i18n %}
-{% block head_title %}{% trans "Sign Up Closed" %}{% endblock %}
+{% block title %}{% trans "Sign Up Closed" %}{% endblock %}
 {% block content %}
   <c-card class="shadow text-center">
     <c-slot name="header">
@@ -379,7 +379,7 @@ screenshots/
 ```html
 {% extends "socialaccount/base_entrance.html" %}
 {% load i18n %}
-{% block head_title %}{% trans "Sign Up" %}{% endblock %}
+{% block title %}{% trans "Sign Up" %}{% endblock %}
 {% block content %}
   <c-card class="shadow">
     <c-slot name="header">

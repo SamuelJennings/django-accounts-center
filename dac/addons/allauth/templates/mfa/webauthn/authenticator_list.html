@@ -16,10 +16,10 @@
 {% element table %}
 {% element thead %}
 {% element th %}
-{% translate "Key" %}
+{% trans "Key" %}
 {% endelement %}
 {% element th %}
-{% translate "Usage" %}
+{% trans "Usage" %}
 {% endelement %}
 {% element th %}
 {% endelement %}
@@ -31,15 +31,15 @@
   {{ authenticator }}
   {% if authenticator.wrap.is_passwordless is True %}
     {% element badge tags="mfa,key,primary" %}
-    {% translate "Passkey" %}
+    {% trans "Passkey" %}
   {% endelement %}
 {% elif authenticator.wrap.is_passwordless is False %}
   {% element badge tags="mfa,key,secondary" %}
-  {% translate "Security key" %}
+  {% trans "Security key" %}
 {% endelement %}
 {% else %}
 {% element badge title=_("This key does not indicate whether it is a passkey.") tags="mfa,key,warning" %}
-{% translate "Unspecified" %}
+{% trans "Unspecified" %}
 {% endelement %}
 {% endif %}
 {% endelement %}
@@ -54,11 +54,11 @@
 {% element td align="right" %}
 {% url 'mfa_edit_webauthn' pk=authenticator.pk as edit_url %}
 {% element button tags="mfa,authenticator,edit,tool" href=edit_url %}
-{% translate "Edit" %}
+{% trans "Edit" %}
 {% endelement %}
 {% url 'mfa_remove_webauthn' pk=authenticator.pk as remove_url %}
 {% element button tags="mfa,authenticator,danger,delete,tool" href=remove_url %}
-{% translate "Remove" %}
+{% trans "Remove" %}
 {% endelement %}
 {% endelement %}
 {% endelement %}
@@ -68,7 +68,7 @@
 {% endif %}
 {% url 'mfa_add_webauthn' as add_url %}
 {% element button href=add_url %}
-{% translate "Add" %}
+{% trans "Add" %}
 {% endelement %}
 </li>
 </ul>

@@ -37,6 +37,9 @@ def test_email_verification_sent_page(live_server, settings, capture_screenshot)
 def test_email_confirm_valid_page(page, live_server, settings, django_user_model, save_screenshot):
     """Screenshot: email_confirm.html with a valid confirmation key (can_confirm=True branch)."""
     settings.ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED = False
+    # Disable HMAC so the view uses DB-backed EmailConfirmation.from_key().
+    # HMAC keys contain colons which crash Django's static file handler on Windows.
+    settings.ACCOUNT_EMAIL_CONFIRMATION_HMAC = False
     user = create_test_user(django_user_model)
     email_address = EmailAddress.objects.create(
         user=user,

@@ -1,9 +1,9 @@
 {% extends "socialaccount/base_entrance.html" %}
 {% load i18n %}
 
-{% block head_title %}
+{% block title %}
   {% trans "Sign Up" %}
-{% endblock head_title %}
+{% endblock title %}
 
 {% block content %}
   {# djlint:off #}
@@ -19,11 +19,10 @@
         </p>
       </div>
     </c-slot>
-    <c-form method="post" action="{% url 'socialaccount_signup' %}">
+    <c-form method="post" action="{% url 'socialaccount_signup' %}" :form-obj="form">
       {% if form.non_field_errors %}
         <c-alert variant="danger" class="mb-3">{{ form.non_field_errors }}</c-alert>
       {% endif %}
-      <c-form.crispy />
       {{ redirect_field }}
       <div class="d-grid mt-3">
         <c-button type="submit"

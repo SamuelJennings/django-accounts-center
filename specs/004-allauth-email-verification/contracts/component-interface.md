@@ -37,18 +37,17 @@ account/email_confirm.html
                </c-entrance.text>
 
 account/confirm_email_verification_code.html
-  └─ extends account/base_confirm_code.html (block overrides only)
-       ├─ {% block title_ %} — "Enter Email Verification Code"
-       ├─ {% block recipient %} — <a href="mailto:{{ email }}">{{ email }}</a>
-       ├─ {% block action_url %} — fail-silent {% url 'account_email_verification_sent' as u %}{{ u }}
-       ├─ {% block action_url_resend %} — same fail-silent pattern
-       ├─ {% block extra_tags %} — email,verification
-       └─ {% block change_title %} — "Use a different email address"
+  └─ <c-allauth.confirm-code
+          recipient="{{ email }}"
+          action="{% url 'account_email_verification_sent' as u %}{{ u }}"
+          resend-url="{% url 'account_email_verification_sent' as u %}{{ u }}"
+          change-title="{% trans 'Use a different email address' %}"
+          resend-supported />
 
 account/account_inactive.html
   └─ <c-entrance title="Account Inactive">   [via account/base_entrance.html]
        └─ <c-entrance.text center>
-            {% translate "This account is inactive." %}
+            {% trans "This account is inactive." %}
           </c-entrance.text>
 ```
 
@@ -81,7 +80,7 @@ are created.
 
 <!-- account_inactive.html — centred informational paragraph -->
 <c-entrance.text center>
-  {% translate "This account is inactive." %}
+  {% trans "This account is inactive." %}
 </c-entrance.text>
 
 <!-- email_confirm.html — confirmation message (not centred; contains inline content) -->
@@ -128,12 +127,18 @@ only the CSRF token and redirect field are required inside the form.
 
 ## Constraints & Non-Negotiables
 
-1. `confirm_email_verification_code.html` MUST use `{% block title_ %}` (inner block), NOT
-   `{% block title %}` (outer block), to match `base_confirm_code.html`'s block API.
-2. `confirm_email_verification_code.html` MUST NOT override `head_title_`.
+1. `confirm_email_verification_code.html` MUST use `<c-allauth.confirm-code>` and MUST
+   declare `resend-supported` (email verification flow supports resend via quota).
+2. `confirm_email_verification_code.html` uses fail-silent `{% url ... as u %}{{ u }}`
+   patterns for `action` and `resend-url` so the template renders safely when
+   `ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED = False`.
 3. `account_inactive.html` MUST extend `account/base_entrance.html`, NOT
    `allauth/layouts/entrance.html`.
 4. All four templates MUST be free of `{% element %}` and `{% endelement %}` tags.
 5. `<c-entrance.text>` without `center` modifier is used for paragraphs that contain
    inline links or user-specific content (email_confirm branches); `center` is used
    for purely informational messages.
+6. The `resend-supported` attribute (on `<c-allauth.confirm-code>`) is a flow-level
+   capability flag, separate from `can_resend` (view context, quota-based). When
+   `resend-supported` is set and `can_resend=False`, the button is `disabled` — not
+   hidden. When `resend-supported` is absent, no resend UI is rendered at all.

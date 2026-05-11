@@ -2,9 +2,9 @@
 {% load i18n %}
 {% load allauth %}
 
-{% block head_title %}
+{% block title %}
   {% trans "Authorize" %}
-{% endblock head_title %}
+{% endblock title %}
 
 {% block content %}
   {% element h1 %}
@@ -22,10 +22,10 @@
 {% slot actions %}
 {% element button_group %}
 {% element button name="action" value="grant" type="submit" tags="primary,consent" %}
-{% translate "Authorize" %}
+{% trans "Authorize" %}
 {% endelement %}
 {% element button name="action" value="cancel" type="submit" tags="outline,consent" %}
-{% translate "Cancel" %}
+{% trans "Cancel" %}
 {% endelement %}
 {% endelement %}
 {% endslot %}

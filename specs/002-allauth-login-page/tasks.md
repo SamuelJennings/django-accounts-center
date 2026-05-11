@@ -46,7 +46,7 @@ All shared infrastructure from spec 001 is in place. No foundational tasks neede
 
 - [X] T002 [US1] Write dac/addons/allauth/templates/account/login.html — complete Cotton rewrite of the existing `{% element %}`-based placeholder. Template must:
       - `{% extends "account/base_entrance.html" %}` + `{% load i18n %}`
-      - `{% block head_title %}{% trans "Sign In" %}{% endblock head_title %}`
+      - `{% block title %}{% trans "Sign In" %}{% endblock title %}`
       - `{% block title %}{% trans "Sign in" %}{% endblock title %}`
       - `{% block content %}` — ordered sections:
           1. `{% if SOCIALACCOUNT_ENABLED %}` → `{% include "socialaccount/snippets/provider_list.html" with process="login" %}` → `{% if not SOCIALACCOUNT_ONLY %}<c-card.divider text="or" />{% endif %}` `{% endif %}`
@@ -99,12 +99,12 @@ All shared infrastructure from spec 001 is in place. No foundational tasks neede
 
 - [X] T005 [P] [US4] Write dac/addons/allauth/templates/account/request_login_code.html — full Cotton rewrite:
       - `{% extends "account/base_entrance.html" %}` + `{% load i18n %}`
-      - `{% block head_title %}{% trans "Request Sign-In Code" %}{% endblock head_title %}`
+      - `{% block title %}{% trans "Request Sign-In Code" %}{% endblock title %}`
       - `{% block title %}{% trans "Send me a sign-in code" %}{% endblock title %}`
       - `{% block content %}`: `<c-entrance.text class="mb-3">{% blocktrans %}You will receive a special code for a password-free sign-in.{% endblocktranslate %}</c-entrance.text>` → `<c-form method="post" action="{{ request_login_code_url }}">` + `<c-form.crispy />` + `{{ redirect_field }}` + `<c-button.stack class="mt-4">` + `<c-button text="Send Code" icon="send" type="submit" variant="primary" size="lg" />` + `</c-button.stack></c-form>` → `<c-entrance.text class="mt-3 mb-0"><a href="{{ login_url }}">{% trans "Other sign-in options" %}</a></c-entrance.text>`
 - [X] T006 [US4] Write dac/addons/allauth/templates/account/confirm_login_code.html — full Cotton rewrite extending `account/base_entrance.html` directly (NOT `account/base_confirm_code.html`):
       - `{% extends "account/base_entrance.html" %}` + `{% load i18n %}`
-      - `{% block head_title %}{% trans "Enter Sign-In Code" %}{% endblock head_title %}`
+      - `{% block title %}{% trans "Enter Sign-In Code" %}{% endblock title %}`
       - `{% block title %}{% trans "Enter Sign-In Code" %}{% endblock title %}`
       - `{% block content %}`: recipient description text via `<c-entrance.text>` (show email or phone from context) → place the two auxiliary form elements outside the button stack (invisible): `{% if can_resend %}<form id="resend" method="post">{% csrf_token %}<input type="hidden" name="action" value="resend"></form>{% endif %}` and `{% if not cancel_url %}<form id="logout-from-stage" method="post">{% csrf_token %}</form>{% endif %}` → primary `<c-form method="post" action=".">` + `<c-form.crispy form=verify_form />` + `{{ redirect_field }}` + `<c-button.stack class="mt-4">` containing ALL action buttons: `<c-button text="Confirm" icon="check-circle" type="submit" variant="primary" size="lg" />` + `{% if can_resend %}<c-button type="submit" form="resend" text="Resend Code" icon="arrow-repeat" class="border-light-subtle" />{% endif %}` + cancel button (always last, inside the stack): `{% if cancel_url %}<c-button href="{{ cancel_url }}" text="Cancel" icon="x-circle" class="border-light-subtle" />{% else %}<c-button type="submit" form="logout-from-stage" text="Cancel" icon="x-circle" class="border-light-subtle" />{% endif %}` + `</c-button.stack></c-form>`
 - [X] T007 [P] [US4] Write login-by-code tests in tests/test_addons/test_allauth/test_login_view.py covering:
@@ -160,12 +160,12 @@ All shared infrastructure from spec 001 is in place. No foundational tasks neede
 
 - [X] T012 [P] [US7] Rewrite dac/addons/allauth/templates/socialaccount/login.html using Cotton components:
       - `{% extends "socialaccount/base_entrance.html" %}` + `{% load i18n %}`
-      - `{% block head_title %}{% trans "Sign In" %}{% endblock head_title %}`
+      - `{% block title %}{% trans "Sign In" %}{% endblock title %}`
       - `{% block title %}` — conditional: `{% if process == "connect" %}{% blocktrans with provider.name as provider %}Connect {{ provider }}{% endblocktrans %}{% else %}{% blocktrans with provider.name as provider %}Sign In Via {{ provider }}{% endblocktrans %}{% endif %}` `{% endblock title %}`
       - `{% block content %}`: `<c-entrance.text class="mb-3">` — conditional description text (connect vs sign-in blurb using `{% blocktrans %}`) `</c-entrance.text>` → `<c-form method="post" action=".">` + `{% csrf_token %}` + `{{ redirect_field }}` + `<c-button.stack class="mt-4">` + `<c-button text="{% trans "Continue" %}" icon="login" type="submit" variant="primary" size="lg" />` + `</c-button.stack></c-form>`
 - [X] T013 [P] [US7] Rewrite dac/addons/allauth/templates/socialaccount/login_cancelled.html using Cotton components:
       - `{% extends "socialaccount/base_entrance.html" %}` + `{% load i18n %}`
-      - `{% block head_title %}{% trans "Login Cancelled" %}{% endblock head_title %}`
+      - `{% block title %}{% trans "Login Cancelled" %}{% endblock title %}`
       - `{% block title %}{% trans "Login Cancelled" %}{% endblock title %}`
       - `{% block content %}`: `{% url 'account_login' as login_url %}` → `<c-entrance.text class="mb-4">{% blocktrans %}You decided to cancel logging in to our site using one of your existing accounts. If this was a mistake, please proceed to <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</c-entrance.text>` → `<c-button.stack>` + `<c-button href="{{ login_url }}" text="{% trans "Sign in" %}" icon="login" variant="primary" size="lg" />` + `</c-button.stack>`
 - [X] T014 [P] [US7] Rewrite dac/addons/allauth/templates/socialaccount/login_redirect.html — minimal rewrite preserving meta-refresh:

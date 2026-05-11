@@ -2,9 +2,9 @@
 {% load i18n %}
 {% load allauth %}
 
-{% block head_title %}
+{% block title %}
   {% trans "Authorize" %}
-{% endblock head_title %}
+{% endblock title %}
 
 {% block content %}
   {% element h1 %}
@@ -15,7 +15,7 @@
 {% endelement %}
 {% element field type="text" value=user_code disabled=True %}
 {% slot label %}
-{% translate "Code" %}
+{% trans "Code" %}
 {% endslot %}
 {% endelement %}
 {% element form method="post" action=authorization_url %}
@@ -25,10 +25,10 @@
 {% slot actions %}
 {% element button_group %}
 {% element button name="action" value="confirm" type="submit" tags="primary,consent" %}
-{% translate "Confirm" %}
+{% trans "Confirm" %}
 {% endelement %}
 {% element button name="action" value="deny" type="submit" tags="outline,consent" %}
-{% translate "Deny" %}
+{% trans "Deny" %}
 {% endelement %}
 {% endelement %}
 {% endslot %}

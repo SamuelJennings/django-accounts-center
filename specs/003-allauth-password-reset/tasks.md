@@ -46,7 +46,7 @@ All shared infrastructure from specs 001 and 002 is in place. No foundational ta
 
 - [X] T002 [US1] Write `dac/addons/allauth/templates/account/password_reset.html` — full Cotton rewrite of the existing `{% element %}`-based placeholder. Template must:
       - `{% extends "account/base_entrance.html" %}` + `{% load i18n account %}`
-      - `{% block head_title %}{% trans "Password Reset" %}{% endblock head_title %}`
+      - `{% block title %}{% trans "Password Reset" %}{% endblock title %}`
       - `{% block title %}{% trans "Password Reset" %}{% endblock title %}`
       - `{% block content %}` — ordered sections per contracts/template-context.md:
           1. `{% if user.is_authenticated %}{% include "account/snippets/already_logged_in.html" %}{% endif %}`
@@ -66,7 +66,7 @@ All shared infrastructure from specs 001 and 002 is in place. No foundational ta
 
 - [X] T004 [US1] [US2] Write `dac/addons/allauth/templates/account/password_reset_from_key.html` — full Cotton rewrite covering both branches per contracts/template-context.md (US1: valid-token; US2: invalid-token). Template must:
       - `{% extends "account/base_entrance.html" %}` + `{% load i18n account %}`
-      - `{% block head_title %}{% trans "Change Password" %}{% endblock head_title %}`
+      - `{% block title %}{% trans "Change Password" %}{% endblock title %}`
       - `{% block title %}` — conditional: `{% if token_fail %}{% trans "Bad Token" %}{% else %}{% trans "Change Password" %}{% endif %}` `{% endblock title %}`
       - `{% block content %}` — two branches:
           - **Invalid branch** (`{% if token_fail %}`): `<c-entrance.text>{% blocktrans with passwd_reset_url=... %}The password reset link was invalid, possibly because it has already been used. Please request a <a href="{{ passwd_reset_url }}">new password reset</a>.{% endblocktrans %}</c-entrance.text>`
@@ -168,7 +168,7 @@ All shared infrastructure from specs 001 and 002 is in place. No foundational ta
 
 - [X] T010 [US4] Rewrite `dac/addons/allauth/templates/account/base_confirm_code.html` — full Cotton replacement of all `{% element %}` syntax per contracts/component-interface.md. Template must:
       - `{% extends "account/base_entrance.html" %}` + `{% load i18n account %}`
-      - `{% block head_title %}{% block head_title_ %}{% endblock head_title_ %}{% endblock head_title %}`
+      - `{% block title %}{% block head_title_ %}{% endblock head_title_ %}{% endblock title %}`
       - `{% block title %}{% block title_ %}{% endblock title_ %}{% endblock title %}`
       - `{% block content %}` — complete structure:
           1. Recipient paragraph: `<p>{% blocktrans with recipient=... %}We've sent a code to {{ recipient }}.…{% endblocktrans %}</p>` (uses `{% block recipient %}`)
@@ -179,7 +179,7 @@ All shared infrastructure from specs 001 and 002 is in place. No foundational ta
       - Zero `{% element %}` tags
 
 - [X] T011 [US4] Update `dac/addons/allauth/templates/account/confirm_password_reset_code.html` — block-values only (no structural changes). Must set per contracts/template-context.md:
-      - `{% block title_ %}{% translate "Enter Password Reset Code" %}{% endblock title_ %}` (only `title_` overridden — no `head_title_` block)
+      - `{% block title_ %}{% trans "Enter Password Reset Code" %}{% endblock title_ %}` (only `title_` overridden — no `head_title_` block)
       - `{% block recipient %}<a href="mailto:{{ email }}">{{ email }}</a>{% endblock recipient %}`
       - `{% block action_url %}{% url 'account_confirm_password_reset_code' as confirm_code_url %}{{ confirm_code_url }}{% endblock action_url %}` (fail-silent pattern)
       - `{% block action_url_resend %}{% url 'account_confirm_password_reset_code' as confirm_code_url_resend %}{{ confirm_code_url_resend }}{% endblock action_url_resend %}` (fail-silent pattern)

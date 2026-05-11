@@ -2,9 +2,9 @@
 {% load i18n %}
 {% load allauth %}
 
-{% block head_title %}
+{% block title %}
   {% trans "Email Address" %}
-{% endblock head_title %}
+{% endblock title %}
 
 {% block content %}
   {% element h1 %}
@@ -20,7 +20,7 @@
 {% if current_emailaddress %}
   {% element field id="current_email" disabled=True type="email" value=current_emailaddress.email %}
   {% slot label %}
-  {% translate "Current email" %}:
+  {% trans "Current email" %}:
 {% endslot %}
 {% endelement %}
 {% endif %}
@@ -28,9 +28,9 @@
   {% element field id="new_email" value=new_emailaddress.email disabled=True type="email" %}
   {% slot label %}
   {% if not current_emailaddress %}
-    {% translate "Current email" %}:
+    {% trans "Current email" %}:
   {% else %}
-    {% translate "Changing to" %}:
+    {% trans "Changing to" %}:
   {% endif %}
 {% endslot %}
 {% slot help_text %}
@@ -48,7 +48,7 @@
 {% endif %}
 {% element field id=form.email.auto_id name="email" value=form.email.value errors=form.email.errors type="email" %}
 {% slot label %}
-{% translate "Change to" %}:
+{% trans "Change to" %}:
 {% endslot %}
 {% endelement %}
 {% endslot %}

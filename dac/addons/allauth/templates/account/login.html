@@ -17,8 +17,7 @@
   {% endif %}
   {% if not SOCIALACCOUNT_ONLY %}
     <c-entrance.section text="{% trans "Using the details you signed up with." %}">
-      <c-form method="post">
-        <c-form.crispy />
+      <c-form method="post" :form-obj="form">
         {{ redirect_field }}
         <c-button.stack>
           <c-button text="{% trans "Sign in" %}"

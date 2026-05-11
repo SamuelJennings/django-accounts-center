@@ -61,35 +61,32 @@ is no Django form object to render.
 
 ### 1.3 `account/confirm_email_verification_code.html`
 
-**Structure**: Extends `account/base_confirm_code.html`. Block overrides in allauth original:
+**Allauth original structure**: Extends `account/base_confirm_code.html` with block overrides.
 
-- `{% block head_title %}` — "Email Verification"
-- `{% block title %}` — "Enter Email Verification Code"
-- `{% block recipient %}` — `<a href="mailto:{{ email }}">{{ email }}</a>`
-- `{% block action_url %}` — `{% url 'account_email_verification_sent' %}`
-- `{% block extra_tags %}` — `email,verification`
-- `{% block change_title %}` — "Use a different email address"
+**DAC implementation**: Uses `<c-allauth.confirm-code>` Cotton component directly (the same component used by `confirm_login_code.html` and `confirm_password_reset_code.html`). `base_confirm_code.html` no longer exists — it was replaced by the `cotton/allauth/confirm_code.html` component.
 
-**DAC `base_confirm_code.html` block API** (verified from source):
+**Allauth resend model** (verified from source):
 
-- `{% block head_title_ %}` (inner block, inherited via `{% block head_title %}`→`{% block head_title_ %}`)
-- `{% block title_ %}` (inner block, inherited via `{% block title %}`→`{% block title_ %}`)
-- `{% block recipient %}`
-- `{% block action_url %}` — used as `<c-form action="…">`
-- `{% block action_url_resend %}` — used as `<form id="resend" action="…">`
-- `{% block action_url_change %}` — used inside `<details>` change section (if `can_change`)
-- `{% block extra_tags %}` — passed to `<c-button tags="…">`
-- `{% block submit_button_tags %}` — wraps `extra_tags`
-- `{% block change_title %}` — `<summary>` text
+- `EmailVerificationProcess.can_resend` — overrides base; returns `not is_resend_quota_reached(EMAIL_VERIFICATION_MAX_RESEND_COUNT)`. Starts `True`, becomes `False` after quota hit.
+- `PasswordResetVerificationProcess.can_resend` — does NOT override base; always `False`. No `resend()` method.
+- `LoginCodeVerificationProcess.can_resend` — same quota pattern as email verification.
 
-**Decision**: The DAC override must:
+**Two-variable resend model**:
 
-1. Use `{% block title_ %}` (not `{% block title %}`) to match `base_confirm_code.html`'s inner block
-2. NOT override `head_title_` (per FR-004 and spec assumption)
-3. Override `action_url` with fail-silent pattern: `{% url 'account_email_verification_sent' as u %}{{ u }}`
-4. Override `action_url_resend` with the same fail-silent pattern (same URL)
-5. Override `recipient`, `extra_tags`, and `change_title` as normal
-6. The existing DAC file uses `{% block title %}` and direct URL — both must be corrected
+- `resend-supported` (Cotton component attribute, set by the parent template) — declares that the flow has a resend mechanism. Must be explicitly set on `<c-allauth.confirm-code>` for flows that support resend.
+- `can_resend` (Django view context variable) — quota-based flag. When `resend-supported` is set: `True` → button enabled; `False` → button present but `disabled`.
+
+**Decision**: `confirm_email_verification_code.html` must declare `resend-supported` (email verification supports resend). `confirm_password_reset_code.html` must NOT declare it.
+
+**Component usage**:
+
+```django
+<c-allauth.confirm-code recipient="{{ email }}"
+                        action="{% url 'account_email_verification_sent' as u %}{{ u }}"
+                        resend-url="{% url 'account_email_verification_sent' as u %}{{ u }}"
+                        change-title="{% trans 'Use a different email address' %}"
+                        resend-supported />
+```
 
 **URL name confirmed**: `account_email_verification_sent` (from allauth source).
 
@@ -130,7 +127,7 @@ new files need to be created, only existing files edited.
 |---|---|---|
 | `password_reset_done.html` | `verification_sent.html` | `<c-entrance>` + `<c-entrance.text center>`, no form |
 | `password_reset_from_key_done.html` | `account_inactive.html` | `<c-entrance>` + `<c-entrance.text center>`, no form |
-| `confirm_password_reset_code.html` | `confirm_email_verification_code.html` | Block overrides on `base_confirm_code.html` |
+| `confirm_password_reset_code.html` | `confirm_email_verification_code.html` | `<c-allauth.confirm-code>` with `resend-supported` |
 
 `email_confirm.html` has no direct Spec 003 analog — it is the most complex template
 in this feature, requiring three conditional branches, one of which contains a bare

@@ -8,8 +8,8 @@
 {% block content %}
   <c-entrance.section>
     <c-form method="post"
-            action="{% url "account_signup_by_passkey" %}">
-      <c-form.crispy />
+            action="{% url "account_signup_by_passkey" %}"
+            :form-obj="form">
       {{ redirect_field }}
       <c-button.stack>
         <c-button text="{% trans "Create passkey" %}"

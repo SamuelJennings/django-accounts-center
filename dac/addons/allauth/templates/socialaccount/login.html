@@ -1,14 +1,6 @@
 {% extends "socialaccount/base_entrance.html" %}
 {% load i18n %}
 
-{% block head_title %}
-  {% if process == "connect" %}
-    {% blocktrans with provider.name as provider %}Connect {{ provider }}{% endblocktrans %}
-  {% else %}
-    {% trans "Sign In" %}
-  {% endif %}
-{% endblock head_title %}
-
 {% block title %}
   {% if process == "connect" %}
     {% blocktrans with provider.name as provider %}Connect {{ provider }}{% endblocktrans %}

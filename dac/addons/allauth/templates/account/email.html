@@ -1,9 +1,9 @@
 {% extends "account/base_manage_email.html" %}
 {% load static allauth i18n %}
 
-{% block head_title %}
+{% block title %}
   {% trans "Email Addresses" %}
-{% endblock head_title %}
+{% endblock title %}
 
 {% block content %}
   {% element h1 %}
@@ -24,16 +24,16 @@
     {{ emailaddress.email }}
     {% if emailaddress.verified %}
       {% element badge tags="success,email,verified" %}
-      {% translate "Verified" %}
+      {% trans "Verified" %}
     {% endelement %}
   {% else %}
     {% element badge tags="warning,email,unverified" %}
-    {% translate "Unverified" %}
+    {% trans "Unverified" %}
   {% endelement %}
 {% endif %}
 {% if emailaddress.primary %}
   {% element badge tags="email,primary" %}
-  {% translate "Primary" %}
+  {% trans "Primary" %}
 {% endelement %}
 {% endif %}
 {% endslot %}

@@ -3,9 +3,9 @@
 {% load allauth %}
 {% load allauth static %}
 
-{% block head_title %}
+{% block title %}
   {% trans "Sign In" %}
-{% endblock head_title %}
+{% endblock title %}
 
 {% block content %}
   {% element h1 %}
@@ -36,7 +36,7 @@
   {% element hr %}
 {% endelement %}
 {% element h2 %}
-{% translate "Alternative options" %}
+{% trans "Alternative options" %}
 {% endelement %}
 {% element button_group vertical=True %}
 {% element button form="webauthn_form" id="mfa_webauthn_authenticate" type="button" tags="outline,primary" %}

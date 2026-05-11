@@ -3,9 +3,9 @@
 {% load i18n %}
 {% load humanize %}
 
-{% block head_title %}
+{% block title %}
   {% trans "Sessions" %}
-{% endblock head_title %}
+{% endblock title %}
 
 {% block content %}
   {% element h1 tags="usersessions,list" %}
@@ -23,17 +23,17 @@
 {% element thead %}
 {% element tr %}
 {% element th %}
-{% translate "Started At" %}
+{% trans "Started At" %}
 {% endelement %}
 {% element th %}
-{% translate "IP Address" %}
+{% trans "IP Address" %}
 {% endelement %}
 {% element th %}
-{% translate "Browser" %}
+{% trans "Browser" %}
 {% endelement %}
 {% if show_last_seen_at %}
   {% element th %}
-  {% translate "Last seen at" %}
+  {% trans "Last seen at" %}
 {% endelement %}
 {% endif %}
 {% endelement %}
@@ -58,7 +58,7 @@
 {% element td %}
 {% if session.is_current %}
   {% element badge tags="session,current" %}
-  {% translate "Current" %}
+  {% trans "Current" %}
 {% endelement %}
 {% else %}
 {% endif %}
@@ -71,11 +71,11 @@
 {% slot actions %}
 {% if session_count > 1 %}
   {% element button type="submit" %}
-  {% translate "Sign Out Other Sessions" %}
+  {% trans "Sign Out Other Sessions" %}
 {% endelement %}
 {% else %}
 {% element button type="submit" %}
-{% translate "Sign Out" %}
+{% trans "Sign Out" %}
 {% endelement %}
 {% endif %}
 {% endslot %}

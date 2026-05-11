@@ -107,9 +107,9 @@ needed — user story implementation begins immediately in Phase 3.
 - [X] T006 [P] [US4] Rewrite `dac/addons/allauth/templates/account/account_inactive.html` — full Cotton rewrite. Template must:
       - Change `{% extends "allauth/layouts/entrance.html" %}` to `{% extends "account/base_entrance.html" %}`
       - `{% load i18n %}` (no `{% load allauth %}` — no longer needed)
-      - `{% block title %}{% translate "Account Inactive" %}{% endblock title %}` (no `head_title` block)
+      - `{% block title %}{% trans "Account Inactive" %}{% endblock title %}` (no `head_title` block)
       - `{% block content %}`:
-          1. `<c-entrance.text center>{% translate "This account is inactive." %}</c-entrance.text>`
+          1. `<c-entrance.text center>{% trans "This account is inactive." %}</c-entrance.text>`
       - Zero `{% element %}` tags
 
 - [X] T007 [P] [US4] [US5] Write US4 integration test in `tests/test_addons/test_allauth/test_email_verification_view.py` covering:
@@ -132,17 +132,17 @@ needed — user story implementation begins immediately in Phase 3.
 
 **Independent Test**: With `ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED = True`, navigate to the code-confirmation URL and assert HTTP 200 with a code-entry form rendered.
 
-- [X] T008 [P] [US3] Fix `dac/addons/allauth/templates/account/confirm_email_verification_code.html` — corrective rewrite of the existing override. Template must:
-      - `{% extends "account/base_confirm_code.html" %}` + `{% load i18n %}`
-      - `{% block title_ %}{% translate "Enter Email Verification Code" %}{% endblock title_ %}` — MUST be `title_` (inner block), NOT `title` (outer base block)
-      - `{% block recipient %}<a href="mailto:{{ email }}">{{ email }}</a>{% endblock recipient %}`
-      - `{% block action_url %}{% url 'account_email_verification_sent' as u %}{{ u }}{% endblock action_url %}` — fail-silent pattern: renders empty string if URL not registered
-      - `{% block action_url_resend %}{% url 'account_email_verification_sent' as u %}{{ u }}{% endblock action_url_resend %}` — same fail-silent pattern
-      - `{% block extra_tags %}email,verification{% endblock extra_tags %}`
-      - `{% block change_title %}{% translate "Use a different email address" %}{% endblock change_title %}`
-      - NO `{% block head_title_ %}` override (FR-004 — `head_title_` is not overridden)
-      - Remove any `{% block title %}` and `{% block head_title %}` overrides from the current incorrect version
+- [X] T008 [P] [US3] Rewrite `dac/addons/allauth/templates/account/confirm_email_verification_code.html` — use `<c-allauth.confirm-code>` component. Template must:
+      - `{% extends "account/base_entrance.html" %}` + `{% load i18n %}`
+      - `{% block title %}{% trans "Enter verification code" %}{% endblock title %}`
+      - `{% block content %}` containing `<c-allauth.confirm-code>` with:
+          - `recipient="{{ email }}"`
+          - `action="{% url 'account_email_verification_sent' as u %}{{ u }}"`  (fail-silent)
+          - `resend-url="{% url 'account_email_verification_sent' as u %}{{ u }}"`  (fail-silent)
+          - `change-title="{% trans "Use a different email address" %}"`
+          - `resend-supported` — MUST be declared (email verification supports resend)
       - Zero `{% element %}` tags
+      - Note: `base_confirm_code.html` no longer exists; `<c-allauth.confirm-code>` is the replacement
 
 - [X] T009 [P] [US3] [US5] Write US3 integration test in `tests/test_addons/test_allauth/test_email_verification_view.py` covering (using `@pytest.mark.override_settings(ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED=True)` or `override_settings`):
       - `confirm_email_verification_code.html` renders HTTP 200 when the code-based flow is enabled

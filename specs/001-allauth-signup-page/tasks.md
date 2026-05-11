@@ -29,7 +29,7 @@ description: "Task list for 001-allauth-signup-page implementation"
 
 **⚠️ CRITICAL**: `account/signup.html` and every other allauth template inherits from these two files.
 
-- [X] T002 Write `dac/addons/allauth/templates/allauth/layouts/base.html` — extend `mvp/base.html`, map `{% block title %}{% block head_title %}{% endblock %}{% endblock %}`
+- [X] T002 Write `dac/addons/allauth/templates/allauth/layouts/base.html` — extend `mvp/base.html`, map `{% block title %}{% block title %}{% endblock %}{% endblock %}`
 - [X] T003 Write `dac/addons/allauth/templates/allauth/layouts/entrance.html` — extend `allauth/layouts/base.html`, override `{% block app %}` with `<body>`, `<c-messages dismissible animate />`, and `<c-entrance cols="12" md="8" lg="5">` with a `<c-slot name="title">{% block title %}{% endblock %}</c-slot>` and `{% block content %}{% endblock %}`
 - [X] T003b Create Cotton entrance components in `dac/templates/cotton/entrance/`: `index.html` (`<c-entrance>` — full-viewport layout, responsive col, card, logo, title, slot), `background.html` (`<c-entrance.background>` — `bg-primary-subtle bg-gradient` wrapper, override to change background), `logo.html` (`<c-entrance.logo>` — DAC SVG logo; no `src` prop, override template to change logo)
 - [X] T004 Run `python manage.py check` in `example/` settings — must pass with no errors after layout templates are in place

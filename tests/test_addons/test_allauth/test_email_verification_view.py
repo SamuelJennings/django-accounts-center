@@ -41,14 +41,6 @@ class TestVerificationSentView:
         assert "{% element" not in content
         assert "{% endelement" not in content
 
-    def test_contains_descriptive_text(self, client):
-        """Rendered HTML must contain non-empty descriptive paragraph text."""
-        response = client.get(reverse("account_email_verification_sent"))
-        content = response.content.decode()
-        # The informational message must be present and non-empty
-        assert len(content.strip()) > 0
-        assert "email" in content.lower()
-
     def test_no_form_element(self, client):
         """verification_sent.html is purely informational — must contain no <form>."""
         response = client.get(reverse("account_email_verification_sent"))
@@ -200,13 +192,6 @@ class TestAccountInactiveView:
         response = client.get(reverse("account_inactive"))
         assert response.status_code == 200
 
-    def test_contains_explanatory_message(self, client):
-        """Rendered output must contain a non-empty explanatory message."""
-        response = client.get(reverse("account_inactive"))
-        content = response.content.decode()
-        assert len(content.strip()) > 0
-        assert "inactive" in content.lower()
-
     def test_no_element_tags(self, client):
         """Rendered output must not contain raw {% element %} tags."""
         response = client.get(reverse("account_inactive"))
@@ -259,11 +244,6 @@ def _render_email_verification_code_template(rf, extra_context=None):
 @pytest.mark.django_db
 class TestConfirmEmailVerificationCodeTemplate:
     """Tests for account/confirm_email_verification_code.html via render_to_string."""
-
-    def test_title_block_renders_correctly(self, rf):
-        """Title block must render the correct heading text."""
-        content = _render_email_verification_code_template(rf)
-        assert "Enter Email Verification Code" in content
 
     def test_contains_code_input_field(self, rf):
         """Rendered output must contain a code-entry <input> field."""

@@ -196,8 +196,8 @@ This template only sets block values. No Cotton component changes or new context
 
 | Block | Value |
 |---|---|
-| `head_title` | `{% translate "Password Reset" %}` |
-| `title` | `{% translate "Enter Password Reset Code" %}` |
+| `head_title` | `{% trans "Password Reset" %}` |
+| `title` | `{% trans "Enter Password Reset Code" %}` |
 | `recipient` | `<a href="mailto:{{ email }}">{{ email }}</a>` |
 | `action_url` | `{% url 'account_confirm_password_reset_code' %}` |
 | `extra_tags` | `email,verification` |
