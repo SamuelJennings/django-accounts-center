@@ -2,33 +2,34 @@
 {% load i18n crispy_forms_tags %}
 
 {% block title %}
-  {% trans "Email Address" %}
+  {% trans "Change Email" %}
 {% endblock title %}
 
 {% block page.breadcrumbs %}
   {{ block.super }}
-  <c-breadcrumbs.item text="{% trans 'Email Address' %}" />
+  <c-breadcrumbs.item text="{% trans "Change Email" %}" />
 {% endblock page.breadcrumbs %}
 
 {% block page.content %}
+  {# Warn the user if they have no email address on file — the form below requires one to exist before a change can be made. #}
   {% if not emailaddresses %}
     {% include "account/snippets/warn_no_email.html" %}
   {% endif %}
   {% url 'account_email' as action_url %}
   <c-form.card method="post" action="{{ action_url }}">
+    {# Show the current verified address as a read-only field. Absent when the user has no confirmed address yet. #}
     {% if current_emailaddress %}
-      <div class="mb-3">
-        <label class="form-label">{% trans "Current email" %}:</label>
-        <input class="form-control"
-               id="current_email"
-               type="email"
-               disabled
-               value="{{ current_emailaddress.email }}" />
-      </div>
+      <c-dac.form-field label="{% trans "Current email" %}"
+                        id="current_email"
+                        type="email"
+                        disabled
+                        value="{{ current_emailaddress.email }}" />
     {% endif %}
+    {# Show a pending-address block when the user has submitted a new address that is still awaiting verification. #}
     {% if new_emailaddress %}
       <div class="mb-3">
         <label class="form-label">
+          {# Label differs: if there is no confirmed address yet, the pending one IS the current address. #}
           {% if not current_emailaddress %}
             {% trans "Current email" %}:
           {% else %}
@@ -40,35 +41,38 @@
                type="email"
                disabled
                value="{{ new_emailaddress.email }}" />
-        <div class="form-text">
-          {% blocktrans %}Your email address is still pending verification.{% endblocktrans %}
-        </div>
-        <div class="mt-2">
+        <c-card.text>
+          {% trans "Your email address is still pending verification." %}
+        </c-card.text>
+        <c-button form="pending-email"
+                  type="submit"
+                  name="action_send"
+                  variant="secondary"
+                  size="sm"
+                  text="{% trans "Re-send verification" %}" />
+        {# "Cancel Change" requires a confirmed address to revert to; hidden when there is no current address. #}
+        {% if current_emailaddress %}
           <c-button form="pending-email"
                     type="submit"
-                    name="action_send"
-                    variant="secondary"
+                    name="action_remove"
+                    variant="danger"
                     size="sm"
-                    text="{% trans 'Re-send Verification' %}" />
-          {% if current_emailaddress %}
-            <c-button form="pending-email"
-                      type="submit"
-                      name="action_remove"
-                      variant="danger"
-                      size="sm"
-                      text="{% trans 'Cancel Change' %}" />
-          {% endif %}
-        </div>
+                    text="{% trans 'Cancel Change' %}" />
+        {% endif %}
       </div>
     {% endif %}
+    <c-card.text>
+      {% trans "Provide the new email address you wish to change to." %}
+    </c-card.text>
     {{ form.email|as_crispy_field }}
-    <c-slot name="actions">
+    <c-slot name="form_actions">
       <c-button name="action_add"
                 type="submit"
                 variant="primary"
                 text="{% trans 'Change Email' %}" />
     </c-slot>
   </c-form.card>
+  {# Hidden form used by the Re-send / Cancel Change buttons above; targets the pending address via a hidden email field. #}
   {% if new_emailaddress %}
     <form style="display: none"
           id="pending-email"

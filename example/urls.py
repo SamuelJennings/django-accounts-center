@@ -5,6 +5,8 @@ from django.urls import include, path, reverse_lazy
 from django.views.generic.base import RedirectView
 from django.views.generic.edit import UpdateView
 
+from example.views import EmailChangeTestView, _verified_email_required_view
+
 urlpatterns = [
     path("", RedirectView.as_view(url=reverse_lazy("account_login")), name="example-home"),
     path("account-center/", include("dac.urls")),
@@ -15,6 +17,17 @@ urlpatterns = [
     ),
     path("admin/dj-urls-panel/", include("dj_urls_panel.urls")),
     path("admin/", admin.site.urls),
+    # Test-only URLs — not part of the production URL configuration
+    path(
+        "test/email-change/",
+        EmailChangeTestView.as_view(),
+        name="account_email_change_test",
+    ),
+    path(
+        "test/verified-email-required/",
+        _verified_email_required_view,
+        name="account_verified_email_required",
+    ),
     path("__reload__/", include("django_browser_reload.urls")),
     *debug_toolbar_urls(),
 ]

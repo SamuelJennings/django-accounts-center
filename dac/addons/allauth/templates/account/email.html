@@ -41,17 +41,21 @@
                     <input type="hidden"
                            name="email"
                            value="{{ emailaddress.email }}" />
+                    {# "Make primary" only applies to non-primary addresses; the current primary cannot promote itself. #}
                     {% if not emailaddress.primary %}
                       <c-dropdown.item type="submit"
                                        name="action_primary"
                                        text="{% trans "Make primary" %}" />
                     {% endif %}
+                    {# "Re-send verification" is only useful for unverified addresses. #}
                     {% if not emailaddress.verified %}
                       <c-dropdown.item type="submit"
                                        name="action_send"
                                        text="{% trans "Re-send verification" %}" />
                     {% endif %}
+                    {# Divider appears only when there are action items above it (i.e. this is not the primary address). #}
                     {% if not emailaddress.primary %}<c-dropdown.divider />{% endif %}
+                    {# "Remove" is always shown but rendered disabled for the primary address, which cannot be deleted. #}
                     <c-dropdown.item type="submit"
                                      class="{% if emailaddress.primary %}disabled{% else %}link-danger{% endif %}"
                                      icon="delete"
@@ -60,17 +64,17 @@
                   </form>
                 </c-dropdown>
               </div>
+              {# Show a description blurb only under the primary address row. #}
               {% if emailaddress.primary %}
-                <c-card.text text="{% trans "This email address is the default for notifications and account-related activity." %}"
-                             small
-                             tight />
+                small
+                tight />
               {% endif %}
             </c-list-group.item>
           {% endwith %}
         {% endfor %}
       </c-list-group>
+      {# Show the "add email" form only when the user hasn't reached the configured address limit (ACCOUNT_MAX_EMAIL_ADDRESSES). #}
       {% if can_add_email %}
-        <c-card.divider />
         <c-card.text center tight small>
           {% trans "Add a backup email in case you lose access to the others." %}
         </c-card.text>

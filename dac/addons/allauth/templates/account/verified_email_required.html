@@ -2,26 +2,26 @@
 {% load i18n %}
 
 {% block title %}
-  {% trans "Verify Your Email Address" %}
+  {% trans "Verify your email address" %}
 {% endblock title %}
 
 {% block page.content %}
   {% url 'account_email' as email_url %}
-  <c-card>
-    <p>
-      {% blocktrans %}This part of the site requires us to verify that
-      you are who you claim to be. For this purpose, we require that you
-      verify ownership of your email address.{% endblocktrans %}
-    </p>
-    <p>
+  <c-card title="{% trans "Verify your email address" %}"
+          icon="warning"
+          level="1"
+          fs="3">
+    <c-card.text center impact>
+      {% blocktrans %}To acces this part of the site, you must first verify your email address.{% endblocktrans %}
+    </c-card.text>
+    <c-card.text center>
       {% blocktrans %}We have sent an email to you for verification. Please click on
       the link inside that email. If you do not see the verification email in your main
-      inbox, check your spam folder. Otherwise contact us if you do not receive it
-      within a few minutes.{% endblocktrans %}
-    </p>
-    <p>
+      inbox, check your spam folder. If you do not receive it within 10 minutes, please contact us.{% endblocktrans %}
+    </c-card.text>
+    <c-card.text center small>
       {% blocktrans %}<strong>Note:</strong> you can still
       <a href="{{ email_url }}">change your email address</a>.{% endblocktrans %}
-    </p>
+    </c-card.text>
   </c-card>
 {% endblock page.content %}
