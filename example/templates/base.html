@@ -1,0 +1,16 @@
+{% extends "mvp/base.html" %}
+{% block app %}
+  <c-app>
+    <c-app.header />
+    {% block app.sidebar %}
+      <c-app.sidebar />
+    {% endblock app.sidebar %}
+
+    <c-app.main>
+      {% block content %}
+      {% endblock content %}
+
+    </c-app.main>
+    <c-app.footer />
+  </c-app>
+{% endblock app %}

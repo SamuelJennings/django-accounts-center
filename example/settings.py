@@ -33,10 +33,10 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.humanize",
     "compressor",
-    "example",
     "dac",
     "dac.addons.allauth",
     "mvp",
+    "example",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
@@ -72,6 +72,7 @@ MIDDLEWARE = [
     "allauth.account.middleware.AccountMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django_browser_reload.middleware.BrowserReloadMiddleware",
+    "django.contrib.sites.middleware.CurrentSiteMiddleware",
 ]
 
 ROOT_URLCONF = "example.urls"
@@ -235,6 +236,7 @@ EASY_ICONS = {
             "check-circle": "bi bi-check-circle",
             "arrow-repeat": "bi bi-arrow-repeat",
             "x-circle": "bi bi-x-circle",
+            "three-dots": "bi bi-three-dots",
         },
     },
     # Font Awesome for common UI icons

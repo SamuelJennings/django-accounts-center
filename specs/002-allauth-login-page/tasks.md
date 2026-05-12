@@ -53,7 +53,7 @@ All shared infrastructure from spec 001 is in place. No foundational tasks neede
           2. `{% if not SOCIALACCOUNT_ONLY %}` → `<c-form method="post" action=".">` + `<c-form.crispy />` + `{{ redirect_field }}` + `<c-button.stack class="mt-4">` + `<c-button text="Sign in" icon="login" size="lg" type="submit" variant="primary" reverse />` + `</c-button.stack></c-form>` + `<c-entrance.text class="mt-2 mb-0">` "Forgot your password?" link to `{% url 'account_reset_password' %}` `</c-entrance.text>` `{% endif %}`
           3. `{% if not SOCIALACCOUNT_ONLY and (PASSKEY_LOGIN_ENABLED or LOGIN_BY_CODE_ENABLED) %}` → `<c-card.divider text="or" />` + `<c-button.stack>` + passkey `<c-button id="passkey_login" .../>` (if `PASSKEY_LOGIN_ENABLED`) + code `<c-button href="{{ request_login_code_url }}" .../>` (if `LOGIN_BY_CODE_ENABLED`) + `</c-button.stack>` `{% endif %}`
           4. `{% if signup_url %}` → `<c-entrance.text class="mt-4 mb-0">{% blocktrans %}Don't have an account? <a href="{{ signup_url }}">Sign up</a>.{% endblocktrans %}</c-entrance.text>` `{% endif %}`
-      - `{% block extra_body %}{{ block.super }}{% if PASSKEY_LOGIN_ENABLED %}{% include "mfa/webauthn/snippets/login_script.html" with button_id="passkey_login" %}{% endif %}{% endblock extra_body %}`
+      - `{% block extra_js %}{{ block.super }}{% if PASSKEY_LOGIN_ENABLED %}{% include "mfa/webauthn/snippets/login_script.html" with button_id="passkey_login" %}{% endif %}{% endblock extra_js %}`
 - [X] T003 [P] [US2] Write email/password login tests in tests/test_addons/test_allauth/test_login_view.py covering:
       - Login page renders (200 OK) for anonymous user
       - Form renders email/password fields (no `{% element %}` tags in output)

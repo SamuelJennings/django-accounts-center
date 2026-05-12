@@ -125,7 +125,7 @@ exclude = ["*/migrations/*.py"]
 [tool.djlint]
 blank_line_after_tag = "load,endpartialdef,endblock"
 close_void_tags = true
-custom_blocks = "addtoblock"
+custom_blocks = "element,slot"
 custom_html = "django-formset,c-[\\w.-]+,swiper-container,swiper-slide"
 format_js = true
 format_css = true

@@ -43,7 +43,7 @@
 | `head_title` | Page `<title>` — set to `{% trans "Sign In" %}` |
 | `title` | Heading inside `<c-entrance>` card — set to `{% trans "Sign in" %}` |
 | `content` | Main page body — the entire login form and surrounding UI |
-| `extra_body` | Injected after `{{ block.super }}` — used only when `PASSKEY_LOGIN_ENABLED` for WebAuthn script |
+| `extra_js` | Injected after `{{ block.super }}` — used only when `PASSKEY_LOGIN_ENABLED` for WebAuthn script |
 
 ---
 

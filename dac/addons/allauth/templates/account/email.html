@@ -1,89 +1,108 @@
-{% extends "account/base_manage_email.html" %}
-{% load static allauth i18n %}
+{% extends "dac/base.html" %}
+{% load static i18n %}
 
 {% block title %}
-  {% trans "Email Addresses" %}
+  {% trans "Manage email" %}
 {% endblock title %}
 
-{% block content %}
-  {% element h1 %}
-  {% trans "Email Addresses" %}
-{% endelement %}
-{% if emailaddresses %}
-  {% element p %}
-  {% trans 'The following email addresses are associated with your account:' %}
-{% endelement %}
-{% url 'account_email' as email_url %}
-{% element form form=form action=email_url method="post" tags="email,list" %}
-{% slot body %}
-{% csrf_token %}
-{% for radio in emailaddress_radios %}
-  {% with emailaddress=radio.emailaddress %}
-    {% element field type="radio" checked=radio.checked name="email" value=emailaddress.email id=radio.id %}
-    {% slot label %}
-    {{ emailaddress.email }}
-    {% if emailaddress.verified %}
-      {% element badge tags="success,email,verified" %}
-      {% trans "Verified" %}
-    {% endelement %}
-  {% else %}
-    {% element badge tags="warning,email,unverified" %}
-    {% trans "Unverified" %}
-  {% endelement %}
-{% endif %}
-{% if emailaddress.primary %}
-  {% element badge tags="email,primary" %}
-  {% trans "Primary" %}
-{% endelement %}
-{% endif %}
-{% endslot %}
-{% endelement %}
-{% endwith %}
-{% endfor %}
-{% endslot %}
-{% slot actions %}
-{% element button type="submit" name="action_primary" %}
-{% trans 'Make Primary' %}
-{% endelement %}
-{% element button tags="secondary" type="submit" name="action_send" %}
-{% trans 'Re-send Verification' %}
-{% endelement %}
-{% element button tags="danger,delete" type="submit" name="action_remove" %}
-{% trans 'Remove' %}
-{% endelement %}
-{% endslot %}
-{% endelement %}
-{% else %}
-{% include "account/snippets/warn_no_email.html" %}
-{% endif %}
-{% if can_add_email %}
-  {% element h2 %}
-  {% trans "Add Email Address" %}
-{% endelement %}
-{% url 'account_email' as action_url %}
-{% element form form=form method="post" action=action_url tags="email,add" %}
-{% slot body %}
-{% csrf_token %}
-{% element fields form=form %}
-{% endelement %}
-{% endslot %}
-{% slot actions %}
-{% element button name="action_add" type="submit" %}
-{% trans "Add Email" %}
-{% endelement %}
-{% endslot %}
-{% endelement %}
-{% endif %}
-{% endblock content %}
+{% block page.breadcrumbs %}
+  {{ block.super }}
+  <c-breadcrumbs.item text="{% trans "Manage email" %}" />
+{% endblock page.breadcrumbs %}
 
-{% block extra_body %}
-  <script src="{% static 'account/js/account.js' %}"></script>
-  <script src="{% static 'account/js/onload.js' %}"></script>
+{% block page.content %}
+  {% if emailaddresses %}
+    <c-card title="{% trans "Your email addresses" %}"
+            icon="email">
+      <c-list-group flush :border="False">
+        {% for radio in emailaddress_radios %}
+          {% with emailaddress=radio.emailaddress %}
+            <c-list-group.item>
+              <div class="d-flex align-items-center w-100 gap-2">
+                <span>{{ emailaddress }}</span>
+                <!-- Email badges -->
+                <div class="d-flex gap-1">
+                  {% if emailaddress.primary %}
+                    <c-badge text="{% trans "Primary" %}" />
+                  {% endif %}
+                  {% if emailaddress.verified %}
+                    <c-badge variant="success" text="{% trans "Verified" %}" />
+                  {% else %}
+                    <c-badge variant="secondary"
+                             text="{% trans "Unverified" %}" />
+                  {% endif %}
+                </div>
+                <c-dropdown icon="three-dots"
+                            :caret="False"
+                            align="end"
+                            dropdown_class="ms-auto">
+                  <form method="post" action="{% url "account_email" %}">
+                    {% csrf_token %}
+                    <input type="hidden"
+                           name="email"
+                           value="{{ emailaddress.email }}" />
+                    {% if not emailaddress.primary %}
+                      <c-dropdown.item type="submit"
+                                       name="action_primary"
+                                       text="{% trans "Make primary" %}" />
+                    {% endif %}
+                    {% if not emailaddress.verified %}
+                      <c-dropdown.item type="submit"
+                                       name="action_send"
+                                       text="{% trans "Re-send verification" %}" />
+                    {% endif %}
+                    {% if not emailaddress.primary %}<c-dropdown.divider />{% endif %}
+                    <c-dropdown.item type="submit"
+                                     class="{% if emailaddress.primary %}disabled{% else %}link-danger{% endif %}"
+                                     icon="delete"
+                                     name="action_remove"
+                                     text="{% trans "Remove" %}" />
+                  </form>
+                </c-dropdown>
+              </div>
+              {% if emailaddress.primary %}
+                <c-card.text text="{% trans "This email address is the default for notifications and account-related activity." %}"
+                             small
+                             tight />
+              {% endif %}
+            </c-list-group.item>
+          {% endwith %}
+        {% endfor %}
+      </c-list-group>
+      {% if can_add_email %}
+        <c-card.divider />
+        <c-card.text center tight small>
+          {% trans "Add a backup email in case you lose access to the others." %}
+        </c-card.text>
+        <c-form id="addEmailForm"
+                method="post"
+                action="{% url "account_email" %}"
+                :form-obj="form">
+          <c-slot name="actions">
+            <c-button text="{% trans "Add email" %}"
+                      icon="add"
+                      name="action_add"
+                      type="submit"
+                      variant="primary" />
+          </c-slot>
+        </c-form>
+      {% endif %}
+    </c-card>
+  {% else %}
+    {% include "account/snippets/warn_no_email.html" %}
+  {% endif %}
+{% endblock page.content %}
+
+{% block extra_js %}
+  <script src="{% static "account/js/account.js" %}"></script>
+  <script src="{% static "account/js/onload.js" %}"></script>
+  {# djlint:off #}
   <script data-allauth-onload="allauth.account.forms.manageEmailForm" type="application/json">
     {
       "i18n": {
-        "confirmDelete": "{% trans 'Do you really want to remove the selected email address?' %}"
+        "confirmDelete": "{% trans "Do you really want to remove the selected email address?" %}"
       }
     }
-  </script>
-{% endblock extra_body %}
+</script>
+  {# djlint:on #}
+{% endblock extra_js %}

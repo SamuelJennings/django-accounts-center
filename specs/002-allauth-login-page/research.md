@@ -153,14 +153,14 @@ The "Forgot password?" link must only appear when the password form is visible (
 
 ## Decision 7: WebAuthn Script Injection for Passkey Login
 
-**Decision**: Inject `mfa/webauthn/snippets/login_script.html` into the `extra_body` block of `account/login.html` when `PASSKEY_LOGIN_ENABLED` is `True`, passing `button_id="passkey_login"` to match the passkey button's `id` attribute.
+**Decision**: Inject `mfa/webauthn/snippets/login_script.html` into the `extra_js` block of `account/login.html` when `PASSKEY_LOGIN_ENABLED` is `True`, passing `button_id="passkey_login"` to match the passkey button's `id` attribute.
 
 **Rationale**: This is the same pattern used in allauth's own `account/login.html`. The script wires the browser's WebAuthn API to the passkey button's click event. Without it, the button renders but clicking does nothing. The script must be conditional to avoid loading unnecessary JavaScript when passkeys are not configured (per FR-015).
 
 **Implementation**:
 
 ```html
-{% block extra_body %}
+{% block extra_js %}
   {{ block.super }}
   {% if PASSKEY_LOGIN_ENABLED %}
     {% include "mfa/webauthn/snippets/login_script.html" with button_id="passkey_login" %}

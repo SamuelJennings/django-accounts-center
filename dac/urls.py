@@ -4,7 +4,7 @@ from django.urls import include, path
 from . import views
 
 urlpatterns = [
-    path("", views.Home.as_view(), name="account-center"),
+    path("", views.AccountCenter.as_view(), name="account-center"),
     path("account/", include("allauth.urls")),
 ]
 

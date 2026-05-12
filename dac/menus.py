@@ -7,12 +7,9 @@ It integrates with django-flex-menus to provide structured navigation for accoun
 
 from django.utils.translation import gettext_lazy as _
 from flex_menu import Menu, MenuItem
-from flex_menu.checks import user_is_authenticated
 
 # Main menu instance for django-account-center
-AccountCenterMenu = Menu(
-    name="Account Center Menu",
-)
+AccountCenterMenu = Menu(name="Account Center Menu")
 
 AuthenticatedUserMenu = Menu(
     name="AuthenticatedUserMenu",
@@ -20,8 +17,12 @@ AuthenticatedUserMenu = Menu(
         MenuItem(
             name=_("Account Center"),
             view_name="account-center",
-            extra_context={"icon": "account_center", "description": _("Manage your account")},
-            check=user_is_authenticated,
+            extra_context={
+                "label": "Account Center",
+                "icon": "account_center",
+                "description": _("Manage your account"),
+            },
+            # check=user_is_authenticated,
         ),
     ],
 )

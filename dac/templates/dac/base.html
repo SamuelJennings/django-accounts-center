@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block app.sidebar %}
+  <c-app.sidebar menu="Account Center Menu" />
+{% endblock app.sidebar %}
+
+{% block content %}
+  <c-page class="dac-management-page">
+    {% block page.header %}
+      <c-slot name="header">
+        <c-mvp-toolbar fluid>
+          <c-slot name="start">
+            <c-breadcrumbs>
+              {% block page.breadcrumbs %}
+                <c-breadcrumbs.item text="{% trans "Account Center" %}"
+                                    href="{% url "account-center" %}" />
+              {% endblock page.breadcrumbs %}
+
+            </c-breadcrumbs>
+          </c-slot>
+        </c-mvp-toolbar>
+      </c-slot>
+    {% endblock page.header %}
+
+    {% block page.content-wrapper %}
+      <c-page.content class="container">
+        <c-layouts.form-view>
+          <c-mvp-toolbar relaxed gap="3">
+            <c-slot name="title">
+              {% block title %}
+              {% endblock title %}
+
+            </c-slot>
+          </c-mvp-toolbar>
+          <c-card.stack>
+            {% block page.content %}
+              {% trans "Coming soon..." %}
+            {% endblock page.content %}
+
+          </c-card.stack>
+        </c-layouts.form-view>
+      </c-page.content>
+    {% endblock page.content-wrapper %}
+
+  </c-page>
+{% endblock content %}
