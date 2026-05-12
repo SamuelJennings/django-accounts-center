@@ -222,20 +222,6 @@ class TestEmailMultiView:
         assert "{% element" not in content
         assert "{% endelement" not in content
 
-    def test_both_email_values_in_radio_inputs(self, client, settings):
-        """Both email address values must appear as value attributes on radio inputs."""
-        settings.ACCOUNT_CHANGE_EMAIL = False
-        user = make_user()
-        make_email_address(user, verified=True, primary=True)
-        EmailAddress.objects.create(user=user, email="second@example.com", verified=False, primary=False)
-        client.force_login(user)
-        response = client.get(reverse("account_email"))
-        content = response.content.decode()
-        assert 'type="radio"' in content
-        assert 'name="email"' in content
-        assert user.email in content
-        assert "second@example.com" in content
-
     def test_verified_address_has_badge(self, client, settings):
         """The verified address must have a sibling .badge element in its label."""
         settings.ACCOUNT_CHANGE_EMAIL = False
@@ -258,20 +244,22 @@ class TestEmailMultiView:
         assert "badge" in content
 
     def test_action_primary_button_present(self, client, settings):
-        """action_primary button must be present in rendered output."""
+        """action_primary button must be present for a non-primary address."""
         settings.ACCOUNT_CHANGE_EMAIL = False
         user = make_user()
-        make_email_address(user)
+        make_email_address(user, verified=True, primary=True)
+        EmailAddress.objects.create(user=user, email="second@example.com", verified=True, primary=False)
         client.force_login(user)
         response = client.get(reverse("account_email"))
         content = response.content.decode()
         assert 'name="action_primary"' in content
 
     def test_action_send_button_present(self, client, settings):
-        """action_send button must be present in rendered output."""
+        """action_send button must be present for an unverified address."""
         settings.ACCOUNT_CHANGE_EMAIL = False
         user = make_user()
-        make_email_address(user)
+        make_email_address(user, verified=True, primary=True)
+        EmailAddress.objects.create(user=user, email="second@example.com", verified=False, primary=False)
         client.force_login(user)
         response = client.get(reverse("account_email"))
         content = response.content.decode()

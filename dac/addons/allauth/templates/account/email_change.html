@@ -5,7 +5,12 @@
   {% trans "Email Address" %}
 {% endblock title %}
 
-{% block content %}
+{% block page.breadcrumbs %}
+  {{ block.super }}
+  <c-breadcrumbs.item text="{% trans 'Email Address' %}" />
+{% endblock page.breadcrumbs %}
+
+{% block page.content %}
   {% if not emailaddresses %}
     {% include "account/snippets/warn_no_email.html" %}
   {% endif %}
@@ -57,12 +62,12 @@
       </div>
     {% endif %}
     {{ form.email|as_crispy_field }}
-    <c-button.stack>
+    <c-slot name="actions">
       <c-button name="action_add"
                 type="submit"
                 variant="primary"
                 text="{% trans 'Change Email' %}" />
-    </c-button.stack>
+    </c-slot>
   </c-form.card>
   {% if new_emailaddress %}
     <form style="display: none"
@@ -75,4 +80,4 @@
              value="{{ new_emailaddress.email }}" />
     </form>
   {% endif %}
-{% endblock content %}
+{% endblock page.content %}
