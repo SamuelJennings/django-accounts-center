@@ -66,8 +66,9 @@
               </div>
               {# Show a description blurb only under the primary address row. #}
               {% if emailaddress.primary %}
-                small
-                tight />
+                <c-card.text text="{% trans "This email address is the default for notifications and account-related activity." %}"
+                             small
+                             tight />
               {% endif %}
             </c-list-group.item>
           {% endwith %}
