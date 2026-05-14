@@ -13,7 +13,7 @@ dependencies = ["django (>=5,<6.0)", "django-mvp"]
 allauth = ["django-allauth (>=64.0)", "crispy-bootstrap5 (>=2024.2)"]
 
 [tool.poetry]
-version = "0.1.0"
+version = "0.1.1"
 packages = [{ include = "dac" }]
 requires-poetry = '>=2.0,<3.0'
 
