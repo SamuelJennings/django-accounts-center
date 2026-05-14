@@ -1561,4 +1561,4 @@ allauth = ["crispy-bootstrap5", "django-allauth"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<4.0"
-content-hash = "53cf6f654a16012e1e299044067068a2d2a0e76907779b26f4d2496f813cd760"
+content-hash = "fae65af697a62239ac6f2458d725879da8484e38aba563172df44bc7bb486ecb"

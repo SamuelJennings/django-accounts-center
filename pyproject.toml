@@ -25,7 +25,10 @@ drf-stripe-subscription = "^1.2.2"
 django-activity-stream = "^2.0.0"
 django-extensions = "^4.1"
 beautifulsoup4 = "^4.14.3"
-fairdm-dev-tools = { git = "https://github.com/FAIR-DM/dev-tools" }
+fairdm-dev-tools = { git = "https://github.com/FAIR-DM/dev-tools", extras = [
+    "test",
+    "dev",
+] }
 dj-urls-panel = "^0.2.0"
 # django-mvp = { path = "../django-mvp", develop = true }
 pytest-playwright = "^0.7.2"
@@ -226,7 +229,14 @@ django-debug-toolbar = ["debug_toolbar"]
 
 [tool.deptry.per_rule_ignores]
 # flex_menu/allauth/crispy_forms are optional or transitive; debug_toolbar/pytest come via git deps
-DEP001 = ["invoke", "flex_menu", "debug_toolbar", "pytest", "allauth", "crispy_forms"]
+DEP001 = [
+    "invoke",
+    "flex_menu",
+    "debug_toolbar",
+    "pytest",
+    "allauth",
+    "crispy_forms",
+]
 DEP003 = ["toml"]
 # dotenv is used in example/ (dev-only app), not in the published package
 DEP004 = ["dotenv"]
