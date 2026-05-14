@@ -3,20 +3,14 @@ Pytest configuration and fixtures for django-accounts-center tests.
 """
 
 import pytest
-from allauth.account.models import EmailAddress
-from allauth.socialaccount.models import SocialAccount, SocialApp
-from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
-from django.contrib.sites.models import Site
 from django.test import Client
-
-User = get_user_model()
 
 
 @pytest.fixture
-def user():
+def user(django_user_model):
     """Create a test user."""
-    return User.objects.create_user(username="testuser", email="test@example.com", password="testpass123")
+    return django_user_model.objects.create_user(username="testuser", email="test@example.com", password="testpass123")
 
 
 @pytest.fixture
@@ -45,22 +39,26 @@ def anonymous_user():
 
 
 @pytest.fixture
-def superuser():
+def superuser(django_user_model):
     """Create a superuser."""
-    return User.objects.create_superuser(username="admin", email="admin@example.com", password="adminpass123")
+    return django_user_model.objects.create_superuser(username="admin", email="admin@example.com", password="adminpass123")
 
 
 @pytest.fixture
 def user_with_verified_email(user):
     """Create a user with verified email address."""
+    from allauth.account.models import EmailAddress
+
     EmailAddress.objects.create(user=user, email=user.email, verified=True, primary=True)
     return user
 
 
 @pytest.fixture
-def user_with_unverified_email():
+def user_with_unverified_email(django_user_model):
     """Create a user with unverified email address."""
-    user = User.objects.create_user(username="unverified", email="unverified@example.com", password="testpass123")
+    from allauth.account.models import EmailAddress
+
+    user = django_user_model.objects.create_user(username="unverified", email="unverified@example.com", password="testpass123")
     EmailAddress.objects.create(user=user, email=user.email, verified=False, primary=True)
     return user
 
@@ -68,8 +66,10 @@ def user_with_unverified_email():
 @pytest.fixture
 def social_app():
     """Create a social app for testing."""
-    site = Site.objects.get_or_create(id=1, defaults={"domain": "example.com", "name": "example.com"})[0]
+    from allauth.socialaccount.models import SocialApp
+    from django.contrib.sites.models import Site
 
+    site = Site.objects.get_or_create(id=1, defaults={"domain": "example.com", "name": "example.com"})[0]
     app = SocialApp.objects.create(provider="google", name="Google", client_id="test_client_id", secret="test_secret")
     app.sites.add(site)
     return app
@@ -78,6 +78,8 @@ def social_app():
 @pytest.fixture
 def user_with_social_account(user, social_app):
     """Create a user with social account."""
+    from allauth.socialaccount.models import SocialAccount
+
     SocialAccount.objects.create(
         user=user, provider="google", uid="12345", extra_data={"email": user.email, "name": "Test User"}
     )
