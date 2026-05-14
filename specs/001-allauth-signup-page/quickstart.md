@@ -1,7 +1,7 @@
 # Quickstart: Allauth Signup Page
 
-**Feature**: 001-allauth-signup-page  
-**Package**: `django-accounts-center`  
+**Feature**: 001-allauth-signup-page
+**Package**: `django-accounts-center`
 **Target**: Developers integrating django-allauth with a styled signup page
 
 ---

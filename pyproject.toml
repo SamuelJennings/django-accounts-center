@@ -9,8 +9,11 @@ authors = [{ name = "Sam", email = "samuel.scott.jennings@gmail.com" }]
 requires-python = ">=3.12,<4.0"
 dependencies = ["django (>=5,<6.0)", "django-mvp"]
 
+[project.optional-dependencies]
+allauth = ["django-allauth (>=64.0)", "crispy-bootstrap5 (>=2024.2)"]
+
 [tool.poetry]
-version = "0.1.0"
+version = "0.0.1"
 packages = [{ include = "dac" }]
 requires-poetry = '>=2.0,<3.0'
 
@@ -60,6 +63,8 @@ exclude = [
     "*/migrations/*.py",
     "staticfiles/*",
     "docs/",
+    ".github/",
+    "screenshots/",
 ]
 line-length = 120
 fix = true
@@ -106,15 +111,15 @@ ignore = [
     # ClassAttributesShouldBeAnnotated
     "RUF012",
     "TRY003",
-
     "A003",
     "F403",
     "F405",
     "C901",
 ]
-exclude = []
+
 [tool.ruff.lint.per-file-ignores]
 "**/tests/*" = ["S101", "S105"]
+"example/**" = ["S105", "S106", "RUF002", "RUF003"]
 
 [tool.ruff.format]
 docstring-code-format = true
@@ -210,7 +215,21 @@ omit = [
 
 [tool.deptry]
 extend_exclude = ["tasks.py", "docs", ".*tests"]
-ignore_transitive = ["toml"]
+
+[tool.deptry.package_module_name_map]
+django-mvp = ["mvp"]
+django-allauth = ["allauth"]
+django-flex-menus = ["flex_menu"]
+crispy-bootstrap5 = ["crispy_forms"]
+python-dotenv = ["dotenv"]
+django-debug-toolbar = ["debug_toolbar"]
+
+[tool.deptry.per_rule_ignores]
+# flex_menu/allauth/crispy_forms are optional or transitive; debug_toolbar/pytest come via git deps
+DEP001 = ["invoke", "flex_menu", "debug_toolbar", "pytest", "allauth", "crispy_forms"]
+DEP003 = ["toml"]
+# dotenv is used in example/ (dev-only app), not in the published package
+DEP004 = ["dotenv"]
 
 
 [tool.tox]

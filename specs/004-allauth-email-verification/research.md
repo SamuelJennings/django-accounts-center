@@ -1,7 +1,7 @@
 # Research: Allauth Email Verification Flow
 
-**Feature**: 004-allauth-email-verification  
-**Date**: 2026-05-11  
+**Feature**: 004-allauth-email-verification
+**Date**: 2026-05-11
 **Status**: Complete — all unknowns resolved
 
 ---

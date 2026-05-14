@@ -1,7 +1,7 @@
 # Component Interface Contract: Allauth Signup Page Cotton Components
 
-**Feature**: 001-allauth-signup-page  
-**Date**: 2026-05-07  
+**Feature**: 001-allauth-signup-page
+**Date**: 2026-05-07
 **Updated**: 2026-05-08 — Added DAC-owned entrance Cotton components (`<c-entrance>`, `<c-entrance.background>`, `<c-entrance.logo>`, `<c-button.stack>`). Updated `<c-card>`, `<c-button>`, `<c-form>`, `<c-form.crispy>`, and `<c-alert>` sections to reflect finalised implementation (card owned by `<c-entrance>`; non-field errors handled in `<c-form.crispy>`; social providers use Bootstrap Icon `<a>` tags; submit wrapped in `<c-button.stack>`).
 
 This document specifies how the django-accounts-center allauth addon composes its signup page UI from Cotton components. Components are grouped by origin: DAC-owned (created in this package) and library components (from django-mvp or django-cotton-bs5).
@@ -255,6 +255,6 @@ A developer consuming `django-accounts-center` can override any of the following
 | `allauth/layouts/entrance.html` | Entrance-page layout — override only if replacing `<c-entrance>` entirely |
 | `allauth/layouts/base.html` | HTML shell — override only if replacing django-mvp entirely |
 
-**To override the background only**: Create `templates/cotton/entrance/background.html` in your project.  
-**To override the logo only**: Create `templates/cotton/entrance/logo.html` in your project.  
+**To override the background only**: Create `templates/cotton/entrance/background.html` in your project.
+**To override the logo only**: Create `templates/cotton/entrance/logo.html` in your project.
 **To override a single sub-section** (e.g., just the social provider buttons): Create `templates/socialaccount/snippets/provider_list.html` in your project.

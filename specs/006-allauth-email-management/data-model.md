@@ -1,6 +1,6 @@
 # Data Model: Allauth Email Management Templates
 
-**Feature**: 006-allauth-email-management  
+**Feature**: 006-allauth-email-management
 **Status**: N/A — no new models or migrations
 
 ## Overview

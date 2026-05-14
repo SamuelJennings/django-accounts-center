@@ -1,8 +1,8 @@
 # Feature Specification: Allauth Email Management Templates
 
-**Feature Branch**: `006-allauth-email-management`  
-**Created**: 2026-05-12  
-**Status**: Draft  
+**Feature Branch**: `006-allauth-email-management`
+**Created**: 2026-05-12
+**Status**: Draft
 
 ## User Scenarios & Testing *(mandatory)*
 

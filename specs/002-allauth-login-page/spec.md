@@ -1,10 +1,10 @@
 # Feature Specification: Allauth Login Page
 
-**Feature Branch**: `002-allauth-login-page`  
-**Created**: 2026-05-08  
-**Status**: Refined  
-**Refined**: 2026-05-09 — Added three `socialaccount` templates to scope: `socialaccount/login.html`, `socialaccount/login_cancelled.html`, and `socialaccount/login_redirect.html`. Each must be rewritten using Cotton components consistent with the rest of the entrance page suite.  
-**Refined**: 2026-05-08 — Four clarifications applied: (1) social buttons above email/password form (mirroring signup page); (2) passkey login in scope — FR-008 expanded, FR-015 added, User Story 6 added; (3) both login-by-code templates (`request_login_code.html` and `confirm_login_code.html`) require `<c-entrance>` shell — FR-013 updated, screenshot permutations split; (4) signup cross-link placed at bottom of card after all content. FR-012 restructured to group permutations by overridden template, making per-template screenshot coverage explicit.  
+**Feature Branch**: `002-allauth-login-page`
+**Created**: 2026-05-08
+**Status**: Refined
+**Refined**: 2026-05-09 — Added three `socialaccount` templates to scope: `socialaccount/login.html`, `socialaccount/login_cancelled.html`, and `socialaccount/login_redirect.html`. Each must be rewritten using Cotton components consistent with the rest of the entrance page suite.
+**Refined**: 2026-05-08 — Four clarifications applied: (1) social buttons above email/password form (mirroring signup page); (2) passkey login in scope — FR-008 expanded, FR-015 added, User Story 6 added; (3) both login-by-code templates (`request_login_code.html` and `confirm_login_code.html`) require `<c-entrance>` shell — FR-013 updated, screenshot permutations split; (4) signup cross-link placed at bottom of card after all content. FR-012 restructured to group permutations by overridden template, making per-template screenshot coverage explicit.
 **Input**: User description: "The login page is a critical page for any django project that allows users to create and manage accounts. The most used 3rd party authentication app is by far django-allauth. This spec is responsible for modernising the login template provided by django-allauth. The login form must be reactive to django-allauth settings provided by the developer (e.g. only shows social accounts when this app is available, shows a message when signup is not available, etc.). Django-allauth provides its own \"component-like\" syntax in its default templates, however, we will NOT be using this, instead opting to use the component system defined by django-cotton and the prebuilt component in the django-mvp package. See spec 001-allauth-signup-page for a similar spec that targetted the signup page."
 
 ## Clarifications

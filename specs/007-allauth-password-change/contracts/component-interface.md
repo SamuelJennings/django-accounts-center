@@ -1,6 +1,6 @@
 # Component Interface Contract: Allauth Password Change Templates
 
-**Feature**: `007-allauth-password-change`  
+**Feature**: `007-allauth-password-change`
 **Date**: 2026-05-12
 
 ## Scope
@@ -12,7 +12,7 @@ Four templates in `dac/addons/allauth/templates/account/` are rewritten.
 
 ## `account/base_reauthenticate.html`
 
-**Change type**: Full rewrite (replace all `{% element %}` tags with Cotton)  
+**Change type**: Full rewrite (replace all `{% element %}` tags with Cotton)
 **Extends**: `account/base_entrance.html` (unchanged)
 
 ### Before (current)
@@ -80,7 +80,7 @@ Four templates in `dac/addons/allauth/templates/account/` are rewritten.
 
 ## `account/reauthenticate.html`
 
-**Change type**: Full rewrite of `{% block reauthenticate_content %}`  
+**Change type**: Full rewrite of `{% block reauthenticate_content %}`
 **Extends**: `account/base_reauthenticate.html`
 
 ### Before (current)
@@ -138,7 +138,7 @@ Four templates in `dac/addons/allauth/templates/account/` are rewritten.
 
 ## `account/password_change.html`
 
-**Change type**: Full rewrite  
+**Change type**: Full rewrite
 **Extends**: `account/base_manage_password.html`
 
 ### Before (current)
@@ -210,7 +210,7 @@ Four templates in `dac/addons/allauth/templates/account/` are rewritten.
 
 ## `account/password_set.html`
 
-**Change type**: Full rewrite  
+**Change type**: Full rewrite
 **Extends**: `account/base_manage_password.html`
 
 ### Before (current)
@@ -279,6 +279,6 @@ Four templates in `dac/addons/allauth/templates/account/` are rewritten.
 
 ## `account/base_manage_password.html`
 
-**Change type**: No change (verified only)  
-**Current content**: `{% extends "account/base_manage.html" %}`  
+**Change type**: No change (verified only)
+**Current content**: `{% extends "account/base_manage.html" %}`
 **Status**: Correct — inherits full DAC layout transitively. Verified by test.

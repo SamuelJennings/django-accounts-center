@@ -1,9 +1,9 @@
 # Feature Specification: Allauth Email Verification Flow
 
-**Feature Branch**: `004-allauth-email-verification`  
-**Created**: 2026-05-11  
-**Status**: Refined  
-**Refined**: 2026-05-11 — Updated FR-001 and FR-005 to specify `<c-text center>` modifier; updated FR-002 to specify `"Confirm"` button label with `icon="check-circle"` and test guidance (assert non-empty text + icon element, not specific values).  
+**Feature Branch**: `004-allauth-email-verification`
+**Created**: 2026-05-11
+**Status**: Refined
+**Refined**: 2026-05-11 — Updated FR-001 and FR-005 to specify `<c-text center>` modifier; updated FR-002 to specify `"Confirm"` button label with `icon="check-circle"` and test guidance (assert non-empty text + icon element, not specific values).
 
 ## User Scenarios & Testing *(mandatory)*
 

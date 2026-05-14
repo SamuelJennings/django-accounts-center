@@ -1,7 +1,7 @@
 # Data Model: Allauth Signup Page
 
-**Feature**: 001-allauth-signup-page  
-**Phase**: 1 — Design  
+**Feature**: 001-allauth-signup-page
+**Phase**: 1 — Design
 **Date**: 2026-05-07
 
 > **Note**: This feature is entirely template-driven. There are **no new Django models or database tables**. The entities described below are runtime objects whose structure and behaviour are defined by django-allauth and the project's settings — not by any code in `django-accounts-center`.

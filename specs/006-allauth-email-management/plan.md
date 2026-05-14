@@ -1,6 +1,6 @@
 # Implementation Plan: Allauth Email Management Templates
 
-**Branch**: `006-allauth-email-management` | **Date**: 2026-05-12 | **Spec**: [spec.md](spec.md)  
+**Branch**: `006-allauth-email-management` | **Date**: 2026-05-12 | **Spec**: [spec.md](spec.md)
 **Input**: Feature specification from `specs/006-allauth-email-management/spec.md`
 
 ## Summary
@@ -27,14 +27,14 @@ make those tests pass.
 
 ## Technical Context
 
-**Language/Version**: Python 3.12, Django 5.x  
-**Primary Dependencies**: django-allauth 65.x, django-cotton, django-mvp, django-cotton-bs5  
-**Storage**: N/A (template-only change; no models, migrations, or settings changes)  
-**Testing**: pytest, pytest-django, pytest-playwright  
-**Target Platform**: Django web application (server-rendered templates)  
-**Project Type**: Reusable Django extension library  
-**Performance Goals**: Same as existing management-page templates (no new DB queries)  
-**Constraints**: Zero `{% element %}` / `{% endelement %}` tags in modified files; `email_change.html` must use `<c-form.card>` as form wrapper; all content in `{% block page.content %}`; `email.html` is corrections-only (no cosmetic refactoring)  
+**Language/Version**: Python 3.12, Django 5.x
+**Primary Dependencies**: django-allauth 65.x, django-cotton, django-mvp, django-cotton-bs5
+**Storage**: N/A (template-only change; no models, migrations, or settings changes)
+**Testing**: pytest, pytest-django, pytest-playwright
+**Target Platform**: Django web application (server-rendered templates)
+**Project Type**: Reusable Django extension library
+**Performance Goals**: Same as existing management-page templates (no new DB queries)
+**Constraints**: Zero `{% element %}` / `{% endelement %}` tags in modified files; `email_change.html` must use `<c-form.card>` as form wrapper; all content in `{% block page.content %}`; `email.html` is corrections-only (no cosmetic refactoring)
 **Scale/Scope**: 4 template files edited; integration tests and screenshot tests pre-written
 
 ## Constitution Check

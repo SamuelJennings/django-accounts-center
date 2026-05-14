@@ -1,7 +1,7 @@
 # Research: Allauth Signup Page — Template Integration
 
-**Phase**: 0 — Unknowns resolved before design  
-**Feature**: 001-allauth-signup-page  
+**Phase**: 0 — Unknowns resolved before design
+**Feature**: 001-allauth-signup-page
 **Date**: 2026-05-07
 
 ---

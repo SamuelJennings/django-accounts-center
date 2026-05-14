@@ -1,9 +1,9 @@
 # Feature Specification: Allauth Password Reset Flow
 
-**Feature Branch**: `003-allauth-password-reset`  
-**Created**: 2026-05-11  
-**Status**: Refined  
-**Refined**: 2026-05-11 — Updated FR-001, FR-002, FR-003, FR-005, FR-006, FR-010 to match implemented template changes: `<c-text>` used for all informational paragraphs; submit button on `password_reset.html` labelled "Send email" (was "Reset My Password"); submit button on `password_reset_from_key.html` labelled "Confirm" (was "Change Password"); `confirm_password_reset_code.html` only overrides `title_` (not `head_title_`) and uses fail-silent URL pattern for action URLs.  
+**Feature Branch**: `003-allauth-password-reset`
+**Created**: 2026-05-11
+**Status**: Refined
+**Refined**: 2026-05-11 — Updated FR-001, FR-002, FR-003, FR-005, FR-006, FR-010 to match implemented template changes: `<c-text>` used for all informational paragraphs; submit button on `password_reset.html` labelled "Send email" (was "Reset My Password"); submit button on `password_reset_from_key.html` labelled "Confirm" (was "Change Password"); `confirm_password_reset_code.html` only overrides `title_` (not `head_title_`) and uses fail-silent URL pattern for action URLs.
 
 ## User Scenarios & Testing *(mandatory)*
 

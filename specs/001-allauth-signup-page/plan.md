@@ -1,10 +1,10 @@
 # Implementation Plan: Allauth Signup Page
 
-**Branch**: `001-allauth-signup-page` | **Date**: 2026-05-07 | **Spec**: [spec.md](spec.md)  
-**Input**: Feature specification from `/specs/001-allauth-signup-page/spec.md`  
-**Propagated**: 2026-05-07 — Added Principle XIII (FR-011) multi-viewport screenshot coverage: Constitution Check table updated with Principle XIII row; Project Structure updated with `docs/_static/` directories and `test_signup_screenshots.py`.  
-**Propagated**: 2026-05-08 — Entrance layout architecture finalised. `<c-entrance>`, `<c-entrance.background>`, and `<c-entrance.logo>` Cotton components created in `dac/templates/cotton/entrance/`. The allauth layout template delegates entirely to `<c-entrance>`. Page templates (signup.html, signup_closed.html) are now content-only. Non-field error rendering moved into `<c-form.crispy>`. Submit button uses `<c-button.stack>` + `<c-button icon=...>`. Updated: Summary, Project Structure, Template Design sections, Constitution post-design check, Open Questions.  
-**Propagated**: 2026-05-08 — Passkey signup flow added (User Story 6, FR-012). `signup_by_passkey.html` template added to Project Structure and Template Design. Constitution Check Principle XIII updated to 6 permutations × 3 viewports = 18 screenshot files. Open Questions updated with passkey-specific risk.  
+**Branch**: `001-allauth-signup-page` | **Date**: 2026-05-07 | **Spec**: [spec.md](spec.md)
+**Input**: Feature specification from `/specs/001-allauth-signup-page/spec.md`
+**Propagated**: 2026-05-07 — Added Principle XIII (FR-011) multi-viewport screenshot coverage: Constitution Check table updated with Principle XIII row; Project Structure updated with `docs/_static/` directories and `test_signup_screenshots.py`.
+**Propagated**: 2026-05-08 — Entrance layout architecture finalised. `<c-entrance>`, `<c-entrance.background>`, and `<c-entrance.logo>` Cotton components created in `dac/templates/cotton/entrance/`. The allauth layout template delegates entirely to `<c-entrance>`. Page templates (signup.html, signup_closed.html) are now content-only. Non-field error rendering moved into `<c-form.crispy>`. Submit button uses `<c-button.stack>` + `<c-button icon=...>`. Updated: Summary, Project Structure, Template Design sections, Constitution post-design check, Open Questions.
+**Propagated**: 2026-05-08 — Passkey signup flow added (User Story 6, FR-012). `signup_by_passkey.html` template added to Project Structure and Template Design. Constitution Check Principle XIII updated to 6 permutations × 3 viewports = 18 screenshot files. Open Questions updated with passkey-specific risk.
 **Propagated**: 2026-05-08 — Constitution v1.1.2 (Principle XIII PATCH): screenshot-only test modules MUST live in the root `screenshots/` directory, not inside `tests/`. `test_signup_screenshots.py` moved from `tests/test_addons/test_allauth/` to `screenshots/`. Structure Decision updated. Constitution Check Principle XIII note updated.
 
 ---
@@ -17,14 +17,14 @@ Build a styled, modern allauth signup page for `django-accounts-center` by overr
 
 ## Technical Context
 
-**Language/Version**: Python 3.12+  
-**Primary Dependencies**: Django 5.2+, django-allauth v65+, django-mvp ≥0.1.1, django-cotton, django-cotton-bs5, crispy-bootstrap5  
-**Storage**: N/A — no new database tables or models  
-**Testing**: pytest, pytest-django, pytest-playwright  
-**Target Platform**: Django web application (WSGI/ASGI)  
-**Project Type**: Reusable Django extension library  
-**Performance Goals**: No additional database queries beyond allauth's own signup view; page renders from templates only  
-**Constraints**: Must not patch allauth source; must degrade gracefully when `allauth.socialaccount` is absent; all UI via template overrides only  
+**Language/Version**: Python 3.12+
+**Primary Dependencies**: Django 5.2+, django-allauth v65+, django-mvp ≥0.1.1, django-cotton, django-cotton-bs5, crispy-bootstrap5
+**Storage**: N/A — no new database tables or models
+**Testing**: pytest, pytest-django, pytest-playwright
+**Target Platform**: Django web application (WSGI/ASGI)
+**Project Type**: Reusable Django extension library
+**Performance Goals**: No additional database queries beyond allauth's own signup view; page renders from templates only
+**Constraints**: Must not patch allauth source; must degrade gracefully when `allauth.socialaccount` is absent; all UI via template overrides only
 **Scale/Scope**: Single-page feature (signup page); 7 template files modified
 
 ---

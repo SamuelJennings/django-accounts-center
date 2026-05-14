@@ -1,6 +1,6 @@
 # Implementation Plan: Allauth Password Change Templates
 
-**Branch**: `007-allauth-password-change` | **Date**: 2026-05-12 | **Spec**: [spec.md](spec.md)  
+**Branch**: `007-allauth-password-change` | **Date**: 2026-05-12 | **Spec**: [spec.md](spec.md)
 **Input**: Feature specification from `specs/007-allauth-password-change/spec.md`
 
 ## Summary
@@ -30,14 +30,14 @@ tests are written in `screenshots/test_password_change_screenshots.py`.
 
 ## Technical Context
 
-**Language/Version**: Python 3.12, Django 5.x  
-**Primary Dependencies**: django-allauth 65.x, django-cotton, django-mvp, django-cotton-bs5  
-**Storage**: N/A (template-only change; no models, migrations, or settings changes)  
-**Testing**: pytest, pytest-django, pytest-playwright  
-**Target Platform**: Django web application (server-rendered templates)  
-**Project Type**: Reusable Django extension library  
-**Performance Goals**: Same as existing management-page templates (no new DB queries)  
-**Constraints**: Zero `{% element %}` / `{% endelement %}` tags in modified files; `password_change.html` and `password_set.html` MUST use `<c-form.card>` as form wrapper; all management-page content in `{% block page.content %}`; MFA reauthenticate templates explicitly out of scope  
+**Language/Version**: Python 3.12, Django 5.x
+**Primary Dependencies**: django-allauth 65.x, django-cotton, django-mvp, django-cotton-bs5
+**Storage**: N/A (template-only change; no models, migrations, or settings changes)
+**Testing**: pytest, pytest-django, pytest-playwright
+**Target Platform**: Django web application (server-rendered templates)
+**Project Type**: Reusable Django extension library
+**Performance Goals**: Same as existing management-page templates (no new DB queries)
+**Constraints**: Zero `{% element %}` / `{% endelement %}` tags in modified files; `password_change.html` and `password_set.html` MUST use `<c-form.card>` as form wrapper; all management-page content in `{% block page.content %}`; MFA reauthenticate templates explicitly out of scope
 **Scale/Scope**: 4 template files rewritten; 1 new test module; 1 new screenshot module
 
 ## Constitution Check

@@ -330,11 +330,12 @@ version = "2024.10"
 description = "Bootstrap5 template pack for django-crispy-forms"
 optional = false
 python-versions = ">=3.8"
-groups = ["dev"]
+groups = ["main", "dev"]
 files = [
     {file = "crispy_bootstrap5-2024.10-py3-none-any.whl", hash = "sha256:59e91dac5e45a8c954af3fbcaa6804cd5aef4402f027af2f99a352b096c4016f"},
     {file = "crispy_bootstrap5-2024.10.tar.gz", hash = "sha256:55b442fe675dd95ad280123c7fe464f454186e90b8e5642e751f436c87627c44"},
 ]
+markers = {main = "extra == \"allauth\""}
 
 [package.dependencies]
 django = ">=4.2"
@@ -474,11 +475,12 @@ version = "65.16.1"
 description = "Integrated set of Django applications addressing authentication, registration, account management as well as 3rd party (social) account authentication."
 optional = false
 python-versions = ">=3.10"
-groups = ["dev"]
+groups = ["main", "dev"]
 files = [
     {file = "django_allauth-65.16.1-py3-none-any.whl", hash = "sha256:e49df24056bf37c44e56aaad1e51f78994b7d175bc3476d65e8f8f58390a8ce8"},
     {file = "django_allauth-65.16.1.tar.gz", hash = "sha256:4425ac3088541c4c54983e16e08f6e3eb9f438dc1b1009534fa51c8bb739ed31"},
 ]
+markers = {main = "extra == \"allauth\""}
 
 [package.dependencies]
 asgiref = ">=3.8.1"
@@ -571,11 +573,12 @@ version = "2.6"
 description = "Best way to have Django DRY forms"
 optional = false
 python-versions = ">=3.10"
-groups = ["dev"]
+groups = ["main", "dev"]
 files = [
     {file = "django_crispy_forms-2.6-py3-none-any.whl", hash = "sha256:8ee0ae28b6b0ac41ff48a65944480c049fe8d1b0047086874fd7efabf4ec1374"},
     {file = "django_crispy_forms-2.6.tar.gz", hash = "sha256:4921a1087c6cd4f9fa3c139654c1de1c1c385f8bd6729aaee530bc0121ab4b93"},
 ]
+markers = {main = "extra == \"allauth\""}
 
 [package.dependencies]
 django = ">=5.2"
@@ -1552,7 +1555,10 @@ h2 = ["h2 (>=4,<5)"]
 socks = ["pysocks (>=1.5.6,!=1.5.7,<2.0)"]
 zstd = ["backports-zstd (>=1.0.0) ; python_version < \"3.14\""]
 
+[extras]
+allauth = ["crispy-bootstrap5", "django-allauth"]
+
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<4.0"
-content-hash = "e2f0ffb5be21b7f28c579f615078b549a810a936139a9e6b3ab360ee38d76502"
+content-hash = "53cf6f654a16012e1e299044067068a2d2a0e76907779b26f4d2496f813cd760"

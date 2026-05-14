@@ -162,8 +162,12 @@ LIBSASS_SOURCEMAPS = True
 # ======= DRF Stripe Subscription =======
 
 DRF_STRIPE = {
-    "STRIPE_API_SECRET": os.environ.get("STRIPE_SECRET_KEY"),  # Replace with your actual Stripe Secret Key
-    "STRIPE_WEBHOOK_SECRET": os.environ.get("STRIPE_WEBHOOK_SECRET"),  # Replace with your actual Webhook Secret
+    "STRIPE_API_SECRET": os.environ.get(
+        "STRIPE_SECRET_KEY"
+    ),  # Replace with your actual Stripe Secret Key
+    "STRIPE_WEBHOOK_SECRET": os.environ.get(
+        "STRIPE_WEBHOOK_SECRET"
+    ),  # Replace with your actual Webhook Secret
     "FRONT_END_BASE_URL": "http://localhost:8000",  # Adjust based on your frontend setup
 }
 

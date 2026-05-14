@@ -2,7 +2,13 @@ MFA_PASSKEY_LOGIN_ENABLED = True
 MFA_SUPPORTED_TYPES = ["totp", "webauthn", "recovery_codes"]
 MFA_WEBAUTHN_ALLOW_INSECURE_ORIGIN = True
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
-ACCOUNT_SIGNUP_FIELDS = ("first_name", "last_name", "password1*", "password2*", "email*")
+ACCOUNT_SIGNUP_FIELDS = (
+    "first_name",
+    "last_name",
+    "password1*",
+    "password2*",
+    "email*",
+)
 ACCOUNT_LOGIN_METHODS = ("username", "email")
 
 # Uncomment to disable signups

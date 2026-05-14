@@ -1,7 +1,7 @@
 # Specification Quality Checklist: Allauth Email Verification Flow
 
-**Purpose**: Validate specification completeness and quality before proceeding to planning  
-**Created**: 2026-05-11  
+**Purpose**: Validate specification completeness and quality before proceeding to planning
+**Created**: 2026-05-11
 **Feature**: [spec.md](../spec.md)
 
 ## Content Quality

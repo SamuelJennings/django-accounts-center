@@ -1,7 +1,7 @@
 # Component Interface Contract: `dac/base.html`
 
-**Template path**: `dac/templates/dac/base.html`  
-**Parent**: `base.html` (host project root template)  
+**Template path**: `dac/templates/dac/base.html`
+**Parent**: `base.html` (host project root template)
 **Role**: Base template for all authenticated management pages
 
 ---

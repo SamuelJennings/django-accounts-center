@@ -1,8 +1,8 @@
 # Feature Specification: Allauth Password Change Templates
 
-**Feature Branch**: `007-allauth-password-change`  
-**Created**: 2026-05-12  
-**Status**: Draft  
+**Feature Branch**: `007-allauth-password-change`
+**Created**: 2026-05-12
+**Status**: Draft
 
 ## User Scenarios & Testing *(mandatory)*
 

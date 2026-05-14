@@ -12,7 +12,7 @@ template extends, which blocks it overrides, and which Cotton components it uses
 
 ## 1. `account/base_manage.html`
 
-**File**: `dac/addons/allauth/templates/account/base_manage.html`  
+**File**: `dac/addons/allauth/templates/account/base_manage.html`
 **Change type**: One-line extends correction
 
 ### Before
@@ -35,8 +35,8 @@ template extends, which blocks it overrides, and which Cotton components it uses
 
 ## 2. `account/email_change.html`
 
-**File**: `dac/addons/allauth/templates/account/email_change.html`  
-**Change type**: Full rewrite  
+**File**: `dac/addons/allauth/templates/account/email_change.html`
+**Change type**: Full rewrite
 **Extends**: `account/base_manage_email.html` (unchanged — indirect chain preserved)
 
 ### Blocks overridden
@@ -99,8 +99,8 @@ template extends, which blocks it overrides, and which Cotton components it uses
 
 ## 3. `account/verified_email_required.html`
 
-**File**: `dac/addons/allauth/templates/account/verified_email_required.html`  
-**Change type**: Block rename + card wrapper  
+**File**: `dac/addons/allauth/templates/account/verified_email_required.html`
+**Change type**: Block rename + card wrapper
 **Extends**: `account/base_manage.html`
 
 ### Blocks overridden
@@ -130,8 +130,8 @@ template extends, which blocks it overrides, and which Cotton components it uses
 
 ## 4. `account/email.html`
 
-**File**: `dac/addons/allauth/templates/account/email.html`  
-**Change type**: Functional-errors-only audit  
+**File**: `dac/addons/allauth/templates/account/email.html`
+**Change type**: Functional-errors-only audit
 **Extends**: `dac/base.html` (already correct)
 
 ### Audit checklist

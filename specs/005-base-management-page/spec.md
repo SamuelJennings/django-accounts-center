@@ -1,8 +1,8 @@
 # Feature Specification: Base Management Page
 
-**Feature Branch**: `005-base-management-page`  
-**Created**: 2026-05-12  
-**Status**: Draft  
+**Feature Branch**: `005-base-management-page`
+**Created**: 2026-05-12
+**Status**: Draft
 
 ## User Scenarios & Testing *(mandatory)*
 

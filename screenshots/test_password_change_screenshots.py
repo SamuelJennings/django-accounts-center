@@ -16,7 +16,6 @@ from django.urls import reverse
 
 from screenshots.conftest import create_test_user
 
-
 # ---------------------------------------------------------------------------
 # Helper: log in via the Django test client session and transfer to Playwright
 # ---------------------------------------------------------------------------
@@ -131,9 +130,7 @@ def test_reauthenticate_with_alternatives_page(
         [{"name": "sessionid", "value": session_value, "url": live_server.url}]
     )
 
-    response = page.goto(
-        live_server.url + reverse("test_reauthenticate_alternatives")
-    )
+    response = page.goto(live_server.url + reverse("test_reauthenticate_alternatives"))
     page.wait_for_load_state("networkidle")
     assert response is not None and response.status < 500
     save_screenshot("reauthenticate-alternatives")

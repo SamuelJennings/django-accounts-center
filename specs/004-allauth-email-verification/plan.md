@@ -1,6 +1,6 @@
 # Implementation Plan: Allauth Email Verification Flow
 
-**Branch**: `004-allauth-email-verification` | **Date**: 2026-05-11 | **Spec**: [spec.md](spec.md)  
+**Branch**: `004-allauth-email-verification` | **Date**: 2026-05-11 | **Spec**: [spec.md](spec.md)
 **Input**: Feature specification from `specs/004-allauth-email-verification/spec.md`
 
 ## Summary
@@ -17,14 +17,14 @@ or settings are introduced. The four templates are:
 
 ## Technical Context
 
-**Language/Version**: Python 3.12, Django 5.x  
-**Primary Dependencies**: django-allauth 65.x, django-cotton, django-mvp, django-cotton-bs5  
-**Storage**: N/A (template-only change, no migrations)  
-**Testing**: pytest, pytest-django, pytest-playwright  
-**Target Platform**: Django web application (server-rendered templates)  
-**Project Type**: Reusable Django extension library  
-**Performance Goals**: Same as existing entrance-page templates (no new DB queries)  
-**Constraints**: Zero `{% element %}` tags; must extend `account/base_entrance.html` (not allauth layout directly); `confirm_email_verification_code.html` must use `title_` block and fail-silent URL patterns  
+**Language/Version**: Python 3.12, Django 5.x
+**Primary Dependencies**: django-allauth 65.x, django-cotton, django-mvp, django-cotton-bs5
+**Storage**: N/A (template-only change, no migrations)
+**Testing**: pytest, pytest-django, pytest-playwright
+**Target Platform**: Django web application (server-rendered templates)
+**Project Type**: Reusable Django extension library
+**Performance Goals**: Same as existing entrance-page templates (no new DB queries)
+**Constraints**: Zero `{% element %}` tags; must extend `account/base_entrance.html` (not allauth layout directly); `confirm_email_verification_code.html` must use `title_` block and fail-silent URL patterns
 **Scale/Scope**: 4 template files edited; 1 new integration test file; 1 new screenshot test file
 
 ## Constitution Check
@@ -249,7 +249,7 @@ conditional branches exactly.
   (`{% else %}`), it uses `{{ email }}` — this relies on the email variable being set
   by the preceding `{% blocktrans with … as email %}` in Branch A. However in the
   Cotton version, if Branch A is not rendered (because `can_confirm` is False),
-  the `email` variable is never set.  
+  the `email` variable is never set.
   **Solution**: Extract the email address before the `{% if can_confirm %}` check:
   `{% with email=confirmation.email_address.email %}` wrapping both branches.
 

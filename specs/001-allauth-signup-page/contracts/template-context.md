@@ -1,8 +1,8 @@
 # Template Context Contract: `account/signup.html`
 
-**Feature**: 001-allauth-signup-page  
-**Template**: `dac/addons/allauth/templates/account/signup.html`  
-**Rendered by**: `allauth.account.views.SignupView`  
+**Feature**: 001-allauth-signup-page
+**Template**: `dac/addons/allauth/templates/account/signup.html`
+**Rendered by**: `allauth.account.views.SignupView`
 **Template chain**: `account/signup.html → account/base_entrance.html → allauth/layouts/entrance.html → allauth/layouts/base.html → mvp/base.html`
 
 ---

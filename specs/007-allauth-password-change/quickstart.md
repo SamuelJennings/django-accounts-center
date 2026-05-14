@@ -1,6 +1,6 @@
 # Quickstart: Allauth Password Change Templates
 
-**Feature**: `007-allauth-password-change`  
+**Feature**: `007-allauth-password-change`
 **Date**: 2026-05-12
 
 ## What This Feature Does

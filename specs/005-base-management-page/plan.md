@@ -1,6 +1,6 @@
 # Implementation Plan: Base Management Page
 
-**Branch**: `feature/006-base-management-page` | **Date**: 2026-05-12 | **Spec**: [spec.md](spec.md)  
+**Branch**: `feature/006-base-management-page` | **Date**: 2026-05-12 | **Spec**: [spec.md](spec.md)
 **Input**: Feature specification from `specs/005-base-management-page/spec.md`
 
 ## Summary
@@ -17,14 +17,14 @@ No new template files, views, forms, models, or settings are introduced.
 
 ## Technical Context
 
-**Language/Version**: Python 3.12, Django 5.x  
-**Primary Dependencies**: django-mvp, django-cotton, django-cotton-bs5, flex_menu  
-**Storage**: N/A (no new models or migrations)  
-**Testing**: pytest, pytest-django, django-cotton-bs5 (Cotton fixtures)  
-**Target Platform**: Django web application (server-rendered templates)  
-**Project Type**: Reusable Django extension library  
-**Performance Goals**: N/A — template renders the same as any other management page  
-**Constraints**: Tests must use `cotton_render` / `cotton_render_soup` from `django-cotton-bs5`; no `Template()` or `render_to_string` for Cotton component tests  
+**Language/Version**: Python 3.12, Django 5.x
+**Primary Dependencies**: django-mvp, django-cotton, django-cotton-bs5, flex_menu
+**Storage**: N/A (no new models or migrations)
+**Testing**: pytest, pytest-django, django-cotton-bs5 (Cotton fixtures)
+**Target Platform**: Django web application (server-rendered templates)
+**Project Type**: Reusable Django extension library
+**Performance Goals**: N/A — template renders the same as any other management page
+**Constraints**: Tests must use `cotton_render` / `cotton_render_soup` from `django-cotton-bs5`; no `Template()` or `render_to_string` for Cotton component tests
 **Scale/Scope**: 1 template file already in place; 1 Cotton rendering test module (12 tests across 3 phases covering US1–US3)
 
 ## Constitution Check

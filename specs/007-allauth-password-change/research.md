@@ -1,7 +1,7 @@
 # Research: Allauth Password Change Templates
 
-**Feature**: `007-allauth-password-change`  
-**Date**: 2026-05-12  
+**Feature**: `007-allauth-password-change`
+**Date**: 2026-05-12
 **Status**: N/A — No unknowns requiring research
 
 ## Summary

@@ -1,6 +1,6 @@
 # Component Interface Contract: Email Verification Flow
 
-**Feature**: 004-allauth-email-verification  
+**Feature**: 004-allauth-email-verification
 **Date**: 2026-05-11
 
 ---

@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    
+
     # Third-party packages
     "allauth",
     "allauth.account",
@@ -57,15 +57,15 @@ INSTALLED_APPS = [
     "django_cotton",
     "cotton_bs5",
     "easy_icons",
-    
+
     # Django Account Center
     "dac",
     "dac.addons.allauth",
-    
+
     # Optional addons
     "dac.addons.stripe",  # For Stripe integration
     "dac.addons.actstream",  # For activity streams
-    
+
     # Your apps
     "your_app",
 ]

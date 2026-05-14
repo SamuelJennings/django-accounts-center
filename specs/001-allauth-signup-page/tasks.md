@@ -7,10 +7,10 @@ description: "Task list for 001-allauth-signup-page implementation"
 **Input**: Design documents from `/specs/001-allauth-signup-page/`
 **Prerequisites**: plan.md ✅ | spec.md ✅ | research.md ✅ | data-model.md ✅ | contracts/ ✅ | quickstart.md ✅
 
-**Tests**: Included — spec SC-002 and FR-011 require automated tests covering all allauth configuration permutations and multi-viewport screenshot coverage.  
-**Propagated**: 2026-05-07 — Added Phase 8 (Multi-Viewport Screenshot Coverage) for FR-011 / Principle XIII compliance; updated dependency DAG, parallel execution table, and task counts.  
-**Propagated**: 2026-05-08 — Updated T003 (entrance.html now delegates to `<c-entrance>`), T005 (signup.html is content-only; no card/logo markup; uses `<c-button.stack>`; no `{% if form.non_field_errors %}`), and T011 (provider_list uses Bootstrap Icon `<a>` tags instead of `<c-button>`). Added Phase 2b for Cotton entrance component creation.  
-**Propagated**: 2026-05-08 — Added Phase 5b (User Story 6 — Passkey Signup, FR-012): T024 (signup_by_passkey.html using Cotton components), T025 [P] (integration tests), T026 (Playwright MCP verify), TVAL-6. Updated Phase 8 permutations table to 6 configurations × 3 viewports = 18 screenshot files. Updated T023, TVAL-5, task counts, and dependency DAG.  
+**Tests**: Included — spec SC-002 and FR-011 require automated tests covering all allauth configuration permutations and multi-viewport screenshot coverage.
+**Propagated**: 2026-05-07 — Added Phase 8 (Multi-Viewport Screenshot Coverage) for FR-011 / Principle XIII compliance; updated dependency DAG, parallel execution table, and task counts.
+**Propagated**: 2026-05-08 — Updated T003 (entrance.html now delegates to `<c-entrance>`), T005 (signup.html is content-only; no card/logo markup; uses `<c-button.stack>`; no `{% if form.non_field_errors %}`), and T011 (provider_list uses Bootstrap Icon `<a>` tags instead of `<c-button>`). Added Phase 2b for Cotton entrance component creation.
+**Propagated**: 2026-05-08 — Added Phase 5b (User Story 6 — Passkey Signup, FR-012): T024 (signup_by_passkey.html using Cotton components), T025 [P] (integration tests), T026 (Playwright MCP verify), TVAL-6. Updated Phase 8 permutations table to 6 configurations × 3 viewports = 18 screenshot files. Updated T023, TVAL-5, task counts, and dependency DAG.
 **Propagated**: 2026-05-08 — Constitution v1.1.2 (Principle XIII PATCH): T023 path updated from `tests/test_addons/test_allauth/test_signup_screenshots.py` to `screenshots/test_signup_screenshots.py`. TVAL-5 run command updated to `pytest screenshots/`.
 
 ---
@@ -217,7 +217,7 @@ Each story's parallel tasks ([P]) can be started simultaneously with the precedi
 
 ---
 
-**Total tasks**: 29 implementation tasks + 6 validation checkpoints  
-**Tasks per user story**: US1: 3 | US2: 3 | US3: 6 | US4: 4 | US5: 1 | US6: 3 | Screenshots (Phase 8): 2  
-**Parallel opportunities**: 9 task pairs (added T020 ‖ T022→T023, T025 ‖ T024)  
+**Total tasks**: 29 implementation tasks + 6 validation checkpoints
+**Tasks per user story**: US1: 3 | US2: 3 | US3: 6 | US4: 4 | US5: 1 | US6: 3 | Screenshots (Phase 8): 2
+**Parallel opportunities**: 9 task pairs (added T020 ‖ T022→T023, T025 ‖ T024)
 **Suggested MVP**: Phase 2 + Phase 3 (T001–T007 + TVAL-1)
