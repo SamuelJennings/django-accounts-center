@@ -55,7 +55,7 @@ with Cotton components and ensuring visual consistency with the signup and login
 
 The scope covers four templates. `account/verification_sent.html` is the informational page shown
 after signup when `ACCOUNT_EMAIL_VERIFICATION = "mandatory"`, telling the user to check their inbox;
-it carries no form and should be rendered using `<c-entrance.text>` and informational Cotton elements.
+it carries no form and should be rendered using `<c-text>` and informational Cotton elements.
 `account/email_confirm.html` is the confirmation page reached by clicking the link in the
 verification email; it presents a single confirm button to finalise ownership of the address, and must
 handle both the `can_confirm` (valid key) and invalid-key branches gracefully.

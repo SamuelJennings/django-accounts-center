@@ -5,9 +5,9 @@
         change_url
         resend_url
         resend_supported />
-<c-entrance.text>
+<c-text>
   {% blocktrans %}We sent a code to <a href="{{ phone|yesno:"tel,mailto"}}:{{ recipient }}">{{ recipient }}</a>. The code expires shortly, so please enter it soon.{% endblocktrans %}
-</c-entrance.text>
+</c-text>
 <c-form method="post"
         :form-obj="verify_form"
         action="{{ action }}">

@@ -47,10 +47,10 @@
     </c-entrance.section>
   {% endif %}
   {% if login_url %}
-    <c-entrance.text small>
+    <c-text small>
       {% blocktrans with login_url=login_url %}
                 Already have an account? <a href="{{ login_url }}">Sign in</a>.
             {% endblocktrans %}
-    </c-entrance.text>
+    </c-text>
   {% endif %}
 {% endblock content %}

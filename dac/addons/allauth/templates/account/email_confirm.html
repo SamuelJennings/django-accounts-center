@@ -11,9 +11,9 @@
       {% user_display confirmation.email_address.user as user_display %}
       {% if can_confirm %}
         {% url 'account_confirm_email' confirmation.key as action_url %}
-        <c-entrance.text>
+        <c-text>
           {% blocktrans with confirmation.email_address.email as email %}Please confirm that <a href="mailto:{{ email }}">{{ email }}</a> is an email address for user {{ user_display }}.{% endblocktrans %}
-        </c-entrance.text>
+        </c-text>
         <c-form method="post" action="{{ action_url }}">
           {{ redirect_field }}
           <c-button.stack>
@@ -26,15 +26,15 @@
           </c-button.stack>
         </c-form>
       {% else %}
-        <c-entrance.text>
+        <c-text>
           {% blocktrans %}Unable to confirm {{ email }} because it is already confirmed by a different account.{% endblocktrans %}
-        </c-entrance.text>
+        </c-text>
       {% endif %}
     {% else %}
       {% url 'account_email' as email_url %}
-      <c-entrance.text>
+      <c-text>
         {% blocktrans %}This email confirmation link expired or is invalid. Please <a href="{{ email_url }}">issue a new email confirmation request</a>.{% endblocktrans %}
-      </c-entrance.text>
+      </c-text>
     {% endif %}
   {% endwith %}
 {% endblock content %}

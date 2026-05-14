@@ -12,24 +12,24 @@
 account/password_reset.html
   └─ <c-entrance title="Password Reset">
        ├─ {% include "account/snippets/already_logged_in.html" %} (conditional)
-       ├─ <c-entrance.text center> description </c-entrance.text>
+       ├─ <c-text center> description </c-text>
        ├─ <c-form action=reset_url>
        │    ├─ <c-form.crispy form=form />
        │    ├─ {{ redirect_field }}
        │    └─ <c-button.stack>
        │         └─ <c-button type="submit" icon="send" variant="primary">Send email</c-button>
        │    </c-button.stack>
-       └─ <c-entrance.text small> contact-us </c-entrance.text>
+       └─ <c-text small> contact-us </c-text>
 
 account/password_reset_done.html
   └─ <c-entrance title="Password Reset">
        ├─ {% include "account/snippets/already_logged_in.html" %} (conditional)
-       └─ <c-entrance.text center> spam-folder/contact confirmation </c-entrance.text>
+       └─ <c-text center> spam-folder/contact confirmation </c-text>
 
 account/password_reset_from_key.html
   └─ <c-entrance title="Bad Token" | "Change Password">
        ├─ [token_fail branch]
-       │    └─ <c-entrance.text> {% blocktrans %} link to password_reset {% endblocktrans %} </c-entrance.text>
+       │    └─ <c-text> {% blocktrans %} link to password_reset {% endblocktrans %} </c-text>
        └─ [valid branch]
             ├─ <c-form action=action_url>
             │    ├─ <c-form.crispy form=form />
@@ -41,7 +41,7 @@ account/password_reset_from_key.html
 
 account/password_reset_from_key_done.html
   └─ <c-entrance title="Change Password">
-       └─ <c-entrance.text center> "Your password is now changed." </c-entrance.text>
+       └─ <c-text center> "Your password is now changed." </c-text>
 
 account/base_confirm_code.html
   └─ <c-entrance>  [title from {% block title %}]
@@ -78,7 +78,7 @@ All components are already available from specs 001 and 002. No new components a
 | Component | Source | Usage |
 |---|---|---|
 | `<c-entrance>` | `dac/addons/allauth` (spec 001) | Outer shell for all 4 standard pages |
-| `<c-entrance.text>` | `dac/addons/allauth` (spec 001) | Informational/descriptive paragraphs (replaces raw `<p>`) |
+| `<c-text>` | `dac/addons/allauth` (spec 001) | Informational/descriptive paragraphs (replaces raw `<p>`) |
 | `<c-form>` | django-mvp | Form wrapper with CSRF and action |
 | `<c-form.crispy>` | django-mvp | Renders allauth form fields via crispy |
 | `<c-button>` | django-cotton-bs5 | Submit and link buttons |
@@ -88,32 +88,32 @@ All components are already available from specs 001 and 002. No new components a
 
 ## Component Attributes: Key Usages
 
-### `<c-entrance.text>`
+### `<c-text>`
 
 ```html
 <!-- Description paragraph (password_reset.html) -->
-<c-entrance.text center>
+<c-text center>
   {% trans "Forgotten your password? Enter your email address below…" %}
-</c-entrance.text>
+</c-text>
 
 <!-- Contact-us paragraph (password_reset.html) -->
-<c-entrance.text text="{% trans "Please contact us if you have any trouble resetting your password." %}"
+<c-text text="{% trans "Please contact us if you have any trouble resetting your password." %}"
                  small />
 
 <!-- Confirmation paragraph (password_reset_done.html) -->
-<c-entrance.text center>
+<c-text center>
   {% blocktrans %}We have sent you an email…{% endblocktrans %}
-</c-entrance.text>
+</c-text>
 
 <!-- Success paragraph (password_reset_from_key_done.html) -->
-<c-entrance.text center>
+<c-text center>
   {% trans 'Your password is now changed.' %}
-</c-entrance.text>
+</c-text>
 
 <!-- Invalid-token error (password_reset_from_key.html) -->
-<c-entrance.text>
+<c-text>
   {% blocktrans %}The password reset link was invalid…{% endblocktrans %}
-</c-entrance.text>
+</c-text>
 ```
 
 ### `<c-form>`

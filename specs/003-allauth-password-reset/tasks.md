@@ -50,9 +50,9 @@ All shared infrastructure from specs 001 and 002 is in place. No foundational ta
       - `{% block title %}{% trans "Password Reset" %}{% endblock title %}`
       - `{% block content %}` — ordered sections per contracts/template-context.md:
           1. `{% if user.is_authenticated %}{% include "account/snippets/already_logged_in.html" %}{% endif %}`
-          2. Description via `<c-entrance.text center>{% trans "Forgotten your password? Enter your email…" %}</c-entrance.text>`
+          2. Description via `<c-text center>{% trans "Forgotten your password? Enter your email…" %}</c-text>`
           3. `{% url 'account_reset_password' as reset_url %}` → `<c-form method="post" action="{{ reset_url }}">{% csrf_token %}<c-form.crispy form=form />{{ redirect_field }}<c-button.stack><c-button text="Send email" icon="send" size="lg" type="submit" variant="primary" /></c-button.stack></c-form>`
-          4. Contact-us via `<c-entrance.text text="..." small />`
+          4. Contact-us via `<c-text text="..." small />`
       - Zero `{% element %}` tags
 
 - [X] T003 [P] [US1] Write `dac/addons/allauth/templates/account/password_reset_done.html` — full Cotton rewrite. Template must:
@@ -60,7 +60,7 @@ All shared infrastructure from specs 001 and 002 is in place. No foundational ta
       - `{% block title %}{% trans "Password Reset" %}{% endblock title %}` (no `head_title` block)
       - `{% block content %}`:
           1. `{% if user.is_authenticated %}{% include "account/snippets/already_logged_in.html" %}{% endif %}`
-          2. Confirmation via `<c-entrance.text center>{% blocktrans %}We have sent you an email. If you have not received it please check your spam folder. Otherwise contact us if you do not receive it in a few minutes.{% endblocktrans %}</c-entrance.text>`
+          2. Confirmation via `<c-text center>{% blocktrans %}We have sent you an email. If you have not received it please check your spam folder. Otherwise contact us if you do not receive it in a few minutes.{% endblocktrans %}</c-text>`
       - No form, no button — informational only
       - Zero `{% element %}` tags
 
@@ -69,7 +69,7 @@ All shared infrastructure from specs 001 and 002 is in place. No foundational ta
       - `{% block title %}{% trans "Change Password" %}{% endblock title %}`
       - `{% block title %}` — conditional: `{% if token_fail %}{% trans "Bad Token" %}{% else %}{% trans "Change Password" %}{% endif %}` `{% endblock title %}`
       - `{% block content %}` — two branches:
-          - **Invalid branch** (`{% if token_fail %}`): `<c-entrance.text>{% blocktrans with passwd_reset_url=... %}The password reset link was invalid, possibly because it has already been used. Please request a <a href="{{ passwd_reset_url }}">new password reset</a>.{% endblocktrans %}</c-entrance.text>`
+          - **Invalid branch** (`{% if token_fail %}`): `<c-text>{% blocktrans with passwd_reset_url=... %}The password reset link was invalid, possibly because it has already been used. Please request a <a href="{{ passwd_reset_url }}">new password reset</a>.{% endblocktrans %}</c-text>`
           - **Valid branch** (`{% else %}`): `<c-form method="post" action="{{ action_url }}">{% csrf_token %}<c-form.crispy form=form />{{ redirect_field }}<c-button.stack><c-button text="Confirm" icon="submit" size="lg" type="submit" variant="primary" />{% if cancel_url %}<c-button text="Cancel" href="{{ cancel_url }}" icon="x-circle" size="lg" class="border-secondary-subtle" />{% else %}<c-button text="Cancel" icon="x-circle" type="submit" form="logout-from-stage" size="lg" class="border-secondary-subtle" />{% endif %}</c-button.stack></c-form>`
           - Hidden logout form (when no `cancel_url`): `{% if not cancel_url %}<form id="logout-from-stage" method="post" action="{% url 'account_logout' %}">{% csrf_token %}<input type="hidden" name="next" value="{% url 'account_login' %}" /></form>{% endif %}`
       - Zero `{% element %}` tags
@@ -77,7 +77,7 @@ All shared infrastructure from specs 001 and 002 is in place. No foundational ta
 - [X] T005 [P] [US1] Write `dac/addons/allauth/templates/account/password_reset_from_key_done.html` — full Cotton rewrite. Template must:
       - `{% extends "account/base_entrance.html" %}` + `{% load i18n %}`
       - `{% block title %}{% trans "Change Password" %}{% endblock title %}` (no `head_title` block)
-      - `{% block content %}`: `<c-entrance.text center>{% trans 'Your password is now changed.' %}</c-entrance.text>`
+      - `{% block content %}`: `<c-text center>{% trans 'Your password is now changed.' %}</c-text>`
       - No button, no link, no further action — informational only
       - Zero `{% element %}` tags
 

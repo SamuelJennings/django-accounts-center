@@ -24,7 +24,7 @@ The login page benefits from `<c-entrance>` automatically via template inheritan
 
 ---
 
-### `<c-entrance.text>` — Subtitle / Cross-Link Text
+### `<c-text>` — Subtitle / Cross-Link Text
 
 **Source**: `dac/templates/cotton/entrance/text.html`
 **Used in**:
@@ -36,9 +36,9 @@ The login page benefits from `<c-entrance>` automatically via template inheritan
 **Interface**:
 
 ```html
-<c-entrance.text [lead] [class="..."]>
+<c-text [lead] [class="..."]>
   Content text or inline HTML (links, etc.)
-</c-entrance.text>
+</c-text>
 ```
 
 | Attr | Default | Purpose |
@@ -51,21 +51,21 @@ The login page benefits from `<c-entrance>` automatically via template inheritan
 
 ```html
 {# Intro description #}
-<c-entrance.text class="mb-3">
+<c-text class="mb-3">
   {% trans "You will receive a special code for a password-free sign-in." %}
-</c-entrance.text>
+</c-text>
 
 {# Forgot password link #}
-<c-entrance.text class="mt-2 mb-0">
+<c-text class="mt-2 mb-0">
   <a href="{% url 'account_reset_password' %}">{% trans "Forgot your password?" %}</a>
-</c-entrance.text>
+</c-text>
 
 {# Sign-up cross-link #}
-<c-entrance.text class="mt-4 mb-0">
+<c-text class="mt-4 mb-0">
   {% blocktrans with signup_url=signup_url %}
     Don't have an account? <a href="{{ signup_url }}">Sign up</a>.
   {% endblocktrans %}
-</c-entrance.text>
+</c-text>
 ```
 
 ---
@@ -220,23 +220,23 @@ account/login.html
   │   └─ <c-form.crispy>
   ├─ <c-button.stack>
   │   └─ <c-button> (submit)
-  ├─ <c-entrance.text> (forgot password, signup cross-link)
+  ├─ <c-text> (forgot password, signup cross-link)
   ├─ <c-card.divider> (before passkey/code section)
   └─ <c-button.stack> (passkey + code buttons)
       └─ <c-button> (×2 if both enabled)
 
 account/request_login_code.html
   ├─ (via base chain) <c-entrance> ← allauth/layouts/entrance.html
-  ├─ <c-entrance.text> (intro description)
+  ├─ <c-text> (intro description)
   ├─ <c-form>
   │   └─ <c-form.crispy>
   ├─ <c-button.stack>
   │   └─ <c-button> (submit)
-  └─ <c-entrance.text> (back to login link)
+  └─ <c-text> (back to login link)
 
 account/confirm_login_code.html
   ├─ (via base chain) <c-entrance> ← allauth/layouts/entrance.html
-  ├─ <c-entrance.text> (recipient description)
+  ├─ <c-text> (recipient description)
   ├─ <c-form>  [primary: code entry]
   │   └─ <c-form.crispy form=verify_form>
   ├─ <c-button.stack> (confirm submit, resend, cancel)

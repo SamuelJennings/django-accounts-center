@@ -39,9 +39,9 @@
 | Section | Condition | Output |
 |---|---|---|
 | Already-logged-in snippet | `user.is_authenticated` | `{% include "account/snippets/already_logged_in.html" %}` |
-| Description paragraph | Always | `<c-entrance.text center>{% trans "Forgotten your password? Enter your email…" %}</c-entrance.text>` |
+| Description paragraph | Always | `<c-text center>{% trans "Forgotten your password? Enter your email…" %}</c-text>` |
 | Email form | Always | `<c-form action=reset_url>` + `<c-form.crispy form=form />` + `{{ redirect_field }}` + `<c-button.stack><c-button text="Send email" icon="send" size="lg" type="submit" variant="primary" /></c-button.stack>` |
-| Contact-us paragraph | Always | `<c-entrance.text small text="..." />` |
+| Contact-us paragraph | Always | `<c-text small text="..." />` |
 
 ---
 
@@ -70,7 +70,7 @@
 | Section | Condition | Output |
 |---|---|---|
 | Already-logged-in snippet | `user.is_authenticated` | `{% include "account/snippets/already_logged_in.html" %}` |
-| Confirmation paragraph | Always | `<c-entrance.text center>{% blocktrans %}We have sent you an email. If you have not received it…{% endblocktrans %}</c-entrance.text>` |
+| Confirmation paragraph | Always | `<c-text center>{% blocktrans %}We have sent you an email. If you have not received it…{% endblocktrans %}</c-text>` |
 
 ---
 
@@ -108,7 +108,7 @@
 
 | Branch | Condition | Output |
 |---|---|---|
-| Invalid-token | `token_fail=True` | `<c-entrance.text>{% blocktrans %}The password reset link was invalid…<a href="{{ passwd_reset_url }}">…{% endblocktrans %}</c-entrance.text>` |
+| Invalid-token | `token_fail=True` | `<c-text>{% blocktrans %}The password reset link was invalid…<a href="{{ passwd_reset_url }}">…{% endblocktrans %}</c-text>` |
 | Valid form | `token_fail=False` | `<c-form action=action_url>` + `<c-form.crispy form=form />` + `{{ redirect_field }}` + `<c-button text="Confirm" icon="submit" variant="primary">` button + "Cancel" `icon="x-circle"` button |
 | Cancel (with URL) | `cancel_url` truthy | `<c-button text="Cancel" href=cancel_url icon="x-circle" />` |
 | Cancel (no URL) | `cancel_url` falsy | `<c-button text="Cancel" icon="x-circle" type="submit" form="logout-from-stage" />` + hidden `<form id="logout-from-stage">` |
@@ -137,7 +137,7 @@ No template-specific variables.
 
 | Section | Condition | Output |
 |---|---|---|
-| Confirmation paragraph | Always | `<c-entrance.text center>{% trans 'Your password is now changed.' %}</c-entrance.text>` |
+| Confirmation paragraph | Always | `<c-text center>{% trans 'Your password is now changed.' %}</c-text>` |
 
 ---
 

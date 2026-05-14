@@ -10,16 +10,16 @@
 ```
 account/verification_sent.html
   └─ <c-entrance title="Verify Your Email Address">
-       └─ <c-entrance.text center>
+       └─ <c-text center>
             {% blocktrans %}We have sent an email to you for verification...{% endblocktrans %}
-          </c-entrance.text>
+          </c-text>
 
 account/email_confirm.html
   └─ <c-entrance title="Confirm Email Address">
        ├─ [if confirmation and can_confirm]
-       │    ├─ <c-entrance.text>
+       │    ├─ <c-text>
        │    │    {% blocktrans with email %}Please confirm that <a href="mailto:{{ email }}">{{ email }}</a> is an email address for user {{ user_display }}.{% endblocktrans %}
-       │    │  </c-entrance.text>
+       │    │  </c-text>
        │    └─ <c-form method="post" action="{{ action_url }}">
        │         ├─ {% csrf_token %}
        │         ├─ {{ redirect_field }}
@@ -28,13 +28,13 @@ account/email_confirm.html
        │           </c-button.stack>
        │       </c-form>
        ├─ [elif confirmation and not can_confirm]
-       │    └─ <c-entrance.text>
+       │    └─ <c-text>
        │         {% blocktrans %}Unable to confirm {{ email }} because it is already confirmed by a different account.{% endblocktrans %}
-       │       </c-entrance.text>
+       │       </c-text>
        └─ [else — no confirmation]
-            └─ <c-entrance.text>
+            └─ <c-text>
                  {% blocktrans %}This email confirmation link expired or is invalid. Please <a href="{{ email_url }}">issue a new email confirmation request</a>.{% endblocktrans %}
-               </c-entrance.text>
+               </c-text>
 
 account/confirm_email_verification_code.html
   └─ <c-allauth.confirm-code
@@ -46,9 +46,9 @@ account/confirm_email_verification_code.html
 
 account/account_inactive.html
   └─ <c-entrance title="Account Inactive">   [via account/base_entrance.html]
-       └─ <c-entrance.text center>
+       └─ <c-text center>
             {% trans "This account is inactive." %}
-          </c-entrance.text>
+          </c-text>
 ```
 
 ---
@@ -61,7 +61,7 @@ are created.
 | Component | Source | Usage |
 |---|---|---|
 | `<c-entrance>` | `dac/addons/allauth` (spec 001) | Outer shell for all 4 pages |
-| `<c-entrance.text>` | `dac/addons/allauth` (spec 001) | Informational/descriptive paragraphs |
+| `<c-text>` | `dac/addons/allauth` (spec 001) | Informational/descriptive paragraphs |
 | `<c-form>` | django-mvp | Form wrapper (email_confirm.html valid-key branch only) |
 | `<c-button>` | django-cotton-bs5 | Submit button (email_confirm.html valid-key branch only) |
 | `<c-button.stack>` | django-mvp | Button group (email_confirm.html valid-key branch only) |
@@ -70,28 +70,28 @@ are created.
 
 ## Component Attributes: Key Usages
 
-### `<c-entrance.text>`
+### `<c-text>`
 
 ```html
 <!-- verification_sent.html — centred informational paragraph -->
-<c-entrance.text center>
+<c-text center>
   {% blocktrans %}We have sent an email to you for verification...{% endblocktrans %}
-</c-entrance.text>
+</c-text>
 
 <!-- account_inactive.html — centred informational paragraph -->
-<c-entrance.text center>
+<c-text center>
   {% trans "This account is inactive." %}
-</c-entrance.text>
+</c-text>
 
 <!-- email_confirm.html — confirmation message (not centred; contains inline content) -->
-<c-entrance.text>
+<c-text>
   {% blocktrans with confirmation.email_address.email as email %}Please confirm that ...{% endblocktrans %}
-</c-entrance.text>
+</c-text>
 
 <!-- email_confirm.html — invalid-key branch (not centred; contains inline link) -->
-<c-entrance.text>
+<c-text>
   {% blocktrans %}This email confirmation link expired or is invalid...{% endblocktrans %}
-</c-entrance.text>
+</c-text>
 ```
 
 ### `<c-button>` (email_confirm.html valid-key branch)
@@ -135,7 +135,7 @@ only the CSRF token and redirect field are required inside the form.
 3. `account_inactive.html` MUST extend `account/base_entrance.html`, NOT
    `allauth/layouts/entrance.html`.
 4. All four templates MUST be free of `{% element %}` and `{% endelement %}` tags.
-5. `<c-entrance.text>` without `center` modifier is used for paragraphs that contain
+5. `<c-text>` without `center` modifier is used for paragraphs that contain
    inline links or user-specific content (email_confirm branches); `center` is used
    for purely informational messages.
 6. The `resend-supported` attribute (on `<c-allauth.confirm-code>`) is a flow-level

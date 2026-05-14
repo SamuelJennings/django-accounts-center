@@ -13,6 +13,7 @@
 {% block page.content %}
   {% if emailaddresses %}
     <c-card title="{% trans "Your email addresses" %}"
+            fs="3"
             icon="email">
       <c-list-group flush :border="False">
         {% for radio in emailaddress_radios %}
@@ -66,19 +67,18 @@
               </div>
               {# Show a description blurb only under the primary address row. #}
               {% if emailaddress.primary %}
-                <c-card.text text="{% trans "This email address is the default for notifications and account-related activity." %}"
-                             small
-                             tight />
+                <c-text text="{% trans "This email address is the default for notifications and account-related activity." %}"
+                        small
+                        tight />
               {% endif %}
             </c-list-group.item>
           {% endwith %}
         {% endfor %}
       </c-list-group>
       {# Show the "add email" form only when the user hasn't reached the configured address limit (ACCOUNT_MAX_EMAIL_ADDRESSES). #}
-      {% if can_add_email %}
-        <c-card.text center tight small>
-          {% trans "Add a backup email in case you lose access to the others." %}
-        </c-card.text>
+      <c-card.section :condition="can_add_email"
+                      divider
+                      message="{% trans "Add a backup email in case you lose access to the others." %}">
         <c-form id="addEmailForm"
                 method="post"
                 action="{% url "account_email" %}"
@@ -91,7 +91,7 @@
                       variant="primary" />
           </c-slot>
         </c-form>
-      {% endif %}
+      </c-card.section>
     </c-card>
   {% else %}
     {% include "account/snippets/warn_no_email.html" %}

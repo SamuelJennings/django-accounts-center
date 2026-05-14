@@ -53,9 +53,9 @@
 |---|---|---|
 | Social providers | `SOCIALACCOUNT_ENABLED` | `{% include "socialaccount/snippets/provider_list.html" with process="login" %}` |
 | "or" divider | Social shown AND `not SOCIALACCOUNT_ONLY` | `<c-card.divider text="or" />` |
-| Login form + "Forgot password?" | `not SOCIALACCOUNT_ONLY` | `<c-form>` + `<c-form.crispy />` + `<c-button>` + `<c-entrance.text>` |
+| Login form + "Forgot password?" | `not SOCIALACCOUNT_ONLY` | `<c-form>` + `<c-form.crispy />` + `<c-button>` + `<c-text>` |
 | Passkey/code section | `not SOCIALACCOUNT_ONLY` AND (`PASSKEY_LOGIN_ENABLED` OR `LOGIN_BY_CODE_ENABLED`) | `<c-card.divider>` + `<c-button.stack>` |
-| Sign-up cross-link | `signup_url` is truthy | `<c-entrance.text>` with blocktrans |
+| Sign-up cross-link | `signup_url` is truthy | `<c-text>` with blocktrans |
 | WebAuthn script | `PASSKEY_LOGIN_ENABLED` | `{% include "mfa/webauthn/snippets/login_script.html" %}` |
 
 ---

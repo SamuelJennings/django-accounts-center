@@ -41,9 +41,9 @@
                type="email"
                disabled
                value="{{ new_emailaddress.email }}" />
-        <c-card.text>
+        <c-text>
           {% trans "Your email address is still pending verification." %}
-        </c-card.text>
+        </c-text>
         <c-button form="pending-email"
                   type="submit"
                   name="action_send"
@@ -61,9 +61,9 @@
         {% endif %}
       </div>
     {% endif %}
-    <c-card.text>
+    <c-text>
       {% trans "Provide the new email address you wish to change to." %}
-    </c-card.text>
+    </c-text>
     {{ form.email|as_crispy_field }}
     <c-slot name="form_actions">
       <c-button name="action_add"

@@ -20,7 +20,7 @@ account/login.html
   → mvp/base.html  (AdminLTE4 + Bootstrap 5 shell)
 ```
 
-The `<c-entrance>` Cotton component and its sub-components (`<c-entrance.background>`, `<c-entrance.logo>`, `<c-entrance.text>`) are already implemented and available. This spec only needs to rewrite the page-level content blocks.
+The `<c-entrance>` Cotton component and its sub-components (`<c-entrance.background>`, `<c-entrance.logo>`, `<c-text>`) are already implemented and available. This spec only needs to rewrite the page-level content blocks.
 
 **Alternatives considered**: Creating separate base templates per page — rejected for the same reasons as spec 001 (duplication, drift risk).
 
@@ -116,9 +116,9 @@ The label adaptation is handled by allauth's `LoginForm` — the Cotton template
 **Implementation**:
 
 ```html
-<c-entrance.text class="mt-2 mb-0">
+<c-text class="mt-2 mb-0">
   <a href="{% url 'account_reset_password' %}">{% trans "Forgot your password?" %}</a>
-</c-entrance.text>
+</c-text>
 ```
 
 The "Forgot password?" link must only appear when the password form is visible (i.e., when `not SOCIALACCOUNT_ONLY`).
@@ -174,10 +174,10 @@ The passkey button in the template must carry `id="passkey_login"` to match this
 
 ## Decision 8: `confirm_login_code.html` — Resend and Cancel Form Rendering
 
-**Decision**: Render the resend form as a raw HTML `<form id="resend">` (inline in the template), and the cancel action as either a `<c-entrance.text>` link (when `cancel_url` is set) or a hidden form (when it is not). The `<c-form>` component is NOT used for the resend/cancel forms because they are auxiliary controls, not the primary submission form.
+**Decision**: Render the resend form as a raw HTML `<form id="resend">` (inline in the template), and the cancel action as either a `<c-text>` link (when `cancel_url` is set) or a hidden form (when it is not). The `<c-form>` component is NOT used for the resend/cancel forms because they are auxiliary controls, not the primary submission form.
 
 **Rationale**: The resend and cancel forms are allauth internal mechanism forms that POST to the same URL with a hidden discriminator field. They are secondary to the code-entry form and should be rendered as compact, visually secondary controls. Using `<c-button>` for their submit triggers and wrapping in `<c-button.stack>` maintains visual consistency without needing `<c-form.crispy>` (which would incorrectly try to render crispy fields for a form with no visible fields).
 
 **Primary form** (code entry): use `<c-form>` + `<c-form.crispy />`.
 **Resend form**: raw `<form id="resend" method="post">` with a `<c-button type="submit" form="resend">`.
-**Cancel**: `<c-entrance.text>` link to `cancel_url` when available; otherwise a `<form id="logout-from-stage">` submit via `<c-button>`.
+**Cancel**: `<c-text>` link to `cancel_url` when available; otherwise a `<form id="logout-from-stage">` submit via `<c-button>`.

@@ -10,10 +10,10 @@ to replace all `{% element %}` syntax with Cotton components, making the email-v
 flow visually consistent with the signup and login pages. No new files, views, models,
 or settings are introduced. The four templates are:
 
-1. `account/verification_sent.html` — informational page, no form; use `<c-entrance.text center>`
-2. `account/email_confirm.html` — three-branch page; valid key shows `<c-form>` + `<c-button>`; both invalid branches show `<c-entrance.text>`
+1. `account/verification_sent.html` — informational page, no form; use `<c-text center>`
+2. `account/email_confirm.html` — three-branch page; valid key shows `<c-form>` + `<c-button>`; both invalid branches show `<c-text>`
 3. `account/confirm_email_verification_code.html` — use `<c-allauth.confirm-code>` component with `resend-supported` and fail-silent URL patterns
-4. `account/account_inactive.html` — switch extends from `allauth/layouts/entrance.html` to `account/base_entrance.html`; use `<c-entrance.text center>`
+4. `account/account_inactive.html` — switch extends from `allauth/layouts/entrance.html` to `account/base_entrance.html`; use `<c-text center>`
 
 ## Technical Context
 
@@ -41,7 +41,7 @@ or settings are introduced. The four templates are:
 | VI. UI Verification | Playwright MCP verification required in implementation tasks | ✅ PASS |
 | VII. Documentation Retrieval | No new external APIs — reusing established patterns from Specs 001–003 | ✅ PASS (N/A) |
 | VIII. E2E Testing | Screenshot tests cover 5 states × 3 viewports = 15 PNGs | ✅ PASS |
-| IX. Component Reuse | No new components; all `<c-entrance>`, `<c-entrance.text>`, `<c-form>`, `<c-button>` are existing | ✅ PASS |
+| IX. Component Reuse | No new components; all `<c-entrance>`, `<c-text>`, `<c-form>`, `<c-button>` are existing | ✅ PASS |
 | X. Third-Party Integration | Template overrides primary; no view overrides | ✅ PASS |
 | XI. Dual-Audience Stories | US1–US4 (End User) + US5 (Developer) present | ✅ PASS |
 | XII. View Docstrings | No view classes modified | ✅ PASS (N/A) |
@@ -105,7 +105,7 @@ No new directories are needed.
 ### Phase 1 — Template: `verification_sent.html` (US1, US5)
 
 **Goal**: Replace `{% element h1 %}` and `{% element p %}` with `<c-entrance>` shell and
-`<c-entrance.text center>`.
+`<c-text center>`.
 
 **Before** (current DAC file):
 
@@ -139,12 +139,12 @@ No new directories are needed.
 {% endblock title %}
 
 {% block content %}
-  <c-entrance.text center>
+  <c-text center>
     {% blocktrans %}We have sent an email to you for verification. Follow the link provided
     to finalize the signup process. If you do not see the verification email in your main
     inbox, check your spam folder. Please contact us if you do not receive the verification
     email within a few minutes.{% endblocktrans %}
-  </c-entrance.text>
+  </c-text>
 {% endblock content %}
 ```
 
@@ -172,9 +172,9 @@ No new directories are needed.
 {% endblock title %}
 
 {% block content %}
-  <c-entrance.text center>
+  <c-text center>
     {% trans "This account is inactive." %}
-  </c-entrance.text>
+  </c-text>
 {% endblock content %}
 ```
 
@@ -198,12 +198,12 @@ conditional branches exactly.
 ```django
 {% user_display confirmation.email_address.user as user_display %}
 {% url 'account_confirm_email' confirmation.key as action_url %}
-<c-entrance.text>
+<c-text>
   {% blocktrans with confirmation.email_address.email as email %}
     Please confirm that <a href="mailto:{{ email }}">{{ email }}</a>
     is an email address for user {{ user_display }}.
   {% endblocktrans %}
-</c-entrance.text>
+</c-text>
 <c-form method="post" action="{{ action_url }}">
   {% csrf_token %}
   {{ redirect_field }}
@@ -221,20 +221,20 @@ conditional branches exactly.
 **Branch B** (`confirmation and not can_confirm`):
 
 ```django
-<c-entrance.text>
+<c-text>
   {% blocktrans %}Unable to confirm {{ email }} because it is already confirmed
   by a different account.{% endblocktrans %}
-</c-entrance.text>
+</c-text>
 ```
 
 **Branch C** (no `confirmation`):
 
 ```django
 {% url 'account_email' as email_url %}
-<c-entrance.text>
+<c-text>
   {% blocktrans %}This email confirmation link expired or is invalid. Please
   <a href="{{ email_url }}">issue a new email confirmation request</a>.{% endblocktrans %}
-</c-entrance.text>
+</c-text>
 ```
 
 **Notes**:

@@ -1,23 +1,15 @@
 {% extends "account/base_reauthenticate.html" %}
-{% load allauth %}
 {% load i18n %}
 
 {% block reauthenticate_content %}
-  {% element p %}
-  {% blocktranslate %}Enter your password:{% endblocktranslate %}
-{% endelement %}
-{% url 'account_reauthenticate' as action_url %}
-{% element form form=form method="post" action=action_url %}
-{% slot body %}
-{% csrf_token %}
-{% element fields form=form unlabeled=True %}
-{% endelement %}
-{{ redirect_field }}
-{% endslot %}
-{% slot actions %}
-{% element button type="submit" tags="primary,reauthenticate" %}
-{% trans "Confirm" %}
-{% endelement %}
-{% endslot %}
-{% endelement %}
+  <c-form method="post"
+          action="{% url 'account_reauthenticate' %}"
+          :form-obj="form">
+    {{ redirect_field }}
+    <c-button.stack>
+      <c-button type="submit"
+                variant="primary"
+                text="{% trans "Confirm" %}" />
+    </c-button.stack>
+  </c-form>
 {% endblock %}

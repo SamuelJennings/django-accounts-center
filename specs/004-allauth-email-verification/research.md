@@ -20,9 +20,9 @@ All four target templates were read from the `django-allauth` workspace at
 
 **Decision**: Replace `{% element h1 %}` with the `<c-entrance>` `title` attribute (set
 to `{% trans "Verify Your Email Address" %}`), and replace `{% element p %}` with
-`<c-entrance.text center>`.
+`<c-text center>`.
 
-**Alternatives considered**: Rendering the h1 inline as a `<c-entrance.text>` — rejected;
+**Alternatives considered**: Rendering the h1 inline as a `<c-text>` — rejected;
 the page title must come via the `title` slot/attribute of `<c-entrance>` to match the
 established pattern.
 
@@ -44,13 +44,13 @@ established pattern.
 
 **Decision**:
 
-- Branch A: `<c-entrance>` shell with `<c-entrance.text>` descriptive paragraph (not `center`,
+- Branch A: `<c-entrance>` shell with `<c-text>` descriptive paragraph (not `center`,
   since it contains inline content addressed to the specific user), `<c-form>` with
   `<c-form.crispy>` not needed (no Django form object — just `{% csrf_token %}` and
   `{{ redirect_field }}`), and a `<c-button.stack>` with
   `<c-button type="submit" icon="check-circle" variant="primary">Confirm</c-button>`.
-- Branch B: `<c-entrance.text>` with the error prose.
-- Branch C: `<c-entrance.text>` with the error prose + inline link.
+- Branch B: `<c-text>` with the error prose.
+- Branch C: `<c-text>` with the error prose + inline link.
 
 **Note on Branch A form**: The allauth original uses a raw form with only CSRF + redirect
 field, no Django form object. `<c-form>` wraps the CSRF and action; the inner `{% csrf_token %}`
@@ -107,7 +107,7 @@ Content block contains:
 
 - Change `{% extends "allauth/layouts/entrance.html" %}` → `{% extends "account/base_entrance.html" %}`
 - Replace `{% element h1 %}` with the `title` attribute on `<c-entrance>`
-- Replace `{% element p %}` with `<c-entrance.text center>`
+- Replace `{% element p %}` with `<c-text center>`
 
 ---
 
@@ -125,8 +125,8 @@ new files need to be created, only existing files edited.
 
 | Spec 003 analog | Spec 004 target | Pattern |
 |---|---|---|
-| `password_reset_done.html` | `verification_sent.html` | `<c-entrance>` + `<c-entrance.text center>`, no form |
-| `password_reset_from_key_done.html` | `account_inactive.html` | `<c-entrance>` + `<c-entrance.text center>`, no form |
+| `password_reset_done.html` | `verification_sent.html` | `<c-entrance>` + `<c-text center>`, no form |
+| `password_reset_from_key_done.html` | `account_inactive.html` | `<c-entrance>` + `<c-text center>`, no form |
 | `confirm_password_reset_code.html` | `confirm_email_verification_code.html` | `<c-allauth.confirm-code>` with `resend-supported` |
 
 `email_confirm.html` has no direct Spec 003 analog — it is the most complex template
@@ -158,5 +158,5 @@ form (no Django form object).
 ## 6. No New Components Required
 
 All Cotton components used in this feature are already available:
-`<c-entrance>`, `<c-entrance.text>`, `<c-form>`, `<c-button>`, `<c-button.stack>`.
+`<c-entrance>`, `<c-text>`, `<c-form>`, `<c-button>`, `<c-button.stack>`.
 No new custom components need to be created.

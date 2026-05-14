@@ -7,9 +7,9 @@
 
 {% block content %}
   {% url 'account_login' as login_url %}
-  <c-entrance.text>
+  <c-text>
     {% blocktrans %}You decided to cancel logging in to our site using one of your existing accounts. If this was a mistake, please proceed to <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}
-  </c-entrance.text>
+  </c-text>
   <c-button.stack>
     <c-button href="{{ login_url }}"
               text="Sign in"

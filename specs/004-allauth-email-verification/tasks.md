@@ -21,7 +21,7 @@ plus integration tests. US3 and US4 are P2 stories that can follow independently
 - `email_confirm.html` covers both US1 (valid-key branch) and US2 (invalid-key branch) in a single file — both branches written together in T003
 - `confirm_email_verification_code.html` is a block-override-only template that extends `base_confirm_code.html` — no new structure needed, just block-name and URL fixes
 - No new Python code, models, migrations, URL patterns, or Cotton components are introduced
-- All shared infrastructure (`<c-entrance>`, `<c-entrance.text>`, `<c-form>`, `<c-button>`, `<c-button.stack>`, `base_entrance.html`) is in place from specs 001, 002, and 003
+- All shared infrastructure (`<c-entrance>`, `<c-text>`, `<c-form>`, `<c-button>`, `<c-button.stack>`, `base_entrance.html`) is in place from specs 001, 002, and 003
 - Integration tests for the confirm button MUST assert non-empty button text and a rendered icon element — MUST NOT assert the specific label string `"Confirm"` or icon name `"check-circle"`
 
 ---
@@ -51,7 +51,7 @@ needed — user story implementation begins immediately in Phase 3.
       - `{% extends "account/base_entrance.html" %}` + `{% load i18n %}`
       - `{% block title %}{% trans "Verify Your Email Address" %}{% endblock title %}` (no `head_title` block — `base_entrance.html` derives it from `title`)
       - `{% block content %}`:
-          1. `<c-entrance.text center>{% blocktrans %}We have sent an email to you for verification. Follow the link provided to finalize the signup process. If you do not see the verification email in your main inbox, check your spam folder. Please contact us if you do not receive the verification email within a few minutes.{% endblocktrans %}</c-entrance.text>`
+          1. `<c-text center>{% blocktrans %}We have sent an email to you for verification. Follow the link provided to finalize the signup process. If you do not see the verification email in your main inbox, check your spam folder. Please contact us if you do not receive the verification email within a few minutes.{% endblocktrans %}</c-text>`
       - Remove `{% load allauth %}` — no longer needed without `{% element %}` tags
       - Zero `{% element %}` tags
 
@@ -62,13 +62,13 @@ needed — user story implementation begins immediately in Phase 3.
           - **Branch A** (`{% if confirmation %}{% if can_confirm %}`): valid-key branch —
               1. `{% user_display confirmation.email_address.user as user_display %}`
               2. `{% url 'account_confirm_email' confirmation.key as action_url %}`
-              3. `<c-entrance.text>{% blocktrans with confirmation.email_address.email as email %}Please confirm that <a href="mailto:{{ email }}">{{ email }}</a> is an email address for user {{ user_display }}.{% endblocktrans %}</c-entrance.text>`
+              3. `<c-text>{% blocktrans with confirmation.email_address.email as email %}Please confirm that <a href="mailto:{{ email }}">{{ email }}</a> is an email address for user {{ user_display }}.{% endblocktrans %}</c-text>`
               4. `<c-form method="post" action="{{ action_url }}">{% csrf_token %}{{ redirect_field }}<c-button.stack><c-button type="submit" icon="check-circle" size="lg" variant="primary">{% trans "Confirm" %}</c-button></c-button.stack></c-form>`
           - **Branch B** (`{% else %}` — confirmation exists but `can_confirm` is False):
-              1. `<c-entrance.text>{% blocktrans %}Unable to confirm {{ email }} because it is already confirmed by a different account.{% endblocktrans %}</c-entrance.text>`
+              1. `<c-text>{% blocktrans %}Unable to confirm {{ email }} because it is already confirmed by a different account.{% endblocktrans %}</c-text>`
           - **Branch C** (`{% else %}` — no `confirmation` object):
               1. `{% url 'account_email' as email_url %}`
-              2. `<c-entrance.text>{% blocktrans %}This email confirmation link expired or is invalid. Please <a href="{{ email_url }}">issue a new email confirmation request</a>.{% endblocktrans %}</c-entrance.text>`
+              2. `<c-text>{% blocktrans %}This email confirmation link expired or is invalid. Please <a href="{{ email_url }}">issue a new email confirmation request</a>.{% endblocktrans %}</c-text>`
       - Remove `{% load allauth %}` — no longer needed without `{% element %}` tags
       - Zero `{% element %}` tags
       - Replicate the allauth original exactly: every element, paragraph, and conditional present in the source must appear in the Cotton version with no additions or omissions beyond the syntax change (FR-003)
@@ -109,7 +109,7 @@ needed — user story implementation begins immediately in Phase 3.
       - `{% load i18n %}` (no `{% load allauth %}` — no longer needed)
       - `{% block title %}{% trans "Account Inactive" %}{% endblock title %}` (no `head_title` block)
       - `{% block content %}`:
-          1. `<c-entrance.text center>{% trans "This account is inactive." %}</c-entrance.text>`
+          1. `<c-text center>{% trans "This account is inactive." %}</c-text>`
       - Zero `{% element %}` tags
 
 - [X] T007 [P] [US4] [US5] Write US4 integration test in `tests/test_addons/test_allauth/test_email_verification_view.py` covering:

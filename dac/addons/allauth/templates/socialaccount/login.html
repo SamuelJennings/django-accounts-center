@@ -10,13 +10,13 @@
 {% endblock title %}
 
 {% block content %}
-  <c-entrance.text>
+  <c-text>
     {% if process == "connect" %}
       {% blocktrans with provider.name as provider %}You are about to connect a new third-party account from {{ provider }}.{% endblocktrans %}
     {% else %}
       {% blocktrans with provider.name as provider %}You are about to sign in using a third-party account from {{ provider }}.{% endblocktrans %}
     {% endif %}
-  </c-entrance.text>
+  </c-text>
   <c-form method="post" action=".">
     {% csrf_token %}
     {{ redirect_field }}

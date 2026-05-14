@@ -11,7 +11,7 @@ Build a styled, modern allauth login page for django-accounts-center by rewritin
 
 Three additional `socialaccount` entrance templates are also rewritten in this spec (FR-016, added 2026-05-09): `socialaccount/login.html` (OAuth confirmation step), `socialaccount/login_cancelled.html` (cancellation message), and `socialaccount/login_redirect.html` (ephemeral meta-refresh redirect). All three already exist as placeholder overrides using `{% element %}` syntax and must be converted to Cotton.
 
-The `<c-entrance>` shell — centred card, logo, background, and visual framework — is **already implemented** from spec 001 and requires no changes. All entrance-page templates inherit it automatically via the existing template chain. This spec's work is entirely at the page-content level: replacing `{% element %}` calls inside `{% block content %}` with the appropriate Cotton components (`<c-form>`, `<c-form.crispy>`, `<c-button.stack>`, `<c-button>`, `<c-card.divider>`, `<c-entrance.text>`).
+The `<c-entrance>` shell — centred card, logo, background, and visual framework — is **already implemented** from spec 001 and requires no changes. All entrance-page templates inherit it automatically via the existing template chain. This spec's work is entirely at the page-content level: replacing `{% element %}` calls inside `{% block content %}` with the appropriate Cotton components (`<c-form>`, `<c-form.crispy>`, `<c-button.stack>`, `<c-button>`, `<c-card.divider>`, `<c-text>`).
 
 Social provider rendering is also already Cotton-based (spec 001) via `socialaccount/snippets/provider_list.html`. The login page reuses it with `process="login"`.
 
