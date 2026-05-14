@@ -3,7 +3,6 @@ Pytest configuration and fixtures for django-accounts-center tests.
 """
 
 import pytest
-from django.contrib.auth.models import AnonymousUser
 from django.test import Client
 
 
@@ -35,13 +34,17 @@ def authenticated_client(client, user):
 @pytest.fixture
 def anonymous_user():
     """Create an anonymous user."""
+    from django.contrib.auth.models import AnonymousUser
+
     return AnonymousUser()
 
 
 @pytest.fixture
 def superuser(django_user_model):
     """Create a superuser."""
-    return django_user_model.objects.create_superuser(username="admin", email="admin@example.com", password="adminpass123")
+    return django_user_model.objects.create_superuser(
+        username="admin", email="admin@example.com", password="adminpass123"
+    )
 
 
 @pytest.fixture
@@ -58,7 +61,9 @@ def user_with_unverified_email(django_user_model):
     """Create a user with unverified email address."""
     from allauth.account.models import EmailAddress
 
-    user = django_user_model.objects.create_user(username="unverified", email="unverified@example.com", password="testpass123")
+    user = django_user_model.objects.create_user(
+        username="unverified", email="unverified@example.com", password="testpass123"
+    )
     EmailAddress.objects.create(user=user, email=user.email, verified=False, primary=True)
     return user
 
