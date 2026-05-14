@@ -1,5 +1,5 @@
 {% extends "account/base_entrance.html" %}
-{% load i18n socialaccount %}
+{% load i18n %}
 
 {% block title %}
   {% trans "Create your account" %}
@@ -7,15 +7,7 @@
 
 {% block content %}
   {% if SOCIALACCOUNT_ENABLED %}
-    {% get_providers as socialaccount_providers %}
-    {% if socialaccount_providers %}
-      <c-entrance.section text="{% trans "Using your preferred third-party provider." %}">
-        {% include "socialaccount/snippets/provider_list.html" with process="signup" %}
-      </c-entrance.section>
-      {% if not SOCIALACCOUNT_ONLY %}
-        <c-card.divider text="{% trans "or" %}" />
-      {% endif %}
-    {% endif %}
+    {% include "socialaccount/snippets/login.html" with process="signup" %}
   {% endif %}
   {% if not SOCIALACCOUNT_ONLY %}
     <c-entrance.section text="{% trans "By filling out the form below." %}">

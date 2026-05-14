@@ -3,10 +3,9 @@
 {% get_providers as socialaccount_providers %}
 {% if socialaccount_providers %}
   <c-entrance.section text="{% trans "Using your preferred third-party provider." %}">
-    {% include "socialaccount/snippets/provider_list.html" with process=process|default:"login" %}
+    {% include "socialaccount/snippets/provider_list.html" with process=process %}
   </c-entrance.section>
   {% if not SOCIALACCOUNT_ONLY %}
     <c-card.divider text="{% trans "or" %}" />
   {% endif %}
-  {% include "socialaccount/snippets/login_extra.html" %}
 {% endif %}

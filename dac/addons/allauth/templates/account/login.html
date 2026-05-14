@@ -1,19 +1,13 @@
 {% extends "account/base_entrance.html" %}
-{% load i18n socialaccount %}
+{% load i18n %}
 
 {% block title %}
   {% trans "Sign in to your account" %}
 {% endblock title %}
 
 {% block content %}
-  {% get_providers as socialaccount_providers %}
-  {% if SOCIALACCOUNT_ENABLED and socialaccount_providers %}
-    <c-entrance.section text="{% trans "Using your preferred third-party provider." %}">
-      {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-    </c-entrance.section>
-    {% if not SOCIALACCOUNT_ONLY %}
-      <c-card.divider text="{% trans "or" %}" />
-    {% endif %}
+  {% if SOCIALACCOUNT_ENABLED %}
+    {% include "socialaccount/snippets/login.html" with process="login" %}
   {% endif %}
   {% if not SOCIALACCOUNT_ONLY %}
     <c-entrance.section text="{% trans "Using the details you signed up with." %}">
