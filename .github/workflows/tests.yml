@@ -48,6 +48,9 @@ jobs:
       - name: Pin Django version
         run: poetry run pip install "django~=${{ matrix.django-version }}"
 
+      - name: Install Playwright browsers
+        run: poetry run playwright install --with-deps chromium
+
       - name: Run tests
         run: |
           if [ "${{ matrix.python-version }}" = "3.12" ] && [ "${{ matrix.django-version }}" = "5.2" ]; then
