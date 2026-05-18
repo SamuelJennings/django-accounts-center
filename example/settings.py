@@ -241,6 +241,7 @@ EASY_ICONS = {
             "arrow-repeat": "bi bi-arrow-repeat",
             "x-circle": "bi bi-x-circle",
             "three-dots": "bi bi-three-dots",
+            "grid": "bi bi-grid",
         },
     },
     # Font Awesome for common UI icons

@@ -22,6 +22,22 @@ _factory = RequestFactory()
 _MOCK_SITE = SimpleNamespace(name="Test Site", domain="example.com", id=1)
 
 
+class _MockUser:
+    """Minimal mock user whose str() matches Django User behaviour (returns username)."""
+
+    is_authenticated = True
+    pk = 1
+    id = 1
+    username = "testuser"
+    email = "test@example.com"
+
+    def __str__(self):
+        return self.username
+
+
+_MOCK_AUTHENTICATED_USER = _MockUser()
+
+
 @pytest.fixture
 def cotton_render_string_soup():
     """
@@ -38,6 +54,31 @@ def cotton_render_string_soup():
             context = {}
         request = _factory.get("/")
         request.site = _MOCK_SITE
+        context["request"] = request
+
+        compiled = _compiler.process(template_string)
+        html = Template(compiled).render(Context(context))
+        return BeautifulSoup(html, "html.parser")
+
+    return _render
+
+
+@pytest.fixture
+def cotton_render_string_soup_authenticated():
+    """
+    Like cotton_render_string_soup but with a mock authenticated user on the request.
+
+    Use this fixture for tests that render components guarded by
+    ``{% if request.user.is_authenticated %}``.  The user object is a
+    SimpleNamespace so no database access is required.
+    """
+
+    def _render(template_string, context=None):
+        if context is None:
+            context = {}
+        request = _factory.get("/")
+        request.site = _MOCK_SITE
+        request.user = _MOCK_AUTHENTICATED_USER
         context["request"] = request
 
         compiled = _compiler.process(template_string)

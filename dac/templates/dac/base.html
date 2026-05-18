@@ -2,7 +2,11 @@
 {% load i18n %}
 
 {% block app.sidebar %}
-  <c-app.sidebar menu="Account Center Menu" />
+  <c-app.sidebar menu="Account Center Menu">
+    <c-slot name="footer">
+      <c-dac.user-menu />
+    </c-slot>
+  </c-app.sidebar>
 {% endblock app.sidebar %}
 
 {% block content %}

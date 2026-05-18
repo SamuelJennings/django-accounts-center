@@ -218,3 +218,181 @@ class TestDacBaseStructure:
         soup = cotton_render_string_soup(_BASE)
         card_stack = soup.find("div", class_="d-flex")
         assert card_stack is not None
+
+
+# ---------------------------------------------------------------------------
+# Feature 008 — Sidebar User Menu (<c-dac.user-menu>)
+# ---------------------------------------------------------------------------
+
+# The component is zero-config: no props required. All user data comes from
+# request.user directly.  The mock authenticated user has username="testuser"
+# and email="test@example.com" (see conftest._MockUser).
+_USER_MENU = "<c-dac.user-menu />"
+
+
+class TestDacUserMenu:
+    """Tests for the <c-dac.user-menu> Cotton component.
+
+    The component is a drop-in, zero-configuration widget: it reads
+    ``request.user`` directly and delegates all avatar rendering to
+    ``<c-avatar size="sm" />``.  No props are passed by the caller.
+
+    Uses cotton_render_string_soup_authenticated for authenticated-user tests
+    and cotton_render_string_soup (anonymous) for the guard test.  The
+    use_test_urls autouse fixture ensures {% url 'account-center' %} and
+    {% url 'account_logout' %} resolve correctly.
+    """
+
+    # ── T009: Core render behaviour ──────────────────────────────────────────
+
+    def test_anonymous_user_renders_nothing(self, cotton_render_string_soup):
+        """Anonymous user: the auth guard produces no output.
+
+        SC-001: {% if request.user.is_authenticated %} wraps everything;
+        anonymous requests must produce no HTML for the component.
+        """
+        soup = cotton_render_string_soup(_USER_MENU)
+        assert soup.find("div", class_="dac-user-menu") is None
+        assert soup.find("button", attrs={"data-bs-toggle": "dropdown"}) is None
+
+    def test_authenticated_user_renders_component(self, cotton_render_string_soup_authenticated):
+        """Authenticated user: the dropup wrapper is present in the output.
+
+        SC-002: the component must render when the user is logged in.
+        """
+        soup = cotton_render_string_soup_authenticated(_USER_MENU)
+        wrapper = soup.find("div", class_="dac-user-menu")
+        assert wrapper is not None
+
+    def test_username_in_trigger(self, cotton_render_string_soup_authenticated):
+        """request.user string (username) appears inside the trigger button.
+
+        The component renders {{ request.user }} directly; with the mock user
+        whose __str__ returns "testuser", that text must be visible.
+        """
+        soup = cotton_render_string_soup_authenticated(_USER_MENU)
+        trigger = soup.find("button", attrs={"data-bs-toggle": "dropdown"})
+        assert trigger is not None
+        assert "testuser" in trigger.get_text()
+
+    def test_email_in_trigger(self, cotton_render_string_soup_authenticated):
+        """request.user.email appears as a muted secondary line in the trigger.
+
+        The component renders {{ request.user.email }} always (no opt-in prop).
+        """
+        soup = cotton_render_string_soup_authenticated(_USER_MENU)
+        trigger = soup.find("button", attrs={"data-bs-toggle": "dropdown"})
+        assert trigger is not None
+        muted_spans = trigger.find_all("span", class_="text-muted")
+        assert len(muted_spans) >= 1
+        assert "test@example.com" in muted_spans[0].get_text()
+
+    def test_trigger_has_aria_attrs(self, cotton_render_string_soup_authenticated):
+        """Trigger button carries aria-expanded and aria-haspopup for accessibility.
+
+        SC-005: keyboard and screen-reader users must be able to identify and
+        operate the dropdown trigger.
+        """
+        soup = cotton_render_string_soup_authenticated(_USER_MENU)
+        trigger = soup.find("button", attrs={"data-bs-toggle": "dropdown"})
+        assert trigger is not None
+        assert trigger.get("aria-expanded") == "false"
+        assert trigger.get("aria-haspopup") == "true"
+
+    def test_username_has_truncate_class(self, cotton_render_string_soup_authenticated):
+        """Username span carries text-truncate for long name overflow prevention.
+
+        FR-013: names must not overflow the sidebar width; text-truncate prevents this.
+        """
+        soup = cotton_render_string_soup_authenticated(_USER_MENU)
+        trigger = soup.find("button", attrs={"data-bs-toggle": "dropdown"})
+        assert trigger is not None
+        truncate_spans = trigger.find_all("span", class_="text-truncate")
+        assert any("testuser" in span.get_text() for span in truncate_spans)
+
+    # ── T010: Avatar rendering ───────────────────────────────────────────────
+
+    def test_avatar_component_present_in_trigger(self, cotton_render_string_soup_authenticated):
+        """<c-avatar> renders its wrapper element inside the trigger button.
+
+        The component uses <c-avatar size="sm" /> (no src) and delegates URL
+        resolution to the avatar component's own template tag.  The avatar
+        wrapper span (class="avatar") must always be present.
+        """
+        soup = cotton_render_string_soup_authenticated(_USER_MENU)
+        trigger = soup.find("button", attrs={"data-bs-toggle": "dropdown"})
+        assert trigger is not None
+        avatar = trigger.find("span", class_="avatar")
+        assert avatar is not None
+
+    # ── T011: Menu item presence ─────────────────────────────────────────────
+
+    def test_account_center_link_present(self, cotton_render_string_soup_authenticated):
+        """Account Center link appears in the dropdown panel when the URL is registered.
+
+        FR-005: <a href="/account-center/"> must be present by default.
+        """
+        soup = cotton_render_string_soup_authenticated(_USER_MENU)
+        links = soup.find_all("a")
+        account_center_links = [a for a in links if "/account-center/" in (a.get("href") or "")]
+        assert len(account_center_links) >= 1
+
+    def test_logout_form_present(self, cotton_render_string_soup_authenticated):
+        """Logout POST form appears in the dropdown panel when the URL is registered.
+
+        FR-006: logout must use a POST form (allauth 0.56+ requirement).
+        """
+        soup = cotton_render_string_soup_authenticated(_USER_MENU)
+        forms = soup.find_all("form", attrs={"method": "post"})
+        assert len(forms) >= 1
+
+    def test_account_center_link_absent_when_url_not_registered(
+        self, settings, cotton_render_string_soup_authenticated
+    ):
+        """No account-center URL: component renders without an Account Center link.
+
+        FR-005: {% url 'account-center' as var %} suppresses NoReverseMatch;
+        graceful degradation must produce no account-center <a> tag.
+        """
+        settings.ROOT_URLCONF = "tests.urls_minimal"
+        soup = cotton_render_string_soup_authenticated(_USER_MENU)
+        links = soup.find_all("a")
+        account_center_links = [a for a in links if "/account-center/" in (a.get("href") or "")]
+        assert len(account_center_links) == 0
+
+    def test_logout_form_absent_when_url_not_registered(
+        self, settings, cotton_render_string_soup_authenticated
+    ):
+        """No account_logout URL: component renders without a logout form.
+
+        FR-006: {% url 'account_logout' as var %} suppresses NoReverseMatch;
+        graceful degradation must produce no <form method="post">.
+        """
+        settings.ROOT_URLCONF = "tests.urls_minimal"
+        soup = cotton_render_string_soup_authenticated(_USER_MENU)
+        forms = soup.find_all("form", attrs={"method": "post"})
+        assert len(forms) == 0
+
+    # ── T012: Custom slot ────────────────────────────────────────────────────
+
+    def test_custom_slot_item_appears_before_logout(self, cotton_render_string_soup_authenticated):
+        """Slot content renders between Account Center link and Logout button.
+
+        FR-007: default slot items are placed after the Account Center link
+        and before the logout form.
+        """
+        soup = cotton_render_string_soup_authenticated(
+            """
+            <c-dac.user-menu>
+              <c-dropdown.item text="Settings" href="#" />
+            </c-dac.user-menu>
+            """
+        )
+        settings_link = soup.find("a", string=lambda t: t and "Settings" in t)
+        logout_form = soup.find("form", attrs={"method": "post"})
+        assert settings_link is not None
+        assert logout_form is not None
+        rendered_html = str(soup)
+        settings_pos = rendered_html.find("Settings")
+        logout_pos = rendered_html.find('method="post"')
+        assert settings_pos < logout_pos

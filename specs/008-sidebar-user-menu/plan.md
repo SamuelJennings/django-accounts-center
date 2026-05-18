@@ -1,0 +1,162 @@
+# Implementation Plan: Sidebar User Menu Component
+
+**Branch**: `008-sidebar-user-menu` | **Date**: 2026-05-18 | **Spec**: [spec.md](spec.md)
+**Refined**: 2026-05-18 — Zero-config redesign applied; plan updated to match implemented component.
+**Refined**: 2026-05-18 — Testing strategy updated: inline template strings only, no external template files; screenshot tests removed as out of scope.
+**Input**: Feature specification from `specs/008-sidebar-user-menu/spec.md`
+
+## Summary
+
+Create a `<c-dac.user-menu>` Cotton component — a zero-configuration drop-in that
+renders a dropup user menu at the bottom of the application sidebar. The component
+reads user data directly from `request.user` (no props required), displays the
+logged-in user's avatar via `<c-avatar size="sm" />` (avatar URL resolution delegated
+to the avatar component), username, and email as an always-visible trigger. Clicking
+the trigger opens a Bootstrap 5 dropup panel with, by default, an Account Center link
+and a POST-form logout button.
+
+**Two deliverables** (in dependency order):
+
+1. `dac/templates/cotton/dac/user_menu.html` — the Cotton component (zero-config:
+   no `<c-vars>`; reads `request.user` directly; uses `<c-button>`, `<c-avatar size="sm" />`,
+   `<c-dropdown.item>`, `<c-dropdown.divider>`)
+2. `tests/test_components/test_dac_base.py` — new `TestDacUserMenu` test class
+   added to the existing shared dac component test module; all tests render
+   inline template strings (no external template files created)
+
+## Technical Context
+
+**Language/Version**: Python 3.12, Django 5.x
+**Primary Dependencies**: django-mvp (avatar, sidebar components), django-cotton-bs5 (dropdown), django-allauth (logout URL), django-cotton
+**Storage**: N/A (template and template-tag only; no models or migrations)
+**Testing**: pytest, pytest-django, django-cotton-bs5 (`cotton_render_string_soup` / `cotton_render_string_soup_authenticated` fixtures; template strings composed inline in each test)
+**Target Platform**: Django web application (server-rendered templates); Bootstrap 5 JS for dropdown behaviour
+**Project Type**: Reusable Django extension library
+**Performance Goals**: No additional DB queries beyond what the host page already makes
+**Constraints**: Zero raw HTML in `account-center` URL resolution; CSRF-safe logout POST; no `NoReverseMatch` on optional URLs; component renders nothing for anonymous users
+**Scale/Scope**: 1 new Cotton component; 1 new test class (no screenshot module)
+
+## Constitution Check
+
+*Pre-design gate — all items PASS.*
+
+| Principle | Gate | Status |
+|---|---|---|
+| I. Design-First | Component interface defined in `contracts/component-interface.md`; tests written alongside implementation | ✅ PASS |
+| II. Documentation-First | `quickstart.md` documents all props, slots, examples, and test commands | ✅ PASS |
+| III. Component Quality & Accessibility | Trigger uses `<button>` (not `<div>`); `aria-expanded`, `aria-haspopup` attributes present; keyboard-navigable via Bootstrap dropdown JS | ✅ PASS |
+| IV. Compatibility | Template-only; no Python-level view or settings changes; props have stable defaults | ✅ PASS |
+| V. Tooling | `poetry run pytest`; djlint for templates; Ruff for `dac.py` changes | ✅ PASS |
+| VI. UI Verification | Manual inspection only; Playwright/screenshot automation is explicitly excluded for this component | ✅ PASS (N/A) |
+| VII. Documentation Retrieval | `<c-dropdown>` and `<c-avatar>` interfaces verified from installed package source before authoring component | ✅ PASS |
+| VIII. E2E Testing | **EXCLUDED** — spec explicitly does not require screenshot or E2E tests; component is covered by `cotton_render_string_soup` unit tests only | ❌ EXCLUDED |
+| IX. Component Reuse | `<c-dropdown direction="up">`, `<c-avatar>`, `<c-dropdown.item>`, `<c-dropdown.divider>` all reused from django-cotton-bs5 / django-mvp; new component justified as reusable cross-project sidebar UI | ✅ PASS |
+| X. Third-Party Integration | Allauth logout via template URL reference only; no view overrides | ✅ PASS |
+| XI. Dual-Audience Stories | US1, US3, US4, US5 [Developer] + US2 [End User] | ✅ PASS |
+| XII. View Docstrings | No view classes introduced or modified | ✅ PASS (N/A) |
+| XIII. Screenshot Coverage | **EXCLUDED** — spec explicitly states no screenshot tests are required for this component | ❌ EXCLUDED |
+
+**No violations. No complexity justification required.**
+
+*Post-design re-check: same result — no new Python view classes, no model changes, no settings changes.*
+
+## Project Structure
+
+### Documentation (this feature)
+
+```text
+specs/008-sidebar-user-menu/
+├── plan.md              ← this file
+├── research.md          ← Phase 0 output (complete)
+├── data-model.md        ← Phase 1 output (complete)
+├── quickstart.md        ← Phase 1 output (complete)
+├── contracts/
+│   └── component-interface.md   ← Phase 1 output (complete)
+├── checklists/
+│   └── requirements.md
+└── tasks.md             ← generated by /speckit.tasks (NOT by /speckit.plan)
+```
+
+### Source Code (affected files)
+
+```text
+dac/templates/cotton/dac/
+└── user_menu.html                ← NEW: <c-dac.user-menu> Cotton component (snake_case per COTTON_SNAKE_CASED_NAMES)
+
+tests/test_components/
+└── test_dac_base.py              ← EDIT: add TestDacUserMenu class (inline template strings; no external test templates)
+```
+
+**Structure Decision**: All production changes are contained within the existing
+`dac/` package. The component is `user_menu.html` (snake_case) because
+`COTTON_SNAKE_CASED_NAMES = True` converts hyphens to underscores in filenames.
+The `example/` app settings were updated to add `"grid": "bi bi-grid"` to the
+`EASY_ICONS` default icons dict (required for the grid icon used in the Account
+Center link). Test infrastructure added: `tests/test_components/conftest.py`
+(authenticated fixture), `tests/urls_minimal.py` (minimal URL conf for degradation
+tests). **Screenshot tests are explicitly out of scope; the `screenshots/` module
+and `tests/urls.py` screenshot routes are not part of this feature's test
+deliverables.**
+
+## Complexity Tracking
+
+No Constitution violations. No complexity justification required.
+
+## Phase 0: Research
+
+All unknowns resolved. See [research.md](research.md) for full findings.
+
+**Key decisions**:
+
+- **Dropup**: `<c-dropdown direction="up">` produces Bootstrap 5 `dropup` class; no custom CSS needed
+- **Custom trigger**: `<c-slot name="button">` on `<c-dropdown>` replaces the default button; `<c-button>` carries `data-bs-toggle="dropdown"`, `aria-expanded="false"`, `aria-haspopup="true"`
+- **Logout**: POST form implemented using `<c-dropdown.item type="submit" form="logoutForm">` linked to a hidden `<form id="logoutForm">` below the dropdown; `account_logout` URL resolved via `{% url ... as var %}` for graceful degradation
+- **Avatar**: `<c-avatar size="sm" />` — no `src`; the avatar component uses its own `avatar_url` template tag to resolve the user's photo URL; SVG fallback when no URL is found; zero avatar-related config in `<c-dac.user-menu>`
+- **Zero props**: No `<c-vars>` declaration; all user data read from `request.user` directly; component is a self-contained drop-in
+- **URL degradation**: `{% url 'account_logout' as var %}` suppresses `NoReverseMatch`; Account Center URL resolved inline (always present when `dac.urls` is included)
+- **Anonymous guard**: `{% if request.user.is_authenticated %}` wraps entire component output
+
+## Phase 1: Design & Contracts
+
+### Component Interface ([data-model.md](data-model.md))
+
+**Component**: `<c-dac.user-menu>`
+**File**: `dac/templates/cotton/dac/user_menu.html`
+
+**No props.** Zero-configuration component. All data sourced from `request.user`.
+
+| Data Source | Template Expression | Description |
+|---|---|---|
+| `request.user` | `{{ request.user }}` | Username (Django's `User.__str__`) |
+| `request.user.email` | `{{ request.user.email }}` | Email displayed as muted secondary line |
+| (avatar) | `<c-avatar size="sm" />` | Avatar resolved by `<c-avatar>` internally |
+
+Default slot: developer's custom menu items (rendered between Account Center link and Logout button).
+
+### Dropup Panel Layout
+
+```
+┌────────────────────────────────┐  ← opens upward
+│  ⚙  Account Center            │  ← <c-dropdown.item> (always shown)
+├────────────────────────────────┤
+│  [Developer custom slot items] │
+├────────────────────────────────┤
+│  ↩  Log out                   │  ← <c-dropdown.item type="submit" form="logoutForm">
+└────────────────────────────────┘
+
+Trigger (always visible):
+┌────────────────────────────────┐
+│  [Avatar]  {{ request.user }}  │
+│            {{ request.user.email }} │
+└────────────────────────────────┘
+```
+
+### Component Interface Contract ([contracts/component-interface.md](contracts/component-interface.md))
+
+Full component template, rendered HTML contract, suppression attribute behaviour,
+and integration test assertions documented in the contract file.
+
+### Agent Context Update
+
+`.github/copilot-instructions.md` updated to point to
+`specs/008-sidebar-user-menu/plan.md`.

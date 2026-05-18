@@ -10,7 +10,7 @@
     {% include "socialaccount/snippets/login.html" with process="login" %}
   {% endif %}
   {% if not SOCIALACCOUNT_ONLY %}
-    <c-entrance.section text="{% trans "Using the details you signed up with." %}">
+    <c-entrance.section text="{% trans "Using the details you signed up with." %}" center>
       <c-form method="post" :form-obj="form">
         {{ redirect_field }}
         <c-button.stack>
@@ -48,7 +48,7 @@
     </c-entrance.section>
   {% endif %}
   {% if signup_url %}
-    <c-text small>
+    <c-text small center>
       {% blocktrans %}Don't have an account? <a href="{{ signup_url }}">Sign up</a>.{% endblocktrans %}
     </c-text>
   {% endif %}
