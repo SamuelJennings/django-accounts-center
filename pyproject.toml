@@ -32,9 +32,8 @@ fairdm-dev-tools = { git = "https://github.com/FAIR-DM/dev-tools", extras = [
 dj-urls-panel = "^0.2.0"
 pytest-playwright = "^0.7.2"
 
-
-[tool.poetry.group.local.dependencies]
-django-mvp = { path = "../django-mvp", develop = true }
+# [tool.poetry.group.local.dependencies]
+# django-mvp = { path = "../django-mvp", develop = true }
 
 [tool.poetry.dependencies]
 [build-system]
