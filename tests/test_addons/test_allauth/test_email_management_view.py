@@ -12,6 +12,8 @@ Notes on test design:
     cannot change which template allauth serves via the account_email URL.
     A dedicated test URL ("account_email_change_test") uses a subclass of EmailView
     with the template name hard-coded to "account/email_change.html".
+  - A dedicated test URL ("account_email_multi_test") uses a subclass of EmailView
+    with the template name hard-coded to "account/email.html".
   - allauth 65.x does not register a URL for the verified_email_required gate page;
     the decorator renders the template inline.  A test-only URL is registered in
     tests/urls.py under the name "account_verified_email_required".
@@ -208,7 +210,7 @@ class TestEmailMultiView:
         make_email_address(user, verified=True, primary=True)
         EmailAddress.objects.create(user=user, email="second@example.com", verified=False, primary=False)
         client.force_login(user)
-        response = client.get(reverse("account_email"))
+        response = client.get(reverse("account_email_multi_test"))
         assert response.status_code == 200
 
     def test_no_element_tags_in_output(self, client, settings):
@@ -217,7 +219,7 @@ class TestEmailMultiView:
         user = make_user()
         make_email_address(user)
         client.force_login(user)
-        response = client.get(reverse("account_email"))
+        response = client.get(reverse("account_email_multi_test"))
         content = response.content.decode()
         assert "{% element" not in content
         assert "{% endelement" not in content
@@ -228,7 +230,7 @@ class TestEmailMultiView:
         user = make_user()
         make_email_address(user, verified=True, primary=True)
         client.force_login(user)
-        response = client.get(reverse("account_email"))
+        response = client.get(reverse("account_email_multi_test"))
         content = response.content.decode()
         assert "badge" in content
 
@@ -239,7 +241,7 @@ class TestEmailMultiView:
         make_email_address(user, verified=True, primary=True)
         EmailAddress.objects.create(user=user, email="second@example.com", verified=False, primary=False)
         client.force_login(user)
-        response = client.get(reverse("account_email"))
+        response = client.get(reverse("account_email_multi_test"))
         content = response.content.decode()
         assert "badge" in content
 
@@ -250,7 +252,7 @@ class TestEmailMultiView:
         make_email_address(user, verified=True, primary=True)
         EmailAddress.objects.create(user=user, email="second@example.com", verified=True, primary=False)
         client.force_login(user)
-        response = client.get(reverse("account_email"))
+        response = client.get(reverse("account_email_multi_test"))
         content = response.content.decode()
         assert 'name="action_primary"' in content
 
@@ -261,7 +263,7 @@ class TestEmailMultiView:
         make_email_address(user, verified=True, primary=True)
         EmailAddress.objects.create(user=user, email="second@example.com", verified=False, primary=False)
         client.force_login(user)
-        response = client.get(reverse("account_email"))
+        response = client.get(reverse("account_email_multi_test"))
         content = response.content.decode()
         assert 'name="action_send"' in content
 
@@ -271,7 +273,7 @@ class TestEmailMultiView:
         user = make_user()
         make_email_address(user)
         client.force_login(user)
-        response = client.get(reverse("account_email"))
+        response = client.get(reverse("account_email_multi_test"))
         content = response.content.decode()
         assert 'name="action_remove"' in content
 
@@ -282,7 +284,7 @@ class TestEmailMultiView:
         user = make_user()
         make_email_address(user)
         client.force_login(user)
-        response = client.get(reverse("account_email"))
+        response = client.get(reverse("account_email_multi_test"))
         content = response.content.decode()
         # The Add Email section renders a form with action_add button
         assert 'name="action_add"' in content
@@ -293,7 +295,7 @@ class TestEmailMultiView:
         user = make_user()
         make_email_address(user)
         client.force_login(user)
-        response = client.get(reverse("account_email"))
+        response = client.get(reverse("account_email_multi_test"))
         content = response.content.decode()
         assert "account/js/account.js" in content
 
@@ -306,7 +308,7 @@ class TestEmailMultiView:
         settings.ACCOUNT_CHANGE_EMAIL = False
         user = make_user(email="")
         client.force_login(user)
-        response = client.get(reverse("account_email"))
+        response = client.get(reverse("account_email_multi_test"))
         content = response.content.decode()
         assert "alert-warning" in content
 

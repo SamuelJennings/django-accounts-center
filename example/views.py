@@ -13,6 +13,17 @@ class EmailChangeTestView(EmailView):
     template_name = "account/email_change.html"
 
 
+class MultiEmailTestView(EmailView):
+    """EmailView subclass that forces account/email.html template.
+
+    Mirrors the same pattern as EmailChangeTestView: because EmailView.template_name
+    is evaluated once at import time, tests for the multi-email UI must route through
+    this subclass rather than the stock allauth URL to guarantee the right template.
+    """
+
+    template_name = "account/email.html"
+
+
 def _verified_email_required_view(request):
     """Render the verified_email_required gate page directly.
 

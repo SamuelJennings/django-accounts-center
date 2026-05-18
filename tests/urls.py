@@ -9,7 +9,7 @@ from django.contrib import admin
 from django.shortcuts import render
 from django.urls import include, path
 
-from example.views import EmailChangeTestView, _verified_email_required_view
+from example.views import EmailChangeTestView, MultiEmailTestView, _verified_email_required_view
 
 
 def _user_menu_no_avatar_view(request):
@@ -52,6 +52,11 @@ urlpatterns = [
         "test/email-change/",
         EmailChangeTestView.as_view(),
         name="account_email_change_test",
+    ),
+    path(
+        "test/email-multi/",
+        MultiEmailTestView.as_view(),
+        name="account_email_multi_test",
     ),
     path(
         "test/verified-email-required/",
