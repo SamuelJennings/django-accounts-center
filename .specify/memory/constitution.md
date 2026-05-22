@@ -1,5 +1,28 @@
 <!--
 Sync Impact Report
+- Version change: 1.1.3 → 1.1.4
+- Change type: PATCH — Clarified the boundary between playwright-cli interactive
+  verification (Principle VI) and screenshot file analysis (Principle XIII). Added
+  an explicit token-efficiency priority rule to Principle VI stating that playwright-cli
+  MUST be the first choice for all UI verification and that screenshot file analysis
+  is a token-expensive fallback. Replaced the blanket NON-NEGOTIABLE screenshot
+  inspection mandate in Principle XIII with a decision rule that limits screenshot
+  analysis to cases where interactive verification is insufficient (multi-viewport
+  layout differences, settings-permutation visual diffs, subtle CSS regressions, or
+  explicit human review requests). No structural principle changes.
+- Modified principles:
+  - Principle VI: added token-efficiency priority and screenshot-fallback boundary rule
+  - Principle XIII: replaced blanket screenshot inspection mandate with conditional
+    decision rule; removed NON-NEGOTIABLE label from agent visual verification bullet
+- Added sections: none
+- Removed sections: none
+- Templates requiring updates:
+  - .specify/templates/plan-template.md — no update required
+  - .specify/templates/tasks-template.md — no update required
+  - .specify/templates/spec-template.md — no update required
+- Deferred items: none
+
+--- Previous Report (v1.1.3, 2026-05-22) ---
 - Version change: 1.1.2 → 1.1.3
 - Change type: PATCH — Updated Principle VI to mandate the `playwright-cli` skill
   (`.github/skills/playwright-cli/SKILL.md`) as the required tool for all UI
@@ -232,6 +255,11 @@ Agents MUST verify UI changes using the `playwright-cli` skill during implementa
 - The `playwright-cli` skill MUST be read and followed before performing any
   browser-based verification step. Agents MUST NOT attempt ad-hoc browser automation
   without consulting the skill.
+- **Token-efficiency priority**: `playwright-cli` interactive verification is the
+  most token-efficient confirmation method and MUST be the first and default choice
+  for all UI verification tasks. Opening and examining generated screenshot files is
+  a token-expensive secondary step; agents MUST NOT read screenshot files unless the
+  conditions in Principle XIII's agent visual verification decision rule are met.
 - Any phase in `tasks.md` that modifies the user experience — including HTML
   templates, Cotton components, form rendering, CSS, HTMX interactions, or any
   visible UI element — MUST include at least one `playwright-cli` verification task
@@ -485,12 +513,25 @@ removes, or materially rearranges any visible UI element.
 - The `docs/_static/desktop/` and `docs/_static/mobile/`
   directories MUST be created before the first screenshot test runs; if they do not
   exist, the test setup MUST create them.
-- **Agent visual verification (NON-NEGOTIABLE)**: Implementing agents MUST visually
-  inspect the screenshots produced by the playwright screenshot tests/scripts before
-  marking any UI task complete. Running the tests is not sufficient — the agent MUST
-  open and review the generated screenshot files to confirm the rendered output
-  matches the acceptance criteria. Any discrepancy observed in a screenshot MUST be
-  resolved before the task is closed.
+- **Agent visual verification — decision rule**: `playwright-cli` interactive
+  verification (Principle VI) is the default confirmation method and is sufficient
+  for most UI tasks. Agents MUST NOT open or analyse screenshot files as a routine
+  step when `playwright-cli` has already confirmed the expected interactive state;
+  doing so wastes token budget unnecessarily.
+  Screenshot file analysis is warranted **only** in the following cases:
+  - **Multi-viewport layout differences**: the change may render differently at
+    tablet (768 px) or mobile (390 px) widths and the difference cannot be
+    confirmed interactively with `playwright-cli` alone.
+  - **Settings-permutation diffs**: the task generates permutation screenshots and
+    the agent must confirm that two or more config states produce visually distinct
+    output.
+  - **Subtle CSS/layout regression**: the change involves precise spacing, overflow,
+    or z-index behaviour that the `playwright-cli` snapshot cannot reliably surface.
+  - **Explicit human request**: the user or reviewer has specifically asked the agent
+    to open and describe a screenshot.
+  Outside these four cases, agents MUST rely solely on `playwright-cli` verification
+  and MUST NOT open screenshot files. Any discrepancy found during warranted
+  screenshot analysis MUST be resolved before the task is closed.
 
 **Rationale**: Account management UIs must remain coherent across device categories.
 Visual regressions on tablet and mobile viewports are routinely invisible to developers
@@ -547,4 +588,4 @@ conventions.
 - MINOR: Adds a principle/section or materially expands guidance.
 - PATCH: Clarifies wording or fixes typos without changing intent.
 
-**Version**: 1.1.3 | **Ratified**: 2026-05-07 | **Last Amended**: 2026-05-22
+**Version**: 1.1.4 | **Ratified**: 2026-05-07 | **Last Amended**: 2026-05-22
