@@ -1,5 +1,29 @@
 <!--
 Sync Impact Report
+- Version change: 1.1.2 → 1.1.3
+- Change type: PATCH — Updated Principle VI to mandate the `playwright-cli` skill
+  (`.github/skills/playwright-cli/SKILL.md`) as the required tool for all UI
+  verification tasks. Replaced all references to "Playwright MCP server" with
+  "playwright-cli skill". Added an explicit bullet requiring that the skill file is
+  read before any browser-based verification step. Updated the Development Workflow
+  section to reference playwright-cli instead of playwright-mcp. No structural
+  principle changes; intent of Principle VI (verify UI changes in a real browser)
+  is unchanged.
+- Modified principles:
+  - Principle VI: renamed "(playwright-mcp)" → "(playwright-cli)"; replaced all
+    "Playwright MCP server" references with "playwright-cli skill"; added mandatory
+    skill-consultation bullet
+- Added sections: none
+- Removed sections: none
+- Templates requiring updates:
+  - .specify/templates/plan-template.md — ✅ no "Playwright MCP" wording found;
+    no update required
+  - .specify/templates/tasks-template.md — ✅ no "Playwright MCP" wording found;
+    no update required
+  - .specify/templates/spec-template.md — no update required
+- Deferred items: none
+
+--- Previous Report (v1.1.2, 2026-05-08) ---
 - Version change: 1.1.1 → 1.1.2
 - Change type: PATCH — Clarified Principle XIII to document that screenshot tests
   MUST live in the root `screenshots/` directory (not inside `tests/`), are excluded
@@ -92,7 +116,7 @@ between expectations and implementation.
 
 1. **Design Phase**: Create the design (mockups, wireframes, or initial implementation) based on specifications
 2. **Verification Phase**: Verify the design meets expectations using visual inspection
-   (Playwright MCP server for UI), user feedback, and manual testing
+   (`playwright-cli` skill for UI), user feedback, and manual testing
 3. **Implementation Phase**: Refine implementation based on verification feedback
 4. **Testing Phase**: Write comprehensive tests for the verified, approved implementation
 
@@ -197,19 +221,22 @@ The project uses consistent tooling to keep quality high and contributions smoot
   committed with djlint violations.
 - Keep changes minimal and focused; avoid incidental refactors.
 
-### VI. UI Verification (playwright-mcp)
+### VI. UI Verification (playwright-cli)
 
-Agents MUST verify UI changes using the Playwright MCP server during implementation.
+Agents MUST verify UI changes using the `playwright-cli` skill during implementation.
 
-- When building or modifying UI elements, agents MUST use the Playwright MCP server
-  to open a real browser, interact with the rendered output, and confirm that
-  implementation changes are visually and interactively represented as expected.
+- When building or modifying UI elements, agents MUST use the `playwright-cli` skill
+  (`.github/skills/playwright-cli/SKILL.md`) to open a real browser, interact with
+  the rendered output, and confirm that implementation changes are visually and
+  interactively represented as expected.
+- The `playwright-cli` skill MUST be read and followed before performing any
+  browser-based verification step. Agents MUST NOT attempt ad-hoc browser automation
+  without consulting the skill.
 - Any phase in `tasks.md` that modifies the user experience — including HTML
   templates, Cotton components, form rendering, CSS, HTMX interactions, or any
-  visible UI element — MUST include at least one Playwright verification task that
-  uses the Playwright MCP server to confirm the expected interactive or visual outcome
-  in a real browser.
-- Playwright tasks MUST assert the specific UX behaviour described in the
+  visible UI element — MUST include at least one `playwright-cli` verification task
+  that confirms the expected interactive or visual outcome in a real browser.
+- Verification tasks MUST assert the specific UX behaviour described in the
   corresponding user story acceptance criteria and MUST NOT merely assert that the
   page loads without error.
 - Visual verification MUST occur after each significant UI modification to catch
@@ -239,7 +266,7 @@ Features MUST include comprehensive end-to-end test coverage using pytest-playwr
 - UI interactions, form submissions, navigation flows, and visual elements MUST be
   tested at the browser level.
 - E2E tests serve as acceptance tests that validate feature requirements are fully met.
-- **Distinction from Principle VI**: Playwright MCP server tasks (Principle VI) are
+- **Distinction from Principle VI**: `playwright-cli` skill tasks (Principle VI) are
   the inline interactive verification step performed by agents during implementation;
   pytest-playwright tests (this principle) are the formal regression suite that
   persists in the repository and runs in CI.
@@ -492,7 +519,7 @@ If a change affects UI output or interaction:
 
 - Start with the design that expresses the desired behavior and visual appearance
 - Verify the design meets expectations through visual inspection and user feedback
-  (use Playwright MCP server for UI verification)
+  (use the `playwright-cli` skill for UI verification)
 - Refine the implementation based on verification feedback
 - Write comprehensive tests for the verified implementation (unit, integration,
   and end-to-end)
@@ -520,4 +547,4 @@ conventions.
 - MINOR: Adds a principle/section or materially expands guidance.
 - PATCH: Clarifies wording or fixes typos without changing intent.
 
-**Version**: 1.1.2 | **Ratified**: 2026-05-07 | **Last Amended**: 2026-05-08
+**Version**: 1.1.3 | **Ratified**: 2026-05-07 | **Last Amended**: 2026-05-22
