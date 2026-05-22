@@ -1,5 +1,27 @@
 <!--
 Sync Impact Report
+- Version change: 1.1.4 → 1.1.5
+- Change type: PATCH — Removed the tablet (768×1024) viewport from the required
+  screenshot tiers. Desktop (1440×900) and mobile (390×844) are now the two
+  canonical tiers. Tablet screenshots are available as an optional explicit capture
+  when a component has a meaningful md-breakpoint layout that differs visually from
+  both desktop and mobile. Updated Principle XIII heading, viewport table,
+  settings-permutation wording, implementation rules, agent decision rule, rationale,
+  and Quality Gates accordingly. No structural principle changes.
+- Modified principles:
+  - Principle XIII: viewport tiers reduced from three (desktop/tablet/mobile) to
+    two (desktop/mobile); tablet noted as optional for md-breakpoint components
+- Added sections: none
+- Removed sections: none
+- Templates requiring updates:
+  - .specify/templates/tasks-template.md — ✅ updated screenshot task pattern to
+    remove tablet tier; now references desktop + mobile only
+  - .specify/templates/plan-template.md — ✅ no hardcoded three-tier wording found;
+    no update required
+  - .specify/templates/spec-template.md — no update required
+- Deferred items: none
+
+--- Previous Report (v1.1.4, 2026-05-22) ---
 - Version change: 1.1.3 → 1.1.4
 - Change type: PATCH — Clarified the boundary between playwright-cli interactive
   verification (Principle VI) and screenshot file analysis (Principle XIII). Added
@@ -449,16 +471,19 @@ quality gate and a knowledge-transfer artifact.
 ### XIII. Multi-Viewport Screenshot Coverage (NON-NEGOTIABLE)
 
 All tasks that modify UI MUST be accompanied by automated Playwright tests that
-capture screenshots at three canonical viewport sizes and persist them as visual
+capture screenshots at two canonical viewport sizes and persist them as visual
 documentation artifacts under `docs/_static/`.
 
 **Viewport Sizes** (MUST be used consistently across all screenshot tests):
 
-| Tier    | Width | Height | Representative device   |
-|---------|-------|--------|-------------------------|
+| Tier    | Width | Height | Representative device    |
+|---------|-------|--------|--------------------------|
 | Desktop | 1440  | 900    | 13″ laptop / wide monitor |
-| Tablet  | 768   | 1024   | iPad portrait            |
 | Mobile  | 390   | 844    | iPhone 12 / 13 portrait  |
+
+**Tablet (optional)**: A 768×1024 tablet capture MAY be added when a component has
+a meaningful `md`-breakpoint layout that is visually distinct from both desktop and
+mobile. Tablet is not a default requirement.
 
 **Storage Convention**:
 
@@ -477,7 +502,7 @@ Where `<page-name>` is the lowercase-kebab slug of the page being captured
 
 For any page whose visual output varies based on Django or package settings (e.g.,
 whether social accounts are enabled, MFA is active, or a specific addon is installed),
-a full set of three viewport screenshots MUST be captured for **each distinct visible
+a desktop and mobile screenshot MUST be captured for **each distinct visible
 configuration**. Permutation screenshots MUST follow the naming pattern
 `<page-name>-<config-slug>.png`. Examples:
 
@@ -502,7 +527,7 @@ removes, or materially rearranges any visible UI element.
   discovers the `screenshots/` directory, keeping normal test runs fast. To
   regenerate screenshots explicitly, run `pytest screenshots/`.
 - Tests MUST use `@pytest.mark.parametrize` or a viewport fixture to switch across
-  all three sizes without duplicating assertion logic.
+  both sizes (desktop and mobile) without duplicating assertion logic.
 - Screenshots MUST be committed to the repository alongside the code change that
   introduces the UI modification; a PR that changes UI without updated screenshots
   MUST NOT be merged.
@@ -520,8 +545,8 @@ removes, or materially rearranges any visible UI element.
   doing so wastes token budget unnecessarily.
   Screenshot file analysis is warranted **only** in the following cases:
   - **Multi-viewport layout differences**: the change may render differently at
-    tablet (768 px) or mobile (390 px) widths and the difference cannot be
-    confirmed interactively with `playwright-cli` alone.
+    mobile (390 px) width and the difference cannot be confirmed interactively
+    with `playwright-cli` alone.
   - **Settings-permutation diffs**: the task generates permutation screenshots and
     the agent must confirm that two or more config states produce visually distinct
     output.
@@ -534,8 +559,8 @@ removes, or materially rearranges any visible UI element.
   screenshot analysis MUST be resolved before the task is closed.
 
 **Rationale**: Account management UIs must remain coherent across device categories.
-Visual regressions on tablet and mobile viewports are routinely invisible to developers
-working only on desktop. Persisted screenshots provide reviewers, project maintainers,
+Visual regressions on mobile viewports are routinely invisible to developers working
+only on desktop. Persisted screenshots provide reviewers, project maintainers,
 and future agents with an authoritative visual reference for every page state and
 settings permutation, reducing the risk of silent regressions and misaligned
 integrations.
@@ -553,8 +578,8 @@ The following gates MUST pass for every pull request that changes runtime behavi
 If a change affects UI output or interaction:
 
 - Add or update pytest-playwright coverage (Principle VIII).
-- Capture and commit viewport screenshots for all three tiers (desktop, tablet,
-  mobile) and all distinct settings permutations (Principle XIII).
+- Capture and commit viewport screenshots for both tiers (desktop and mobile)
+  and all distinct settings permutations (Principle XIII).
 
 ## Development Workflow
 
@@ -588,4 +613,4 @@ conventions.
 - MINOR: Adds a principle/section or materially expands guidance.
 - PATCH: Clarifies wording or fixes typos without changing intent.
 
-**Version**: 1.1.4 | **Ratified**: 2026-05-07 | **Last Amended**: 2026-05-22
+**Version**: 1.1.5 | **Ratified**: 2026-05-07 | **Last Amended**: 2026-05-22

@@ -38,11 +38,11 @@ permutation when the page has multiple visual states:
 - [ ] TXXX [Story] Capture viewport screenshots for <page-name>
       - Add/update pytest-playwright screenshot test in `screenshots/`
         (e.g., `screenshots/test_<page-name>_screenshots.py`)
-      - Run with `pytest screenshots/` to generate files at desktop (1440×900),
-        tablet (768×1024), and mobile (390×844)
-      - Save to docs/_static/{desktop,tablet,mobile}/<page-name>.png
+      - Run with `pytest screenshots/` to generate files at desktop (1440×900)
+        and mobile (390×844)
+      - Save to docs/_static/{desktop,mobile}/<page-name>.png
       - If page has settings permutations, capture each:
-          docs/_static/desktop/<page-name>-<config-slug>.png (+ tablet, mobile)
+          docs/_static/desktop/<page-name>-<config-slug>.png (+ mobile)
       - Commit both the screenshot test file and generated PNG files
 ```
 
