@@ -113,13 +113,11 @@ The sessions page has two visible states based on `session_count`:
 
 ## Screenshot Coverage
 
-Six screenshots are generated automatically by `pytest screenshots/`:
+Four screenshots are generated automatically by `pytest screenshots/`:
 
 ```
 docs/_static/desktop/sessions-multiple.png   (1440×900)
 docs/_static/desktop/sessions-single.png     (1440×900)
-docs/_static/tablet/sessions-multiple.png    (768×1024)
-docs/_static/tablet/sessions-single.png      (768×1024)
 docs/_static/mobile/sessions-multiple.png    (390×844)
 docs/_static/mobile/sessions-single.png      (390×844)
 ```

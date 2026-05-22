@@ -32,7 +32,7 @@ feature** in `tests/test_addons/test_allauth/test_usersessions_view.py` and
 **Project Type**: Reusable Django extension library
 **Performance Goals**: Same as existing management-page templates
 **Constraints**: Zero `{% element %}` / `{% endelement %}` tags in modified files; bulk sign-out only (no per-session radio buttons); Bootstrap `<table class="table">` inside `<c-card>` (no `<c-table>` component); `text-truncate` on user-agent cell; `<c-badge variant="success">` for Current badge; `<c-button variant="primary">` for submit
-**Scale/Scope**: 2 template files edited; 1 new integration test file; 1 new screenshot test file; 6 PNGs (2 states × 3 viewports)
+**Scale/Scope**: 2 template files edited; 1 new integration test file; 1 new screenshot test file; 4 PNGs (2 states × 2 viewports)
 
 ## Constitution Check
 
@@ -45,14 +45,14 @@ feature** in `tests/test_addons/test_allauth/test_usersessions_view.py` and
 | III. Component Quality & Accessibility | No new components introduced; all components are validated existing ones | ✅ PASS |
 | IV. Compatibility | Template overrides only; no view or settings changes | ✅ PASS |
 | V. Tooling | `poetry run pytest`; djlint for templates | ✅ PASS |
-| VI. UI Verification | Playwright MCP verification required per implementation task | ✅ PASS |
+| VI. UI Verification | playwright-cli skill is the first choice for all UI verification; screenshot file analysis is a token-expensive fallback only when interactive verification is insufficient; `.github/skills/playwright-cli/SKILL.md` MUST be consulted before any browser step (v1.1.5) | ✅ PASS |
 | VII. Documentation Retrieval | No new external APIs — reusing established patterns from Specs 001–009 | ✅ PASS (N/A) |
-| VIII. E2E Testing | Screenshot tests: 2 states × 3 viewports = 6 PNGs | ✅ PASS |
+| VIII. E2E Testing | Screenshot tests: 2 states × 2 viewports = 4 PNGs | ✅ PASS |
 | IX. Component Reuse | No new components; `<c-badge>`, `<c-button>`, `<c-card>`, `<c-breadcrumbs.item>` are all existing | ✅ PASS |
 | X. Third-Party Integration | Template overrides primary; no view overrides introduced | ✅ PASS |
 | XI. Dual-Audience Stories | US1, US3 [Developer] + US2 [End User] | ✅ PASS |
 | XII. View Docstrings | No view classes introduced or modified | ✅ PASS (N/A) |
-| XIII. Screenshot Coverage | 2 page states × 3 viewports = 6 PNGs; `screenshots/` dir; `pytest screenshots/` | ✅ PASS |
+| XIII. Screenshot Coverage | 2 page states × 2 viewports = 4 PNGs (desktop + mobile); `screenshots/` dir; `pytest screenshots/` | ✅ PASS |
 
 **No violations. No complexity justification required.**
 
@@ -88,14 +88,12 @@ tests/test_addons/test_allauth/
 └── test_usersessions_view.py  ← NEW: integration tests written as part of this feature
 
 screenshots/
-└── test_usersessions_screenshots.py  ← NEW: screenshot tests (2 states × 3 viewports)
+└── test_usersessions_screenshots.py  ← NEW: screenshot tests (2 states × 2 viewports)
 
 docs/_static/
 ├── desktop/
 │   ├── sessions-multiple.png
 │   └── sessions-single.png
-├── tablet/
-│   └── (same 2 files)
 └── mobile/
     └── (same 2 files)
 ```

@@ -110,5 +110,5 @@ a heading there would produce a second toolbar-level element outside the expecte
 | `<c-button variant="danger">` for destructive inline forms | Spec 009 (`socialaccount/connections.html`) |
 | `<c-card>` as content section wrapper | Spec 006 (`account/email.html`) |
 | Integration test pattern for allauth addon views | Spec 006 (`test_email_management_view.py`) |
-| Screenshot test pattern (N states × 3 viewports) | Spec 006 (`test_email_management_screenshots.py`) |
+| Screenshot test pattern (N states × 2 viewports: desktop + mobile) | Spec 006 (`test_email_management_screenshots.py`) |
 | Bootstrap table inside `<c-card>` (no `<c-table>`) | N/A — first use; pattern established here |

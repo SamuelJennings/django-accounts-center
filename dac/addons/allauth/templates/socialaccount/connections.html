@@ -7,13 +7,13 @@
 
 {% block page.breadcrumbs %}
   {{ block.super }}
-  <c-breadcrumbs.item text="{% trans 'Account Connections' %}" />
+  <c-breadcrumbs.item text="{% trans "Account Connections" %}" />
 {% endblock page.breadcrumbs %}
 
 {% block page.content %}
   {# --- Connected accounts section --- #}
   {% if form.accounts %}
-    <c-card title="{% trans 'Account Connections' %}"
+    <c-card title="{% trans "Account Connections" %}"
             icon="person"
             fs="3">
       <c-list-group flush :border="False">
@@ -31,7 +31,7 @@
                          name="account"
                          value="{{ account.pk }}" />
                   <c-button type="submit"
-                            text="{% trans 'Remove' %}"
+                            text="{% trans "Remove" %}"
                             variant="danger"
                             size="sm"
                             icon="delete" />
@@ -50,7 +50,7 @@
     </c-card>
   {% endif %}
   {# --- Add connections section --- #}
-  <c-card title="{% trans 'Add a Third-Party Account' %}">
+  <c-card title="{% trans "Add a Third-Party Account" %}">
     {% include "socialaccount/snippets/provider_list.html" with process="connect" %}
     {% include "socialaccount/snippets/login_extra.html" %}
   </c-card>

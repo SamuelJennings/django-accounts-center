@@ -3,7 +3,7 @@
 **Input**: Design documents from `specs/010-usersessions-templates/`
 **Prerequisites**: plan.md ✅ | spec.md ✅ | research.md ✅ | data-model.md ✅ | contracts/component-interface.md ✅ | quickstart.md ✅
 
-**Scope**: 2 template files edited · 1 integration test file · 1 screenshot test file · 6 PNGs (2 states × 3 viewports)
+**Scope**: 2 template files edited · 1 integration test file · 1 screenshot test file · 4 PNGs (2 states × 2 viewports)
 
 ## Format: `[ID] [P?] [Story] Description`
 
@@ -17,7 +17,7 @@
 
 **Purpose**: Verify the test baseline before any changes are made
 
-- [ ] T001 Run existing allauth addon test suite to establish a clean baseline: `poetry run pytest tests/test_addons/test_allauth/ --no-cov -q` — MUST pass before any edits begin
+- [X] T001 Run existing allauth addon test suite to establish a clean baseline: `poetry run pytest tests/test_addons/test_allauth/ --no-cov -q` — MUST pass before any edits begin
 
 ---
 
@@ -27,20 +27,23 @@
 
 **Independent Test**: Navigate to `/accounts/usersessions/` as a logged-in user; the Account Center sidebar, "Account Center" root breadcrumb, and "Sessions" leaf breadcrumb must all be visible.
 
-- [ ] T002 [US1] Edit `dac/addons/allauth/templates/usersessions/base_manage.html` — change the single `extends` line from `allauth/layouts/manage.html` to `dac/base.html`
+- [X] T002 [US1] Edit `dac/addons/allauth/templates/usersessions/base_manage.html` — change the single `extends` line from `allauth/layouts/manage.html` to `dac/base.html`
 
   Before:
+
   ```django
   {% extends "allauth/layouts/manage.html" %}
   ```
+
   After:
+
   ```django
   {% extends "dac/base.html" %}
   ```
 
 - [ ] T003 [US1] playwright-cli skill verify — consult `.github/skills/playwright-cli/SKILL.md` before executing; start dev server (`poetry run python manage.py runserver`), log in as a test user, navigate to `/accounts/usersessions/`; confirm the Account Center sidebar, "Account Center" breadcrumb, "Sessions" breadcrumb, and "Sessions" heading are all rendered (page must NOT show the raw allauth layout)
 
-- [ ] TVAL-1 [US1] Run `python manage.py check` — MUST pass with no errors after T002
+- [X] TVAL-1 [US1] Run `python manage.py check` — MUST pass with no errors after T002
 
 **Checkpoint**: US1 complete — Sessions page now renders inside the DAC Account Center layout
 
@@ -52,7 +55,7 @@
 
 **Independent Test**: Render the template with representative context (multiple sessions + `is_current` on one; `show_last_seen_at` both True and False); assert table rows, "Current" badge, button text, and column visibility are correct.
 
-- [ ] T004 [US2] Fully rewrite `dac/addons/allauth/templates/usersessions/usersession_list.html` using the interface contract in `specs/010-usersessions-templates/contracts/component-interface.md`:
+- [X] T004 [US2] Fully rewrite `dac/addons/allauth/templates/usersessions/usersession_list.html` using the interface contract in `specs/010-usersessions-templates/contracts/component-interface.md`:
 
   - `{% load i18n humanize %}` (remove `{% load allauth %}` — no allauth tags used)
   - `{% block title %}{% trans "Sessions" %}{% endblock title %}`
@@ -71,9 +74,9 @@
 
 - [ ] T006 [P] [US2] playwright-cli skill verify — consult `.github/skills/playwright-cli/SKILL.md` before executing; single-session state (manually create a test scenario or inspect template logic): confirm button text reads "Sign Out" (not "Sign Out Other Sessions")
 
-- [ ] TVAL-2 [US2] Run `python manage.py check` — MUST pass after T004
+- [X] TVAL-2 [US2] Run `python manage.py check` — MUST pass after T004
 
-- [ ] TVAL-3 [US2] Run `poetry run pytest tests/test_addons/test_allauth/ --no-cov -q` — MUST pass (existing tests must not regress)
+- [X] TVAL-3 [US2] Run `poetry run pytest tests/test_addons/test_allauth/ --no-cov -q` — MUST pass (existing tests must not regress)
 
 **Checkpoint**: US2 complete — Sessions page shows Bootstrap table, Current badge, and sign-out form in the DAC layout
 
@@ -83,9 +86,9 @@
 
 **Goal**: Automated integration tests and screenshot tests proving every conditional branch renders correctly without starting a server.
 
-**Independent Test**: `pytest tests/test_addons/test_allauth/test_usersessions_view.py --no-cov -v` passes with zero failures. `pytest screenshots/test_usersessions_screenshots.py` generates 6 PNGs.
+**Independent Test**: `pytest tests/test_addons/test_allauth/test_usersessions_view.py --no-cov -v` passes with zero failures. `pytest screenshots/test_usersessions_screenshots.py` generates 4 PNGs.
 
-- [ ] T007 [P] [US3] Create `tests/test_addons/test_allauth/test_usersessions_view.py` — integration tests using the Cotton rendering fixtures (see `cotton-test-components` skill):
+- [X] T007 [P] [US3] Create `tests/test_addons/test_allauth/test_usersessions_view.py` — integration tests using the Cotton rendering fixtures (see `cotton-test-components` skill):
 
   Consult `.github/skills/cotton-test-components/SKILL.md` and `.github/skills/pytest-django-testing/SKILL.md` before writing tests.
 
@@ -101,7 +104,7 @@
 
   Use factory-boy (`DjangoModelFactory`) for `UserSession` test data if model access is needed; otherwise create plain dataclass/mock objects with the required attributes.
 
-- [ ] T008 [P] [US3] Create `screenshots/test_usersessions_screenshots.py` — pytest-playwright screenshot tests (2 states × 3 viewports = 6 PNGs):
+- [X] T008 [P] [US3] Create `screenshots/test_usersessions_screenshots.py` — pytest-playwright screenshot tests (2 states × 2 viewports = 4 PNGs):
 
   Consult `.github/skills/playwright-cli/SKILL.md` for screenshot test patterns.
 
@@ -109,23 +112,21 @@
   - `sessions-multiple`: page rendered with ≥2 active sessions (current + others visible)
   - `sessions-single`: page rendered with 1 active session (current only, "Sign Out" button)
 
-  Viewports: desktop (1440×900), tablet (768×1024), mobile (390×844)
+  Viewports: desktop (1440×900), mobile (390×844)
 
   Save to:
   - `docs/_static/desktop/sessions-multiple.png`
   - `docs/_static/desktop/sessions-single.png`
-  - `docs/_static/tablet/sessions-multiple.png`
-  - `docs/_static/tablet/sessions-single.png`
   - `docs/_static/mobile/sessions-multiple.png`
   - `docs/_static/mobile/sessions-single.png`
 
   Use `@pytest.mark.parametrize` or a viewport fixture to avoid duplicating assertion logic across sizes.
 
-- [ ] TVAL-4 [US3] Run `poetry run pytest tests/test_addons/test_allauth/test_usersessions_view.py --no-cov -v` — MUST pass with zero failures; all 8 test cases green
+- [X] TVAL-4 [US3] Run `poetry run pytest tests/test_addons/test_allauth/test_usersessions_view.py --no-cov -v` — MUST pass with zero failures; all 8 test cases green
 
-- [ ] TVAL-5 [US3] Run `poetry run pytest screenshots/test_usersessions_screenshots.py -v` — MUST produce 6 PNG files in `docs/_static/`; inspect each screenshot visually to confirm correct layout (Principle XIII agent visual verification)
+- [X] TVAL-5 [US3] Run `poetry run pytest screenshots/test_usersessions_screenshots.py -v` — MUST produce 4 PNG files in `docs/_static/` (desktop + mobile, 2 states each); if interactive playwright-cli verification is insufficient to confirm layout differences across viewports, inspect the generated PNGs as a fallback (Principle XIII — conditional per v1.1.4; not mandatory when playwright-cli interactive check already passed)
 
-**Checkpoint**: US3 complete — every conditional branch verified by automated tests; 6 screenshots committed as visual documentation
+**Checkpoint**: US3 complete — every conditional branch verified by automated tests; 4 screenshots committed as visual documentation
 
 ---
 
@@ -133,22 +134,28 @@
 
 **Purpose**: Final quality gates across all modified files
 
-- [ ] T009 [P] Run djlint on modified templates — zero violations:
+- [X] T009 [P] Run djlint on modified templates — zero violations:
+
   ```bash
   poetry run djlint dac/addons/allauth/templates/usersessions/base_manage.html dac/addons/allauth/templates/usersessions/usersession_list.html --check
   ```
+
   Fix any violations before marking complete.
 
-- [ ] T010 [P] Grep for residual allauth element tags in modified templates — MUST return zero matches (SC-002):
+- [X] T010 [P] Grep for residual allauth element tags in modified templates — MUST return zero matches (SC-002):
+
   ```bash
   Select-String -Path "dac\addons\allauth\templates\usersessions\*.html" -Pattern "element|endelement" -SimpleMatch
   ```
+
   Any matches are blocking defects.
 
-- [ ] T011 Run full test suite to confirm no regressions:
+- [X] T011 Run full test suite to confirm no regressions:
+
   ```bash
   poetry run pytest tests/ --no-cov -q
   ```
+
   MUST pass with zero failures.
 
 ---

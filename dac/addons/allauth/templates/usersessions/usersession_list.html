@@ -1,83 +1,70 @@
 {% extends "usersessions/base_manage.html" %}
-{% load allauth %}
-{% load i18n %}
-{% load humanize %}
+{% load i18n humanize %}
 
 {% block title %}
   {% trans "Sessions" %}
 {% endblock title %}
 
-{% block content %}
-  {% element h1 tags="usersessions,list" %}
-  {% trans "Sessions" %}
-{% endelement %}
-{% if session_count > 1 %}
-  {% url 'usersessions_list' as action_url %}
-{% else %}
-  {% url 'account_logout' as action_url %}
-{% endif %}
-{% element form action=action_url method="post" tags="sessions" no_visible_fields=True %}
-{% slot body %}
-{% csrf_token %}
-{% element table tags="sessions" %}
-{% element thead %}
-{% element tr %}
-{% element th %}
-{% trans "Started At" %}
-{% endelement %}
-{% element th %}
-{% trans "IP Address" %}
-{% endelement %}
-{% element th %}
-{% trans "Browser" %}
-{% endelement %}
-{% if show_last_seen_at %}
-  {% element th %}
-  {% trans "Last seen at" %}
-{% endelement %}
-{% endif %}
-{% endelement %}
-{% endelement %}
-{% element tbody %}
-{% for session in sessions %}
-  {% element tr %}
-  {% element td %}
-  <span title="{{ session.created_at }}">{{ session.created_at|naturaltime }}</span>
-{% endelement %}
-{% element td %}
-{{ session.ip }}
-{% endelement %}
-{% element td %}
-{{ session.user_agent }}
-{% endelement %}
-{% if show_last_seen_at %}
-  {% element td %}
-  <span title="{{ session.last_seen_at }}">{{ session.last_seen_at|naturaltime }}</span>
-{% endelement %}
-{% endif %}
-{% element td %}
-{% if session.is_current %}
-  {% element badge tags="session,current" %}
-  {% trans "Current" %}
-{% endelement %}
-{% else %}
-{% endif %}
-{% endelement %}
-{% endelement %}
-{% endfor %}
-{% endelement %}
-{% endelement %}
-{% endslot %}
-{% slot actions %}
-{% if session_count > 1 %}
-  {% element button type="submit" %}
-  {% trans "Sign Out Other Sessions" %}
-{% endelement %}
-{% else %}
-{% element button type="submit" %}
-{% trans "Sign Out" %}
-{% endelement %}
-{% endif %}
-{% endslot %}
-{% endelement %}
-{% endblock content %}
+{% block page.breadcrumbs %}
+  {{ block.super }}
+  <c-breadcrumbs.item text="{% trans \"Sessions\" %}" />
+{% endblock page.breadcrumbs %}
+
+{% block page.content %}
+  {% if session_count > 1 %}
+    {% url 'usersessions_list' as action_url %}
+  {% else %}
+    {% url 'account_logout' as action_url %}
+  {% endif %}
+  <c-card>
+    <form method="post" action="{{ action_url }}">
+      {% csrf_token %}
+      <table class="table">
+        <thead>
+          <tr>
+            <th>{% trans "Started At" %}</th>
+            <th>{% trans "IP Address" %}</th>
+            <th>{% trans "Browser" %}</th>
+            {% if show_last_seen_at %}
+              <th>{% trans "Last seen at" %}</th>
+            {% endif %}
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for session in sessions %}
+            <tr>
+              <td>
+                <span title="{{ session.created_at }}">{{ session.created_at|naturaltime }}</span>
+              </td>
+              <td>{{ session.ip }}</td>
+              <td>
+                <span class="text-truncate d-inline-block"
+                      style="max-width: 20ch">{{ session.user_agent }}</span>
+              </td>
+              {% if show_last_seen_at %}
+                <td>
+                  <span title="{{ session.last_seen_at }}">{{ session.last_seen_at|naturaltime }}</span>
+                </td>
+              {% endif %}
+              <td>
+                {% if session.is_current %}
+                  <c-badge variant="success" text="{% trans "Current" %}" />
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% if session_count > 1 %}
+        <c-button type="submit"
+                  variant="primary"
+                  text="{% trans "Sign out other sessions" %}" />
+      {% else %}
+        <c-button type="submit"
+                  variant="primary"
+                  text="{% trans "Sign Out" %}" />
+      {% endif %}
+    </form>
+  </c-card>
+{% endblock page.content %}
