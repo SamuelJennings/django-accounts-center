@@ -1,34 +1,40 @@
 {% extends "mfa/recovery_codes/base.html" %}
 {% load i18n %}
-{% load allauth %}
 
-{% block content %}
-  {% element h1 %}
-  {% trans "Recovery Codes" %}
-{% endelement %}
-{% element p %}
-{% blocktranslate %}You are about to generate a new set of recovery codes for your account.{% endblocktranslate %}
-{% if unused_code_count %}
-  {% blocktranslate %}This action will invalidate your existing codes.{% endblocktranslate %}
-{% endif %}
-{% blocktranslate %}Are you sure?{% endblocktranslate %}
-{% endelement %}
-{% url 'mfa_generate_recovery_codes' as action_url %}
-{% element form method="post" action=action_url no_visible_fields=True %}
-{% slot body %}
-{% csrf_token %}
-{{ form.as_p }}
-{% endslot %}
-{% slot actions %}
-{% setvar tags %}
-{% if unused_code_count %}
-  danger
-{% else %}
-{% endif %}
-{% endsetvar %}
-{% element button type="submit" tags=tags %}
-{% trans "Generate" %}
-{% endelement %}
-{% endslot %}
-{% endelement %}
-{% endblock content %}
+{% block title %}
+  {% trans "Generate Recovery Codes" %}
+{% endblock title %}
+
+{% block page.breadcrumbs %}
+  {{ block.super }}
+  <c-breadcrumbs.item href="{% url 'mfa_index' %}"
+                      text="{% trans 'Two-Factor Authentication' %}" />
+  <c-breadcrumbs.item href="{% url 'mfa_view_recovery_codes' %}"
+                      text="{% trans 'Recovery Codes' %}" />
+  <c-breadcrumbs.item text="{% trans 'Generate' %}" />
+{% endblock page.breadcrumbs %}
+
+{% block page.content %}
+  <c-form.card title="{% trans 'Generate Recovery Codes' %}"
+               method="post"
+               action="{% url 'mfa_generate_recovery_codes' %}">
+    {% csrf_token %}
+    <c-slot name="actions">
+      {% if unused_code_count > 0 %}
+        <c-button type="submit"
+                  variant="danger"
+                  text="{% trans 'Generate New Codes' %}" />
+      {% else %}
+        <c-button type="submit"
+                  text="{% trans 'Generate New Codes' %}" />
+      {% endif %}
+    </c-slot>
+    {% if unused_code_count > 0 %}
+      <p class="text-danger">
+        {% blocktrans with count=unused_code_count %}
+          Warning: generating new codes will invalidate your {{ count }} existing unused code(s).
+        {% endblocktrans %}
+      </p>
+    {% endif %}
+  </c-form.card>
+{% endblock page.content %}

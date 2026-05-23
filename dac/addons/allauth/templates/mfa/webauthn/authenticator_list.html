@@ -1,75 +1,62 @@
 {% extends "mfa/webauthn/base.html" %}
 {% load i18n %}
-{% load static %}
-{% load allauth %}
-{% load humanize %}
 
-{% block content %}
-  {% element h1 %}
+{% block title %}
   {% trans "Security Keys" %}
-{% endelement %}
-{% if authenticators|length == 0 %}
-  {% element p %}
-  {% blocktranslate %}No security keys have been added.{% endblocktranslate %}
-{% endelement %}
-{% else %}
-{% element table %}
-{% element thead %}
-{% element th %}
-{% trans "Key" %}
-{% endelement %}
-{% element th %}
-{% trans "Usage" %}
-{% endelement %}
-{% element th %}
-{% endelement %}
-{% endelement %}
-{% element tbody %}
-{% for authenticator in authenticators %}
-  {% element tr %}
-  {% element td %}
-  {{ authenticator }}
-  {% if authenticator.wrap.is_passwordless is True %}
-    {% element badge tags="mfa,key,primary" %}
-    {% trans "Passkey" %}
-  {% endelement %}
-{% elif authenticator.wrap.is_passwordless is False %}
-  {% element badge tags="mfa,key,secondary" %}
-  {% trans "Security key" %}
-{% endelement %}
-{% else %}
-{% element badge title=_("This key does not indicate whether it is a passkey.") tags="mfa,key,warning" %}
-{% trans "Unspecified" %}
-{% endelement %}
-{% endif %}
-{% endelement %}
-{% element td %}
-{% blocktranslate with created_at=authenticator.created_at|date:"SHORT_DATE_FORMAT" %}Added on {{ created_at }}{% endblocktranslate %}.
-{% if authenticator.last_used_at %}
-  {% blocktranslate with last_used=authenticator.last_used_at|naturaltime %}Last used {{ last_used }}{% endblocktranslate %}
-{% else %}
-  Not used.
-{% endif %}
-{% endelement %}
-{% element td align="right" %}
-{% url 'mfa_edit_webauthn' pk=authenticator.pk as edit_url %}
-{% element button tags="mfa,authenticator,edit,tool" href=edit_url %}
-{% trans "Edit" %}
-{% endelement %}
-{% url 'mfa_remove_webauthn' pk=authenticator.pk as remove_url %}
-{% element button tags="mfa,authenticator,danger,delete,tool" href=remove_url %}
-{% trans "Remove" %}
-{% endelement %}
-{% endelement %}
-{% endelement %}
-{% endfor %}
-{% endelement %}
-{% endelement %}
-{% endif %}
-{% url 'mfa_add_webauthn' as add_url %}
-{% element button href=add_url %}
-{% trans "Add" %}
-{% endelement %}
-</li>
-</ul>
-{% endblock %}
+{% endblock title %}
+
+{% block page.breadcrumbs %}
+  {{ block.super }}
+  <c-breadcrumbs.item href="{% url 'mfa_index' %}"
+                      text="{% trans 'Two-Factor Authentication' %}" />
+  <c-breadcrumbs.item text="{% trans 'Security Keys' %}" />
+{% endblock page.breadcrumbs %}
+
+{% block page.content %}
+  <c-card title="{% trans 'Security Keys' %}">
+    <c-slot name="actions">
+      <c-button href="{% url 'mfa_add_webauthn' %}"
+                text="{% trans 'Add Security Key' %}" />
+    </c-slot>
+    {% if authenticators %}
+      <table class="table">
+        <thead>
+          <tr>
+            <th>{% trans "Name" %}</th>
+            <th>{% trans "Type" %}</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for authenticator in authenticators %}
+            <tr>
+              {% with wrapped=authenticator.wrap %}
+                <td>{{ wrapped.name }}</td>
+                <td>
+                  {% if wrapped.is_passwordless %}
+                    <c-badge variant="primary" text="{% trans 'Passkey' %}" />
+                  {% elif wrapped.is_passwordless is False %}
+                    <c-badge variant="secondary"
+                             text="{% trans 'Security key' %}" />
+                  {% else %}
+                    <c-badge variant="warning"
+                             text="{% trans 'Unspecified' %}" />
+                  {% endif %}
+                </td>
+                <td>
+                  <c-button href="{% url 'mfa_edit_webauthn' authenticator.pk %}"
+                            text="{% trans 'Edit' %}" />
+                  <c-button href="{% url 'mfa_remove_webauthn' authenticator.pk %}"
+                            variant="danger"
+                            text="{% trans 'Remove' %}" />
+                </td>
+              {% endwith %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>{% trans "No security keys have been registered." %}</p>
+    {% endif %}
+  </c-card>
+{% endblock page.content %}

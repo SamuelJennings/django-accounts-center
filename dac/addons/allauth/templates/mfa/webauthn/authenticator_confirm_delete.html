@@ -1,21 +1,31 @@
 {% extends "mfa/webauthn/base.html" %}
 {% load i18n %}
-{% load allauth %}
 
-{% block content %}
-  {% element h1 %}
+{% block title %}
   {% trans "Remove Security Key" %}
-{% endelement %}
-{% element p %}
-{% blocktranslate %}Are you sure you want to remove this security key?{% endblocktranslate %}
-{% endelement %}
-{% url 'mfa_remove_webauthn' pk=authenticator.pk as action_url %}
-{% element form method="post" action=action_url no_visible_fields=True %}
-{% slot actions %}
-{% csrf_token %}
-{% element button tags="danger" type="submit" %}
-{% trans "Remove" %}
-{% endelement %}
-{% endslot %}
-{% endelement %}
-{% endblock %}
+{% endblock title %}
+
+{% block page.breadcrumbs %}
+  {{ block.super }}
+  <c-breadcrumbs.item href="{% url 'mfa_index' %}"
+                      text="{% trans 'Two-Factor Authentication' %}" />
+  <c-breadcrumbs.item href="{% url 'mfa_list_webauthn' %}"
+                      text="{% trans 'Security Keys' %}" />
+  <c-breadcrumbs.item text="{% trans 'Remove' %}" />
+{% endblock page.breadcrumbs %}
+
+{% block page.content %}
+  <c-form.card title="{% trans 'Remove Security Key' %}"
+               method="post"
+               action="{% url 'mfa_remove_webauthn' pk=authenticator.pk %}">
+    {% csrf_token %}
+    <c-slot name="actions">
+      <c-button type="submit"
+                variant="danger"
+                text="{% trans 'Remove' %}" />
+    </c-slot>
+    <p>
+      {% blocktrans with name=authenticator.wrap.name %}Are you sure you want to remove the security key "{{ name }}"?{% endblocktrans %}
+    </p>
+  </c-form.card>
+{% endblock page.content %}

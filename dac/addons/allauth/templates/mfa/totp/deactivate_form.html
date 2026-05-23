@@ -1,30 +1,26 @@
 {% extends "mfa/totp/base.html" %}
 {% load i18n %}
-{% load allauth %}
 
 {% block title %}
   {% trans "Deactivate Authenticator App" %}
 {% endblock title %}
 
-{% block content %}
-  {% element h1 %}
-  {% trans "Deactivate Authenticator App" %}
-{% endelement %}
-{% element p %}
-{% blocktranslate %}You are about to deactivate authenticator app based authentication. Are you sure?{% endblocktranslate %}
-{% endelement %}
-{% url 'mfa_deactivate_totp' as action_url %}
-{% element form form=form method="post" action=action_url no_visible_fields=True %}
-{% slot body %}
-{% csrf_token %}
-{% element fields form=form %}
-{{ form.as_p }}
-{% endelement %}
-{% endslot %}
-{% slot actions %}
-{% element button tags="danger,delete" type="submit" %}
-{% trans "Deactivate" %}
-{% endelement %}
-{% endslot %}
-{% endelement %}
-{% endblock content %}
+{% block page.breadcrumbs %}
+  {{ block.super }}
+  <c-breadcrumbs.item href="{% url 'mfa_index' %}"
+                      text="{% trans 'Two-Factor Authentication' %}" />
+  <c-breadcrumbs.item text="{% trans 'Deactivate' %}" />
+{% endblock page.breadcrumbs %}
+
+{% block page.content %}
+  <c-form.card title="{% trans 'Deactivate Authenticator App' %}"
+               method="post"
+               action="{% url 'mfa_deactivate_totp' %}"
+               :form-obj="form">
+    <c-slot name="actions">
+      <c-button type="submit"
+                variant="danger"
+                text="{% trans 'Deactivate' %}" />
+    </c-slot>
+  </c-form.card>
+{% endblock page.content %}
