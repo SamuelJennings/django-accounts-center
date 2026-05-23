@@ -15,11 +15,11 @@
 {% endblock page.breadcrumbs %}
 
 {% block page.content %}
-  <c-form.card title="{% trans 'Edit Security Key' %}"
-               method="post"
+  <c-form.card method="post"
                action="{% url 'mfa_edit_webauthn' authenticator.pk %}"
+               title="{% trans 'Edit Security Key' %}"
                :form-obj="form">
-    <c-slot name="actions">
+    <c-slot name="form_actions">
       <c-button type="submit"
                 variant="primary"
                 text="{% trans 'Save' %}" />

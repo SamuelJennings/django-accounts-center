@@ -15,11 +15,11 @@
 {% endblock page.breadcrumbs %}
 
 {% block page.content %}
-  <c-form.card title="{% trans 'Remove Security Key' %}"
-               method="post"
-               action="{% url 'mfa_remove_webauthn' pk=authenticator.pk %}">
+  <c-form.card method="post"
+               action="{% url 'mfa_remove_webauthn' pk=authenticator.pk %}"
+               title="{% trans 'Remove Security Key' %}">
     {% csrf_token %}
-    <c-slot name="actions">
+    <c-slot name="form_actions">
       <c-button type="submit"
                 variant="danger"
                 text="{% trans 'Remove' %}" />

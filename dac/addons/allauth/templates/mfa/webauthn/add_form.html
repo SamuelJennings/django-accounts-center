@@ -15,13 +15,14 @@
 {% endblock page.breadcrumbs %}
 
 {% block page.content %}
-  <c-form.card title="{% trans 'Add Security Key' %}"
-               method="post"
-               action="{% url 'mfa_add_webauthn' %}">
+  <c-form.card method="post"
+               action="{% url 'mfa_add_webauthn' %}"
+               title="{% trans 'Add Security Key' %}">
     {% csrf_token %}
-    <c-slot name="actions">
+    <c-slot name="form_actions">
       <c-button type="submit"
                 id="mfa_webauthn_add"
+                variant="primary"
                 text="{% trans 'Register Key' %}" />
     </c-slot>
     {{ form.passwordless }}

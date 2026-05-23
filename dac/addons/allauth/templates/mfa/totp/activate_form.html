@@ -13,18 +13,21 @@
 {% endblock page.breadcrumbs %}
 
 {% block page.content %}
-  <c-form.card title="{% trans 'Activate Authenticator App' %}"
-               method="post"
-               action="{% url 'mfa_activate_totp' %}">
+  <c-form.card method="post"
+               action="{% url 'mfa_activate_totp' %}"
+               title="{% trans 'Activate Authenticator App' %}">
     {% csrf_token %}
-    <c-slot name="actions">
+    <c-slot name="form_actions">
       <c-button type="submit"
                 variant="primary"
                 text="{% trans 'Activate' %}" />
     </c-slot>
-    <img src="{{ totp_svg_data_uri }}"
-         alt="{% trans 'TOTP QR Code' %}"
-         class="img-fluid mb-3" />
+    <div class="text-center mb-3">
+      <img src="{{ totp_svg_data_uri }}"
+           alt="{% trans 'TOTP QR Code' %}"
+           class="img-fluid"
+           style="max-width: 220px" />
+    </div>
     <p>
       {% blocktrans with secret=form.secret.value %}Or enter this secret manually: <code>{{ secret }}</code>{% endblocktrans %}
     </p>

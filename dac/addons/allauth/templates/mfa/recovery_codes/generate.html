@@ -15,17 +15,18 @@
 {% endblock page.breadcrumbs %}
 
 {% block page.content %}
-  <c-form.card title="{% trans 'Generate Recovery Codes' %}"
-               method="post"
-               action="{% url 'mfa_generate_recovery_codes' %}">
+  <c-form.card method="post"
+               action="{% url 'mfa_generate_recovery_codes' %}"
+               title="{% trans 'Generate Recovery Codes' %}">
     {% csrf_token %}
-    <c-slot name="actions">
+    <c-slot name="form_actions">
       {% if unused_code_count > 0 %}
         <c-button type="submit"
                   variant="danger"
                   text="{% trans 'Generate New Codes' %}" />
       {% else %}
         <c-button type="submit"
+                  variant="primary"
                   text="{% trans 'Generate New Codes' %}" />
       {% endif %}
     </c-slot>

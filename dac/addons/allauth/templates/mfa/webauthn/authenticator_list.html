@@ -14,10 +14,6 @@
 
 {% block page.content %}
   <c-card title="{% trans 'Security Keys' %}">
-    <c-slot name="actions">
-      <c-button href="{% url 'mfa_add_webauthn' %}"
-                text="{% trans 'Add Security Key' %}" />
-    </c-slot>
     {% if authenticators %}
       <table class="table">
         <thead>
@@ -43,12 +39,18 @@
                              text="{% trans 'Unspecified' %}" />
                   {% endif %}
                 </td>
-                <td>
-                  <c-button href="{% url 'mfa_edit_webauthn' authenticator.pk %}"
-                            text="{% trans 'Edit' %}" />
-                  <c-button href="{% url 'mfa_remove_webauthn' authenticator.pk %}"
-                            variant="danger"
-                            text="{% trans 'Remove' %}" />
+                <td class="text-end">
+                  <c-dropdown icon="three-dots"
+                              :caret="False"
+                              align="end">
+                    <c-dropdown.item href="{% url 'mfa_edit_webauthn' authenticator.pk %}"
+                                     text="{% trans 'Edit' %}" />
+                    <c-dropdown.divider />
+                    <c-dropdown.item href="{% url 'mfa_remove_webauthn' authenticator.pk %}"
+                                     class="link-danger"
+                                     icon="delete"
+                                     text="{% trans 'Remove' %}" />
+                  </c-dropdown>
                 </td>
               {% endwith %}
             </tr>
@@ -58,5 +60,8 @@
     {% else %}
       <p>{% trans "No security keys have been registered." %}</p>
     {% endif %}
+    <c-button href="{% url 'mfa_add_webauthn' %}"
+              variant="primary"
+              text="{% trans 'Add Security Key' %}" />
   </c-card>
 {% endblock page.content %}

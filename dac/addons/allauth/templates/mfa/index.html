@@ -13,35 +13,21 @@
 {% block page.content %}
   {% if "totp" in MFA_SUPPORTED_TYPES %}
     <c-card title="{% trans 'Authenticator App' %}">
-      <c-slot name="actions">
-        {% if authenticators.totp %}
-          <c-button href="{% url 'mfa_deactivate_totp' %}"
-                    variant="danger"
-                    text="{% trans 'Deactivate' %}" />
-        {% else %}
-          <c-button href="{% url 'mfa_activate_totp' %}"
-                    text="{% trans 'Activate' %}" />
-        {% endif %}
-      </c-slot>
       {% if authenticators.totp %}
         <p>{% trans "Authentication using an authenticator app is active." %}</p>
+        <c-button href="{% url 'mfa_deactivate_totp' %}"
+                  variant="danger"
+                  text="{% trans 'Deactivate' %}" />
       {% else %}
         <p>{% trans "An authenticator app is not active." %}</p>
+        <c-button href="{% url 'mfa_activate_totp' %}"
+                  variant="primary"
+                  text="{% trans 'Activate' %}" />
       {% endif %}
     </c-card>
   {% endif %}
   {% if "recovery_codes" in MFA_SUPPORTED_TYPES %}
     <c-card title="{% trans 'Recovery Codes' %}">
-      <c-slot name="actions">
-        {% if is_mfa_enabled and authenticators.recovery_codes %}
-          <c-button href="{% url 'mfa_view_recovery_codes' %}"
-                    text="{% trans 'View' %}" />
-          <c-button href="{% url 'mfa_download_recovery_codes' %}"
-                    text="{% trans 'Download' %}" />
-        {% endif %}
-        <c-button href="{% url 'mfa_generate_recovery_codes' %}"
-                  text="{% trans 'Generate' %}" />
-      </c-slot>
       {% if authenticators.recovery_codes %}
         <p>
           {% blocktrans with unused=authenticators.recovery_codes.get_unused_codes|length total=authenticators.recovery_codes.generate_codes|length %}{{ unused }} of {{ total }} recovery codes remaining.{% endblocktrans %}
@@ -49,14 +35,21 @@
       {% else %}
         <p>{% trans "No recovery codes set up." %}</p>
       {% endif %}
+      {% if is_mfa_enabled and authenticators.recovery_codes %}
+        <c-button href="{% url 'mfa_view_recovery_codes' %}"
+                  variant="primary"
+                  text="{% trans 'View' %}"
+                  class="me-2" />
+        <c-button href="{% url 'mfa_download_recovery_codes' %}"
+                  text="{% trans 'Download' %}"
+                  class="me-2" />
+      {% endif %}
+      <c-button href="{% url 'mfa_generate_recovery_codes' %}"
+                text="{% trans 'Generate' %}" />
     </c-card>
   {% endif %}
   {% if "webauthn" in MFA_SUPPORTED_TYPES %}
     <c-card title="{% trans 'Security Keys' %}">
-      <c-slot name="actions">
-        <c-button href="{% url 'mfa_list_webauthn' %}"
-                  text="{% trans 'Manage' %}" />
-      </c-slot>
       {% with count=authenticators.webauthn|length %}
         {% if count %}
           <p>
@@ -66,6 +59,9 @@
           <p>{% trans "No security keys registered." %}</p>
         {% endif %}
       {% endwith %}
+      <c-button href="{% url 'mfa_list_webauthn' %}"
+                variant="primary"
+                text="{% trans 'Manage' %}" />
     </c-card>
   {% endif %}
 {% endblock page.content %}
