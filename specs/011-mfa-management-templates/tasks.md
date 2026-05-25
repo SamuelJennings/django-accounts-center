@@ -68,17 +68,12 @@
 
     ```django
     <c-card title="{% trans 'Authenticator App' %}">
-      <c-slot name="actions">
-        {% if authenticators.totp %}
-          <c-button href="{% url 'mfa_deactivate_totp' %}" variant="danger" text="{% trans 'Deactivate' %}" />
-        {% else %}
-          <c-button href="{% url 'mfa_activate_totp' %}" text="{% trans 'Activate' %}" />
-        {% endif %}
-      </c-slot>
       {% if authenticators.totp %}
         <p>{% trans "Authentication using an authenticator app is active." %}</p>
+        <c-button href="{% url 'mfa_deactivate_totp' %}" variant="danger" text="{% trans 'Deactivate' %}" />
       {% else %}
         <p>{% trans "An authenticator app is not active." %}</p>
+        <c-button href="{% url 'mfa_activate_totp' %}" variant="primary" text="{% trans 'Activate' %}" />
       {% endif %}
     </c-card>
     ```
@@ -87,18 +82,16 @@
 
     ```django
     <c-card title="{% trans 'Recovery Codes' %}">
-      <c-slot name="actions">
-        {% if authenticators.recovery_codes %}
-          <c-button href="{% url 'mfa_view_recovery_codes' %}" text="{% trans 'View' %}" />
-          <c-button href="{% url 'mfa_download_recovery_codes' %}" text="{% trans 'Download' %}" />
-        {% endif %}
-        <c-button href="{% url 'mfa_generate_recovery_codes' %}" text="{% trans 'Generate' %}" />
-      </c-slot>
       {% if authenticators.recovery_codes %}
-        <p>{% blocktrans with unused=authenticators.recovery_codes.unused_codes|length total=authenticators.recovery_codes.total_count %}{{ unused }} of {{ total }} recovery codes remaining.{% endblocktrans %}</p>
+        <p>{% blocktrans with unused=authenticators.recovery_codes.get_unused_codes|length total=authenticators.recovery_codes.generate_codes|length %}{{ unused }} of {{ total }} recovery codes remaining.{% endblocktrans %}</p>
       {% else %}
         <p>{% trans "No recovery codes set up." %}</p>
       {% endif %}
+      {% if is_mfa_enabled and authenticators.recovery_codes %}
+        <c-button href="{% url 'mfa_view_recovery_codes' %}" variant="primary" text="{% trans 'View' %}" />
+        <c-button href="{% url 'mfa_download_recovery_codes' %}" text="{% trans 'Download' %}" />
+      {% endif %}
+      <c-button href="{% url 'mfa_generate_recovery_codes' %}" text="{% trans 'Generate' %}" />
     </c-card>
     ```
 
@@ -106,9 +99,6 @@
 
     ```django
     <c-card title="{% trans 'Security Keys' %}">
-      <c-slot name="actions">
-        <c-button href="{% url 'mfa_list_webauthn' %}" text="{% trans 'Manage' %}" />
-      </c-slot>
       {% with count=authenticators.webauthn|length %}
         {% if count %}
           <p>{% blocktrans count counter=count %}{{ counter }} security key registered.{% plural %}{{ counter }} security keys registered.{% endblocktrans %}</p>
@@ -116,6 +106,7 @@
           <p>{% trans "No security keys registered." %}</p>
         {% endif %}
       {% endwith %}
+      <c-button href="{% url 'mfa_list_webauthn' %}" variant="primary" text="{% trans 'Manage' %}" />
     </c-card>
     ```
 
@@ -132,12 +123,22 @@
     ```django
     <c-form.card title="{% trans 'Activate Authenticator App' %}" method="post" action="{% url 'mfa_activate_totp' %}">
       {% csrf_token %}
-      <c-slot name="actions">
+      <c-slot name="form_actions">
         <c-button type="submit" variant="primary" text="{% trans 'Activate' %}" />
       </c-slot>
-      <img src="{{ totp_svg_data_uri }}" alt="{% trans 'TOTP QR Code' %}" class="img-fluid mb-3" />
+      <div class="text-center mb-3">
+        <img src="{{ totp_svg_data_uri }}" alt="{% trans 'TOTP QR Code' %}" class="img-fluid" style="max-width: 220px" />
+      </div>
       <p>{% blocktrans with secret=form.secret.value %}Or enter this secret manually: <code>{{ secret }}</code>{% endblocktrans %}</p>
-      {{ form.token }}
+      <c-dac.form-field type="text"
+                        id="{{ form.code.auto_id }}"
+                        name="{{ form.code.html_name }}"
+                        label="{{ form.code.label }}"
+                        autocomplete="one-time-code"
+                        placeholder="{% trans 'Code' %}"
+                        value="{{ form.code.value|default_if_none:'' }}"
+                        class="{% if form.code.errors %}is-invalid{% endif %}" />
+      {% for error in form.code.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
     </c-form.card>
     ```
 
@@ -150,7 +151,7 @@
 
     ```django
     <c-form.card title="{% trans 'Deactivate Authenticator App' %}" method="post" action="{% url 'mfa_deactivate_totp' %}" :form-obj="form">
-      <c-slot name="actions">
+      <c-slot name="form_actions">
         <c-button type="submit" variant="danger" text="{% trans 'Deactivate' %}" />
       </c-slot>
     </c-form.card>
@@ -182,7 +183,7 @@
           </div>
         {% endif %}
         {% if can_download_codes %}
-          <c-button href="{% url 'mfa_download_recovery_codes' %}" text="{% trans 'Download' %}" class="me-2" />
+          <c-button href="{% url 'mfa_download_recovery_codes' %}" variant="primary" text="{% trans 'Download' %}" />
         {% endif %}
         {% if can_generate_codes %}
           <c-button href="{% url 'mfa_generate_recovery_codes' %}" text="{% trans 'Generate New Codes' %}" />
@@ -198,16 +199,15 @@
   - `{% load i18n %}`
   - `{% block title %}{% trans "Generate Recovery Codes" %}{% endblock title %}`
   - `{% block page.breadcrumbs %}{{ block.super }}<c-breadcrumbs.item href="{% url 'mfa_index' %}" text="{% trans 'Two-Factor Authentication' %}" /><c-breadcrumbs.item href="{% url 'mfa_view_recovery_codes' %}" text="{% trans 'Recovery Codes' %}" /><c-breadcrumbs.item text="{% trans 'Generate' %}" />{% endblock page.breadcrumbs %}`
-  - `{% block page.content %}` — using `<c-form.card>` with `:form-obj="form"` and conditional danger button:
+  - `{% block page.content %}` — using `<c-form.card>` with explicit `{% csrf_token %}` and single inline-conditional button:
 
     ```django
-    <c-form.card title="{% trans 'Generate Recovery Codes' %}" method="post" action="{% url 'mfa_generate_recovery_codes' %}" :form-obj="form">
-      <c-slot name="actions">
-        {% if unused_code_count > 0 %}
-          <c-button type="submit" variant="danger" text="{% trans 'Generate New Codes' %}" />
-        {% else %}
-          <c-button type="submit" text="{% trans 'Generate New Codes' %}" />
-        {% endif %}
+    <c-form.card title="{% trans 'Generate Recovery Codes' %}" method="post" action="{% url 'mfa_generate_recovery_codes' %}">
+      {% csrf_token %}
+      <c-slot name="form_actions">
+        <c-button type="submit"
+                  variant="{% if unused_code_count > 0 %}danger{% else %}primary{% endif %}"
+                  text="{% trans 'Generate New Codes' %}" />
       </c-slot>
       {% if unused_code_count > 0 %}
         <p class="text-danger">
@@ -239,20 +239,17 @@
 
 - [X] T011 [US3] Fully rewrite `dac/addons/allauth/templates/mfa/webauthn/authenticator_list.html`:
 
-  Research Decision 6 applies: no `<c-table>` component exists; use raw Bootstrap `<table class="table">` inside `<c-card>`.
+  Research Decision 6 applies: no `<c-table>` component exists; use raw Bootstrap `<table class="table mb-3">` inside `<c-card>`. Edit and Remove actions use `<c-dropdown>` (not `<c-button>` pairs). Add button in card body.
 
   - `{% load i18n %}`
   - `{% block title %}{% trans "Security Keys" %}{% endblock title %}`
   - `{% block page.breadcrumbs %}{{ block.super }}<c-breadcrumbs.item href="{% url 'mfa_index' %}" text="{% trans 'Two-Factor Authentication' %}" /><c-breadcrumbs.item text="{% trans 'Security Keys' %}" />{% endblock page.breadcrumbs %}`
-  - `{% block page.content %}` — `<c-card>` with Add button in `<c-slot name="actions">`:
+  - `{% block page.content %}` — `<c-card>` with Add button in card body:
 
     ```django
     <c-card title="{% trans 'Security Keys' %}">
-      <c-slot name="actions">
-        <c-button href="{% url 'mfa_add_webauthn' %}" text="{% trans 'Add Security Key' %}" />
-      </c-slot>
       {% if authenticators %}
-        <table class="table">
+        <table class="table mb-3">
           <thead>
             <tr>
               <th>{% trans "Name" %}</th>
@@ -263,9 +260,9 @@
           <tbody>
             {% for authenticator in authenticators %}
               <tr>
-                <td>{{ authenticator.name }}</td>
-                <td>
-                  {% with wrapped=authenticator.wrap %}
+                {% with wrapped=authenticator.wrap %}
+                  <td>{{ wrapped.name }}</td>
+                  <td>
                     {% if wrapped.is_passwordless %}
                       <c-badge variant="primary" text="{% trans 'Passkey' %}" />
                     {% elif wrapped.is_passwordless is False %}
@@ -273,12 +270,15 @@
                     {% else %}
                       <c-badge variant="warning" text="{% trans 'Unspecified' %}" />
                     {% endif %}
-                  {% endwith %}
-                </td>
-                <td>
-                  <c-button href="{% url 'mfa_edit_webauthn' authenticator.pk %}" text="{% trans 'Edit' %}" />
-                  <c-button href="{% url 'mfa_remove_webauthn' authenticator.pk %}" variant="danger" text="{% trans 'Remove' %}" />
-                </td>
+                  </td>
+                  <td class="text-end">
+                    <c-dropdown icon="three-dots" :caret="False" align="end">
+                      <c-dropdown.item href="{% url 'mfa_edit_webauthn' authenticator.pk %}" text="{% trans 'Edit' %}" />
+                      <c-dropdown.divider />
+                      <c-dropdown.item href="{% url 'mfa_remove_webauthn' authenticator.pk %}" class="link-danger" icon="delete" text="{% trans 'Remove' %}" />
+                    </c-dropdown>
+                  </td>
+                {% endwith %}
               </tr>
             {% endfor %}
           </tbody>
@@ -286,6 +286,7 @@
       {% else %}
         <p>{% trans "No security keys have been registered." %}</p>
       {% endif %}
+      <c-button href="{% url 'mfa_add_webauthn' %}" variant="primary" text="{% trans 'Add Security Key' %}" />
     </c-card>
     ```
 
@@ -301,10 +302,22 @@
     ```django
     <c-form.card title="{% trans 'Add Security Key' %}" method="post" action="{% url 'mfa_add_webauthn' %}">
       {% csrf_token %}
-      <c-slot name="actions">
-        <c-button type="submit" id="mfa_webauthn_add" text="{% trans 'Register Key' %}" />
+      <c-slot name="form_actions">
+        <c-button type="submit" id="mfa_webauthn_add" variant="primary" text="{% trans 'Register Key' %}" />
       </c-slot>
-      {{ form.passwordless }}
+      {% if form.passwordless %}
+        <div class="form-check mb-3">
+          <input class="form-check-input"
+                 type="checkbox"
+                 id="{{ form.passwordless.auto_id }}"
+                 name="{{ form.passwordless.html_name }}"
+                 {% if form.passwordless.value %}checked{% endif %} />
+          <label class="form-check-label" for="{{ form.passwordless.auto_id }}">
+            {{ form.passwordless.label }}
+          </label>
+          <div class="form-text">{{ form.passwordless.help_text }}</div>
+        </div>
+      {% endif %}
       {{ form.credential }}
     </c-form.card>
     ```
@@ -336,7 +349,7 @@
 
     ```django
     <c-form.card title="{% trans 'Edit Security Key' %}" method="post" action="{% url 'mfa_edit_webauthn' authenticator.pk %}" :form-obj="form">
-      <c-slot name="actions">
+      <c-slot name="form_actions">
         <c-button type="submit" variant="primary" text="{% trans 'Save' %}" />
       </c-slot>
     </c-form.card>
@@ -350,11 +363,12 @@
   - `{% block page.content %}` — `<c-form.card>` with `:form-obj="form"`:
 
     ```django
-    <c-form.card title="{% trans 'Remove Security Key' %}" method="post" action="{% url 'mfa_remove_webauthn' pk=authenticator.pk %}" :form-obj="form">
-      <c-slot name="actions">
+    <c-form.card title="{% trans 'Remove Security Key' %}" method="post" action="{% url 'mfa_remove_webauthn' pk=authenticator.pk %}">
+      {% csrf_token %}
+      <c-slot name="form_actions">
         <c-button type="submit" variant="danger" text="{% trans 'Remove' %}" />
       </c-slot>
-      <p>{% blocktrans with name=authenticator.name %}Are you sure you want to remove the security key "{{ name }}"?{% endblocktrans %}</p>
+      <p>{% blocktrans with name=authenticator.wrap.name %}Are you sure you want to remove the security key "{{ name }}"?{% endblocktrans %}</p>
     </c-form.card>
     ```
 
@@ -392,7 +406,7 @@
   8. **Recovery codes view** (US2 SC6): Render `mfa/recovery_codes/index.html` with `can_view_codes=True` and `unused_codes=["code1", "code2"]` → assert `<textarea id="recovery_codes">` with `readonly` attribute is present and contains the code strings; assert "Download" and "Generate" buttons are present
   9. **Recovery codes generate — existing codes** (US2 SC7): Render `mfa/recovery_codes/generate.html` with `unused_code_count=5` → assert invalidation warning text and danger-styled "Generate New Codes" button are present
   10. **Recovery codes generate — no codes** (edge case): Render `mfa/recovery_codes/generate.html` with `unused_code_count=0` → assert NO invalidation warning and NO danger variant on the "Generate" button
-  11. **WebAuthn list — with keys** (US3 SC1): Render `mfa/webauthn/authenticator_list.html` with authenticators list containing 2 items → assert 2 table rows with key names, type badges, "Edit" and "Remove" links per row
+  11. **WebAuthn list — with keys** (US3 SC1): Render `mfa/webauthn/authenticator_list.html` with authenticators list containing 2 items → assert 2 table rows with key names, type badges, and a three-dots dropdown containing Edit and Remove action items per row
   12. **WebAuthn list — empty** (US3 SC2): Render `mfa/webauthn/authenticator_list.html` with `authenticators=[]` → assert "No security keys have been registered." empty-state message; assert no `<table>` in output
   13. **WebAuthn add form** (US3 SC3): Render `mfa/webauthn/add_form.html` → assert form fields and `<script data-allauth-onload="allauth.webauthn.forms.addForm">` block are present; assert `id="mfa_webauthn_add"` is present on the submit button
   14. **WebAuthn edit form** (US3 SC4): Render `mfa/webauthn/edit_form.html` with mock authenticator → assert "Save" submit button is present

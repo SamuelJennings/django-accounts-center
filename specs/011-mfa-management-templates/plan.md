@@ -1,6 +1,7 @@
 # Implementation Plan: MFA Management Templates
 
 **Branch**: `011-mfa-management-templates` | **Date**: 2026-05-22 | **Spec**: [spec.md](spec.md)
+**Propagated**: 2026-05-25 — Updated from spec.md refinement
 **Input**: Feature specification from `specs/011-mfa-management-templates/spec.md`
 
 ## Summary
@@ -33,7 +34,7 @@ Integration tests and Playwright screenshot tests are written as part of this fe
 **Target Platform**: Django web application (server-rendered templates)
 **Project Type**: Reusable Django extension library
 **Performance Goals**: Same as existing management-page templates
-**Constraints**: Zero `{% element %}` / `{% endelement %}` / allauth-`{% slot %}` tags in modified files; `id="recovery_codes"` must be preserved (JS dependency); `id="mfa_webauthn_add"` must be preserved (JS dependency); WebAuthn JS blocks (`allauth.webauthn.forms.addForm`) preserved intact; Bootstrap `<table class="table">` inside `<c-card>` (no `<c-table>` component); `<c-dac.form-field>` cannot render textarea with content (self-closing render — use raw HTML wrapper for recovery codes textarea); CSRF handled by `<c-form>` automatically
+**Constraints**: Zero `{% element %}` / `{% endelement %}` / allauth-`{% slot %}` tags in modified files; `id="recovery_codes"` must be preserved (JS dependency); `id="mfa_webauthn_add"` must be preserved (JS dependency); WebAuthn JS blocks (`allauth.webauthn.forms.addForm`) preserved intact; Bootstrap `<table class="table mb-3">` inside `<c-card>` (no `<c-table>` component); `<c-dac.form-field>` cannot render textarea with content (self-closing render — use raw HTML wrapper for recovery codes textarea); CSRF token explicit (`{% csrf_token %}`) in templates not using `:form-obj="form"`
 **Scale/Scope**: 10 template files edited (1 base + 9 content); 1 new integration test file; 1 new screenshot test file; 22 PNGs (11 states × 2 viewports)
 
 ## Constitution Check
@@ -50,7 +51,7 @@ Integration tests and Playwright screenshot tests are written as part of this fe
 | VI. UI Verification | playwright-cli skill is the first choice for all UI verification; screenshot file analysis is a token-expensive fallback only when interactive verification is insufficient; `.github/skills/playwright-cli/SKILL.md` MUST be consulted before any browser step (v1.1.5) | ✅ PASS |
 | VII. Documentation Retrieval | No new external APIs — reusing established patterns from Specs 001–010 | ✅ PASS (N/A) |
 | VIII. E2E Testing | Screenshot tests: 11 states × 2 viewports = 22 PNGs | ✅ PASS |
-| IX. Component Reuse | No new components; `<c-badge>`, `<c-button>`, `<c-card>`, `<c-form.card>`, `<c-dac.form-field>`, `<c-breadcrumbs.item>` are all existing; raw Bootstrap table used for WebAuthn list (Principle IX one-off exemption); raw HTML textarea used for recovery codes (self-closing limitation of `<c-dac.form-field>`, one-off exemption) | ✅ PASS |
+| IX. Component Reuse | No new components; `<c-badge>`, `<c-button>`, `<c-card>`, `<c-form.card>`, `<c-dac.form-field>`, `<c-dropdown>`, `<c-dropdown.item>`, `<c-breadcrumbs.item>` are all existing; raw Bootstrap table used for WebAuthn list (Principle IX one-off exemption); raw HTML textarea used for recovery codes (self-closing limitation of `<c-dac.form-field>`, one-off exemption) | ✅ PASS |
 | X. Third-Party Integration | Template overrides primary; no view overrides introduced | ✅ PASS |
 | XI. Dual-Audience Stories | US1, US4 [Developer] + US2, US3 [End User] | ✅ PASS |
 | XII. View Docstrings | No view classes introduced or modified | ✅ PASS (N/A) |
@@ -90,7 +91,7 @@ dac/addons/allauth/templates/mfa/
 │   ├── index.html                      ← FULL REWRITE (raw textarea; Download/Generate buttons below)
 │   └── generate.html                   ← FULL REWRITE (<c-form.card>; conditional danger submit)
 └── webauthn/
-    ├── authenticator_list.html         ← FULL REWRITE (<c-card> + Bootstrap table; <c-badge> types)
+    ├── authenticator_list.html         ← FULL REWRITE (<c-card> + Bootstrap table; <c-badge> types; <c-dropdown> for edit/remove actions)
     ├── add_form.html                   ← REWRITE (preserve JS block exactly; id="mfa_webauthn_add")
     ├── edit_form.html                  ← REWRITE (<c-form.card> or block page.content)
     └── authenticator_confirm_delete.html  ← REWRITE (<c-form.card> or block page.content; danger submit)
