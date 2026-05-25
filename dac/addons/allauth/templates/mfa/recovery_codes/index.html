@@ -1,55 +1,51 @@
 {% extends "mfa/recovery_codes/base.html" %}
-{% load i18n allauth static %}
+{% load i18n %}
 
-{% block content %}
-  {% element h1 %}
-    {% trans "Recovery Codes" %}
-  {% endelement %}
-  {% element p %}
-    {% blocktranslate count unused_count=unused_codes|length %}There is {{ unused_count }} out of {{ total_count }} recovery codes available.{% plural %}There are {{ unused_count }} out of {{ total_count }} recovery codes available.{% endblocktranslate %}
-  {% endelement %}
-  {% if can_view_codes %}
-    {% element field id="recovery_codes" type="textarea" rows=unused_codes|length readonly=True %}
-      {% slot label %}
-        {% trans "Unused codes" %}
-      {% endslot %}
-      {# djlint:off #}
-{% slot value %}{% for code in unused_codes %}{% if forloop.counter0 %}
-{% endif %}{{ code }}{% endfor %}{% endslot %}
-      {# djlint:on #}
-    {% endelement %}
-  {% endif %}
-  {% if can_download_codes %}
-    {% url 'mfa_download_recovery_codes' as download_url %}
-    {% element button href=download_url %}
-      {% trans "Download codes" %}
-    {% endelement %}
-  {% endif %}
-  {% if can_generate_codes %}
-    {% url 'mfa_generate_recovery_codes' as generate_url %}
-    {% element button href=generate_url %}
-      {% trans "Generate new codes" %}
-    {% endelement %}
-  {% endif %}
-  {% if MFA_RECOVERY_CODES_SHOW_ONCE and can_view_codes %}
-    {% element field type="checkbox" id="codes_saved" %}
-      {% slot label %}
-        {% trans "I have saved my recovery codes" %}
-      {% endslot %}
-    {% endelement %}
-  {% endif %}
-{% endblock content %}
+{% block title %}
+  {% trans "Recovery Codes" %}
+{% endblock title %}
+
+{% block page.breadcrumbs %}
+  {{ block.super }}
+  <c-breadcrumbs.item href="{% url 'mfa_index' %}"
+                      text="{% trans 'Two-Factor Authentication' %}" />
+  <c-breadcrumbs.item text="{% trans 'Recovery Codes' %}" />
+{% endblock page.breadcrumbs %}
+
+{% block page.content %}
+  <c-card title="{% trans 'Recovery Codes' %}">
+    {% if can_view_codes %}
+      <c-dac.form-field type="textarea"
+                        id="recovery_codes"
+                        readonly
+                        rows="{{ unused_codes|length }}"
+                        label="{% trans 'Unused codes' %}"
+                        class="mb-3">
+        {# djlint:off #}{% for code in unused_codes %}{% if forloop.counter0 %}
+        {% endif %}{{ code }}{% endfor %}{# djlint:on #}
+      </c-dac.form-field>
+      {% if MFA_RECOVERY_CODES_SHOW_ONCE %}
+        <div class="form-check mb-3">
+          <input class="form-check-input"
+                 type="checkbox"
+                 id="codes_saved" />
+          <label class="form-check-label" for="codes_saved">{% trans "I have saved my recovery codes." %}</label>
+        </div>
+      {% endif %}
+      {% if can_download_codes %}
+        <c-button href="{% url 'mfa_download_recovery_codes' %}"
+                  variant="primary"
+                  text="{% trans 'Download' %}" />
+      {% endif %}
+      {% if can_generate_codes %}
+        <c-button href="{% url 'mfa_generate_recovery_codes' %}"
+                  text="{% trans 'Generate New Codes' %}" />
+      {% endif %}
+    {% endif %}
+  </c-card>
+{% endblock page.content %}
 
 {% block extra_js %}
   {{ block.super }}
-  <script src="{% static 'mfa/js/recovery_codes.js' %}"></script>
-  <script src="{% static 'account/js/onload.js' %}"></script>
-  <script data-allauth-onload="allauth.recoveryCodes.forms.viewForm" type="application/json">
-    {
-      "ids": {
-        "saveConfirmation": "codes_saved",
-        "recoveryCodes": "recovery_codes"
-      }
-    }
-  </script>
+  {% include "mfa/recovery_codes/snippets/scripts.html" %}
 {% endblock extra_js %}

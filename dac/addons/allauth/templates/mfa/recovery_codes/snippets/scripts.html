@@ -1,0 +1,12 @@
+{% load static %}
+
+<script src="{% static 'mfa/js/recovery_codes.js' %}"></script>
+<script src="{% static 'account/js/onload.js' %}"></script>
+<script data-allauth-onload="allauth.recoveryCodes.forms.viewForm" type="application/json">
+  {
+    "ids": {
+      "saveConfirmation": "codes_saved",
+      "recoveryCodes": "recovery_codes"
+    }
+  }
+</script>

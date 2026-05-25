@@ -1,23 +1,28 @@
 {% extends "mfa/webauthn/base.html" %}
 {% load i18n %}
-{% load static %}
-{% load allauth %}
 
-{% block content %}
-  {% element h1 %}
+{% block title %}
   {% trans "Edit Security Key" %}
-{% endelement %}
-{% url 'mfa_edit_webauthn' as action_url %}
-{% element form form=form method="post" action=action_url %}
-{% slot body %}
-{% csrf_token %}
-{% element fields form=form %}
-{% endelement %}
-{% endslot %}
-{% slot actions %}
-{% element button id="mfa_webauthn_edit" type="submit" %}
-{% trans "Save" %}
-{% endelement %}
-{% endslot %}
-{% endelement %}
-{% endblock %}
+{% endblock title %}
+
+{% block page.breadcrumbs %}
+  {{ block.super }}
+  <c-breadcrumbs.item href="{% url 'mfa_index' %}"
+                      text="{% trans 'Two-Factor Authentication' %}" />
+  <c-breadcrumbs.item href="{% url 'mfa_list_webauthn' %}"
+                      text="{% trans 'Security Keys' %}" />
+  <c-breadcrumbs.item text="{% trans 'Edit' %}" />
+{% endblock page.breadcrumbs %}
+
+{% block page.content %}
+  <c-form.card method="post"
+               action="{% url 'mfa_edit_webauthn' authenticator.pk %}"
+               title="{% trans 'Edit Security Key' %}"
+               :form-obj="form">
+    <c-slot name="form_actions">
+      <c-button type="submit"
+                variant="primary"
+                text="{% trans 'Save' %}" />
+    </c-slot>
+  </c-form.card>
+{% endblock page.content %}
