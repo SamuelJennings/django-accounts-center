@@ -25,6 +25,8 @@ COMPREHENSIVE_TESTING_STRATEGY.md
 docs/_static/desktop/*
 docs/_static/mobile/*
 docs/_static/tablet/*
+.playwright-cli
+.playwright
 
 # Project files
 .ropeproject
