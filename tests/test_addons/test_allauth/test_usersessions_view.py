@@ -148,7 +148,7 @@ class TestUserSessionsMultipleSignOut:
             user_agent="TestBrowser",
         )
         response = client.get(reverse("usersessions_list"))
-        assert "Sign Out Other Sessions" in response.content.decode()
+        assert "Sign out other sessions" in response.content.decode()
 
     def test_form_action_is_usersessions_list(self, client):
         user = make_user()
@@ -179,7 +179,7 @@ class TestUserSessionsSingleSignOut:
         response = client.get(reverse("usersessions_list"))
         content = response.content.decode()
         assert "Sign Out" in content
-        assert "Sign Out Other Sessions" not in content
+        assert "Sign out other sessions" not in content
 
     def test_form_action_is_account_logout_single_session(self, client):
         user = make_user()
