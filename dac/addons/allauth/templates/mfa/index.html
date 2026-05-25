@@ -38,11 +38,9 @@
       {% if is_mfa_enabled and authenticators.recovery_codes %}
         <c-button href="{% url 'mfa_view_recovery_codes' %}"
                   variant="primary"
-                  text="{% trans 'View' %}"
-                  class="me-2" />
+                  text="{% trans 'View' %}" />
         <c-button href="{% url 'mfa_download_recovery_codes' %}"
-                  text="{% trans 'Download' %}"
-                  class="me-2" />
+                  text="{% trans 'Download' %}" />
       {% endif %}
       <c-button href="{% url 'mfa_generate_recovery_codes' %}"
                 text="{% trans 'Generate' %}" />

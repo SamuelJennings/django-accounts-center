@@ -35,8 +35,7 @@
       {% if can_download_codes %}
         <c-button href="{% url 'mfa_download_recovery_codes' %}"
                   variant="primary"
-                  text="{% trans 'Download' %}"
-                  class="me-2" />
+                  text="{% trans 'Download' %}" />
       {% endif %}
       {% if can_generate_codes %}
         <c-button href="{% url 'mfa_generate_recovery_codes' %}"

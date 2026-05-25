@@ -25,7 +25,18 @@
                 variant="primary"
                 text="{% trans 'Register Key' %}" />
     </c-slot>
-    {{ form.passwordless }}
+    {% if form.passwordless %}
+      <div class="form-check mb-3">
+        <input class="form-check-input"
+               type="checkbox"
+               id="{{ form.passwordless.auto_id }}"
+               name="{{ form.passwordless.html_name }}"
+               {% if form.passwordless.value %}checked{% endif %} />
+        <label class="form-check-label"
+               for="{{ form.passwordless.auto_id }}">{{ form.passwordless.label }}</label>
+        <div class="form-text">{{ form.passwordless.help_text }}</div>
+      </div>
+    {% endif %}
     {{ form.credential }}
   </c-form.card>
 {% endblock page.content %}

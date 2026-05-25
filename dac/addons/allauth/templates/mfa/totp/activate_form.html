@@ -31,6 +31,14 @@
     <p>
       {% blocktrans with secret=form.secret.value %}Or enter this secret manually: <code>{{ secret }}</code>{% endblocktrans %}
     </p>
-    {{ form.code }}
+    <c-dac.form-field type="text"
+                      id="{{ form.code.auto_id }}"
+                      name="{{ form.code.html_name }}"
+                      label="{{ form.code.label }}"
+                      autocomplete="one-time-code"
+                      placeholder="{% trans 'Code' %}"
+                      value="{{ form.code.value|default_if_none:'' }}"
+                      class="{% if form.code.errors %}is-invalid{% endif %}" />
+    {% for error in form.code.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
   </c-form.card>
 {% endblock page.content %}

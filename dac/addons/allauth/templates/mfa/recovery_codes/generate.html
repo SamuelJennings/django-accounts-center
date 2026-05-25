@@ -20,22 +20,16 @@
                title="{% trans 'Generate Recovery Codes' %}">
     {% csrf_token %}
     <c-slot name="form_actions">
+      <c-button type="submit"
+                variant="{% if unused_code_count > 0 %}danger{% else %}primary{% endif %}"
+                text="{% trans 'Generate New Codes' %}" />
+      </c-slot>
       {% if unused_code_count > 0 %}
-        <c-button type="submit"
-                  variant="danger"
-                  text="{% trans 'Generate New Codes' %}" />
-      {% else %}
-        <c-button type="submit"
-                  variant="primary"
-                  text="{% trans 'Generate New Codes' %}" />
-      {% endif %}
-    </c-slot>
-    {% if unused_code_count > 0 %}
-      <p class="text-danger">
-        {% blocktrans with count=unused_code_count %}
+        <p class="text-danger">
+          {% blocktrans with count=unused_code_count %}
           Warning: generating new codes will invalidate your {{ count }} existing unused code(s).
         {% endblocktrans %}
-      </p>
-    {% endif %}
-  </c-form.card>
-{% endblock page.content %}
+        </p>
+      {% endif %}
+    </c-form.card>
+  {% endblock page.content %}

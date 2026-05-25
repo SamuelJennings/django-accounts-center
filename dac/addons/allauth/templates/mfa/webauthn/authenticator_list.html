@@ -15,7 +15,7 @@
 {% block page.content %}
   <c-card title="{% trans 'Security Keys' %}">
     {% if authenticators %}
-      <table class="table">
+      <table class="table mb-3">
         <thead>
           <tr>
             <th>{% trans "Name" %}</th>
@@ -40,9 +40,7 @@
                   {% endif %}
                 </td>
                 <td class="text-end">
-                  <c-dropdown icon="three-dots"
-                              :caret="False"
-                              align="end">
+                  <c-dropdown icon="three-dots" :caret="False" align="end">
                     <c-dropdown.item href="{% url 'mfa_edit_webauthn' authenticator.pk %}"
                                      text="{% trans 'Edit' %}" />
                     <c-dropdown.divider />

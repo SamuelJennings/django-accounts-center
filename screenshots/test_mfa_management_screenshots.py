@@ -89,11 +89,13 @@ def _goto(page, live_server, url_name, **kwargs):
 def test_mfa_overview_active(page, live_server, django_user_model):
     """Screenshot: MFA overview with TOTP and recovery codes active."""
     user = create_test_user(django_user_model)
+
+    # Login BEFORE activating MFA so login doesn't trigger MFA challenge.
+    _browser_login(page, live_server, user.username)
     secret = generate_totp_secret()
     TOTP.activate(user, secret)
     RecoveryCodes.activate(user)
 
-    _browser_login(page, live_server, user.username)
     _goto(page, live_server, "mfa_index")
     _save_screenshot_2vp(page, "mfa-overview-active")
 
@@ -137,11 +139,12 @@ def test_mfa_totp_activate(page, live_server, django_user_model):
 def test_mfa_totp_deactivate(page, live_server, django_user_model):
     """Screenshot: TOTP deactivation confirmation form."""
     user = create_test_user(django_user_model)
+
+    # Login BEFORE activating TOTP so login doesn't trigger TOTP MFA challenge.
+    _browser_login(page, live_server, user.username)
     secret = generate_totp_secret()
     TOTP.activate(user, secret)
 
-    # Browser login satisfies reauthentication requirement
-    _browser_login(page, live_server, user.username)
     _goto(page, live_server, "mfa_deactivate_totp")
     _save_screenshot_2vp(page, "mfa-totp-deactivate")
 
@@ -155,11 +158,13 @@ def test_mfa_totp_deactivate(page, live_server, django_user_model):
 def test_mfa_recovery_codes_view(page, live_server, django_user_model):
     """Screenshot: Recovery codes view page."""
     user = create_test_user(django_user_model)
+
+    # Login BEFORE activating MFA so login doesn't trigger MFA challenge.
+    _browser_login(page, live_server, user.username)
     secret = generate_totp_secret()
     TOTP.activate(user, secret)
     RecoveryCodes.activate(user)
 
-    _browser_login(page, live_server, user.username)
     _goto(page, live_server, "mfa_view_recovery_codes")
     _save_screenshot_2vp(page, "mfa-recovery-codes-view")
 
@@ -173,11 +178,13 @@ def test_mfa_recovery_codes_view(page, live_server, django_user_model):
 def test_mfa_recovery_codes_generate(page, live_server, django_user_model):
     """Screenshot: Generate recovery codes form (with existing codes warning)."""
     user = create_test_user(django_user_model)
+
+    # Login BEFORE activating MFA so login doesn't trigger MFA challenge.
+    _browser_login(page, live_server, user.username)
     secret = generate_totp_secret()
     TOTP.activate(user, secret)
     RecoveryCodes.activate(user)
 
-    _browser_login(page, live_server, user.username)
     _goto(page, live_server, "mfa_generate_recovery_codes")
     _save_screenshot_2vp(page, "mfa-recovery-codes-generate")
 
@@ -191,6 +198,10 @@ def test_mfa_recovery_codes_generate(page, live_server, django_user_model):
 def test_mfa_webauthn_list(page, live_server, django_user_model):
     """Screenshot: WebAuthn authenticator list with one key registered."""
     user = create_test_user(django_user_model)
+
+    # Login BEFORE creating the WebAuthn authenticator so login doesn't trigger
+    # WebAuthn MFA challenge (which would fail with fake credential data).
+    _browser_login(page, live_server, user.username)
     Authenticator.objects.create(
         user=user,
         type=Authenticator.Type.WEBAUTHN,
@@ -200,7 +211,6 @@ def test_mfa_webauthn_list(page, live_server, django_user_model):
         },
     )
 
-    _browser_login(page, live_server, user.username)
     _goto(page, live_server, "mfa_list_webauthn")
     _save_screenshot_2vp(page, "mfa-webauthn-list")
 
