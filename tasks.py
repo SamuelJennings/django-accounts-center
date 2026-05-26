@@ -2,7 +2,7 @@ from invoke import task
 
 
 @task
-def prerelease(c):
+def prerelease(c, no_test=False):
     """
     Run comprehensive pre-release checks and update all required files.
 
@@ -34,11 +34,12 @@ def prerelease(c):
     c.run("poetry check --lock")
 
     # Step 3: Run comprehensive test suite
-    print("\n🧪 Step 3: Running comprehensive test suite")
-    print("🚀 Running pytest with coverage")
-    c.run(
-        "poetry run pytest --cov --cov-config=pyproject.toml --cov-report=html --cov-report=term --tb=no -qq"
-    )
+    if not no_test:
+        print("\n🧪 Step 3: Running comprehensive test suite")
+        print("🚀 Running pytest with coverage")
+        c.run(
+            "poetry run pytest --cov --cov-config=pyproject.toml --cov-report=html --cov-report=term --tb=no -qq"
+        )
 
     print("\n" + "=" * 60)
     print("✅ Pre-release checks completed successfully!")
