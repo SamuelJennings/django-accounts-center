@@ -7,7 +7,7 @@ dynamic = ["version"]
 readme = "README.md"
 authors = [{ name = "Sam", email = "samuel.scott.jennings@gmail.com" }]
 requires-python = ">=3.12,<4.0"
-dependencies = ["django (>=5,<6.0)", "django-mvp (>=0.4.0,<0.5.0)"]
+dependencies = ["django (>=5,<6.0)", "django-mvp"]
 
 [project.optional-dependencies]
 allauth = ["django-allauth (>=64.0)", "crispy-bootstrap5 (>=2024.2)"]
