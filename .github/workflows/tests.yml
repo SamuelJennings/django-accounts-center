@@ -26,4 +26,5 @@ jobs:
     with:
       coverage-package: dac
       install-playwright: true
+      poetry-install-args: --with dev
     secrets: inherit
