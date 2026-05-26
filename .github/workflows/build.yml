@@ -5,6 +5,9 @@ on:
     workflows: ["Tests"]
     types: [completed]
     branches: [main]
+  push:
+    tags:
+      - 'v*'
   workflow_dispatch:
 
 jobs:
