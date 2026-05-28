@@ -43,14 +43,15 @@
       </c-list-group>
     </c-card>
   {% else %}
-    <c-card>
-      <c-text>
+    <c-card title="{% trans "Your connected accounts" %}"
+            icon="link">
+      <c-text center>
         {% trans "You currently have no third-party accounts connected to this account." %}
       </c-text>
     </c-card>
   {% endif %}
   {# --- Add connections section --- #}
-  <c-card title="{% trans "Add a Third-Party Account" %}">
+  <c-card title="{% trans "Connect another account" %}">
     {% include "socialaccount/snippets/provider_list.html" with process="connect" %}
     {% include "socialaccount/snippets/login_extra.html" %}
   </c-card>
