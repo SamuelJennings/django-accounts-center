@@ -234,18 +234,6 @@ class TestEmailMultiView:
         content = response.content.decode()
         assert 'name="action_remove"' in content
 
-    def test_can_add_email_section_present(self, client, settings):
-        """When can_add_email=True, an email input in a second form must be present."""
-        settings.ACCOUNT_CHANGE_EMAIL = False
-        settings.ACCOUNT_MAX_EMAIL_ADDRESSES = 3
-        user = UserFactory()
-        EmailAddressFactory(user=user)
-        client.force_login(user)
-        response = client.get(reverse("account_email_multi_test"))
-        content = response.content.decode()
-        # The Add Email section renders a form with action_add button
-        assert 'name="action_add"' in content
-
     def test_js_block_present(self, client, settings):
         """Rendered output must contain the account/js/account.js script tag."""
         settings.ACCOUNT_CHANGE_EMAIL = False

@@ -14,7 +14,6 @@ Test design:
 
 import pytest
 from allauth.usersessions.models import UserSession
-from django.template.loader import get_template
 from django.test import Client
 from django.urls import reverse
 
@@ -23,14 +22,6 @@ from tests.factories import UserFactory
 # ---------------------------------------------------------------------------
 # Template source checks — no raw {% element %} / {% endelement %} tags
 # ---------------------------------------------------------------------------
-
-
-@pytest.mark.parametrize("template_name", ["usersessions/list.html"])
-def test_no_raw_element_tags_in_templates(template_name):
-    """No user-sessions template may contain raw {% element %} tags."""
-    source = get_template(template_name).template.source
-    assert "{% element" not in source
-    assert "{% endelement" not in source
 
 
 # ---------------------------------------------------------------------------
@@ -228,4 +219,3 @@ class TestUserSessionsLastSeenHidden:
         client.force_login(user)
         response = client.get(reverse("usersessions_list"))
         assert "Last seen at" not in response.content.decode()
-

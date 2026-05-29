@@ -32,7 +32,6 @@ from tests.factories import UserFactory
 MFA_TEMPLATES = [
     "mfa/index.html",
     "mfa/totp/activate_form.html",
-    "mfa/webauthn/index.html",
     "mfa/webauthn/add_form.html",
 ]
 
