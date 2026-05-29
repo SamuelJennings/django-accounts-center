@@ -5,12 +5,12 @@
   {% trans "Deactivate Authenticator App" %}
 {% endblock title %}
 
-{% block page.breadcrumbs %}
+{% block page.header %}
   {{ block.super }}
   <c-breadcrumbs.item href="{% url 'mfa_index' %}"
                       text="{% trans 'Two-Factor Authentication' %}" />
   <c-breadcrumbs.item text="{% trans 'Deactivate' %}" />
-{% endblock page.breadcrumbs %}
+{% endblock page.header %}
 
 {% block page.content %}
   <c-form.card method="post"

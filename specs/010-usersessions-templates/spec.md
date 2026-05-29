@@ -70,7 +70,7 @@ A developer running the test suite expects all user sessions management template
 - Q: Should the sign-out form support per-session selection (radio buttons per row) or bulk sign-out of all other sessions at once? → A: Bulk sign-out only — one button signs out all other sessions at once; no per-row controls.
 - Q: How should the Browser (user agent) column display the `user_agent` string? → A: Truncated raw string — display `session.user_agent` as-is with a CSS truncation class (e.g. `text-truncate`) to cap column width; no parsing required.
 - Q: What Bootstrap variant should the sign-out `<c-button>` use? → A: `primary` — standard blue call-to-action; no special severity signal.
-- Q: Should the Sessions page render a visible heading in `{% block page.header %}`? → A: Yes — render `{% trans "Sessions" %}` in `{% block title %}`. Research (Decision 6) confirmed that `{% block page.header %}` wraps the breadcrumbs toolbar region, not a heading slot; the heading appears via `{% block title %}` inside `<c-mvp-toolbar>`, consistent with all other DAC management pages.
+- Q: Should the Sessions page render a visible heading in `{% block page.header %}`? → A: Yes — render `{% trans "Sessions" %}` in `{% block title %}`. Research (Decision 6) confirmed that `{% block page.header %}` wraps the breadcrumbs toolbar region, not a heading slot; the heading appears via `{% block title %}` inside `<c-mvp.toolbar>`, consistent with all other DAC management pages.
 - Q: What Bootstrap variant should the `<c-badge>` use for the "Current" session indicator? → A: `success` — green; affirms the current session is active with high visual distinction.
 
 ## Requirements *(mandatory)*

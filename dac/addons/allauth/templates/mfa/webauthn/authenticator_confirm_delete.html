@@ -5,14 +5,14 @@
   {% trans "Remove Security Key" %}
 {% endblock title %}
 
-{% block page.breadcrumbs %}
+{% block page.header %}
   {{ block.super }}
   <c-breadcrumbs.item href="{% url 'mfa_index' %}"
                       text="{% trans 'Two-Factor Authentication' %}" />
   <c-breadcrumbs.item href="{% url 'mfa_list_webauthn' %}"
                       text="{% trans 'Security Keys' %}" />
   <c-breadcrumbs.item text="{% trans 'Remove' %}" />
-{% endblock page.breadcrumbs %}
+{% endblock page.header %}
 
 {% block page.content %}
   <c-form.card method="post"

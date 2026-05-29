@@ -8,15 +8,15 @@
 {% block page.header %}
   <c-slot name="header">
     <c-container fluid>
-      <c-mvp-toolbar>
+      <c-mvp.toolbar>
         <c-breadcrumbs class="py-1">
-          {% block page.breadcrumbs %}
+          {% block page.header %}
             <c-breadcrumbs.item text="{% trans "Account Center" %}"
                                 href="{% url "account-center" %}" />
-          {% endblock page.breadcrumbs %}
+          {% endblock page.header %}
 
         </c-breadcrumbs>
-      </c-mvp-toolbar>
+      </c-mvp.toolbar>
     </c-container>
   </c-slot>
 {% endblock page.header %}

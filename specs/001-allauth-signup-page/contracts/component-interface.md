@@ -2,7 +2,7 @@
 
 **Feature**: 001-allauth-signup-page
 **Date**: 2026-05-07
-**Updated**: 2026-05-08 — Added DAC-owned entrance Cotton components (`<c-entrance>`, `<c-entrance.background>`, `<c-entrance.logo>`, `<c-button.stack>`). Updated `<c-card>`, `<c-button>`, `<c-form>`, `<c-form.crispy>`, and `<c-alert>` sections to reflect finalised implementation (card owned by `<c-entrance>`; non-field errors handled in `<c-form.crispy>`; social providers use Bootstrap Icon `<a>` tags; submit wrapped in `<c-button.stack>`).
+**Updated**: 2026-05-08 — Added DAC-owned entrance Cotton components (`<c-entrance>`, `<c-entrance.background>`, `<c-entrance.logo>`, `<c-button.stack>`). Updated `<c-card>`, `<c-button>`, `<c-form>`, `<c-form.render>`, and `<c-alert>` sections to reflect finalised implementation (card owned by `<c-entrance>`; non-field errors handled in `<c-form.render>`; social providers use Bootstrap Icon `<a>` tags; submit wrapped in `<c-button.stack>`).
 
 This document specifies how the django-accounts-center allauth addon composes its signup page UI from Cotton components. Components are grouped by origin: DAC-owned (created in this package) and library components (from django-mvp or django-cotton-bs5).
 
@@ -177,7 +177,7 @@ These components are consumed by the signup templates. They are defined in djang
 
 ```html
 <c-form method="post" action="{% url 'account_signup' %}">
-  <c-form.crispy />
+  <c-form.render />
   {{ redirect_field }}
   <c-button.stack class="mt-4">
     <c-button text="{% trans \"Let's go!\" %}" icon="login" type="submit" variant="primary" reverse />
@@ -195,14 +195,14 @@ These components are consumed by the signup templates. They are defined in djang
 
 ---
 
-### `<c-form.crispy>` — Form Field Renderer
+### `<c-form.render>` — Form Field Renderer
 
 **Source**: `django-mvp` (`mvp/templates/cotton/form/crispy.html`)
 
 **Usage** (inside `<c-form>`):
 
 ```html
-<c-form.crispy />
+<c-form.render />
 ```
 
 **Behaviour**: Renders `{{ form|crispy }}` using the `form` context variable from allauth's SignupView. Applies `crispy-bootstrap5` styling to all form fields (labels, inputs, help text, per-field errors). When the form has no `helper` attribute, also renders a `<c-alert variant="danger">` for `form.non_field_errors` above the fields. Page templates must NOT add a separate `{% if form.non_field_errors %}` block.
@@ -229,10 +229,10 @@ These components are consumed by the signup templates. They are defined in djang
 
 **Source**: `django-cotton-bs5` (`cotton_bs5/templates/cotton/alert.html`)
 
-**Usage**: Rendered automatically by `<c-form.crispy>` when `form.non_field_errors` is non-empty. Page templates must NOT render this directly.
+**Usage**: Rendered automatically by `<c-form.render>` when `form.non_field_errors` is non-empty. Page templates must NOT render this directly.
 
 ```html
-{# Inside c-form.crispy — do NOT duplicate in page templates #}
+{# Inside c-form.render — do NOT duplicate in page templates #}
 {% if form.non_field_errors %}
   <c-alert variant="danger" class="mb-3">{{ form.non_field_errors }}</c-alert>
 {% endif %}

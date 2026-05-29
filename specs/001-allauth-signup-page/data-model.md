@@ -24,7 +24,7 @@
 | `ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = True` | Adds `password2` (confirm password) field |
 | `ACCOUNT_SIGNUP_FORM_CLASS = "myapp.forms.MySignupForm"` | Appends or replaces fields with custom form |
 
-**Template access**: `{{ form }}` — rendered via `<c-form.crispy />` (which applies `{{ form|crispy }}`).
+**Template access**: `{{ form }}` — rendered via `<c-form.render />` (which applies `{{ form|crispy }}`).
 
 **Validation outcomes**:
 
@@ -89,7 +89,7 @@ allauth/layouts/entrance.html
                         │   └── <c-card.divider>  # "or" separator (conditional)
                         ├── <c-form>           # <form> element (hidden if SOCIALACCOUNT_ONLY)
                         │   ├── <c-alert>      # Non-field errors (conditional)
-                        │   ├── <c-form.crispy>  # Crispy-bootstrap5 field rendering
+                        │   ├── <c-form.render>  # Crispy-bootstrap5 field rendering
                         │   ├── [redirect_field] # Hidden input
                         │   └── <c-button>     # Submit button
                         ├── <c-card.divider>   # Passkey separator (conditional)

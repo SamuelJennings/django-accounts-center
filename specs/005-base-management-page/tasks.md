@@ -73,11 +73,11 @@ with 0 failures and covers all 7 acceptance scenarios from spec US1.
 
   **Test 3 — `test_title_block_empty_by_default`** [US1]:
   - Render a bare extend (no `title` block override)
-  - `<c-mvp-toolbar>` renders its title `<h1>` only when the `title` slot is non-empty. Assert `soup.find('h1') is None` — confirming no heading was produced for an empty `title` block. (The `<c-slot name="title">` passes the empty block content as the `title` variable; `{% if title %}` in the component evaluates to False.)
+  - `<c-mvp.toolbar>` renders its title `<h1>` only when the `title` slot is non-empty. Assert `soup.find('h1') is None` — confirming no heading was produced for an empty `title` block. (The `<c-slot name="title">` passes the empty block content as the `title` variable; `{% if title %}` in the component evaluates to False.)
 
   **Test 4 — `test_title_block_override_renders`** [US1]:
   - Render with `{% block title %}My Test Page{% endblock title %}`
-  - Assert `soup.find('h1').get_text(strip=True) == 'My Test Page'` — `<c-mvp-toolbar>` renders the title slot content as an `<h1>` (default heading level 1) when non-empty.
+  - Assert `soup.find('h1').get_text(strip=True) == 'My Test Page'` — `<c-mvp.toolbar>` renders the title slot content as an `<h1>` (default heading level 1) when non-empty.
 
   **Test 5 — `test_page_content_placeholder_default`** [US1, US3]:
   - Render a bare extend

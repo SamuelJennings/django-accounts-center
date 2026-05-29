@@ -25,42 +25,46 @@ Spec scenarios targeted:
 
 import pytest
 from allauth.socialaccount.models import SocialAccount
-from django.contrib.auth import get_user_model
+from django.template.loader import get_template
 from django.urls import reverse
 
 from tests.factories import (
-    GitHubSocialAccountFactory,
-    GitHubSocialAppFactory,
-    GoogleSocialAccountFactory,
-    GoogleSocialAppFactory,
     SocialAccountFactory,
+    SocialAppFactory,
     UserFactory,
 )
-
-User = get_user_model()
-
-
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
-
-
-def make_user(**kwargs):
-    return UserFactory(**kwargs)
 
 
 def make_user_with_google_account():
     user = UserFactory()
-    GoogleSocialAppFactory()  # required so get_provider_account() can resolve the app
-    GoogleSocialAccountFactory(user=user)
+    SocialAppFactory(provider="google", name="Google")  # required so get_provider_account() can resolve the app
+    SocialAccountFactory(user=user, provider="google")
     return user
 
 
 def make_user_with_github_account():
     user = UserFactory()
-    GitHubSocialAppFactory()  # required so get_provider_account() can resolve the app
-    GitHubSocialAccountFactory(user=user)
+    SocialAppFactory(provider="github", name="GitHub")  # required so get_provider_account() can resolve the app
+    SocialAccountFactory(user=user, provider="github")
     return user
+
+
+# ---------------------------------------------------------------------------
+# Template source checks — no raw {% element %} / {% endelement %} tags
+# ---------------------------------------------------------------------------
+
+SOCIAL_CONNECTIONS_TEMPLATES = [
+    "socialaccount/connections.html",
+    "socialaccount/authentication_error.html",
+]
+
+
+@pytest.mark.parametrize("template_name", SOCIAL_CONNECTIONS_TEMPLATES)
+def test_no_raw_element_tags_in_templates(template_name):
+    """No social-connections template may contain raw {% element %} tags."""
+    source = get_template(template_name).template.source
+    assert "{% element" not in source
+    assert "{% endelement" not in source
 
 
 # ---------------------------------------------------------------------------
@@ -74,23 +78,14 @@ class TestConnectionsLayoutAndStructure:
 
     def test_renders_200_for_authenticated(self, client):
         """GET socialaccount_connections must return HTTP 200 for an authenticated user."""
-        user = make_user()
+        user = UserFactory()
         client.force_login(user)
         response = client.get(reverse("socialaccount_connections"))
         assert response.status_code == 200
 
-    def test_no_element_tags_in_output(self, client):
-        """Rendered HTML must not contain raw {% element %} or {% endelement %} tags."""
-        user = make_user()
-        client.force_login(user)
-        response = client.get(reverse("socialaccount_connections"))
-        content = response.content.decode()
-        assert "{% element" not in content
-        assert "{% endelement" not in content
-
     def test_dac_layout_sidebar_present(self, client):
         """Rendered HTML must contain the app-sidebar element (DAC layout rendered)."""
-        user = make_user()
+        user = UserFactory()
         client.force_login(user)
         response = client.get(reverse("socialaccount_connections"))
         content = response.content.decode()
@@ -98,7 +93,7 @@ class TestConnectionsLayoutAndStructure:
 
     def test_breadcrumb_account_connections_present(self, client):
         """Rendered HTML must contain the 'Account Connections' breadcrumb leaf."""
-        user = make_user()
+        user = UserFactory()
         client.force_login(user)
         response = client.get(reverse("socialaccount_connections"))
         content = response.content.decode()
@@ -106,7 +101,7 @@ class TestConnectionsLayoutAndStructure:
 
     def test_content_in_page_content_block(self, client):
         """Rendered HTML must contain 'Account Center' root breadcrumb (DAC base layout)."""
-        user = make_user()
+        user = UserFactory()
         client.force_login(user)
         response = client.get(reverse("socialaccount_connections"))
         content = response.content.decode()
@@ -168,7 +163,7 @@ class TestConnectionsEmpty:
 
     def test_no_accounts_message_present(self, client):
         """Rendered HTML for a user with no social accounts contains the empty-state message."""
-        user = make_user()
+        user = UserFactory()
         client.force_login(user)
         response = client.get(reverse("socialaccount_connections"))
         content = response.content.decode()
@@ -176,7 +171,7 @@ class TestConnectionsEmpty:
 
     def test_add_connections_section_still_present(self, client):
         """The 'Add a Third-Party Account' section renders even when account list is empty."""
-        user = make_user()
+        user = UserFactory()
         client.force_login(user)
         response = client.get(reverse("socialaccount_connections"))
         content = response.content.decode()
@@ -197,12 +192,6 @@ class TestAuthenticationErrorView:
         response = client.get(reverse("socialaccount_login_error"))
         assert response.status_code == 401
 
-    def test_no_element_tags(self, client):
-        """Rendered HTML must not contain raw {% element %} strings."""
-        response = client.get(reverse("socialaccount_login_error"))
-        content = response.content.decode()
-        assert "{% element" not in content
-
     def test_explanatory_text_present(self, client):
         """Rendered HTML contains 'An error occurred' (substring of the full trans string)."""
         response = client.get(reverse("socialaccount_login_error"))
@@ -221,10 +210,10 @@ class TestConnectionsEdgeCases:
 
     def test_multiple_accounts_same_provider_each_rendered(self, client):
         """Multiple social accounts from the same provider each appear as separate list items."""
-        user = make_user()
-        GoogleSocialAppFactory()  # required so get_provider_account() can resolve the app
-        GoogleSocialAccountFactory(user=user)
-        GoogleSocialAccountFactory(user=user)
+        user = UserFactory()
+        SocialAppFactory(provider="google", name="Google")  # required so get_provider_account() can resolve the app
+        SocialAccountFactory(user=user, provider="google")
+        SocialAccountFactory(user=user, provider="google")
         client.force_login(user)
         response = client.get(reverse("socialaccount_connections"))
         content = response.content.decode()
@@ -237,7 +226,7 @@ class TestConnectionsEdgeCases:
     def test_no_social_providers_configured_renders_without_error(self, client, settings):
         """Page renders without server error when no social providers are configured."""
         settings.SOCIALACCOUNT_PROVIDERS = {}
-        user = make_user()
+        user = UserFactory()
         client.force_login(user)
         response = client.get(reverse("socialaccount_connections"))
         assert response.status_code == 200
@@ -246,7 +235,7 @@ class TestConnectionsEdgeCases:
 
     def test_form_rerender_on_submission_failure_renders_without_error(self, client):
         """POST with an invalid account PK re-renders the page without a server error."""
-        user = make_user()
+        user = UserFactory()
         client.force_login(user)
         response = client.post(
             reverse("socialaccount_connections"),

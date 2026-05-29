@@ -41,7 +41,7 @@ No new template files, views, forms, models, or settings are introduced.
 | VI. UI Verification | N/A — no new UI elements; template is pre-existing | ✅ PASS (N/A) |
 | VII. Documentation Retrieval | Reusing established patterns from Specs 001–004; no new external APIs | ✅ PASS (N/A) |
 | VIII. E2E Testing | N/A — no new user-facing flows introduced; Cotton rendering tests cover all block contracts | ✅ PASS (N/A) |
-| IX. Component Reuse | All components (`layouts.form-view`, `card.stack`, `breadcrumbs`, `app.sidebar`, `mvp-toolbar`) are existing django-mvp components | ✅ PASS |
+| IX. Component Reuse | All components (`layouts.form-view`, `card.stack`, `breadcrumbs`, `app.sidebar`, `mvp.toolbar`) are existing django-mvp components | ✅ PASS |
 | X. Third-Party Integration | N/A — this template has no third-party package dependency | ✅ PASS (N/A) |
 | XI. Dual-Audience Stories | US1, US3 [Developer] + US2 [End User] present | ✅ PASS |
 | XII. View Docstrings | No view classes introduced or modified | ✅ PASS (N/A) |
@@ -93,7 +93,7 @@ Site", domain="example.com", id=1)` so renders succeed without a database hit or
 
 ## Phase 0: Research
 
-No open unknowns. All components (`layouts.form-view`, `card.stack`, `mvp-toolbar`,
+No open unknowns. All components (`layouts.form-view`, `card.stack`, `mvp.toolbar`,
 `breadcrumbs`, `breadcrumbs.item`, `app.sidebar`) are established in the project.
 The `cotton-test-components` skill governs test fixture selection.
 

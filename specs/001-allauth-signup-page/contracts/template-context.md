@@ -37,7 +37,7 @@ The following template tags must be `{% load %}`ed to use the corresponding feat
 | `allauth` | `{% load allauth %}` | Not used directly (no `{% element %}` tags) |
 | `socialaccount` | `{% load socialaccount %}` | `{% get_providers %}`, `{% provider_login_url %}` |
 | `i18n` | `{% load i18n %}` | `{% trans %}`, `{% blocktrans %}` |
-| `crispy_forms_tags` | Loaded inside `<c-form.crispy>` | Not loaded in signup.html directly |
+| `crispy_forms_tags` | Loaded inside `<c-form.render>` | Not loaded in signup.html directly |
 
 > **Warning**: `{% load socialaccount %}` must NOT appear unconditionally in `account/signup.html`. It must only be placed in templates that are included when `SOCIALACCOUNT_ENABLED` is `True`. Use `{% include "socialaccount/snippets/provider_list.html" %}` wrapped in `{% if SOCIALACCOUNT_ENABLED %}`.
 
@@ -54,7 +54,7 @@ The following template tags must be `{% load %}`ed to use the corresponding feat
 
 ## Form Field Contract
 
-The `form` object exposes fields according to active allauth settings. The Cotton template must render ALL fields without introspection — `<c-form.crispy />` (which renders `{{ form|crispy }}`) satisfies this automatically.
+The `form` object exposes fields according to active allauth settings. The Cotton template must render ALL fields without introspection — `<c-form.render />` (which renders `{{ form|crispy }}`) satisfies this automatically.
 
 | Field | Condition for Presence |
 |---|---|

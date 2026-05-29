@@ -111,9 +111,9 @@ with no `src`. The component accepts no `avatar_url` or `avatar_size` props.
 
 ```html
 <c-vars class />
-<c-mvp-toolbar :attrs="attrs" class="sidebar-footer px-3 {{ class }}">
+<c-mvp.toolbar :attrs="attrs" class="sidebar-footer px-3 {{ class }}">
   {{ slot }}
-</c-mvp-toolbar>
+</c-mvp.toolbar>
 ```
 
 A developer using the component places it in the sidebar footer slot:

@@ -11,16 +11,8 @@ The template itself is NOT modified by these tests — read-only verification on
 
 import pathlib
 
-import pytest
-
 # Bare-minimum child template: extends base, loads i18n, no block overrides.
 _BASE = '{% extends "dac/base.html" %}{% load i18n %}'
-
-
-@pytest.fixture(autouse=True)
-def use_test_urls(settings):
-    """Set ROOT_URLCONF so {% url "account-center" %} resolves correctly."""
-    settings.ROOT_URLCONF = "tests.urls"
 
 
 # ---------------------------------------------------------------------------
@@ -58,7 +50,7 @@ class TestDacBaseBlockContract:
     def test_title_block_empty_by_default(self, cotton_render_string_soup):
         """When the title block is not overridden, no heading is rendered.
 
-        <c-mvp-toolbar> only emits an <h*> when its title slot is non-empty.
+        <c-mvp.toolbar> only emits an <h*> when its title slot is non-empty.
         An overridden (empty) title block produces a whitespace-only slot,
         which Cotton strips to an empty string, so {% if title %} is falsy
         and no heading element appears in the output.
@@ -71,7 +63,7 @@ class TestDacBaseBlockContract:
     def test_title_block_override_renders(self, cotton_render_string_soup):
         """Overriding the title block produces an <h1> with the given text.
 
-        <c-mvp-toolbar> renders its heading at level 1 (default) when the
+        <c-mvp.toolbar> renders its heading at level 1 (default) when the
         title slot is non-empty.
         """
         template = _BASE + "{% block title %}My Test Page{% endblock title %}"
@@ -238,9 +230,7 @@ class TestDacUserMenu:
     ``<c-avatar size="sm" />``.  No props are passed by the caller.
 
     Uses cotton_render_string_soup_authenticated for authenticated-user tests
-    and cotton_render_string_soup (anonymous) for the guard test.  The
-    use_test_urls autouse fixture ensures {% url 'account-center' %} and
-    {% url 'account_logout' %} resolve correctly.
+    and cotton_render_string_soup (anonymous) for the guard test.
     """
 
     # ── T009: Core render behaviour ──────────────────────────────────────────
@@ -360,9 +350,7 @@ class TestDacUserMenu:
         account_center_links = [a for a in links if "/account-center/" in (a.get("href") or "")]
         assert len(account_center_links) == 0
 
-    def test_logout_form_absent_when_url_not_registered(
-        self, settings, cotton_render_string_soup_authenticated
-    ):
+    def test_logout_form_absent_when_url_not_registered(self, settings, cotton_render_string_soup_authenticated):
         """No account_logout URL: component renders without a logout form.
 
         FR-006: {% url 'account_logout' as var %} suppresses NoReverseMatch;

@@ -14,7 +14,7 @@ account/password_reset.html
        ├─ {% include "account/snippets/already_logged_in.html" %} (conditional)
        ├─ <c-text center> description </c-text>
        ├─ <c-form action=reset_url>
-       │    ├─ <c-form.crispy form=form />
+       │    ├─ <c-form.render form=form />
        │    ├─ {{ redirect_field }}
        │    └─ <c-button.stack>
        │         └─ <c-button type="submit" icon="send" variant="primary">Send email</c-button>
@@ -32,7 +32,7 @@ account/password_reset_from_key.html
        │    └─ <c-text> {% blocktrans %} link to password_reset {% endblocktrans %} </c-text>
        └─ [valid branch]
             ├─ <c-form action=action_url>
-            │    ├─ <c-form.crispy form=form />
+            │    ├─ <c-form.render form=form />
             │    ├─ {{ redirect_field }}
             │    └─ <c-button.stack>
             │         ├─ <c-button type="submit" icon="submit" variant="primary">Confirm</c-button>
@@ -47,7 +47,7 @@ account/base_confirm_code.html
   └─ <c-entrance>  [title from {% block title %}]
        ├─ <p> "We've sent a code to {{ recipient }}…"
        ├─ <c-form action={{ action_url }}>
-       │    ├─ <c-form.crispy form=verify_form unlabeled=True />
+       │    ├─ <c-form.render form=verify_form unlabeled=True />
        │    ├─ {{ redirect_field }}
        │    └─ <c-button.stack>
        │         ├─ <c-button type="submit" tags=submit_button_tags>Confirm</c-button>
@@ -57,7 +57,7 @@ account/base_confirm_code.html
        ├─ <form id="logout-from-stage"> (cancel_url absent)
        └─ <details> change section (can_change)
             └─ <c-form>
-                 ├─ <c-form.crispy form=change_form />
+                 ├─ <c-form.render form=change_form />
                  ├─ {{ redirect_field }}
                  └─ <c-button name="action" value="change" type="submit">Change</c-button>
 
@@ -80,7 +80,7 @@ All components are already available from specs 001 and 002. No new components a
 | `<c-entrance>` | `dac/addons/allauth` (spec 001) | Outer shell for all 4 standard pages |
 | `<c-text>` | `dac/addons/allauth` (spec 001) | Informational/descriptive paragraphs (replaces raw `<p>`) |
 | `<c-form>` | django-mvp | Form wrapper with CSRF and action |
-| `<c-form.crispy>` | django-mvp | Renders allauth form fields via crispy |
+| `<c-form.render>` | django-mvp | Renders allauth form fields via crispy |
 | `<c-button>` | django-cotton-bs5 | Submit and link buttons |
 | `<c-button.stack>` | django-mvp | Vertical button group |
 
@@ -123,7 +123,7 @@ All components are already available from specs 001 and 002. No new components a
 {% url 'account_reset_password' as reset_url %}
 <c-form method="post" action="{{ reset_url }}">
   {% csrf_token %}
-  <c-form.crispy form=form />
+  <c-form.render form=form />
   {{ redirect_field }}
   <c-button.stack>
     <c-button text="{% trans "Send email" %}"
@@ -137,7 +137,7 @@ All components are already available from specs 001 and 002. No new components a
 <!-- password_reset_from_key.html (valid branch) -->
 <c-form method="post" action="{{ action_url }}">
   {% csrf_token %}
-  <c-form.crispy form=form />
+  <c-form.render form=form />
   {{ redirect_field }}
   <c-button.stack>
     <c-button text="{% trans "Confirm" %}"
@@ -188,5 +188,5 @@ All components are already available from specs 001 and 002. No new components a
 
 - `{% load socialaccount %}` MUST NOT appear in any of these templates (no social provider integration in the password-reset flow).
 - `{{ redirect_field }}` MUST be rendered raw (not escaped) inside each form body.
-- `<c-form.crispy form=verify_form />` MUST use the `unlabeled=True` attribute on `base_confirm_code.html` to match the allauth original's `unlabeled=True` on `{% element fields %}`.
+- `<c-form.render form=verify_form />` MUST use the `unlabeled=True` attribute on `base_confirm_code.html` to match the allauth original's `unlabeled=True` on `{% element fields %}`.
 - The `#resend` and `#logout-from-stage` forms are always rendered as `<form>` elements (not Cotton `<c-form>`), because they are hidden auxiliary forms that do not wrap visible fields.

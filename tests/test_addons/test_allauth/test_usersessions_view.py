@@ -1,4 +1,4 @@
-﻿"""
+"""
 Integration tests for the allauth user sessions management flow.
 
 Covers:
@@ -13,21 +13,29 @@ Test design:
 """
 
 import pytest
-
+from allauth.usersessions.models import UserSession
+from django.template.loader import get_template
 from django.test import Client
 from django.urls import reverse
 
-from allauth.usersessions.models import UserSession
 from tests.factories import UserFactory
+
+# ---------------------------------------------------------------------------
+# Template source checks — no raw {% element %} / {% endelement %} tags
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize("template_name", ["usersessions/list.html"])
+def test_no_raw_element_tags_in_templates(template_name):
+    """No user-sessions template may contain raw {% element %} tags."""
+    source = get_template(template_name).template.source
+    assert "{% element" not in source
+    assert "{% endelement" not in source
 
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
-
-
-def make_user(**kwargs):
-    return UserFactory(**kwargs)
 
 
 def make_real_backed_session(user, ip="127.0.0.1", user_agent="TestAgent/1.0", **kwargs):
@@ -54,26 +62,26 @@ class TestUserSessionsLayout:
     """Sessions page renders inside the DAC Account Center layout (US1)."""
 
     def test_dac_layout_sidebar_present(self, client):
-        user = make_user()
+        user = UserFactory()
         client.force_login(user)
         response = client.get(reverse("usersessions_list"))
         assert response.status_code == 200
         assert "app-sidebar" in response.content.decode()
 
     def test_account_center_breadcrumb_present(self, client):
-        user = make_user()
+        user = UserFactory()
         client.force_login(user)
         response = client.get(reverse("usersessions_list"))
         assert "Account Center" in response.content.decode()
 
     def test_sessions_breadcrumb_present(self, client):
-        user = make_user()
+        user = UserFactory()
         client.force_login(user)
         response = client.get(reverse("usersessions_list"))
         assert "Sessions" in response.content.decode()
 
     def test_sessions_heading_present(self, client):
-        user = make_user()
+        user = UserFactory()
         client.force_login(user)
         response = client.get(reverse("usersessions_list"))
         assert "Sessions" in response.content.decode()
@@ -89,14 +97,14 @@ class TestUserSessionsTableRows:
     """Sessions table renders rows with correct IP and user-agent data."""
 
     def test_ip_addresses_appear_in_rows(self, client):
-        user = make_user()
+        user = UserFactory()
         make_real_backed_session(user, ip="1.2.3.4", user_agent="Mozilla/5.0 TestBrowser/1.0")
         client.force_login(user)
         response = client.get(reverse("usersessions_list"))
         assert "1.2.3.4" in response.content.decode()
 
     def test_user_agent_substrings_appear_in_rows(self, client):
-        user = make_user()
+        user = UserFactory()
         make_real_backed_session(user, ip="5.6.7.8", user_agent="Mozilla/5.0 OtherBrowser/2.0")
         client.force_login(user)
         response = client.get(reverse("usersessions_list"))
@@ -113,7 +121,7 @@ class TestUserSessionsCurrentBadge:
     """Current session row shows a green Current badge."""
 
     def test_current_badge_present_for_current_session(self, client):
-        user = make_user()
+        user = UserFactory()
         # Create an extra session so session_count > 1
         make_real_backed_session(user, ip="9.9.9.9", user_agent="OldBrowser/1.0")
         # Force-login creates the current session; also create its UserSession record
@@ -138,7 +146,7 @@ class TestUserSessionsMultipleSignOut:
     """Multiple sessions show Sign Out Other Sessions button."""
 
     def test_sign_out_other_sessions_button_text(self, client):
-        user = make_user()
+        user = UserFactory()
         make_real_backed_session(user, ip="9.9.9.9", user_agent="OldBrowser/1.0")
         client.force_login(user)
         UserSession.objects.create(
@@ -151,7 +159,7 @@ class TestUserSessionsMultipleSignOut:
         assert "Sign out other sessions" in response.content.decode()
 
     def test_form_action_is_usersessions_list(self, client):
-        user = make_user()
+        user = UserFactory()
         make_real_backed_session(user, ip="9.9.9.9", user_agent="OldBrowser/1.0")
         client.force_login(user)
         UserSession.objects.create(
@@ -174,7 +182,7 @@ class TestUserSessionsSingleSignOut:
     """Single session shows Sign Out button."""
 
     def test_sign_out_button_text_single_session(self, client):
-        user = make_user()
+        user = UserFactory()
         client.force_login(user)
         response = client.get(reverse("usersessions_list"))
         content = response.content.decode()
@@ -182,7 +190,7 @@ class TestUserSessionsSingleSignOut:
         assert "Sign out other sessions" not in content
 
     def test_form_action_is_account_logout_single_session(self, client):
-        user = make_user()
+        user = UserFactory()
         client.force_login(user)
         response = client.get(reverse("usersessions_list"))
         assert reverse("account_logout") in response.content.decode()
@@ -199,7 +207,7 @@ class TestUserSessionsLastSeenVisible:
 
     def test_last_seen_header_visible(self, client, settings):
         settings.USERSESSIONS_TRACK_ACTIVITY = True
-        user = make_user()
+        user = UserFactory()
         client.force_login(user)
         response = client.get(reverse("usersessions_list"))
         assert "Last seen at" in response.content.decode()
@@ -216,25 +224,8 @@ class TestUserSessionsLastSeenHidden:
 
     def test_last_seen_header_hidden(self, client, settings):
         settings.USERSESSIONS_TRACK_ACTIVITY = False
-        user = make_user()
+        user = UserFactory()
         client.force_login(user)
         response = client.get(reverse("usersessions_list"))
         assert "Last seen at" not in response.content.decode()
 
-
-# ---------------------------------------------------------------------------
-# Test 8 (US2 SC5): No allauth element/endelement tags
-# ---------------------------------------------------------------------------
-
-
-@pytest.mark.django_db
-class TestUserSessionsNoAllauthTags:
-    """Rendered output must not contain raw element or endelement tags."""
-
-    def test_no_element_tags_in_output(self, client):
-        user = make_user()
-        client.force_login(user)
-        response = client.get(reverse("usersessions_list"))
-        content = response.content.decode()
-        assert "{% element" not in content
-        assert "{% endelement" not in content

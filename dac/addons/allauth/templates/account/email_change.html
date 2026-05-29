@@ -5,10 +5,10 @@
   {% trans "Change Email" %}
 {% endblock title %}
 
-{% block page.breadcrumbs %}
+{% block page.header %}
   {{ block.super }}
   <c-breadcrumbs.item text="{% trans "Change Email" %}" />
-{% endblock page.breadcrumbs %}
+{% endblock page.header %}
 
 {% block page.content %}
   {# Warn the user if they have no email address on file — the form below requires one to exist before a change can be made. #}
@@ -19,11 +19,11 @@
   <c-form.card method="post" action="{{ action_url }}">
     {# Show the current verified address as a read-only field. Absent when the user has no confirmed address yet. #}
     {% if current_emailaddress %}
-      <c-dac.form-field label="{% trans "Current email" %}"
-                        id="current_email"
-                        type="email"
-                        disabled
-                        value="{{ current_emailaddress.email }}" />
+      <c-form.field label="{% trans "Current email" %}"
+                    id="current_email"
+                    type="email"
+                    disabled
+                    value="{{ current_emailaddress.email }}" />
     {% endif %}
     {# Show a pending-address block when the user has submitted a new address that is still awaiting verification. #}
     {% if new_emailaddress %}

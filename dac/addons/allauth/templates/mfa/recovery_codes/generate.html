@@ -5,14 +5,14 @@
   {% trans "Generate Recovery Codes" %}
 {% endblock title %}
 
-{% block page.breadcrumbs %}
+{% block page.header %}
   {{ block.super }}
   <c-breadcrumbs.item href="{% url 'mfa_index' %}"
                       text="{% trans 'Two-Factor Authentication' %}" />
   <c-breadcrumbs.item href="{% url 'mfa_view_recovery_codes' %}"
                       text="{% trans 'Recovery Codes' %}" />
   <c-breadcrumbs.item text="{% trans 'Generate' %}" />
-{% endblock page.breadcrumbs %}
+{% endblock page.header %}
 
 {% block page.content %}
   <c-form.card method="post"

@@ -79,7 +79,7 @@ The login page benefits from `<c-entrance>` automatically via template inheritan
 
 ```html
 <c-form method="post" action="URL">
-  <c-form.crispy />        {# or <c-form.crispy form=verify_form /> #}
+  <c-form.render />        {# or <c-form.render form=verify_form /> #}
   {{ redirect_field }}
   <c-button.stack class="mt-4">
     <c-button ... />
@@ -92,17 +92,17 @@ The login page benefits from `<c-entrance>` automatically via template inheritan
 
 ---
 
-### `<c-form.crispy>` — Crispy Form Field Renderer
+### `<c-form.render>` — Crispy Form Field Renderer
 
 **Source**: django-mvp (`mvp/templates/cotton/form/crispy.html`)
 **Used in**: all three primary forms in this feature
 
 ```html
 {# Standard usage (renders context variable 'form') #}
-<c-form.crispy />
+<c-form.render />
 
 {# Custom form object (required for confirm_login_code.html) #}
-<c-form.crispy form=verify_form />
+<c-form.render form=verify_form />
 ```
 
 **Critical**: On the code-entry page (`confirm_login_code.html`), the form is `verify_form`, not `form`. Pass it explicitly as `form=verify_form`.
@@ -217,7 +217,7 @@ account/login.html
   │   └─ <c-button.stack> + <c-button> per provider
   ├─ <c-card.divider>
   ├─ <c-form>
-  │   └─ <c-form.crispy>
+  │   └─ <c-form.render>
   ├─ <c-button.stack>
   │   └─ <c-button> (submit)
   ├─ <c-text> (forgot password, signup cross-link)
@@ -229,7 +229,7 @@ account/request_login_code.html
   ├─ (via base chain) <c-entrance> ← allauth/layouts/entrance.html
   ├─ <c-text> (intro description)
   ├─ <c-form>
-  │   └─ <c-form.crispy>
+  │   └─ <c-form.render>
   ├─ <c-button.stack>
   │   └─ <c-button> (submit)
   └─ <c-text> (back to login link)
@@ -238,7 +238,7 @@ account/confirm_login_code.html
   ├─ (via base chain) <c-entrance> ← allauth/layouts/entrance.html
   ├─ <c-text> (recipient description)
   ├─ <c-form>  [primary: code entry]
-  │   └─ <c-form.crispy form=verify_form>
+  │   └─ <c-form.render form=verify_form>
   ├─ <c-button.stack> (confirm submit, resend, cancel)
   │   ├─ <c-button type="submit"> (confirm)
   │   ├─ <c-button type="submit" form="resend"> (resend, conditional)

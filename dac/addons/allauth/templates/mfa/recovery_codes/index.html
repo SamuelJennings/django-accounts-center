@@ -5,25 +5,25 @@
   {% trans "Recovery Codes" %}
 {% endblock title %}
 
-{% block page.breadcrumbs %}
+{% block page.header %}
   {{ block.super }}
   <c-breadcrumbs.item href="{% url 'mfa_index' %}"
                       text="{% trans 'Two-Factor Authentication' %}" />
   <c-breadcrumbs.item text="{% trans 'Recovery Codes' %}" />
-{% endblock page.breadcrumbs %}
+{% endblock page.header %}
 
 {% block page.content %}
   <c-card title="{% trans 'Recovery Codes' %}">
     {% if can_view_codes %}
-      <c-dac.form-field type="textarea"
-                        id="recovery_codes"
-                        readonly
-                        rows="{{ unused_codes|length }}"
-                        label="{% trans 'Unused codes' %}"
-                        class="mb-3">
+      <c-form.field type="textarea"
+                    id="recovery_codes"
+                    readonly
+                    rows="{{ unused_codes|length }}"
+                    label="{% trans 'Unused codes' %}"
+                    class="mb-3">
         {# djlint:off #}{% for code in unused_codes %}{% if forloop.counter0 %}
         {% endif %}{{ code }}{% endfor %}{# djlint:on #}
-      </c-dac.form-field>
+      </c-form.field>
       {% if MFA_RECOVERY_CODES_SHOW_ONCE %}
         <div class="form-check mb-3">
           <input class="form-check-input"

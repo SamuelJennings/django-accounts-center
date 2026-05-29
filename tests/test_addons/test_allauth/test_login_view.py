@@ -10,11 +10,33 @@ Covers:
 """
 
 import pytest
-from django.contrib.auth import get_user_model
+from django.template.loader import get_template
 from django.test import RequestFactory
 from django.urls import reverse
 
-User = get_user_model()
+from tests.factories import UserFactory
+
+
+# ---------------------------------------------------------------------------
+# Template source checks — no raw {% element %} / {% endelement %} tags
+# ---------------------------------------------------------------------------
+
+LOGIN_TEMPLATES = [
+    "account/login.html",
+    "account/request_login_code.html",
+    "account/confirm_login_code.html",
+    "socialaccount/login.html",
+    "socialaccount/login_cancelled.html",
+    "socialaccount/login_redirect.html",
+]
+
+
+@pytest.mark.parametrize("template_name", LOGIN_TEMPLATES)
+def test_no_raw_element_tags_in_templates(template_name):
+    """No login-flow template may contain raw {% element %} tags."""
+    source = get_template(template_name).template.source
+    assert "{% element" not in source
+    assert "{% endelement" not in source
 
 
 # ---------------------------------------------------------------------------
@@ -36,15 +58,6 @@ def test_login_page_returns_200_for_anonymous(client):
     """Login page must return HTTP 200 for anonymous users."""
     response = client.get(get_login_url())
     assert response.status_code == 200
-
-
-@pytest.mark.django_db
-def test_login_page_has_no_element_tags_in_output(client):
-    """Rendered output must not contain raw {% element %} tag syntax."""
-    response = client.get(get_login_url())
-    content = response.content.decode()
-    assert "{% element" not in content
-    assert "{% endelement" not in content
 
 
 @pytest.mark.django_db
@@ -184,11 +197,7 @@ def test_login_page_passkey_button_absent_when_socialaccount_only(client, settin
 @pytest.mark.django_db
 def test_login_page_redirects_authenticated_user(client, settings):
     """Authenticated user visiting /accounts/login/ must be redirected (302)."""
-    user = User.objects.create_user(
-        username="loggedinuser",
-        email="loggedin@example.com",
-        password="Secure1234!",
-    )
+    user = UserFactory(email="loggedin@example.com")
     client.force_login(user)
     response = client.get(get_login_url())
     assert response.status_code == 302
@@ -216,25 +225,6 @@ def _render_template(template_name, context_dict):
     request._messages = FallbackStorage(request)
     context_dict["request"] = request
     return render_to_string(template_name, context_dict, request=request)
-
-
-@pytest.mark.django_db
-def test_request_login_code_has_no_element_tags():
-    """request_login_code.html must not contain {% element %} tags in output."""
-    from allauth.account.forms import RequestLoginCodeForm
-
-    form = RequestLoginCodeForm()
-    content = _render_template(
-        "account/request_login_code.html",
-        {
-            "form": form,
-            "request_login_code_url": "/accounts/login/code/",
-            "login_url": "/accounts/login/",
-            "redirect_field": "",
-        },
-    )
-    assert "{% element" not in content
-    assert "{% endelement" not in content
 
 
 @pytest.mark.django_db
@@ -272,27 +262,6 @@ def test_request_login_code_form_field_present():
     )
     # The form has an email field which crispy renders as <input type="email"> or similar
     assert "<input" in content
-
-
-@pytest.mark.django_db
-def test_confirm_login_code_has_no_element_tags():
-    """confirm_login_code.html must not contain {% element %} tags in output."""
-    from allauth.account.forms import ConfirmLoginCodeForm
-
-    verify_form = ConfirmLoginCodeForm()
-    content = _render_template(
-        "account/confirm_login_code.html",
-        {
-            "verify_form": verify_form,
-            "email": "user@example.com",
-            "phone": None,
-            "can_resend": True,
-            "cancel_url": None,
-            "redirect_field": "",
-        },
-    )
-    assert "{% element" not in content
-    assert "{% endelement" not in content
 
 
 @pytest.mark.django_db
@@ -372,17 +341,6 @@ class _MockProvider:
 
 
 @pytest.mark.django_db
-def test_socialaccount_login_has_no_element_tags():
-    """socialaccount/login.html must not contain {% element %} tags in output."""
-    content = _render_template(
-        "socialaccount/login.html",
-        {"provider": _MockProvider(), "process": "login", "redirect_field": ""},
-    )
-    assert "{% element" not in content
-    assert "{% endelement" not in content
-
-
-@pytest.mark.django_db
 def test_socialaccount_login_process_login_shows_provider_name():
     """socialaccount/login.html with process='login' shows provider name."""
     content = _render_template(
@@ -413,17 +371,6 @@ def test_socialaccount_login_has_continue_button():
 
 
 @pytest.mark.django_db
-def test_socialaccount_login_cancelled_has_no_element_tags():
-    """socialaccount/login_cancelled.html must not contain {% element %} tags."""
-    content = _render_template(
-        "socialaccount/login_cancelled.html",
-        {},
-    )
-    assert "{% element" not in content
-    assert "{% endelement" not in content
-
-
-@pytest.mark.django_db
 def test_socialaccount_login_cancelled_shows_login_cancelled_title():
     """socialaccount/login_cancelled.html must show 'Login Cancelled'."""
     content = _render_template(
@@ -443,17 +390,6 @@ def test_socialaccount_login_cancelled_has_sign_in_link():
     login_url = reverse("account_login")
     assert login_url in content
     assert "sign in" in content.lower()
-
-
-@pytest.mark.django_db
-def test_socialaccount_login_redirect_has_no_element_tags():
-    """socialaccount/login_redirect.html must not contain {% element %} tags."""
-    content = _render_template(
-        "socialaccount/login_redirect.html",
-        {"provider": _MockProvider(), "redirect_to": "/accounts/google/login/?_redir="},
-    )
-    assert "{% element" not in content
-    assert "{% endelement" not in content
 
 
 @pytest.mark.django_db

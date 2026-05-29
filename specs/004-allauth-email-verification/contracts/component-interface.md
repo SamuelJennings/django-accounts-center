@@ -120,7 +120,7 @@ are created.
 </c-form>
 ```
 
-Note: No `<c-form.crispy>` is needed — there is no Django form object in this template;
+Note: No `<c-form.render>` is needed — there is no Django form object in this template;
 only the CSRF token and redirect field are required inside the form.
 
 ---

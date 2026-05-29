@@ -91,7 +91,7 @@ A developer new to the project opens `dac/base.html` and immediately understands
 
 - The host project's `base.html` exposes an `app.sidebar` block and a `content` block; both are required for `dac/base.html` to function correctly.
 - The `account-center` URL name is registered by the host project; the root breadcrumb item's `href` depends on this.
-- The `layouts.form-view`, `card.stack`, `breadcrumbs`, `breadcrumbs.item`, and `mvp-toolbar` Cotton components are all provided by `django-mvp` and are available in the host project's template environment.
+- The `layouts.form-view`, `card.stack`, `breadcrumbs`, `breadcrumbs.item`, and `mvp.toolbar` Cotton components are all provided by `django-mvp` and are available in the host project's template environment.
 - The Account Center Menu (`AccountCenterMenu`) is defined in `dac/menus.py` and registered with the menu system before the template is rendered.
 - The `app.sidebar` Cotton component accepts a `menu` attribute that accepts a menu name string and renders that menu's items in the sidebar.
 - Management pages are only accessed by authenticated users; the base template does not enforce authentication itself — sub-page views are responsible for access control.

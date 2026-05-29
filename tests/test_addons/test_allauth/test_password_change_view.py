@@ -9,13 +9,13 @@ Covers:
 
 import pytest
 from allauth.account.forms import ReauthenticateForm
-from django.contrib.auth import get_user_model
 from django.template import Context, Template
+from django.template.loader import get_template
 from django.test import RequestFactory
 from django.urls import reverse
 from django_cotton.compiler_regex import CottonCompiler  # type: ignore[import-untyped]
 
-User = get_user_model()
+from tests.factories import UserFactory
 
 
 # ---------------------------------------------------------------------------
@@ -23,16 +23,31 @@ User = get_user_model()
 # ---------------------------------------------------------------------------
 
 
-def make_user(username="pwduser", email="pwduser@example.com", password="testpass123"):
-    return User.objects.create_user(username=username, email=email, password=password)
-
-
 def make_user_no_password(username="nopwduser", email="nopwd@example.com"):
     """Return a user with no usable password (triggers password_set flow)."""
-    user = User.objects.create_user(username=username, email=email, password="temp")
+    user = UserFactory(username=username, email=email)
     user.set_unusable_password()
     user.save()
     return user
+
+
+# ---------------------------------------------------------------------------
+# Template source checks — no raw {% element %} / {% endelement %} tags
+# ---------------------------------------------------------------------------
+
+PASSWORD_CHANGE_TEMPLATES = [
+    "account/password_change.html",
+    "account/password_set.html",
+    "account/reauthenticate.html",
+]
+
+
+@pytest.mark.parametrize("template_name", PASSWORD_CHANGE_TEMPLATES)
+def test_no_raw_element_tags_in_templates(template_name):
+    """No password-change template may contain raw {% element %} tags."""
+    source = get_template(template_name).template.source
+    assert "{% element" not in source
+    assert "{% endelement" not in source
 
 
 # ---------------------------------------------------------------------------
@@ -46,23 +61,14 @@ class TestPasswordChangeView:
 
     def test_renders_200_for_authenticated(self, client):
         """account_change_password GET must return HTTP 200 for an authenticated user."""
-        user = make_user()
+        user = UserFactory()
         client.force_login(user)
         response = client.get(reverse("account_change_password"))
         assert response.status_code == 200
 
-    def test_no_element_tags_in_output(self, client):
-        """Rendered HTML must not contain raw {% element %} or {% endelement %} tags."""
-        user = make_user()
-        client.force_login(user)
-        response = client.get(reverse("account_change_password"))
-        content = response.content.decode()
-        assert "{% element" not in content
-        assert "{% endelement" not in content
-
     def test_has_page_content_block(self, client):
         """Response must contain the DAC breadcrumb root 'Account Center'."""
-        user = make_user()
+        user = UserFactory()
         client.force_login(user)
         response = client.get(reverse("account_change_password"))
         content = response.content.decode()
@@ -70,7 +76,7 @@ class TestPasswordChangeView:
 
     def test_has_change_password_breadcrumb(self, client):
         """'Change Password' must appear in the breadcrumb output."""
-        user = make_user()
+        user = UserFactory()
         client.force_login(user)
         response = client.get(reverse("account_change_password"))
         content = response.content.decode()
@@ -78,7 +84,7 @@ class TestPasswordChangeView:
 
     def test_has_submit_button(self, client):
         """Rendered HTML must contain a type="submit" button."""
-        user = make_user()
+        user = UserFactory()
         client.force_login(user)
         response = client.get(reverse("account_change_password"))
         content = response.content.decode()
@@ -86,7 +92,7 @@ class TestPasswordChangeView:
 
     def test_has_forgot_password_link(self, client):
         """Rendered HTML must contain a link to account_reset_password."""
-        user = make_user()
+        user = UserFactory()
         client.force_login(user)
         response = client.get(reverse("account_change_password"))
         content = response.content.decode()
@@ -108,15 +114,6 @@ class TestPasswordSetView:
         client.force_login(user)
         response = client.get(reverse("account_set_password"))
         assert response.status_code == 200
-
-    def test_no_element_tags_in_output(self, client):
-        """Rendered HTML must not contain raw {% element %} or {% endelement %} tags."""
-        user = make_user_no_password()
-        client.force_login(user)
-        response = client.get(reverse("account_set_password"))
-        content = response.content.decode()
-        assert "{% element" not in content
-        assert "{% endelement" not in content
 
     def test_has_set_password_breadcrumb(self, client):
         """'Set Password' must appear in the breadcrumb output."""
@@ -157,15 +154,13 @@ class TestBaseManagePasswordView:
         Render base_manage_password.html directly and assert DAC sidebar/breadcrumb
         structure is present (verifies the inheritance chain is unbroken).
         """
-        user = make_user()
+        user = UserFactory()
         client.force_login(user)
         # Change-password is served by base_manage_password → base_manage → dac/base
         response = client.get(reverse("account_change_password"))
         content = response.content.decode()
         # DAC sidebar is present
         assert "Account Center" in content
-        # No element tags leaked
-        assert "{% element" not in content
 
 
 # ---------------------------------------------------------------------------
@@ -179,7 +174,7 @@ class TestPasswordChangeFormFields:
 
     def test_form_has_old_password_field(self, client):
         """password_change.html must contain the current-password field."""
-        user = make_user()
+        user = UserFactory()
         client.force_login(user)
         response = client.get(reverse("account_change_password"))
         content = response.content.decode()
@@ -187,7 +182,7 @@ class TestPasswordChangeFormFields:
 
     def test_form_has_new_password_fields(self, client):
         """password_change.html must contain password1 and password2 fields."""
-        user = make_user()
+        user = UserFactory()
         client.force_login(user)
         response = client.get(reverse("account_change_password"))
         content = response.content.decode()
@@ -196,19 +191,19 @@ class TestPasswordChangeFormFields:
 
     def test_submit_button_text_is_change_password(self, client):
         """Submit button text must be 'Change Password'."""
-        user = make_user()
+        user = UserFactory()
         client.force_login(user)
         response = client.get(reverse("account_change_password"))
         content = response.content.decode()
         assert "Change Password" in content
 
-    def test_no_element_tags_present(self, client):
-        """Rendered HTML must not contain raw {% element %} strings."""
-        user = make_user()
+    def test_submit_button_text_is_change_password(self, client):
+        """Submit button text must be 'Change Password'."""
+        user = UserFactory()
         client.force_login(user)
         response = client.get(reverse("account_change_password"))
         content = response.content.decode()
-        assert "{% element" not in content
+        assert "Change Password" in content
 
 
 # ---------------------------------------------------------------------------
@@ -238,14 +233,6 @@ class TestPasswordSetFormFields:
         content = response.content.decode()
         assert "Set Password" in content
 
-    def test_no_element_tags_present(self, client):
-        """Rendered HTML must not contain raw {% element %} strings."""
-        user = make_user_no_password()
-        client.force_login(user)
-        response = client.get(reverse("account_set_password"))
-        content = response.content.decode()
-        assert "{% element" not in content
-
 
 # ---------------------------------------------------------------------------
 # T007 / US3: reauthenticate.html
@@ -258,23 +245,14 @@ class TestReauthenticateView:
 
     def test_renders_200_for_authenticated(self, client):
         """account_reauthenticate GET must return HTTP 200 for an authenticated user."""
-        user = make_user()
+        user = UserFactory()
         client.force_login(user)
         response = client.get(reverse("account_reauthenticate"))
         assert response.status_code == 200
 
-    def test_no_element_tags_in_output(self, client):
-        """Rendered HTML must not contain raw {% element %} or {% endelement %} tags."""
-        user = make_user()
-        client.force_login(user)
-        response = client.get(reverse("account_reauthenticate"))
-        content = response.content.decode()
-        assert "{% element" not in content
-        assert "{% endelement" not in content
-
     def test_has_password_field(self, client):
         """Rendered HTML must contain a type="password" input."""
-        user = make_user()
+        user = UserFactory()
         client.force_login(user)
         response = client.get(reverse("account_reauthenticate"))
         content = response.content.decode()
@@ -282,7 +260,7 @@ class TestReauthenticateView:
 
     def test_has_confirm_button(self, client):
         """Rendered HTML must contain a submit button with text 'Confirm'."""
-        user = make_user()
+        user = UserFactory()
         client.force_login(user)
         response = client.get(reverse("account_reauthenticate"))
         content = response.content.decode()
@@ -291,7 +269,7 @@ class TestReauthenticateView:
 
     def test_no_alternatives_section_by_default(self, client):
         """'Alternative options' section must be absent when no alternatives are configured."""
-        user = make_user()
+        user = UserFactory()
         client.force_login(user)
         response = client.get(reverse("account_reauthenticate"))
         content = response.content.decode()
@@ -305,7 +283,7 @@ class TestReauthenticateView:
             url = "/accounts/mock-mfa/"
             description = "Use authenticator code"
 
-        user = make_user(username="reauth_alt_user", email="reauth_alt@example.com")
+        user = UserFactory(username="reauth_alt_user", email="reauth_alt@example.com")
         factory = RequestFactory()
         request = factory.get("/")
         compiler = CottonCompiler()

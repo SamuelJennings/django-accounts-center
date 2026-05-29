@@ -59,7 +59,7 @@ account/confirm_password_reset_code  ┘   extends account/base_confirm_code.htm
 - Heading from `{% block title %}`
 - "We've sent a code to `{{ recipient }}`..." paragraph
 - `<c-form>` wrapping `verify_form` (posted to `{% block action_url %}`)
-  - Unlabelled code input fields via `<c-form.crispy form=verify_form />`
+  - Unlabelled code input fields via `<c-form.render form=verify_form />`
   - `{{ redirect_field }}`
   - "Confirm" submit button (`tags=submit_button_tags`)
   - "Request new code" button (shown when `can_resend`) — submits hidden `#resend` form
@@ -136,11 +136,11 @@ Block overrides in `confirm_password_reset_code.html`:
 |---|---|
 | `{% element h1 %}` | `{% block title %}...{% endblock %}` (inside `<c-entrance>`) |
 | `{% element p %}` | `<p>` with `{% blocktrans %}` / `{% trans %}` |
-| `{% element form %}` with `{% slot body/actions %}` | `<c-form>` with `<c-form.crispy />` + `<c-button>` |
+| `{% element form %}` with `{% slot body/actions %}` | `<c-form>` with `<c-form.render />` + `<c-button>` |
 | `{% element button type="submit" %}` | `<c-button type="submit">` |
 | `{% element button type="submit" form="..." tags="link,cancel" %}` | `<c-button type="submit" form="logout-from-stage">` |
 | `{% element button_group %}` | `<c-button.stack>` |
-| `{% element fields form=... %}` | `<c-form.crispy form=... />` |
+| `{% element fields form=... %}` | `<c-form.render form=... />` |
 | `{% element details %}` | `<details>` / `<summary>` |
 
 ---

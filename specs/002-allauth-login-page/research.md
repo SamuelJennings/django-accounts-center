@@ -71,13 +71,13 @@ The `<c-entrance>` Cotton component and its sub-components (`<c-entrance.backgro
 | `"username"` | `login` | "Username" |
 | `"username_email"` | `login` | "Username or Email" |
 
-The label adaptation is handled by allauth's `LoginForm` — the Cotton template does not need to read the setting directly. `<c-form.crispy />` renders the correct label automatically.
+The label adaptation is handled by allauth's `LoginForm` — the Cotton template does not need to read the setting directly. `<c-form.render />` renders the correct label automatically.
 
 **`ACCOUNT_SESSION_REMEMBER` and the "Remember me" checkbox**:
 
 | Setting value | `remember` field in form | Result |
 |---|---|---|
-| `None` (default) | Present | `<c-form.crispy />` renders a "Remember me" checkbox |
+| `None` (default) | Present | `<c-form.render />` renders a "Remember me" checkbox |
 | `True` | Absent | No checkbox rendered |
 | `False` | Absent | No checkbox rendered |
 
@@ -176,8 +176,8 @@ The passkey button in the template must carry `id="passkey_login"` to match this
 
 **Decision**: Render the resend form as a raw HTML `<form id="resend">` (inline in the template), and the cancel action as either a `<c-text>` link (when `cancel_url` is set) or a hidden form (when it is not). The `<c-form>` component is NOT used for the resend/cancel forms because they are auxiliary controls, not the primary submission form.
 
-**Rationale**: The resend and cancel forms are allauth internal mechanism forms that POST to the same URL with a hidden discriminator field. They are secondary to the code-entry form and should be rendered as compact, visually secondary controls. Using `<c-button>` for their submit triggers and wrapping in `<c-button.stack>` maintains visual consistency without needing `<c-form.crispy>` (which would incorrectly try to render crispy fields for a form with no visible fields).
+**Rationale**: The resend and cancel forms are allauth internal mechanism forms that POST to the same URL with a hidden discriminator field. They are secondary to the code-entry form and should be rendered as compact, visually secondary controls. Using `<c-button>` for their submit triggers and wrapping in `<c-button.stack>` maintains visual consistency without needing `<c-form.render>` (which would incorrectly try to render crispy fields for a form with no visible fields).
 
-**Primary form** (code entry): use `<c-form>` + `<c-form.crispy />`.
+**Primary form** (code entry): use `<c-form>` + `<c-form.render />`.
 **Resend form**: raw `<form id="resend" method="post">` with a `<c-button type="submit" form="resend">`.
 **Cancel**: `<c-text>` link to `cancel_url` when available; otherwise a `<form id="logout-from-stage">` submit via `<c-button>`.

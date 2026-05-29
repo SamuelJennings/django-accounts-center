@@ -3,7 +3,7 @@
 **Branch**: `001-allauth-signup-page` | **Date**: 2026-05-07 | **Spec**: [spec.md](spec.md)
 **Input**: Feature specification from `/specs/001-allauth-signup-page/spec.md`
 **Propagated**: 2026-05-07 — Added Principle XIII (FR-011) multi-viewport screenshot coverage: Constitution Check table updated with Principle XIII row; Project Structure updated with `docs/_static/` directories and `test_signup_screenshots.py`.
-**Propagated**: 2026-05-08 — Entrance layout architecture finalised. `<c-entrance>`, `<c-entrance.background>`, and `<c-entrance.logo>` Cotton components created in `dac/templates/cotton/entrance/`. The allauth layout template delegates entirely to `<c-entrance>`. Page templates (signup.html, signup_closed.html) are now content-only. Non-field error rendering moved into `<c-form.crispy>`. Submit button uses `<c-button.stack>` + `<c-button icon=...>`. Updated: Summary, Project Structure, Template Design sections, Constitution post-design check, Open Questions.
+**Propagated**: 2026-05-08 — Entrance layout architecture finalised. `<c-entrance>`, `<c-entrance.background>`, and `<c-entrance.logo>` Cotton components created in `dac/templates/cotton/entrance/`. The allauth layout template delegates entirely to `<c-entrance>`. Page templates (signup.html, signup_closed.html) are now content-only. Non-field error rendering moved into `<c-form.render>`. Submit button uses `<c-button.stack>` + `<c-button icon=...>`. Updated: Summary, Project Structure, Template Design sections, Constitution post-design check, Open Questions.
 **Propagated**: 2026-05-08 — Passkey signup flow added (User Story 6, FR-012). `signup_by_passkey.html` template added to Project Structure and Template Design. Constitution Check Principle XIII updated to 6 permutations × 3 viewports = 18 screenshot files. Open Questions updated with passkey-specific risk.
 **Propagated**: 2026-05-08 — Constitution v1.1.2 (Principle XIII PATCH): screenshot-only test modules MUST live in the root `screenshots/` directory, not inside `tests/`. `test_signup_screenshots.py` moved from `tests/test_addons/test_allauth/` to `screenshots/`. Structure Decision updated. Constitution Check Principle XIII note updated.
 
@@ -11,7 +11,7 @@
 
 ## Summary
 
-Build a styled, modern allauth signup page for `django-accounts-center` by overriding allauth's template hierarchy to extend the `django-mvp` visual shell (AdminLTE4 + Bootstrap 5). The entrance page shell is owned by a first-class Cotton component family — `<c-entrance>` (layout), `<c-entrance.background>` (background style), `<c-entrance.logo>` (logo) — located in `dac/templates/cotton/entrance/`. The allauth layout template (`allauth/layouts/entrance.html`) delegates entirely to `<c-entrance>`; page templates (e.g. `signup.html`) are content-only. UI is composed from `django-mvp` Cotton components (`<c-card>`, `<c-card.divider>`, `<c-form.crispy>`, `<c-messages>`, `<c-button.stack>`) and `django-cotton-bs5` components (`<c-button>`, `<c-alert>`). Non-field form errors are rendered inside `<c-form.crispy>` and must not be duplicated in page templates. No new Python views, models, or forms are introduced.
+Build a styled, modern allauth signup page for `django-accounts-center` by overriding allauth's template hierarchy to extend the `django-mvp` visual shell (AdminLTE4 + Bootstrap 5). The entrance page shell is owned by a first-class Cotton component family — `<c-entrance>` (layout), `<c-entrance.background>` (background style), `<c-entrance.logo>` (logo) — located in `dac/templates/cotton/entrance/`. The allauth layout template (`allauth/layouts/entrance.html`) delegates entirely to `<c-entrance>`; page templates (e.g. `signup.html`) are content-only. UI is composed from `django-mvp` Cotton components (`<c-card>`, `<c-card.divider>`, `<c-form.render>`, `<c-messages>`, `<c-button.stack>`) and `django-cotton-bs5` components (`<c-button>`, `<c-alert>`). Non-field form errors are rendered inside `<c-form.render>` and must not be duplicated in page templates. No new Python views, models, or forms are introduced.
 
 ---
 
@@ -209,7 +209,7 @@ screenshots/
 - `{% block title %}` provides the card heading text to `<c-entrance>` — no `<h4>` in the page template
 - Social provider buttons rendered via `{% include "socialaccount/snippets/provider_list.html" %}` — uses Bootstrap Icon `<a>` tags, not `<c-button>`, for layout flexibility
 - `<c-card.divider text="or">` separates social from email/password section (only when both present)
-- `<c-form.crispy />` renders all fields **and** non-field errors (FR-005/FR-006) — no `{% if form.non_field_errors %}` in this template
+- `<c-form.render />` renders all fields **and** non-field errors (FR-005/FR-006) — no `{% if form.non_field_errors %}` in this template
 - Submit button wrapped in `<c-button.stack>` for consistent full-width stacking
 - Login link (`{% if login_url %}`) placed at the bottom of the content block, below the form
 
@@ -231,7 +231,7 @@ screenshots/
   {% endif %}
   {% if not SOCIALACCOUNT_ONLY %}
     <c-form method="post" action="{% url 'account_signup' %}">
-      <c-form.crispy />
+      <c-form.render />
       {{ redirect_field }}
       <c-button.stack class="mt-4">
         <c-button text="{% trans \"Let's go!\" }"
@@ -283,7 +283,7 @@ screenshots/
 
 {% block content %}
   <c-form method="post">
-    <c-form.crispy />
+    <c-form.render />
     {{ redirect_field }}
     <c-button.stack class="mt-4">
       <c-button text="{% trans 'Create passkey' %}"
@@ -394,7 +394,7 @@ screenshots/
       </div>
     </c-slot>
     <c-form method="post" action="{% url 'socialaccount_signup' %}">
-      <c-form.crispy />
+      <c-form.render />
       {{ redirect_field }}
       <c-button.stack class="mt-3">
         <c-button type="submit"
@@ -421,7 +421,7 @@ No constitution violations. No complexity exceptions needed.
 | `allauth/layouts/base.html` is also inherited by manage-page templates (email, password, MFA, etc.) | These templates will inherit the `mvp/base.html` shell correctly via the base override; manage-specific layout (`allauth/layouts/manage.html`) is out of scope but will function as a plain unstyled page until a manage-layout spec is implemented |
 | `{% load socialaccount %}` raises `TemplateSyntaxError` when app not installed | Guarded: tag is only in `socialaccount/snippets/provider_list.html`, which is `{% include %}`d only when `SOCIALACCOUNT_ENABLED` is `True` |
 | `signup_by_passkey.html` requires WebAuthn JS from allauth's MFA bundle | allauth injects the required script tags when `MFA_PASSKEY_SIGNUP_ENABLED=True`; the template only needs the form + submit button; no additional JS wiring required in the template |
-| `<c-form.crispy />` uses context `form` directly | Verified: allauth SignupView always injects `form` into context; this is guaranteed by the view |
+| `<c-form.render />` uses context `form` directly | Verified: allauth SignupView always injects `form` into context; this is guaranteed by the view |
 | crispy forms renders a submit button when FormHelper is configured | Allauth's SignupForm does not configure a FormHelper; `{{ form|crispy }}` renders fields only, no auto-submit button |
-| Non-field errors must not be duplicated | `<c-form.crispy>` renders a `<c-alert variant="danger">` for `form.non_field_errors` when no FormHelper is present; page templates must not add a second `{% if form.non_field_errors %}` block |
+| Non-field errors must not be duplicated | `<c-form.render>` renders a `<c-alert variant="danger">` for `form.non_field_errors` when no FormHelper is present; page templates must not add a second `{% if form.non_field_errors %}` block |
 | djlint may flag Cotton template syntax | Use `{# djlint:off #}` / `{# djlint:on #}` around Cotton component tags where needed |

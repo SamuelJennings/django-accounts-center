@@ -239,7 +239,7 @@ conditional branches exactly.
 
 **Notes**:
 
-- `<c-form>` wraps the CSRF + redirect_field; no `<c-form.crispy>` needed (no Django form object)
+- `<c-form>` wraps the CSRF + redirect_field; no `<c-form.render>` needed (no Django form object)
 - Remove `{% load allauth %}` from template (no longer needed)
 - Branch B uses `{{ email }}` which is the email address string — this is set by the
   `{% blocktrans with confirmation.email_address.email as email %}` from allauth's

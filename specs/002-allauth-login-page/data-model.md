@@ -30,7 +30,7 @@ All entities below are **read-only** from the template's perspective. Templates 
 
 ### Rendering
 
-`<c-form.crispy />` renders all fields via `{{ form|crispy }}`. The template does NOT introspect individual fields — `<c-form.crispy />` handles label rendering, validation feedback, and CSRF automatically.
+`<c-form.render />` renders all fields via `{{ form|crispy }}`. The template does NOT introspect individual fields — `<c-form.render />` handles label rendering, validation feedback, and CSRF automatically.
 
 ---
 
@@ -48,7 +48,7 @@ All entities below are **read-only** from the template's perspective. Templates 
 
 ### Rendering
 
-`<c-form.crispy />` renders the single email field. No introspection needed.
+`<c-form.render />` renders the single email field. No introspection needed.
 
 ---
 
@@ -68,7 +68,7 @@ All entities below are **read-only** from the template's perspective. Templates 
 
 ### Rendering
 
-The `<c-form.crispy />` component must be passed `form=verify_form` to render this form's fields with crispy layout. Use `<c-form.crispy form=verify_form />`.
+The `<c-form.render />` component must be passed `form=verify_form` to render this form's fields with crispy layout. Use `<c-form.render form=verify_form />`.
 
 ---
 

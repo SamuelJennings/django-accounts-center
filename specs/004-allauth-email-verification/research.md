@@ -46,7 +46,7 @@ established pattern.
 
 - Branch A: `<c-entrance>` shell with `<c-text>` descriptive paragraph (not `center`,
   since it contains inline content addressed to the specific user), `<c-form>` with
-  `<c-form.crispy>` not needed (no Django form object — just `{% csrf_token %}` and
+  `<c-form.render>` not needed (no Django form object — just `{% csrf_token %}` and
   `{{ redirect_field }}`), and a `<c-button.stack>` with
   `<c-button type="submit" icon="check-circle" variant="primary">Confirm</c-button>`.
 - Branch B: `<c-text>` with the error prose.
@@ -54,7 +54,7 @@ established pattern.
 
 **Note on Branch A form**: The allauth original uses a raw form with only CSRF + redirect
 field, no Django form object. `<c-form>` wraps the CSRF and action; the inner `{% csrf_token %}`
-and `{{ redirect_field }}` are placed inside. No `<c-form.crispy>` is needed because there
+and `{{ redirect_field }}` are placed inside. No `<c-form.render>` is needed because there
 is no Django form object to render.
 
 ---

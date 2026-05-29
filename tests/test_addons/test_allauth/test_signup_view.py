@@ -11,10 +11,28 @@ Covers:
 """
 
 import pytest
-from django.contrib.auth import get_user_model
+from django.template.loader import get_template
 from django.urls import reverse
 
-User = get_user_model()
+from tests.factories import EmailAddressFactory, UserFactory
+
+# ---------------------------------------------------------------------------
+# Template source checks — no raw {% element %} / {% endelement %} tags
+# ---------------------------------------------------------------------------
+
+SIGNUP_TEMPLATES = [
+    "account/signup.html",
+    "account/signup_closed.html",
+    "account/signup_by_passkey.html",
+]
+
+
+@pytest.mark.parametrize("template_name", SIGNUP_TEMPLATES)
+def test_no_raw_element_tags_in_templates(template_name):
+    """No signup template may contain raw {% element %} tags."""
+    source = get_template(template_name).template.source
+    assert "{% element" not in source
+    assert "{% endelement" not in source
 
 
 # ---------------------------------------------------------------------------
@@ -139,11 +157,8 @@ def test_signup_duplicate_email_shows_error(client, settings):
     settings.ACCOUNT_EMAIL_REQUIRED = True
     settings.ACCOUNT_EMAIL_VERIFICATION = "none"
     # Create existing user with the email
-    User.objects.create_user(username="existing", email="taken@example.com", password="SomePass123!")
-    from allauth.account.models import EmailAddress
-
-    existing_user = User.objects.get(email="taken@example.com")
-    EmailAddress.objects.create(user=existing_user, email="taken@example.com", verified=True, primary=True)
+    existing_user = UserFactory(email="taken@example.com")
+    EmailAddressFactory(user=existing_user, email="taken@example.com")
 
     data = {
         "email": "taken@example.com",
@@ -356,10 +371,6 @@ def test_passkey_signup_page_uses_dac_template(client):
     assert response.status_code == 200
     template_names = [t.name for t in response.templates]
     assert "account/signup_by_passkey.html" in template_names
-    content = response.content.decode()
-    # The allauth default template uses {% element %} tags — after rendering they produce
-    # no Cotton card; confirm no allauth element markup bleeds into rendered output
-    assert "{% element" not in content
 
 
 @pytest.mark.django_db

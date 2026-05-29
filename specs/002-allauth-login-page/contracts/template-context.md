@@ -53,7 +53,7 @@
 |---|---|---|
 | Social providers | `SOCIALACCOUNT_ENABLED` | `{% include "socialaccount/snippets/provider_list.html" with process="login" %}` |
 | "or" divider | Social shown AND `not SOCIALACCOUNT_ONLY` | `<c-card.divider text="or" />` |
-| Login form + "Forgot password?" | `not SOCIALACCOUNT_ONLY` | `<c-form>` + `<c-form.crispy />` + `<c-button>` + `<c-text>` |
+| Login form + "Forgot password?" | `not SOCIALACCOUNT_ONLY` | `<c-form>` + `<c-form.render />` + `<c-button>` + `<c-text>` |
 | Passkey/code section | `not SOCIALACCOUNT_ONLY` AND (`PASSKEY_LOGIN_ENABLED` OR `LOGIN_BY_CODE_ENABLED`) | `<c-card.divider>` + `<c-button.stack>` |
 | Sign-up cross-link | `signup_url` is truthy | `<c-text>` with blocktrans |
 | WebAuthn script | `PASSKEY_LOGIN_ENABLED` | `{% include "mfa/webauthn/snippets/login_script.html" %}` |
@@ -134,8 +134,8 @@ This template renders **three separate forms**:
 
 | Form | Rendered with | Purpose |
 |---|---|---|
-| Code entry | `<c-form>` + `<c-form.crispy form=verify_form />` | Primary — enter the received code |
+| Code entry | `<c-form>` + `<c-form.render form=verify_form />` | Primary — enter the received code |
 | Resend | Raw `<form id="resend" method="post">` with hidden `action=resend` | Secondary — request a new code |
 | Cancel | Link to `cancel_url` OR raw `<form id="logout-from-stage" method="post">` | Tertiary — abort the flow |
 
-> **Critical**: `<c-form.crispy>` must receive `form=verify_form` (not the default `form`) because the code-entry form is in `verify_form`, not `form`. The `form` context variable is not present on this page.
+> **Critical**: `<c-form.render>` must receive `form=verify_form` (not the default `form`) because the code-entry form is in `verify_form`, not `form`. The `form` context variable is not present on this page.

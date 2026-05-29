@@ -3,7 +3,29 @@ Pytest configuration and fixtures for django-accounts-center tests.
 """
 
 import pytest
-from django.test import Client
+
+
+def pytest_configure(config):
+    """Apply performance overrides for the test session.
+
+    ``tests/settings.py`` is shared with the dev server (manage.py runserver),
+    so expensive settings that are fine for development but hurt test speed are
+    overridden here rather than in the settings file itself.
+
+    Runs after pytest-django has called django.setup(), so django.conf.settings
+    is safe to modify at this point.
+    """
+    from django.conf import settings
+
+    # libsass takes ~1.35 s per SCSS file per render; with DummyCache every
+    # template render recompiles from scratch.  Tests don't check CSS output.
+    settings.COMPRESS_PRECOMPILERS = ()
+
+    # LocMemCache lets django-compressor (and other middleware) cache across
+    # requests within the same process, eliminating repeated work per test.
+    settings.CACHES = {
+        "default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"},
+    }
 
 
 @pytest.fixture
@@ -13,59 +35,10 @@ def user(django_user_model):
 
 
 @pytest.fixture
-def authenticated_user(user):
-    """Create an authenticated test user."""
-    return user
-
-
-@pytest.fixture
-def client():
-    """Create a test client."""
-    return Client()
-
-
-@pytest.fixture
 def authenticated_client(client, user):
     """Create an authenticated test client."""
     client.force_login(user)
     return client
-
-
-@pytest.fixture
-def anonymous_user():
-    """Create an anonymous user."""
-    from django.contrib.auth.models import AnonymousUser
-
-    return AnonymousUser()
-
-
-@pytest.fixture
-def superuser(django_user_model):
-    """Create a superuser."""
-    return django_user_model.objects.create_superuser(
-        username="admin", email="admin@example.com", password="adminpass123"
-    )
-
-
-@pytest.fixture
-def user_with_verified_email(user):
-    """Create a user with verified email address."""
-    from allauth.account.models import EmailAddress
-
-    EmailAddress.objects.create(user=user, email=user.email, verified=True, primary=True)
-    return user
-
-
-@pytest.fixture
-def user_with_unverified_email(django_user_model):
-    """Create a user with unverified email address."""
-    from allauth.account.models import EmailAddress
-
-    user = django_user_model.objects.create_user(
-        username="unverified", email="unverified@example.com", password="testpass123"
-    )
-    EmailAddress.objects.create(user=user, email=user.email, verified=False, primary=True)
-    return user
 
 
 @pytest.fixture
@@ -78,50 +51,3 @@ def social_app():
     app = SocialApp.objects.create(provider="google", name="Google", client_id="test_client_id", secret="test_secret")
     app.sites.add(site)
     return app
-
-
-@pytest.fixture
-def user_with_social_account(user, social_app):
-    """Create a user with social account."""
-    from allauth.socialaccount.models import SocialAccount
-
-    SocialAccount.objects.create(
-        user=user, provider="google", uid="12345", extra_data={"email": user.email, "name": "Test User"}
-    )
-    return user
-
-
-@pytest.fixture
-def valid_login_data():
-    """Valid login form data."""
-    return {"login": "test@example.com", "password": "testpass123"}
-
-
-@pytest.fixture
-def invalid_login_data():
-    """Invalid login form data."""
-    return {"login": "invalid@email.com", "password": "wrongpassword"}
-
-
-@pytest.fixture
-def valid_signup_data():
-    """Valid signup form data."""
-    return {"email": "newuser@example.com", "password1": "newpassword123", "password2": "newpassword123"}
-
-
-@pytest.fixture
-def invalid_signup_data():
-    """Invalid signup form data."""
-    return {"email": "invalid-email", "password1": "short", "password2": "different"}
-
-
-@pytest.fixture
-def entrance_layout_test_data():
-    """Test data for entrance layout components."""
-    return {"title": "Test Title", "subtitle": "Test Subtitle", "type": "login"}
-
-
-@pytest.fixture
-def standard_layout_test_data():
-    """Test data for standard layout components."""
-    return {"title": "Account Management"}

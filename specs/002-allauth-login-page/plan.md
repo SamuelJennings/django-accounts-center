@@ -11,7 +11,7 @@ Build a styled, modern allauth login page for django-accounts-center by rewritin
 
 Three additional `socialaccount` entrance templates are also rewritten in this spec (FR-016, added 2026-05-09): `socialaccount/login.html` (OAuth confirmation step), `socialaccount/login_cancelled.html` (cancellation message), and `socialaccount/login_redirect.html` (ephemeral meta-refresh redirect). All three already exist as placeholder overrides using `{% element %}` syntax and must be converted to Cotton.
 
-The `<c-entrance>` shell — centred card, logo, background, and visual framework — is **already implemented** from spec 001 and requires no changes. All entrance-page templates inherit it automatically via the existing template chain. This spec's work is entirely at the page-content level: replacing `{% element %}` calls inside `{% block content %}` with the appropriate Cotton components (`<c-form>`, `<c-form.crispy>`, `<c-button.stack>`, `<c-button>`, `<c-card.divider>`, `<c-text>`).
+The `<c-entrance>` shell — centred card, logo, background, and visual framework — is **already implemented** from spec 001 and requires no changes. All entrance-page templates inherit it automatically via the existing template chain. This spec's work is entirely at the page-content level: replacing `{% element %}` calls inside `{% block content %}` with the appropriate Cotton components (`<c-form>`, `<c-form.render>`, `<c-button.stack>`, `<c-button>`, `<c-card.divider>`, `<c-text>`).
 
 Social provider rendering is also already Cotton-based (spec 001) via `socialaccount/snippets/provider_list.html`. The login page reuses it with `process="login"`.
 
@@ -58,7 +58,7 @@ No new Python views, models, forms, or migrations are introduced. No new Cotton 
 | No new DAC-owned Cotton components | ✅ PASS | All UI from spec 001's entrance family + django-mvp + cotton-bs5. |
 | Template overrides isolated inside addon | ✅ PASS | All files under `dac/addons/allauth/templates/`. |
 | Social provider loading guarded | ✅ PASS | `{% load socialaccount %}` only inside `provider_list.html` (unchanged from spec 001). |
-| `<c-form.crispy form=verify_form />` used on confirm page | ✅ PASS | Contracts document the `verify_form` binding explicitly. |
+| `<c-form.render form=verify_form />` used on confirm page | ✅ PASS | Contracts document the `verify_form` binding explicitly. |
 | `base_confirm_code.html` not modified | ✅ PASS | `confirm_login_code.html` bypasses it by extending `base_entrance.html` directly. |
 
 ## Project Structure

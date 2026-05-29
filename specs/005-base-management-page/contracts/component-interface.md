@@ -15,7 +15,7 @@ Sub-page templates interact only with these blocks.
 
 - **Default**: *(empty)*
 - **Type**: Inline text or translation string
-- **Usage**: Rendered inside a `<c-mvp-toolbar>` as the page heading. Sub-pages MUST
+- **Usage**: Rendered inside a `<c-mvp.toolbar>` as the page heading. Sub-pages MUST
   override this block to provide a localised page title.
 - **Nesting**: Do NOT call `{{ block.super }}`. No parent content to preserve.
 
@@ -63,7 +63,7 @@ Sub-page templates interact only with these blocks.
 
 ### `page.header` *(advanced)*
 
-- **Default**: `<c-mvp-toolbar fluid>` wrapping a `<c-breadcrumbs>` that contains
+- **Default**: `<c-mvp.toolbar fluid>` wrapping a `<c-breadcrumbs>` that contains
   the `page.breadcrumbs` block.
 - **Usage**: Override only when the header structure itself must change (e.g., adding
   a search bar or action buttons to the toolbar). Most sub-pages should NOT override
@@ -105,14 +105,14 @@ base.html
 └── content
     └── <c-page>
         └── page.header
-            └── <c-mvp-toolbar fluid>
+            └── <c-mvp.toolbar fluid>
                 └── <c-breadcrumbs>
                     └── page.breadcrumbs
                         └── <c-breadcrumbs.item text="Account Center" href="..." />
         └── page.content-wrapper
             └── <c-page.content class="container">
                 └── <c-layouts.form-view>
-                    └── <c-mvp-toolbar relaxed gap="3">
+                    └── <c-mvp.toolbar relaxed gap="3">
                         └── title  (sub-page title text)
                     └── <c-card.stack>
                         └── page.content  (sub-page content)

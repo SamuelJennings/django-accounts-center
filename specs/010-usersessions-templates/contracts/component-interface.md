@@ -24,7 +24,7 @@ Extends `usersessions/base_manage.html` (unchanged). Overrides three blocks from
 
 #### `{% block title %}`
 
-Renders the visible page heading inside `<c-mvp-toolbar>` → `<c-slot name="title">`.
+Renders the visible page heading inside `<c-mvp.toolbar>` → `<c-slot name="title">`.
 
 ```django
 {% block title %}
@@ -152,6 +152,7 @@ Precedent: `account/email.html` uses `<c-badge variant="success" text="{% trans 
 | `icon` | string | No | Bootstrap icon name |
 
 **Usage**:
+
 - Multiple sessions: `<c-button type="submit" variant="primary" text="{% trans 'Sign Out Other Sessions' %}" />`
 - Single session: `<c-button type="submit" variant="primary" text="{% trans 'Sign Out' %}" />`
 

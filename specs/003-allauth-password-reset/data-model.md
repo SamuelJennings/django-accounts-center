@@ -28,7 +28,7 @@ All entities below are **read-only** from the template's perspective. Templates 
 
 ### Rendering
 
-`<c-form.crispy form=form />` renders the email field with crispy layout. The template does not need to introspect individual fields.
+`<c-form.render form=form />` renders the email field with crispy layout. The template does not need to introspect individual fields.
 
 ---
 
@@ -47,7 +47,7 @@ All entities below are **read-only** from the template's perspective. Templates 
 
 ### Rendering
 
-`<c-form.crispy form=form />` renders both password fields. Validation errors (mismatched passwords, weak password) are rendered inline by crispy.
+`<c-form.render form=form />` renders both password fields. Validation errors (mismatched passwords, weak password) are rendered inline by crispy.
 
 ---
 
@@ -65,7 +65,7 @@ All entities below are **read-only** from the template's perspective. Templates 
 
 ### Rendering
 
-`<c-form.crispy form=verify_form />` with `unlabeled=True` renders the code input. The template does not need to know the field name.
+`<c-form.render form=verify_form />` with `unlabeled=True` renders the code input. The template does not need to know the field name.
 
 ---
 
@@ -83,7 +83,7 @@ All entities below are **read-only** from the template's perspective. Templates 
 
 ### Rendering
 
-Rendered inside a `<details>` / `<summary>` collapsible section. Only present when `can_change=True`. `<c-form.crispy form=change_form />` renders the field.
+Rendered inside a `<details>` / `<summary>` collapsible section. Only present when `can_change=True`. `<c-form.render form=change_form />` renders the field.
 
 ---
 

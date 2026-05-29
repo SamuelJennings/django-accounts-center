@@ -6,7 +6,7 @@
 ## Summary
 
 All core implementation patterns are established in prior specs (001–010). Six targeted
-research areas were resolved: the allauth MFA context API, `<c-dac.form-field>` textarea
+research areas were resolved: the allauth MFA context API, `<c-form.field>` textarea
 limitation, `<c-form.card>` slot mechanics (confirmed by `password_change.html`),
 WebAuthn JS preservation, Bootstrap table pattern, and screenshot naming for 11 states.
 
@@ -51,22 +51,22 @@ MFA views without any Python changes:
 MFA view source. No view overrides required.
 **Alternatives considered**: None — this is the allauth public API.
 
-### Decision 3: `<c-dac.form-field type="textarea">` — component extended to support slot content
+### Decision 3: `<c-form.field type="textarea">` — component extended to support slot content
 
 **Decision**: The recovery codes textarea in `mfa/recovery_codes/index.html` MUST be
-rendered using `<c-dac.form-field type="textarea">` with recovery code strings placed
+rendered using `<c-form.field type="textarea">` with recovery code strings placed
 in the default slot.
-**Rationale**: The `<c-dac.form-field>` component was extended to support a `type`
+**Rationale**: The `<c-form.field>` component was extended to support a `type`
 attribute with a `"textarea"` branch that renders a proper `<textarea>{{ slot }}</textarea>`
 open/close pair (instead of a self-closing input). This allows pre-populated textarea
 content via Django Cotton's default slot mechanism. Usage:
 
 ```django
-<c-dac.form-field type="textarea" id="recovery_codes" readonly
+<c-form.field type="textarea" id="recovery_codes" readonly
                   rows="{{ unused_codes|length }}" label="{% trans 'Unused codes' %}">
   {# djlint:off #}{% for code in unused_codes %}{% if forloop.counter0 %}
 {% endif %}{{ code }}{% endfor %}{# djlint:on #}
-</c-dac.form-field>
+</c-form.field>
 ```
 
 **Implementation note — whitespace**: The component template places `{{ slot }}` on

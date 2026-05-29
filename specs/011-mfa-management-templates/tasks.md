@@ -130,7 +130,7 @@
         <img src="{{ totp_svg_data_uri }}" alt="{% trans 'TOTP QR Code' %}" class="img-fluid" style="max-width: 220px" />
       </div>
       <p>{% blocktrans with secret=form.secret.value %}Or enter this secret manually: <code>{{ secret }}</code>{% endblocktrans %}</p>
-      <c-dac.form-field type="text"
+      <c-form.field type="text"
                         id="{{ form.code.auto_id }}"
                         name="{{ form.code.html_name }}"
                         label="{{ form.code.label }}"
@@ -159,7 +159,7 @@
 
 - [X] T007 [P] [US2] Fully rewrite `dac/addons/allauth/templates/mfa/recovery_codes/index.html`:
 
-  Research Decision 3 applies: use `<c-dac.form-field type="textarea">` with recovery codes in the default slot. `id="recovery_codes"` is a hard JS dependency and MUST be preserved exactly. The component template places `{{ slot }}` on its own indented line — use `{# djlint:off #}` to prevent reformatting.
+  Research Decision 3 applies: use `<c-form.field type="textarea">` with recovery codes in the default slot. `id="recovery_codes"` is a hard JS dependency and MUST be preserved exactly. The component template places `{{ slot }}` on its own indented line — use `{# djlint:off #}` to prevent reformatting.
 
   - `{% load i18n %}`
   - `{% block title %}{% trans "Recovery Codes" %}{% endblock title %}`
@@ -169,13 +169,13 @@
     ```django
     <c-card title="{% trans 'Recovery Codes' %}">
       {% if can_view_codes %}
-        <c-dac.form-field type="textarea" id="recovery_codes" readonly
+        <c-form.field type="textarea" id="recovery_codes" readonly
                           rows="{{ unused_codes|length }}" label="{% trans 'Unused codes' %}"
                           class="mb-3">
           {# djlint:off #}{% for code in unused_codes %}{% if forloop.counter0 %}
 
 {% endif %}{{ code }}{% endfor %}{# djlint:on #}
-        </c-dac.form-field>
+        </c-form.field>
         {% if MFA_RECOVERY_CODES_SHOW_ONCE %}
           <div class="form-check mb-3">
             <input class="form-check-input" type="checkbox" id="codes_saved" />

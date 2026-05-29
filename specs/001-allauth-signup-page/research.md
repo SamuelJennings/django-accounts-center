@@ -87,13 +87,13 @@
 
 ## Decision 4: Form Field Rendering Strategy
 
-**Decision**: Use `<c-card>` (django-mvp) as the outer container and `<c-form>` (django-mvp) as the form element, with explicit markup inside the card body. Form fields are rendered via `<c-form.crispy />`. No modifications to any django-mvp component are required.
+**Decision**: Use `<c-card>` (django-mvp) as the outer container and `<c-form>` (django-mvp) as the form element, with explicit markup inside the card body. Form fields are rendered via `<c-form.render />`. No modifications to any django-mvp component are required.
 
 **Rationale**:
 
 - The card + form structure involves conditional sections (social buttons, `SOCIALACCOUNT_ONLY` guard, passkey button) that make `<c-form.card>`'s slot system more complex than explicit markup.
 - `<c-form>` handles the `<form>` tag and auto-injects `{% csrf_token %}` for POST requests — the only boilerplate saved.
-- `<c-form.crispy />` renders `{{ form|crispy }}` which applies crispy-bootstrap5 styling to all fields (FR-006 satisfied automatically).
+- `<c-form.render />` renders `{{ form|crispy }}` which applies crispy-bootstrap5 styling to all fields (FR-006 satisfied automatically).
 - Social provider buttons (which are `<a>` links, not inputs) sit as direct card body children **above** the `<c-form>` element — cleanly outside the HTML form.
 - No django-mvp component modifications required (Principle IX: use components as-is).
 
@@ -114,7 +114,7 @@
 {# Password form #}
 {% if not SOCIALACCOUNT_ONLY %}
   <c-form method="post" action="{% url 'account_signup' %}">
-    <c-form.crispy />
+    <c-form.render />
     {{ redirect_field }}
     <c-button.stack class="mt-4">
       <c-button text="{% trans \"Let's go!\" %}"
@@ -147,7 +147,7 @@
 
 ## Decision 5: Cotton Component Stack for the Signup UI
 
-**Decision**: Use `<c-entrance>` (DAC Cotton component, `dac/templates/cotton/entrance/index.html`) as the entrance page shell, `<c-entrance.background>` for background styling, `<c-entrance.logo>` for the logo, `<c-card.divider>` for the "or" separator, `<c-button.stack>` (django-mvp) + `<c-button>` (django-cotton-bs5) for submit and passkey buttons, and `<c-messages>` (django-mvp) for flash messages. Non-field errors are rendered inside `<c-form.crispy>` via `<c-alert variant="danger">` — not as a standalone block in page templates.
+**Decision**: Use `<c-entrance>` (DAC Cotton component, `dac/templates/cotton/entrance/index.html`) as the entrance page shell, `<c-entrance.background>` for background styling, `<c-entrance.logo>` for the logo, `<c-card.divider>` for the "or" separator, `<c-button.stack>` (django-mvp) + `<c-button>` (django-cotton-bs5) for submit and passkey buttons, and `<c-messages>` (django-mvp) for flash messages. Non-field errors are rendered inside `<c-form.render>` via `<c-alert variant="danger">` — not as a standalone block in page templates.
 
 **Rationale**: The entrance shell pattern (full-viewport layout, card, logo, title) is shared across all entrance pages. Extracting it into `<c-entrance>` removes duplication and gives developers a clean, single-file override for background and logo without touching any page template. Social provider buttons use Bootstrap Icon `<a>` tags rather than `<c-button>` because the icon+label flex layout is simpler as raw HTML.
 
@@ -161,7 +161,7 @@
 | Submit button stack | `<c-button.stack>` | django-mvp |
 | Submit / passkey button | `<c-button>` | django-cotton-bs5 |
 | Flash messages | `<c-messages dismissible animate>` | django-mvp |
-| Non-field error alert | `<c-alert variant="danger">` inside `<c-form.crispy>` | django-cotton-bs5 |
+| Non-field error alert | `<c-alert variant="danger">` inside `<c-form.render>` | django-cotton-bs5 |
 
 **Alternatives considered**:
 
@@ -178,7 +178,7 @@
 |---|---|
 | `allauth/layouts/base.html` | Replace to extend `mvp/base.html`; wire title block |
 | `allauth/layouts/entrance.html` | Delegate to `<c-entrance>` Cotton component; pass `title` slot and responsive-width attrs |
-| `account/signup.html` | Full rewrite — content-only block; no card/logo markup; social guards; `<c-form.crispy />`; `<c-button.stack>` submit; login link at bottom |
+| `account/signup.html` | Full rewrite — content-only block; no card/logo markup; social guards; `<c-form.render />`; `<c-button.stack>` submit; login link at bottom |
 | `account/signup_closed.html` | Rewrite — content-only closed message |
 | `socialaccount/signup.html` | Rewrite — social-only signup form without `{% element %}` tags |
 | `socialaccount/snippets/provider_list.html` | Rewrite — Bootstrap Icon `<a>` tags per provider |

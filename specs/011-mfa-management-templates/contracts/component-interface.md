@@ -108,7 +108,7 @@ Extends `mfa/totp/base.html` (unchanged). Overrides `{% block page.content %}`.
 
 Extends `mfa/recovery_codes/base.html` (unchanged). Overrides `{% block page.content %}`.
 
-Uses raw Bootstrap HTML textarea (Decision 3 — `<c-dac.form-field>` cannot render
+Uses raw Bootstrap HTML textarea (Decision 3 — `<c-form.field>` cannot render
 textarea with text content). Download and Generate action buttons are inside the card
 body, below the textarea.
 
@@ -292,7 +292,7 @@ Extends `mfa/webauthn/base.html` (unchanged). Overrides `{% block page.content %
 
 | Attribute/Slot | Required | Description |
 |---|---|---|
-| `title` | No | Renders `<c-mvp-toolbar>` as `card-header` |
+| `title` | No | Renders `<c-mvp.toolbar>` as `card-header` |
 | `<c-slot name="actions">` | No | Rendered inside card-header toolbar (requires `title`) |
 | Default slot | No | Card body content |
 

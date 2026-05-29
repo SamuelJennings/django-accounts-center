@@ -73,6 +73,7 @@ truncation — rejected because raw user-agent strings cause horizontal overflow
 **Decision**: Use `<c-badge variant="success">` for the "Current" session indicator and
 `<c-button variant="primary">` for the sign-out form submit button.
 **Rationale**:
+
 - `success` (green) for the badge: signals the current session is active and healthy;
   consistent with `<c-badge variant="success">` already used in `account/email.html`
   for "Verified" email addresses. Confirmed by user clarification (Q5).
@@ -90,7 +91,7 @@ the established convention for active/verified states in the addon.
 `{% block page.header %}` is NOT overridden by `usersession_list.html`.
 **Rationale**: Inspection of `dac/base.html` reveals that `{% block page.header %}`
 wraps the entire breadcrumbs toolbar — it is not the heading slot. The actual page
-title/heading appears in `{% block title %}`, which is rendered inside `<c-mvp-toolbar>` →
+title/heading appears in `{% block title %}`, which is rendered inside `<c-mvp.toolbar>` →
 `<c-slot name="title">`. This is the same pattern used by `connections.html` (spec 009),
 `email.html` (spec 006), and all other DAC management pages. The spec clarification (Q4)
 confirmed that a visible heading is required; the mechanism is `{% block title %}`.

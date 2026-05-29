@@ -11,11 +11,10 @@ Covers:
 import pytest
 from allauth.account.forms import ConfirmPasswordResetCodeForm, default_token_generator
 from allauth.account.utils import user_pk_to_url_str
-from django.contrib.auth import get_user_model
-from django.template.loader import render_to_string
+from django.template.loader import get_template, render_to_string
 from django.urls import reverse
 
-User = get_user_model()
+from tests.factories import UserFactory
 
 
 # ---------------------------------------------------------------------------
@@ -39,6 +38,27 @@ def get_invalid_reset_key_url():
 
 
 # ---------------------------------------------------------------------------
+# Template source checks — no raw {% element %} / {% endelement %} tags
+# ---------------------------------------------------------------------------
+
+RESET_TEMPLATES = [
+    "account/password_reset.html",
+    "account/password_reset_done.html",
+    "account/password_reset_from_key.html",
+    "account/password_reset_from_key_done.html",
+    "account/confirm_password_reset_code.html",
+]
+
+
+@pytest.mark.parametrize("template_name", RESET_TEMPLATES)
+def test_no_raw_element_tags_in_templates(template_name):
+    """No password-reset template may contain raw {% element %} tags."""
+    source = get_template(template_name).template.source
+    assert "{% element" not in source
+    assert "{% endelement" not in source
+
+
+# ---------------------------------------------------------------------------
 # T006 / US1: Standard link-based password reset
 # ---------------------------------------------------------------------------
 
@@ -54,19 +74,17 @@ def test_password_reset_renders_200(client):
 def test_password_reset_renders_200_for_authenticated(client, settings):
     """password_reset.html must return HTTP 200 for authenticated users."""
     settings.ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = False
-    user = User.objects.create_user(username="testuser", email="test@example.com", password="pass")
+    user = UserFactory(email="test@example.com")
     client.force_login(user)
     response = client.get(reverse("account_reset_password"))
     assert response.status_code == 200
 
 
 @pytest.mark.django_db
-def test_password_reset_has_email_field_no_element_tags(client):
-    """Rendered HTML must not contain raw {%% element %%} tags."""
+def test_password_reset_has_email_field(client):
+    """password_reset.html must render an email input field."""
     response = client.get(reverse("account_reset_password"))
     content = response.content.decode()
-    assert "{% element" not in content
-    assert "{% endelement" not in content
     assert 'name="email"' in content or 'type="email"' in content
 
 
@@ -83,7 +101,7 @@ def test_password_reset_has_redirect_field(client):
 def test_password_reset_post_redirects_to_done(client, settings):
     """POST to password reset form redirects to account_reset_password_done."""
     settings.ACCOUNT_PASSWORD_RESET_BY_CODE_ENABLED = False
-    user = User.objects.create_user(username="testuser", email="test@example.com", password="pass")
+    user = UserFactory(email="test@example.com")
     response = client.post(
         reverse("account_reset_password"),
         data={"email": user.email},
@@ -100,19 +118,10 @@ def test_password_reset_done_renders_200(client):
 
 
 @pytest.mark.django_db
-def test_password_reset_done_has_no_element_tags(client):
-    """password_reset_done.html rendered output must not contain raw element tags."""
-    response = client.get(reverse("account_reset_password_done"))
-    content = response.content.decode()
-    assert "{% element" not in content
-    assert "{% endelement" not in content
-
-
-@pytest.mark.django_db
 def test_password_reset_done_renders_200_for_authenticated(client, settings):
     """password_reset_done.html must return HTTP 200 for authenticated users."""
     settings.ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = False
-    user = User.objects.create_user(username="testuser2", email="test2@example.com", password="pass")
+    user = UserFactory(email="test2@example.com")
     client.force_login(user)
     response = client.get(reverse("account_reset_password_done"))
     assert response.status_code == 200
@@ -122,22 +131,20 @@ def test_password_reset_done_renders_200_for_authenticated(client, settings):
 def test_password_reset_from_key_valid_renders_200(client, settings):
     """password_reset_from_key.html (valid token) must return HTTP 200 with the form."""
     settings.ACCOUNT_PASSWORD_RESET_BY_CODE_ENABLED = False
-    user = User.objects.create_user(username="resetuser", email="reset@example.com", password="pass")
+    user = UserFactory(email="reset@example.com")
     url = get_valid_reset_key_url(user)
     response = client.get(url, follow=True)
     assert response.status_code == 200
 
 
 @pytest.mark.django_db
-def test_password_reset_from_key_valid_has_password_fields_no_element_tags(client, settings):
-    """password_reset_from_key.html (valid) must have password fields and no element tags."""
+def test_password_reset_from_key_valid_has_password_fields(client, settings):
+    """password_reset_from_key.html (valid) must have password fields."""
     settings.ACCOUNT_PASSWORD_RESET_BY_CODE_ENABLED = False
-    user = User.objects.create_user(username="resetuser2", email="reset2@example.com", password="pass")
+    user = UserFactory(email="reset2@example.com")
     url = get_valid_reset_key_url(user)
     response = client.get(url, follow=True)
     content = response.content.decode()
-    assert "{% element" not in content
-    assert "{% endelement" not in content
     assert 'type="password"' in content
 
 
@@ -145,7 +152,7 @@ def test_password_reset_from_key_valid_has_password_fields_no_element_tags(clien
 def test_password_reset_from_key_valid_has_redirect_field(client, settings):
     """password_reset_from_key.html (valid) must render redirect_field inside the form."""
     settings.ACCOUNT_PASSWORD_RESET_BY_CODE_ENABLED = False
-    user = User.objects.create_user(username="resetuser3", email="reset3@example.com", password="pass")
+    user = UserFactory(email="reset3@example.com")
     url = get_valid_reset_key_url(user)
     response = client.get(url, follow=True)
     content = response.content.decode()
@@ -157,7 +164,7 @@ def test_password_reset_from_key_valid_has_redirect_field(client, settings):
 def test_password_reset_from_key_valid_cancel_targets_logout_form(client, settings):
     """password_reset_from_key.html (valid) Cancel button targets #logout-from-stage form."""
     settings.ACCOUNT_PASSWORD_RESET_BY_CODE_ENABLED = False
-    user = User.objects.create_user(username="resetuser4", email="reset4@example.com", password="pass")
+    user = UserFactory(email="reset4@example.com")
     url = get_valid_reset_key_url(user)
     response = client.get(url, follow=True)
     content = response.content.decode()
@@ -168,7 +175,7 @@ def test_password_reset_from_key_valid_cancel_targets_logout_form(client, settin
 def test_password_reset_from_key_valid_has_logout_form(client, settings):
     """password_reset_from_key.html (valid, no cancel_url) must have #logout-from-stage form."""
     settings.ACCOUNT_PASSWORD_RESET_BY_CODE_ENABLED = False
-    user = User.objects.create_user(username="resetuser5", email="reset5@example.com", password="pass")
+    user = UserFactory(email="reset5@example.com")
     url = get_valid_reset_key_url(user)
     response = client.get(url, follow=True)
     content = response.content.decode()
@@ -192,19 +199,10 @@ def test_password_reset_from_key_done_contains_success_message(client):
 
 
 @pytest.mark.django_db
-def test_password_reset_from_key_done_has_no_element_tags(client):
-    """password_reset_from_key_done.html must not contain raw element tags."""
-    response = client.get(reverse("account_reset_password_from_key_done"))
-    content = response.content.decode()
-    assert "{% element" not in content
-    assert "{% endelement" not in content
-
-
-@pytest.mark.django_db
 def test_password_reset_end_to_end(client, settings):
     """Full end-to-end: request reset → done → follow key URL → change password → success."""
     settings.ACCOUNT_PASSWORD_RESET_BY_CODE_ENABLED = False
-    user = User.objects.create_user(username="e2euser", email="e2e@example.com", password="oldpassword")
+    user = UserFactory(email="e2e@example.com")
 
     # Step 1: Request reset
     response = client.post(reverse("account_reset_password"), data={"email": user.email})
@@ -264,7 +262,7 @@ def test_password_reset_from_key_invalid_has_no_password_field(client):
 def test_password_reset_from_key_valid_has_password_form(client, settings):
     """Valid-token branch must render password input fields."""
     settings.ACCOUNT_PASSWORD_RESET_BY_CODE_ENABLED = False
-    user = User.objects.create_user(username="titleuser", email="title@example.com", password="pass")
+    user = UserFactory(email="title@example.com")
     url = get_valid_reset_key_url(user)
     response = client.get(url, follow=True)
     content = response.content.decode()
@@ -339,14 +337,6 @@ def _render_confirm_code_template(rf, extra_context=None):
     if extra_context:
         ctx.update(extra_context)
     return render_to_string("account/confirm_password_reset_code.html", ctx, request=request)
-
-
-@pytest.mark.django_db
-def test_confirm_password_reset_code_has_no_element_tags(rf):
-    """Rendered output must not contain raw {%% element %%} tags."""
-    content = _render_confirm_code_template(rf)
-    assert "{% element" not in content
-    assert "{% endelement" not in content
 
 
 @pytest.mark.django_db
