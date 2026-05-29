@@ -153,7 +153,7 @@ A developer running the test suite expects all MFA management template overrides
 
 ## Assumptions
 
-- `dac/base.html` (from spec 005) and `account/base_manage.html` (corrected in spec 006) are fully implemented and provide the `page.content`, `title`, `page.breadcrumbs`, and `page.header` blocks.
+- `dac/base.html` (from spec 005) and `account/base_manage.html` (corrected in spec 006) are fully implemented and provide the `page.content`, `title`, `page.breadcrumbs`, and `breadcrumbs` blocks.
 - The sub-base templates (`mfa/totp/base.html`, `mfa/recovery_codes/base.html`, `mfa/webauthn/base.html`) only need the `extends` fix in `mfa/base_manage.html` to inherit the correct layout; no other changes are required to these sub-base files.
 - The allauth context variables (`authenticators`, `MFA_SUPPORTED_TYPES`, `MFA_RECOVERY_CODES_SHOW_ONCE`, `is_mfa_enabled`) are provided by `allauth.mfa.base.views.IndexView`; templates do not need to fetch or transform this data.
 - No `<c-table>` Cotton component exists in the project; the WebAuthn authenticator list MUST be rendered using raw Bootstrap HTML (`<table class="table">`) inside a `<c-card>`.

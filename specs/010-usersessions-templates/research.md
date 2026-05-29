@@ -85,18 +85,18 @@ truncation — rejected because raw user-agent strings cause horizontal overflow
 button — rejected by user; `primary` for badge — rejected because `success` is already
 the established convention for active/verified states in the addon.
 
-### Decision 6: Page heading via `{% block title %}`, not `{% block page.header %}`
+### Decision 6: Page heading via `{% block title %}`, not `{% block breadcrumbs %}`
 
 **Decision**: The visible "Sessions" page heading is rendered via `{% block title %}`.
-`{% block page.header %}` is NOT overridden by `usersession_list.html`.
-**Rationale**: Inspection of `dac/base.html` reveals that `{% block page.header %}`
+`{% block breadcrumbs %}` is NOT overridden by `usersession_list.html`.
+**Rationale**: Inspection of `dac/base.html` reveals that `{% block breadcrumbs %}`
 wraps the entire breadcrumbs toolbar — it is not the heading slot. The actual page
 title/heading appears in `{% block title %}`, which is rendered inside `<c-mvp.toolbar>` →
 `<c-slot name="title">`. This is the same pattern used by `connections.html` (spec 009),
 `email.html` (spec 006), and all other DAC management pages. The spec clarification (Q4)
 confirmed that a visible heading is required; the mechanism is `{% block title %}`.
-**Alternatives considered**: Overriding `{% block page.header %}` to add a heading —
-rejected because `page.header` wraps the breadcrumbs region, not a heading slot. Adding
+**Alternatives considered**: Overriding `{% block breadcrumbs %}` to add a heading —
+rejected because `breadcrumbs` wraps the breadcrumbs region, not a heading slot. Adding
 a heading there would produce a second toolbar-level element outside the expected structure.
 
 ## Prior Art (Established Patterns)

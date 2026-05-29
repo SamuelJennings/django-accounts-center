@@ -36,6 +36,8 @@ pytest-playwright = "^0.7.2"
 # django-mvp = { path = "../django-mvp", develop = true }
 
 
+
+
 [tool.poetry.dependencies]
 [build-system]
 requires = ['poetry-core (>=2.0,<3.0)']

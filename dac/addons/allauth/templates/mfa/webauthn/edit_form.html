@@ -5,21 +5,21 @@
   {% trans "Edit Security Key" %}
 {% endblock title %}
 
-{% block page.header %}
+{% block breadcrumbs %}
   {{ block.super }}
   <c-breadcrumbs.item href="{% url 'mfa_index' %}"
                       text="{% trans 'Two-Factor Authentication' %}" />
   <c-breadcrumbs.item href="{% url 'mfa_list_webauthn' %}"
                       text="{% trans 'Security Keys' %}" />
   <c-breadcrumbs.item text="{% trans 'Edit' %}" />
-{% endblock page.header %}
+{% endblock breadcrumbs %}
 
 {% block page.content %}
   <c-form.card method="post"
                action="{% url 'mfa_edit_webauthn' authenticator.pk %}"
                title="{% trans 'Edit Security Key' %}"
                :form-obj="form">
-    <c-slot name="form_actions">
+    <c-slot name="actions">
       <c-button type="submit"
                 variant="primary"
                 text="{% trans 'Save' %}" />

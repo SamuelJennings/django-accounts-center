@@ -5,19 +5,19 @@
   {% trans "Deactivate Authenticator App" %}
 {% endblock title %}
 
-{% block page.header %}
+{% block breadcrumbs %}
   {{ block.super }}
   <c-breadcrumbs.item href="{% url 'mfa_index' %}"
                       text="{% trans 'Two-Factor Authentication' %}" />
   <c-breadcrumbs.item text="{% trans 'Deactivate' %}" />
-{% endblock page.header %}
+{% endblock breadcrumbs %}
 
 {% block page.content %}
   <c-form.card method="post"
                action="{% url 'mfa_deactivate_totp' %}"
                title="{% trans 'Deactivate Authenticator App' %}"
                :form-obj="form">
-    <c-slot name="form_actions">
+    <c-slot name="actions">
       <c-button type="submit"
                 variant="danger"
                 text="{% trans 'Deactivate' %}" />

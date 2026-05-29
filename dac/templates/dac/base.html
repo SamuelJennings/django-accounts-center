@@ -6,17 +6,11 @@
 {% endblock app.sidebar %}
 
 {% block page.header %}
-  <c-slot name="header">
-    <c-container fluid>
-      <c-mvp.toolbar>
-        <c-breadcrumbs class="py-1">
-          {% block page.header %}
-            <c-breadcrumbs.item text="{% trans "Account Center" %}"
-                                href="{% url "account-center" %}" />
-          {% endblock page.header %}
+  <c-breadcrumbs>
+    {% block breadcrumbs %}
+      <c-breadcrumbs.item text="{% trans "Account Center" %}"
+                          href="{% url "account-center" %}" />
+    {% endblock breadcrumbs %}
 
-        </c-breadcrumbs>
-      </c-mvp.toolbar>
-    </c-container>
-  </c-slot>
+  </c-breadcrumbs>
 {% endblock page.header %}

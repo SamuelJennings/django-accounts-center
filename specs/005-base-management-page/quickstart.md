@@ -38,7 +38,7 @@ Extend `dac/base.html` from any management sub-page template:
 | `title` | *(empty)* | Always — provide the page heading string |
 | `page.breadcrumbs` | "Account Center" breadcrumb item | Use `{{ block.super }}` and append items |
 | `page.content` | `{% trans "Coming soon..." %}` | Always — provide the page's primary UI |
-| `page.header` | Toolbar + breadcrumbs structure | Rarely — only to change header layout |
+| `breadcrumbs` | Toolbar + breadcrumbs structure | Rarely — only to change header layout |
 | `page.content-wrapper` | `<c-page.content>` + `layouts.form-view` | Rarely — only for full-width layouts |
 | `app.sidebar` | Account Center Menu | Almost never — override to inject a different menu |
 | `content` | Full management page structure | Never — override `page.content` instead |

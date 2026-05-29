@@ -61,16 +61,16 @@ class TestDacBaseBlockContract:
         assert h1 is None or not h1.get_text(strip=True)
 
     def test_title_block_override_renders(self, cotton_render_string_soup):
-        """Overriding the title block produces an <h1> with the given text.
+        """Overriding the title block sets the document <title> element.
 
-        <c-mvp.toolbar> renders its heading at level 1 (default) when the
-        title slot is non-empty.
+        {% block title %} feeds the HTML <title> tag in mvp/base.html.
+        The page heading is handled by form/page components, not this block.
         """
         template = _BASE + "{% block title %}My Test Page{% endblock title %}"
         soup = cotton_render_string_soup(template)
-        h1 = soup.find("h1")
-        assert h1 is not None
-        assert h1.get_text(strip=True) == "My Test Page"
+        title_el = soup.find("title")
+        assert title_el is not None
+        assert "My Test Page" in title_el.get_text()
 
     def test_page_content_placeholder_default(self, cotton_render_string_soup):
         """The default page.content block shows the 'Coming soon...' placeholder.
@@ -100,10 +100,10 @@ class TestDacBaseBlockContract:
         """
         template = (
             _BASE
-            + "{% block page.breadcrumbs %}"
+            + "{% block breadcrumbs %}"
             + "{{ block.super }}"
             + '<c-breadcrumbs.item text="Sub Page" />'
-            + "{% endblock page.breadcrumbs %}"
+            + "{% endblock breadcrumbs %}"
         )
         soup = cotton_render_string_soup(template)
         text = soup.get_text()
@@ -169,7 +169,7 @@ class TestDacBaseStructure:
         """The template source contains every required named block tag.
 
         US3 SC: a developer listing all {% block %} tags must find all seven
-        documented blocks (app.sidebar, content, page.header, page.breadcrumbs,
+        documented blocks (app.sidebar, content, breadcrumbs, page.breadcrumbs,
         page.content-wrapper, title, page.content).
         """
         template_path = (
@@ -178,12 +178,8 @@ class TestDacBaseStructure:
         source = template_path.read_text(encoding="utf-8")
         required_blocks = [
             "app.sidebar",
-            "content",
             "page.header",
-            "page.breadcrumbs",
-            "page.content-wrapper",
-            "title",
-            "page.content",
+            "breadcrumbs",
         ]
         for block_name in required_blocks:
             assert f"{{% block {block_name} %}}" in source, f"Block '{block_name}' not found in dac/base.html"

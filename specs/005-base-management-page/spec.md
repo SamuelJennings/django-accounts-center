@@ -49,7 +49,7 @@ A developer new to the project opens `dac/base.html` and immediately understands
 
 **Acceptance Scenarios**:
 
-1. **Given** the template source, **When** a developer lists all `{% block %}` tags, **Then** the following blocks are present: `app.sidebar`, `content`, `page.header`, `page.breadcrumbs`, `page.content-wrapper`, `title`, `page.content`.
+1. **Given** the template source, **When** a developer lists all `{% block %}` tags, **Then** the following blocks are present: `app.sidebar`, `content`, `breadcrumbs`, `page.breadcrumbs`, `page.content-wrapper`, `title`, `page.content`.
 2. **Given** the template source, **When** a developer reads the `page.breadcrumbs` block default, **Then** it contains exactly one breadcrumb item pointing to the Account Center home URL.
 3. **Given** the template source, **When** a developer reads the `page.content` block default, **Then** it shows a localised placeholder string (not an empty block).
 
@@ -70,8 +70,8 @@ A developer new to the project opens `dac/base.html` and immediately understands
 - **FR-002**: The base template MUST extend the host project's `base.html`, inheriting all global layout blocks (head, navbar, footer, etc.).
 - **FR-003**: The base template MUST override the `app.sidebar` block to inject the Account Center Menu using the project's sidebar component.
 - **FR-004**: The base template MUST override the `content` block to provide the standardised management page structure.
-- **FR-005**: Within the overridden `content` block, the template MUST include a `page.header` block containing a toolbar with a pre-configured breadcrumbs component.
-- **FR-006**: Within the `page.header` breadcrumbs component, the template MUST provide a `page.breadcrumbs` block whose default content is a single breadcrumb item labelled "Account Center" that links to the account-center home URL.
+- **FR-005**: Within the overridden `content` block, the template MUST include a `breadcrumbs` block containing a toolbar with a pre-configured breadcrumbs component.
+- **FR-006**: Within the `breadcrumbs` breadcrumbs component, the template MUST provide a `page.breadcrumbs` block whose default content is a single breadcrumb item labelled "Account Center" that links to the account-center home URL.
 - **FR-007**: The main content area MUST be wrapped in a `layouts.form-view` component to constrain its width and maintain visual consistency with standard django-mvp form pages.
 - **FR-008**: Within the `layouts.form-view` component, the template MUST render a toolbar containing a `title` block, allowing sub-pages to declare their page title.
 - **FR-009**: Below the title toolbar, all page content MUST be wrapped in a `card.stack` component to provide consistent vertical spacing between UI elements.

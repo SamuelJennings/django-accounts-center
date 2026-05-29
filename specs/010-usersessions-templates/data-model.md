@@ -67,5 +67,5 @@ bypassing `dac/base.html` entirely. The "Sessions" page rendered with allauth's 
 layout — no sidebar, no Account Center breadcrumbs, no card-stack.
 
 **After fix**: The full DAC layout chain is restored. All blocks defined in `dac/base.html`
-(`page.header`, `page.breadcrumbs`, `page.content`, `title`) are available to
+(`breadcrumbs`, `page.breadcrumbs`, `page.content`, `title`) are available to
 `usersession_list.html`.

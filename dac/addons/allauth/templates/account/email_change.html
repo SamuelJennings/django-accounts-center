@@ -5,10 +5,10 @@
   {% trans "Change Email" %}
 {% endblock title %}
 
-{% block page.header %}
+{% block breadcrumbs %}
   {{ block.super }}
   <c-breadcrumbs.item text="{% trans "Change Email" %}" />
-{% endblock page.header %}
+{% endblock breadcrumbs %}
 
 {% block page.content %}
   {# Warn the user if they have no email address on file — the form below requires one to exist before a change can be made. #}
@@ -65,7 +65,7 @@
       {% trans "Provide the new email address you wish to change to." %}
     </c-text>
     {{ form.email|as_crispy_field }}
-    <c-slot name="form_actions">
+    <c-slot name="actions">
       <c-button name="action_add"
                 type="submit"
                 variant="primary"

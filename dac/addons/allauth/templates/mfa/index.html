@@ -5,10 +5,10 @@
   {% trans "Two-Factor Authentication" %}
 {% endblock title %}
 
-{% block page.header %}
+{% block breadcrumbs %}
   {{ block.super }}
   <c-breadcrumbs.item text="{% trans 'Two-Factor Authentication' %}" />
-{% endblock page.header %}
+{% endblock breadcrumbs %}
 
 {% block page.content %}
   {% if "totp" in MFA_SUPPORTED_TYPES %}

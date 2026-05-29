@@ -5,21 +5,21 @@
   {% trans "Generate Recovery Codes" %}
 {% endblock title %}
 
-{% block page.header %}
+{% block breadcrumbs %}
   {{ block.super }}
   <c-breadcrumbs.item href="{% url 'mfa_index' %}"
                       text="{% trans 'Two-Factor Authentication' %}" />
   <c-breadcrumbs.item href="{% url 'mfa_view_recovery_codes' %}"
                       text="{% trans 'Recovery Codes' %}" />
   <c-breadcrumbs.item text="{% trans 'Generate' %}" />
-{% endblock page.header %}
+{% endblock breadcrumbs %}
 
 {% block page.content %}
   <c-form.card method="post"
                action="{% url 'mfa_generate_recovery_codes' %}"
                title="{% trans 'Generate Recovery Codes' %}">
     {% csrf_token %}
-    <c-slot name="form_actions">
+    <c-slot name="actions">
       <c-button type="submit"
                 variant="{% if unused_code_count > 0 %}danger{% else %}primary{% endif %}"
                 text="{% trans 'Generate New Codes' %}" />

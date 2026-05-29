@@ -61,7 +61,7 @@ Sub-page templates interact only with these blocks.
 
 ---
 
-### `page.header` *(advanced)*
+### `breadcrumbs` *(advanced)*
 
 - **Default**: `<c-mvp.toolbar fluid>` wrapping a `<c-breadcrumbs>` that contains
   the `page.breadcrumbs` block.
@@ -92,7 +92,7 @@ Sub-page templates interact only with these blocks.
 ### `content` *(reserved)*
 
 - **Default**: Full management page structure (page header + content wrapper)
-- **Usage**: Do NOT override. Use `page.content` for content, `page.header` for header
+- **Usage**: Do NOT override. Use `page.content` for content, `breadcrumbs` for header
   changes. Overriding `content` bypasses all management page structure.
 
 ---
@@ -104,7 +104,7 @@ base.html
 └── app.sidebar                   → <c-app.sidebar menu="Account Center Menu" />
 └── content
     └── <c-page>
-        └── page.header
+        └── breadcrumbs
             └── <c-mvp.toolbar fluid>
                 └── <c-breadcrumbs>
                     └── page.breadcrumbs

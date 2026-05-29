@@ -109,7 +109,7 @@ A developer running the test suite expects all email management template overrid
 
 ## Assumptions
 
-- `dac/base.html` (from spec 005) is fully implemented and provides the `page.content`, `title`, `page.breadcrumbs`, and `page.header` blocks consumed by these email management templates.
+- `dac/base.html` (from spec 005) is fully implemented and provides the `page.content`, `title`, `page.breadcrumbs`, and `breadcrumbs` blocks consumed by these email management templates.
 - The allauth context variables (`emailaddresses`, `emailaddress_radios`, `can_add_email`, `current_emailaddress`, `new_emailaddress`, `form`) are provided by the corresponding allauth views; the templates do not need to fetch or transform this data.
 - The Cotton components used by `email.html` and `email_change.html` (`c-badge`, `c-dropdown`, `c-dropdown.item`, `c-card`, `c-list-group`, `c-list-group.item`, `c-form.card`, `c-form`, `c-button`, `c-button.stack`) are available through `django-mvp`, `django-cotton-bs5`, or existing DAC custom components. `c-form.card` is the preferred form wrapper for management pages; `c-form` is the fallback when `c-form.card` lacks the needed functionality.
 - The `account_email` URL is registered by allauth when `allauth.account` is in `INSTALLED_APPS`; templates may use `{% url "account_email" %}` freely.

@@ -1,6 +1,6 @@
 {% extends "account/base_manage.html" %}
-{% block page.header %}
+{% block breadcrumbs %}
   {{ block.super }}
   <c-breadcrumbs.item text="{% trans "Manage email" %}"
                       href="{% url "account_email" %}" />
-{% endblock page.header %}
+{% endblock breadcrumbs %}

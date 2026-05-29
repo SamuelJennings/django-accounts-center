@@ -127,7 +127,7 @@ A developer running the test suite expects all password change and reauthenticat
 
 ## Assumptions
 
-- `dac/base.html` (from spec 005) and `account/base_manage.html` (corrected in spec 006) are fully implemented and provide the `page.content`, `title`, `page.breadcrumbs`, and `page.header` blocks consumed by the password management templates.
+- `dac/base.html` (from spec 005) and `account/base_manage.html` (corrected in spec 006) are fully implemented and provide the `page.content`, `title`, `page.breadcrumbs`, and `breadcrumbs` blocks consumed by the password management templates.
 - `account/base_entrance.html` is already implemented and extends `allauth/layouts/entrance.html`; only the allauth `{% element %}` tag usage inside `base_reauthenticate.html` and `reauthenticate.html` is in scope — no change to `base_entrance.html` itself is needed.
 - The allauth context variables (`form`, `redirect_field`, `reauthentication_alternatives`) are provided by the corresponding allauth views; the templates do not need to fetch or transform this data.
 - The Cotton components used by these templates (`<c-form.card>`, `<c-form>`, `<c-button>`, `<c-button.stack>`, `<c-entrance.section>`) are available through `django-mvp`, `django-cotton-bs5`, or existing DAC custom components. `<c-form.card>` is the preferred form wrapper for management pages.

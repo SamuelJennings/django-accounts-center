@@ -133,7 +133,7 @@ positions, confirming structural legibility without rendering.
 
 - [x] T007 [US3] Add `test_all_required_blocks_present` to `tests/test_components/test_dac_base.py`:
   - Read the source of `dac/templates/dac/base.html` (use `pathlib.Path` or `django.template.loader.get_template().origin.name`)
-  - Assert the source string contains each of the following block tags: `app.sidebar`, `content`, `page.header`, `page.breadcrumbs`, `page.content-wrapper`, `title`, `page.content`
+  - Assert the source string contains each of the following block tags: `app.sidebar`, `content`, `breadcrumbs`, `page.breadcrumbs`, `page.content-wrapper`, `title`, `page.content`
 
 - [x] T008 [US3] Add `test_page_breadcrumbs_default_has_one_item` to `tests/test_components/test_dac_base.py`:
   - Render a bare extend

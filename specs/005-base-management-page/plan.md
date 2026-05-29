@@ -114,7 +114,7 @@ The public block interface of `dac/base.html` for downstream sub-page authors:
 |---|---|---|
 | `app.sidebar` | `<c-app.sidebar menu="Account Center Menu" />` | Override to inject a different menu; rarely needed |
 | `content` | Full management page structure | Override only to replace the entire layout |
-| `page.header` | Toolbar + breadcrumbs wrapper | Override to change header structure; use `{{ block.super }}` to extend |
+| `breadcrumbs` | Toolbar + breadcrumbs wrapper | Override to change header structure; use `{{ block.super }}` to extend |
 | `page.breadcrumbs` | Single item: "Account Center" → `account-center` URL | Always use `{{ block.super }}` then append additional items |
 | `page.content-wrapper` | `<c-page.content class="container">` + `layouts.form-view` | Override only for full-width or non-form layouts |
 | `title` | *(empty)* | Override with the page heading string; no wrapper needed |

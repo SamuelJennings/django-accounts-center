@@ -100,7 +100,7 @@ A developer running the test suite expects all social account management templat
 
 ## Assumptions
 
-- `dac/base.html` (from spec 005) and `account/base_manage.html` (corrected in spec 006) are fully implemented and provide the `page.content`, `title`, `page.breadcrumbs`, and `page.header` blocks; `socialaccount/base_manage.html` only needs its `extends` line changed to `dac/base.html`.
+- `dac/base.html` (from spec 005) and `account/base_manage.html` (corrected in spec 006) are fully implemented and provide the `page.content`, `title`, `page.breadcrumbs`, and `breadcrumbs` blocks; `socialaccount/base_manage.html` only needs its `extends` line changed to `dac/base.html`.
 - `socialaccount/base_entrance.html` already correctly extends `allauth/layouts/entrance.html`; no change to this file is required.
 - The allauth context variables (`form`, `form.accounts`, `form.fields.account.choices`) are provided by the `SocialAccountDisconnectView`; the templates do not need to fetch or transform this data.
 - The Cotton components used by `connections.html` (`<c-badge>`, `<c-card>`, `<c-form>`, `<c-button>`, `<c-button.stack>`) and `authentication_error.html` (`<c-text>`) are available through `django-mvp`, `django-cotton-bs5`, or existing DAC custom components.
