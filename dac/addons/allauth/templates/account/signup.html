@@ -10,7 +10,8 @@
     {% include "socialaccount/snippets/login.html" with process="signup" %}
   {% endif %}
   {% if not SOCIALACCOUNT_ONLY %}
-    <c-entrance.section text="{% trans "By filling out the form below." %}" center>
+    <c-entrance.section text="{% trans "By filling out the form below." %}"
+                        center>
       <c-form method="post"
               action="{% url 'account_signup' %}"
               :form-obj="form">
@@ -27,7 +28,7 @@
     </c-entrance.section>
   {% endif %}
   {% if PASSKEY_SIGNUP_ENABLED %}
-    <c-card.divider text="{% trans "or" %}" />
+    <c-divider text="{% trans "or" %}" />
     <c-entrance.section text="{% trans "By saving a passkey to your personal device." %}">
       <c-button.stack>
         <c-button href="{{ signup_by_passkey_url }}"

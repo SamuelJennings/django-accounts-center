@@ -50,7 +50,7 @@ class TestDacBaseBlockContract:
     def test_title_block_empty_by_default(self, cotton_render_string_soup):
         """When the title block is not overridden, no heading is rendered.
 
-        <c-mvp.toolbar> only emits an <h*> when its title slot is non-empty.
+        <c-toolbar> only emits an <h*> when its title slot is non-empty.
         An overridden (empty) title block produces a whitespace-only slot,
         which Cotton strips to an empty string, so {% if title %} is falsy
         and no heading element appears in the output.

@@ -6,7 +6,7 @@
     {% include "socialaccount/snippets/provider_list.html" with process=process|default:"login" %}
   </c-entrance.section>
   {% if not SOCIALACCOUNT_ONLY %}
-    <c-card.divider text="{% trans "or" %}" />
+    <c-divider text="{% trans "or" %}" />
   {% endif %}
   {% include "socialaccount/snippets/login_extra.html" %}
 {% endif %}

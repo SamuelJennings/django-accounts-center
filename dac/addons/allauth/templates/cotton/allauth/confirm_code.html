@@ -59,7 +59,6 @@
 {% if can_change %}
   <c-entrance.section>
     <c-form method="post"
-            renderer="crispy"
             :form-obj="change_form"
             action="{{ action_url_change }}">
       {{ redirect_field }}

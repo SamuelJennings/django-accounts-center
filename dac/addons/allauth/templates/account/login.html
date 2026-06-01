@@ -10,7 +10,8 @@
     {% include "socialaccount/snippets/login.html" with process="login" %}
   {% endif %}
   {% if not SOCIALACCOUNT_ONLY %}
-    <c-entrance.section text="{% trans "Using the details you signed up with." %}" center>
+    <c-entrance.section text="{% trans "Using the details you signed up with." %}"
+                        center>
       <c-form method="post" :form-obj="form">
         {{ redirect_field }}
         <c-button.stack>
@@ -25,7 +26,7 @@
     </c-entrance.section>
   {% endif %}
   {% if not SOCIALACCOUNT_ONLY and PASSKEY_LOGIN_ENABLED or not SOCIALACCOUNT_ONLY and LOGIN_BY_CODE_ENABLED %}
-    <c-card.divider text="{% trans "or" %}" />
+    <c-divider text="{% trans "or" %}" />
     <c-entrance.section>
       <c-button.stack>
         {% if PASSKEY_LOGIN_ENABLED %}
