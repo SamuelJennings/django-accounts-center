@@ -40,7 +40,7 @@
 |---|---|---|
 | Already-logged-in snippet | `user.is_authenticated` | `{% include "account/snippets/already_logged_in.html" %}` |
 | Description paragraph | Always | `<c-text center>{% trans "Forgotten your password? Enter your email…" %}</c-text>` |
-| Email form | Always | `<c-form action=reset_url>` + `<c-form.render form=form />` + `{{ redirect_field }}` + `<c-button.stack><c-button text="Send email" icon="send" size="lg" type="submit" variant="primary" /></c-button.stack>` |
+| Email form | Always | `<c-form action=reset_url>` + `<c-form.render form=form />` + `{{ redirect_field }}` + `<c-group><c-button text="Send email" icon="send" size="lg" type="submit" variant="primary" /></c-group>` |
 | Contact-us paragraph | Always | `<c-text small text="..." />` |
 
 ---

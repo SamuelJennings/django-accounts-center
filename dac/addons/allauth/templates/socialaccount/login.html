@@ -20,12 +20,12 @@
   <c-form method="post" action=".">
     {% csrf_token %}
     {{ redirect_field }}
-    <c-button.stack>
+    <c-group>
       <c-button text="{% trans "Continue" %}"
                 icon="login"
                 type="submit"
                 variant="primary"
                 size="lg" />
-    </c-button.stack>
+    </c-group>
   </c-form>
 {% endblock content %}

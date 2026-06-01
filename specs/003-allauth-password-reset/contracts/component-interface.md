@@ -16,9 +16,9 @@ account/password_reset.html
        ├─ <c-form action=reset_url>
        │    ├─ <c-form.render form=form />
        │    ├─ {{ redirect_field }}
-       │    └─ <c-button.stack>
+       │    └─ <c-group>
        │         └─ <c-button type="submit" icon="send" variant="primary">Send email</c-button>
-       │    </c-button.stack>
+       │    </c-group>
        └─ <c-text small> contact-us </c-text>
 
 account/password_reset_done.html
@@ -34,7 +34,7 @@ account/password_reset_from_key.html
             ├─ <c-form action=action_url>
             │    ├─ <c-form.render form=form />
             │    ├─ {{ redirect_field }}
-            │    └─ <c-button.stack>
+            │    └─ <c-group>
             │         ├─ <c-button type="submit" icon="submit" variant="primary">Confirm</c-button>
             │         └─ <c-button type="submit" form="logout-from-stage" icon="x-circle">Cancel</c-button>
             └─ <form id="logout-from-stage"> (when cancel_url absent)
@@ -49,7 +49,7 @@ account/base_confirm_code.html
        ├─ <c-form action={{ action_url }}>
        │    ├─ <c-form.render form=verify_form unlabeled=True />
        │    ├─ {{ redirect_field }}
-       │    └─ <c-button.stack>
+       │    └─ <c-group>
        │         ├─ <c-button type="submit" tags=submit_button_tags>Confirm</c-button>
        │         ├─ <c-button form="resend">Request new code</c-button>  (can_resend)
        │         └─ <c-button href=cancel_url | form="logout-from-stage">Cancel</c-button>
@@ -82,7 +82,7 @@ All components are already available from specs 001 and 002. No new components a
 | `<c-form>` | django-mvp | Form wrapper with CSRF and action |
 | `<c-form.render>` | django-mvp | Renders allauth form fields via crispy |
 | `<c-button>` | django-cotton-bs5 | Submit and link buttons |
-| `<c-button.stack>` | django-mvp | Vertical button group |
+| `<c-group>` | django-mvp | Vertical button group |
 
 ---
 
@@ -125,13 +125,13 @@ All components are already available from specs 001 and 002. No new components a
   {% csrf_token %}
   <c-form.render form=form />
   {{ redirect_field }}
-  <c-button.stack>
+  <c-group>
     <c-button text="{% trans "Send email" %}"
               icon="send"
               size="lg"
               type="submit"
               variant="primary" />
-  </c-button.stack>
+  </c-group>
 </c-form>
 
 <!-- password_reset_from_key.html (valid branch) -->
@@ -139,7 +139,7 @@ All components are already available from specs 001 and 002. No new components a
   {% csrf_token %}
   <c-form.render form=form />
   {{ redirect_field }}
-  <c-button.stack>
+  <c-group>
     <c-button text="{% trans "Confirm" %}"
               icon="submit"
               size="lg"
@@ -159,7 +159,7 @@ All components are already available from specs 001 and 002. No new components a
                 size="lg"
                 class="border-secondary-subtle" />
     {% endif %}
-  </c-button.stack>
+  </c-group>
 </c-form>
 ```
 

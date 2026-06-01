@@ -81,9 +81,9 @@ The login page benefits from `<c-entrance>` automatically via template inheritan
 <c-form method="post" action="URL">
   <c-form.render />        {# or <c-form.render form=verify_form /> #}
   {{ redirect_field }}
-  <c-button.stack class="mt-4">
+  <c-group class="mt-4">
     <c-button ... />
-  </c-button.stack>
+  </c-group>
 </c-form>
 ```
 
@@ -130,16 +130,16 @@ The login page benefits from `<c-entrance>` automatically via template inheritan
 
 ---
 
-### `<c-button.stack>` — Vertical Button Container
+### `<c-group>` — Vertical Button Container
 
 **Source**: django-mvp (`mvp/templates/cotton/button/stack.html`)
 **Used in**: `account/login.html`, `account/request_login_code.html`, `account/confirm_login_code.html`
 
 ```html
-<c-button.stack [class="..."]>
+<c-group [class="..."]>
   <c-button ... />
   <c-button ... />  {# additional buttons if needed #}
-</c-button.stack>
+</c-group>
 ```
 
 Renders buttons stacked vertically with consistent spacing.
@@ -214,15 +214,15 @@ account/login.html
   │   ├─ <c-container> / <c-row> / <c-col>
   │   └─ <c-card>
   ├─ (included) socialaccount/snippets/provider_list.html
-  │   └─ <c-button.stack> + <c-button> per provider
+  │   └─ <c-group> + <c-button> per provider
   ├─ <c-card.divider>
   ├─ <c-form>
   │   └─ <c-form.render>
-  ├─ <c-button.stack>
+  ├─ <c-group>
   │   └─ <c-button> (submit)
   ├─ <c-text> (forgot password, signup cross-link)
   ├─ <c-card.divider> (before passkey/code section)
-  └─ <c-button.stack> (passkey + code buttons)
+  └─ <c-group> (passkey + code buttons)
       └─ <c-button> (×2 if both enabled)
 
 account/request_login_code.html
@@ -230,7 +230,7 @@ account/request_login_code.html
   ├─ <c-text> (intro description)
   ├─ <c-form>
   │   └─ <c-form.render>
-  ├─ <c-button.stack>
+  ├─ <c-group>
   │   └─ <c-button> (submit)
   └─ <c-text> (back to login link)
 
@@ -239,7 +239,7 @@ account/confirm_login_code.html
   ├─ <c-text> (recipient description)
   ├─ <c-form>  [primary: code entry]
   │   └─ <c-form.render form=verify_form>
-  ├─ <c-button.stack> (confirm submit, resend, cancel)
+  ├─ <c-group> (confirm submit, resend, cancel)
   │   ├─ <c-button type="submit"> (confirm)
   │   ├─ <c-button type="submit" form="resend"> (resend, conditional)
   │   └─ <c-button href=cancel_url> OR <c-button type="submit" form="logout-from-stage">

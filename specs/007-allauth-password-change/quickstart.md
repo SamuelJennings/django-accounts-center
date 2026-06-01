@@ -70,10 +70,10 @@ These templates extend `account/base_manage_password.html` which chains to
   <c-form.card method="post" action="{% url 'account_change_password' %}" :form-obj="form">
     {{ redirect_field }}
     <c-slot name="actions">
-      <c-button.stack>
+      <c-group>
         <c-button type="submit" variant="primary" text="{% trans "Change Password" %}" />
         <a href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
-      </c-button.stack>
+      </c-group>
     </c-slot>
   </c-form.card>
 {% endblock page.content %}
@@ -94,11 +94,11 @@ This template extends `account/base_entrance.html` and exposes
   </c-entrance.section>
   {% if reauthentication_alternatives %}
     <c-card.divider text="{% trans "Alternative options" %}" />
-    <c-button.stack>
+    <c-group>
       {% for alt in reauthentication_alternatives %}
         <c-button href="{{ alt.url }}" variant="outline-primary" text="{{ alt.description }}" />
       {% endfor %}
-    </c-button.stack>
+    </c-group>
   {% endif %}
 {% endblock content %}
 ```
@@ -111,9 +111,9 @@ Fills `{% block reauthenticate_content %}` with the password form:
 {% block reauthenticate_content %}
   <c-form method="post" action="{% url 'account_reauthenticate' %}" :form-obj="form">
     {{ redirect_field }}
-    <c-button.stack>
+    <c-group>
       <c-button type="submit" variant="primary" text="{% trans "Confirm" %}" />
-    </c-button.stack>
+    </c-group>
   </c-form>
 {% endblock %}
 ```

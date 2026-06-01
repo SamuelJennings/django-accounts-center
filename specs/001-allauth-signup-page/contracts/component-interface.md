@@ -2,7 +2,7 @@
 
 **Feature**: 001-allauth-signup-page
 **Date**: 2026-05-07
-**Updated**: 2026-05-08 — Added DAC-owned entrance Cotton components (`<c-entrance>`, `<c-entrance.background>`, `<c-entrance.logo>`, `<c-button.stack>`). Updated `<c-card>`, `<c-button>`, `<c-form>`, `<c-form.render>`, and `<c-alert>` sections to reflect finalised implementation (card owned by `<c-entrance>`; non-field errors handled in `<c-form.render>`; social providers use Bootstrap Icon `<a>` tags; submit wrapped in `<c-button.stack>`).
+**Updated**: 2026-05-08 — Added DAC-owned entrance Cotton components (`<c-entrance>`, `<c-entrance.background>`, `<c-entrance.logo>`, `<c-group>`). Updated `<c-card>`, `<c-button>`, `<c-form>`, `<c-form.render>`, and `<c-alert>` sections to reflect finalised implementation (card owned by `<c-entrance>`; non-field errors handled in `<c-form.render>`; social providers use Bootstrap Icon `<a>` tags; submit wrapped in `<c-group>`).
 
 This document specifies how the django-accounts-center allauth addon composes its signup page UI from Cotton components. Components are grouped by origin: DAC-owned (created in this package) and library components (from django-mvp or django-cotton-bs5).
 
@@ -109,16 +109,16 @@ These components are consumed by the signup templates. They are defined in djang
 
 ---
 
-### `<c-button.stack>` — Vertical Button Stack
+### `<c-group>` — Vertical Button Stack
 
 **Source**: `django-mvp` (`mvp/templates/cotton/button/stack.html`)
 
 **Usage** (wraps submit and passkey buttons):
 
 ```html
-<c-button.stack class="mt-4">
+<c-group class="mt-4">
   <c-button text="{% trans \"Let's go!\" %}" icon="login" type="submit" variant="primary" reverse />
-</c-button.stack>
+</c-group>
 ```
 
 **Attributes**:
@@ -136,7 +136,7 @@ These components are consumed by the signup templates. They are defined in djang
 
 **Source**: `django-cotton-bs5` (`cotton_bs5/templates/cotton/button/index.html`)
 
-**Submit button usage** (inside `<c-button.stack>`):
+**Submit button usage** (inside `<c-group>`):
 
 ```html
 <c-button text="{% trans \"Let's go!\" %}"
@@ -146,7 +146,7 @@ These components are consumed by the signup templates. They are defined in djang
           reverse />
 ```
 
-**Passkey signup button usage** (inside `<c-button.stack>`):
+**Passkey signup button usage** (inside `<c-group>`):
 
 ```html
 <c-button href="{{ signup_by_passkey_url }}"
@@ -179,9 +179,9 @@ These components are consumed by the signup templates. They are defined in djang
 <c-form method="post" action="{% url 'account_signup' %}">
   <c-form.render />
   {{ redirect_field }}
-  <c-button.stack class="mt-4">
+  <c-group class="mt-4">
     <c-button text="{% trans \"Let's go!\" %}" icon="login" type="submit" variant="primary" reverse />
-  </c-button.stack>
+  </c-group>
 </c-form>
 ```
 

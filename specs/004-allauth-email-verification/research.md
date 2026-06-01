@@ -47,7 +47,7 @@ established pattern.
 - Branch A: `<c-entrance>` shell with `<c-text>` descriptive paragraph (not `center`,
   since it contains inline content addressed to the specific user), `<c-form>` with
   `<c-form.render>` not needed (no Django form object — just `{% csrf_token %}` and
-  `{{ redirect_field }}`), and a `<c-button.stack>` with
+  `{{ redirect_field }}`), and a `<c-group>` with
   `<c-button type="submit" icon="check-circle" variant="primary">Confirm</c-button>`.
 - Branch B: `<c-text>` with the error prose.
 - Branch C: `<c-text>` with the error prose + inline link.
@@ -158,5 +158,5 @@ form (no Django form object).
 ## 6. No New Components Required
 
 All Cotton components used in this feature are already available:
-`<c-entrance>`, `<c-text>`, `<c-form>`, `<c-button>`, `<c-button.stack>`.
+`<c-entrance>`, `<c-text>`, `<c-form>`, `<c-button>`, `<c-group>`.
 No new custom components need to be created.

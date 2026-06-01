@@ -11,13 +11,13 @@
             action="{{ request_login_code_url }}"
             :form-obj="form">
       {{ redirect_field }}
-      <c-button.stack>
+      <c-group>
         <c-button text="{% trans "Send code" %}"
                   icon="send"
                   type="submit"
                   variant="primary"
                   size="lg" />
-      </c-button.stack>
+      </c-group>
     </c-form>
   </c-entrance.section>
   <c-text small>

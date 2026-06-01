@@ -76,9 +76,9 @@
         {% endfor %}
       </c-list-group>
       {# Show the "add email" form only when the user hasn't reached the configured address limit (ACCOUNT_MAX_EMAIL_ADDRESSES). #}
-      <c-card.section :condition="can_add_email"
-                      divider
-                      message="{% trans "Add a backup email in case you lose access to the others." %}">
+      {% if can_add_email %}
+        <c-divider />
+        <c-text text="{% trans "Add a backup email in case you lose access to the others." %}" />
         <c-form id="addEmailForm"
                 method="post"
                 action="{% url "account_email" %}"
@@ -91,7 +91,7 @@
                       variant="primary" />
           </c-slot>
         </c-form>
-      </c-card.section>
+      {% endif %}
     </c-card>
   {% else %}
     {% include "account/snippets/warn_no_email.html" %}

@@ -56,11 +56,11 @@ Four templates in `dac/addons/allauth/templates/account/` are rewritten.
   </c-entrance.section>
   {% if reauthentication_alternatives %}
     <c-card.divider text="{% trans "Alternative options" %}" />
-    <c-button.stack>
+    <c-group>
       {% for alt in reauthentication_alternatives %}
         <c-button href="{{ alt.url }}" variant="outline-primary" text="{{ alt.description }}" />
       {% endfor %}
-    </c-button.stack>
+    </c-group>
   {% endif %}
 {% endblock content %}
 ```
@@ -72,7 +72,7 @@ Four templates in `dac/addons/allauth/templates/account/` are rewritten.
 - `{% element p %}` → `<c-entrance.section text="…">` wrapper
 - `{% element hr %}` → `<c-card.divider>`
 - `{% element h2 %}` → removed; divider text serves as section label
-- `{% element button_group %}` → `<c-button.stack>`
+- `{% element button_group %}` → `<c-group>`
 - `{% element button href=… tags="primary,outline" %}` → `<c-button href=… variant="outline-primary">`
 - `{% block reauthenticate_content %}` extension hook is preserved inside the section
 
@@ -117,11 +117,11 @@ Four templates in `dac/addons/allauth/templates/account/` are rewritten.
           action="{% url 'account_reauthenticate' %}"
           :form-obj="form">
     {{ redirect_field }}
-    <c-button.stack>
+    <c-group>
       <c-button type="submit"
                 variant="primary"
                 text="{% trans "Confirm" %}" />
-    </c-button.stack>
+    </c-group>
   </c-form>
 {% endblock %}
 ```
@@ -130,7 +130,7 @@ Four templates in `dac/addons/allauth/templates/account/` are rewritten.
 
 - Remove `{% load allauth %}` (no longer needed)
 - `{% element p %}Enter your password:{% endelement %}` → removed; the `<c-form>` renders field labels
-- `{% element form … %}` + `{% slot body %}` + `{% slot actions %}` → `<c-form>` with inline `<c-button.stack>`
+- `{% element form … %}` + `{% slot body %}` + `{% slot actions %}` → `<c-form>` with inline `<c-group>`
 - `{% element fields form=form unlabeled=True %}` → `:form-obj="form"` attribute on `<c-form>` (renders all fields)
 - `{% element button … %}{% trans "Confirm" %}{% endelement %}` → `<c-button type="submit" variant="primary" text="…">`
 
@@ -185,12 +185,12 @@ Four templates in `dac/addons/allauth/templates/account/` are rewritten.
                :form-obj="form">
     {{ redirect_field }}
     <c-slot name="actions">
-      <c-button.stack>
+      <c-group>
         <c-button type="submit"
                   variant="primary"
                   text="{% trans "Change Password" %}" />
         <a href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
-      </c-button.stack>
+      </c-group>
     </c-slot>
   </c-form.card>
 {% endblock page.content %}
@@ -257,11 +257,11 @@ Four templates in `dac/addons/allauth/templates/account/` are rewritten.
                :form-obj="form">
     {{ redirect_field }}
     <c-slot name="actions">
-      <c-button.stack>
+      <c-group>
         <c-button type="submit"
                   variant="primary"
                   text="{% trans "Set Password" %}" />
-      </c-button.stack>
+      </c-group>
     </c-slot>
   </c-form.card>
 {% endblock page.content %}

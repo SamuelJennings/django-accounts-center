@@ -11,13 +11,13 @@
             action="{% url "account_signup_by_passkey" %}"
             :form-obj="form">
       {{ redirect_field }}
-      <c-button.stack>
+      <c-group>
         <c-button text="{% trans "Create passkey" %}"
                   icon="passkey"
                   size="lg"
                   type="submit"
                   variant="primary" />
-      </c-button.stack>
+      </c-group>
     </c-form>
   </c-entrance.section>
   {% if signup_url %}

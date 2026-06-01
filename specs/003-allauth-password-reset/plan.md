@@ -38,7 +38,7 @@ No new Python views, models, forms, or migrations are introduced. No new Cotton 
 | VI. UI Verification (playwright-mcp) | ✅ PASS | Each UI-modifying task includes a Playwright MCP verification step. |
 | VII. Documentation Retrieval (context7) | ✅ PASS | allauth context variable contracts validated against allauth source before design. |
 | VIII. End-to-End Testing (pytest-playwright) | ✅ PASS | Screenshot tests for 5 page states × 3 viewports. Integration tests cover all branches. |
-| IX. Template Component Reuse Discipline | ✅ PASS | django-mvp components first (`<c-form>`, `<c-button.stack>`), cotton-bs5 second (`<c-button>`). No new DAC-owned components. |
+| IX. Template Component Reuse Discipline | ✅ PASS | django-mvp components first (`<c-form>`, `<c-group>`), cotton-bs5 second (`<c-button>`). No new DAC-owned components. |
 | X. Third-Party Integration Strategy | ✅ PASS | Template overrides primary. No view overrides. All overrides within `dac/addons/allauth/`. |
 | XI. Dual-Audience User Stories | ✅ PASS | Spec contains developer story (US5) and multiple end-user stories (US1–US4). |
 | XII. View Class Docstring Completeness | ✅ PASS | No new view classes introduced. |

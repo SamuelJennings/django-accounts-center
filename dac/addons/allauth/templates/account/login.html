@@ -14,21 +14,21 @@
                         center>
       <c-form method="post" :form-obj="form">
         {{ redirect_field }}
-        <c-button.stack>
+        <c-group>
           <c-button text="{% trans "Sign in" %}"
                     icon="login"
                     size="lg"
                     type="submit"
                     variant="primary"
                     reverse />
-        </c-button.stack>
+        </c-group>
       </c-form>
     </c-entrance.section>
   {% endif %}
   {% if not SOCIALACCOUNT_ONLY and PASSKEY_LOGIN_ENABLED or not SOCIALACCOUNT_ONLY and LOGIN_BY_CODE_ENABLED %}
     <c-divider text="{% trans "or" %}" />
     <c-entrance.section>
-      <c-button.stack>
+      <c-group>
         {% if PASSKEY_LOGIN_ENABLED %}
           <c-button type="submit"
                     form="mfa_login"
@@ -45,7 +45,7 @@
                     icon="passcode"
                     class="border-light-subtle" />
         {% endif %}
-      </c-button.stack>
+      </c-group>
     </c-entrance.section>
   {% endif %}
   {% if signup_url %}

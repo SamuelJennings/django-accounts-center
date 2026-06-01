@@ -127,7 +127,7 @@ The "Forgot password?" link must only appear when the password form is visible (
 
 ## Decision 5: Social Provider Rendering — Reuse spec 001 Snippets
 
-**Decision**: Reuse `socialaccount/snippets/provider_list.html` (already using Cotton `<c-button.stack>`) unchanged. Pass `process="login"` (not `"signup"`) when including it from `account/login.html`.
+**Decision**: Reuse `socialaccount/snippets/provider_list.html` (already using Cotton `<c-group>`) unchanged. Pass `process="login"` (not `"signup"`) when including it from `account/login.html`.
 
 **Rationale**: The `provider_list.html` snippet is already fully Cotton-based from spec 001. The `process` parameter controls the OAuth redirect behaviour on the provider side. For login, use `process="login"`; the template is otherwise identical.
 
@@ -176,7 +176,7 @@ The passkey button in the template must carry `id="passkey_login"` to match this
 
 **Decision**: Render the resend form as a raw HTML `<form id="resend">` (inline in the template), and the cancel action as either a `<c-text>` link (when `cancel_url` is set) or a hidden form (when it is not). The `<c-form>` component is NOT used for the resend/cancel forms because they are auxiliary controls, not the primary submission form.
 
-**Rationale**: The resend and cancel forms are allauth internal mechanism forms that POST to the same URL with a hidden discriminator field. They are secondary to the code-entry form and should be rendered as compact, visually secondary controls. Using `<c-button>` for their submit triggers and wrapping in `<c-button.stack>` maintains visual consistency without needing `<c-form.render>` (which would incorrectly try to render crispy fields for a form with no visible fields).
+**Rationale**: The resend and cancel forms are allauth internal mechanism forms that POST to the same URL with a hidden discriminator field. They are secondary to the code-entry form and should be rendered as compact, visually secondary controls. Using `<c-button>` for their submit triggers and wrapping in `<c-group>` maintains visual consistency without needing `<c-form.render>` (which would incorrectly try to render crispy fields for a form with no visible fields).
 
 **Primary form** (code entry): use `<c-form>` + `<c-form.render />`.
 **Resend form**: raw `<form id="resend" method="post">` with a `<c-button type="submit" form="resend">`.

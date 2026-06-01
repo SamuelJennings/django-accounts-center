@@ -16,27 +16,27 @@
               action="{% url 'account_signup' %}"
               :form-obj="form">
         {{ redirect_field }}
-        <c-button.stack>
+        <c-group>
           <c-button text="{% trans "Create account" %}"
                     icon="login"
                     size="lg"
                     type="submit"
                     variant="primary"
                     reverse />
-        </c-button.stack>
+        </c-group>
       </c-form>
     </c-entrance.section>
   {% endif %}
   {% if PASSKEY_SIGNUP_ENABLED %}
     <c-divider text="{% trans "or" %}" />
     <c-entrance.section text="{% trans "By saving a passkey to your personal device." %}">
-      <c-button.stack>
+      <c-group>
         <c-button href="{{ signup_by_passkey_url }}"
                   icon="passkey"
                   size="lg"
                   text="{% trans "Use passkey" %}"
                   class="border-light-subtle" />
-      </c-button.stack>
+      </c-group>
     </c-entrance.section>
   {% endif %}
   {% if login_url %}

@@ -21,7 +21,7 @@ plus integration tests. US3 and US4 are P2 stories that can follow independently
 - `email_confirm.html` covers both US1 (valid-key branch) and US2 (invalid-key branch) in a single file — both branches written together in T003
 - `confirm_email_verification_code.html` is a block-override-only template that extends `base_confirm_code.html` — no new structure needed, just block-name and URL fixes
 - No new Python code, models, migrations, URL patterns, or Cotton components are introduced
-- All shared infrastructure (`<c-entrance>`, `<c-text>`, `<c-form>`, `<c-button>`, `<c-button.stack>`, `base_entrance.html`) is in place from specs 001, 002, and 003
+- All shared infrastructure (`<c-entrance>`, `<c-text>`, `<c-form>`, `<c-button>`, `<c-group>`, `base_entrance.html`) is in place from specs 001, 002, and 003
 - Integration tests for the confirm button MUST assert non-empty button text and a rendered icon element — MUST NOT assert the specific label string `"Confirm"` or icon name `"check-circle"`
 
 ---
@@ -63,7 +63,7 @@ needed — user story implementation begins immediately in Phase 3.
               1. `{% user_display confirmation.email_address.user as user_display %}`
               2. `{% url 'account_confirm_email' confirmation.key as action_url %}`
               3. `<c-text>{% blocktrans with confirmation.email_address.email as email %}Please confirm that <a href="mailto:{{ email }}">{{ email }}</a> is an email address for user {{ user_display }}.{% endblocktrans %}</c-text>`
-              4. `<c-form method="post" action="{{ action_url }}">{% csrf_token %}{{ redirect_field }}<c-button.stack><c-button type="submit" icon="check-circle" size="lg" variant="primary">{% trans "Confirm" %}</c-button></c-button.stack></c-form>`
+              4. `<c-form method="post" action="{{ action_url }}">{% csrf_token %}{{ redirect_field }}<c-group><c-button type="submit" icon="check-circle" size="lg" variant="primary">{% trans "Confirm" %}</c-button></c-group></c-form>`
           - **Branch B** (`{% else %}` — confirmation exists but `can_confirm` is False):
               1. `<c-text>{% blocktrans %}Unable to confirm {{ email }} because it is already confirmed by a different account.{% endblocktrans %}</c-text>`
           - **Branch C** (`{% else %}` — no `confirmation` object):

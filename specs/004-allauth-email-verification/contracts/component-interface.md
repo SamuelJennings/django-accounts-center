@@ -23,9 +23,9 @@ account/email_confirm.html
        │    └─ <c-form method="post" action="{{ action_url }}">
        │         ├─ {% csrf_token %}
        │         ├─ {{ redirect_field }}
-       │         └─ <c-button.stack>
+       │         └─ <c-group>
        │              └─ <c-button type="submit" icon="check-circle" variant="primary">Confirm</c-button>
-       │           </c-button.stack>
+       │           </c-group>
        │       </c-form>
        ├─ [elif confirmation and not can_confirm]
        │    └─ <c-text>
@@ -64,7 +64,7 @@ are created.
 | `<c-text>` | `dac/addons/allauth` (spec 001) | Informational/descriptive paragraphs |
 | `<c-form>` | django-mvp | Form wrapper (email_confirm.html valid-key branch only) |
 | `<c-button>` | django-cotton-bs5 | Submit button (email_confirm.html valid-key branch only) |
-| `<c-button.stack>` | django-mvp | Button group (email_confirm.html valid-key branch only) |
+| `<c-group>` | django-mvp | Button group (email_confirm.html valid-key branch only) |
 
 ---
 
@@ -97,14 +97,14 @@ are created.
 ### `<c-button>` (email_confirm.html valid-key branch)
 
 ```html
-<c-button.stack>
+<c-group>
   <c-button type="submit"
             icon="check-circle"
             size="lg"
             variant="primary">
     {% trans "Confirm" %}
   </c-button>
-</c-button.stack>
+</c-group>
 ```
 
 ### `<c-form>` (email_confirm.html valid-key branch)
@@ -114,9 +114,9 @@ are created.
 <c-form method="post" action="{{ action_url }}">
   {% csrf_token %}
   {{ redirect_field }}
-  <c-button.stack>
+  <c-group>
     ...
-  </c-button.stack>
+  </c-group>
 </c-form>
 ```
 

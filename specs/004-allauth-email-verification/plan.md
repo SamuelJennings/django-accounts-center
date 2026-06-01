@@ -207,14 +207,14 @@ conditional branches exactly.
 <c-form method="post" action="{{ action_url }}">
   {% csrf_token %}
   {{ redirect_field }}
-  <c-button.stack>
+  <c-group>
     <c-button type="submit"
               icon="check-circle"
               size="lg"
               variant="primary">
       {% trans "Confirm" %}
     </c-button>
-  </c-button.stack>
+  </c-group>
 </c-form>
 ```
 

@@ -12,12 +12,12 @@
   </c-entrance.section>
   {% if reauthentication_alternatives %}
     <c-divider text="{% trans "Alternative options" %}" />
-    <c-button.stack>
+    <c-group>
       {% for alt in reauthentication_alternatives %}
         <c-button href="{{ alt.url }}"
                   variant="outline-primary"
                   text="{{ alt.description }}" />
       {% endfor %}
-    </c-button.stack>
+    </c-group>
   {% endif %}
 {% endblock content %}

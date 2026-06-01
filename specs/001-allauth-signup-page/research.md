@@ -116,24 +116,24 @@
   <c-form method="post" action="{% url 'account_signup' %}">
     <c-form.render />
     {{ redirect_field }}
-    <c-button.stack class="mt-4">
+    <c-group class="mt-4">
       <c-button text="{% trans \"Let's go!\" %}"
                 icon="login"
                 type="submit"
                 variant="primary"
                 reverse />
-    </c-button.stack>
+    </c-group>
   </c-form>
 {% endif %}
 
 {# Passkey option #}
 {% if PASSKEY_SIGNUP_ENABLED %}
   <c-card.divider />
-  <c-button.stack class="mt-4">
+  <c-group class="mt-4">
     <c-button href="{{ signup_by_passkey_url }}"
               text="{% trans 'Sign up using a passkey' %}"
               variant="outline-secondary" />
-  </c-button.stack>
+  </c-group>
 {% endif %}
 ```
 
@@ -147,7 +147,7 @@
 
 ## Decision 5: Cotton Component Stack for the Signup UI
 
-**Decision**: Use `<c-entrance>` (DAC Cotton component, `dac/templates/cotton/entrance/index.html`) as the entrance page shell, `<c-entrance.background>` for background styling, `<c-entrance.logo>` for the logo, `<c-card.divider>` for the "or" separator, `<c-button.stack>` (django-mvp) + `<c-button>` (django-cotton-bs5) for submit and passkey buttons, and `<c-messages>` (django-mvp) for flash messages. Non-field errors are rendered inside `<c-form.render>` via `<c-alert variant="danger">` — not as a standalone block in page templates.
+**Decision**: Use `<c-entrance>` (DAC Cotton component, `dac/templates/cotton/entrance/index.html`) as the entrance page shell, `<c-entrance.background>` for background styling, `<c-entrance.logo>` for the logo, `<c-card.divider>` for the "or" separator, `<c-group>` (django-mvp) + `<c-button>` (django-cotton-bs5) for submit and passkey buttons, and `<c-messages>` (django-mvp) for flash messages. Non-field errors are rendered inside `<c-form.render>` via `<c-alert variant="danger">` — not as a standalone block in page templates.
 
 **Rationale**: The entrance shell pattern (full-viewport layout, card, logo, title) is shared across all entrance pages. Extracting it into `<c-entrance>` removes duplication and gives developers a clean, single-file override for background and logo without touching any page template. Social provider buttons use Bootstrap Icon `<a>` tags rather than `<c-button>` because the icon+label flex layout is simpler as raw HTML.
 
@@ -158,7 +158,7 @@
 | Site logo | `<c-entrance.logo>` | DAC (`dac/templates/cotton/entrance/`) |
 | Form field "or" divider | `<c-card.divider text="or">` | django-mvp |
 | Social provider button | Bootstrap Icon `<a>` tag (raw HTML) | N/A |
-| Submit button stack | `<c-button.stack>` | django-mvp |
+| Submit button stack | `<c-group>` | django-mvp |
 | Submit / passkey button | `<c-button>` | django-cotton-bs5 |
 | Flash messages | `<c-messages dismissible animate>` | django-mvp |
 | Non-field error alert | `<c-alert variant="danger">` inside `<c-form.render>` | django-cotton-bs5 |
@@ -178,7 +178,7 @@
 |---|---|
 | `allauth/layouts/base.html` | Replace to extend `mvp/base.html`; wire title block |
 | `allauth/layouts/entrance.html` | Delegate to `<c-entrance>` Cotton component; pass `title` slot and responsive-width attrs |
-| `account/signup.html` | Full rewrite — content-only block; no card/logo markup; social guards; `<c-form.render />`; `<c-button.stack>` submit; login link at bottom |
+| `account/signup.html` | Full rewrite — content-only block; no card/logo markup; social guards; `<c-form.render />`; `<c-group>` submit; login link at bottom |
 | `account/signup_closed.html` | Rewrite — content-only closed message |
 | `socialaccount/signup.html` | Rewrite — social-only signup form without `{% element %}` tags |
 | `socialaccount/snippets/provider_list.html` | Rewrite — Bootstrap Icon `<a>` tags per provider |

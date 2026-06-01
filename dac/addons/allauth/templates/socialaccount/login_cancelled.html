@@ -10,11 +10,11 @@
   <c-text>
     {% blocktrans %}You decided to cancel logging in to our site using one of your existing accounts. If this was a mistake, please proceed to <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}
   </c-text>
-  <c-button.stack>
+  <c-group>
     <c-button href="{{ login_url }}"
               text="Sign in"
               icon="login"
               variant="primary"
               size="lg" />
-  </c-button.stack>
+  </c-group>
 {% endblock content %}

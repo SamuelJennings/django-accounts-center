@@ -38,7 +38,7 @@ No project setup required. All files exist; no migrations, no new Python files, 
   - `{% element p %}…{% endelement %}` → `<c-entrance.section text="{% trans \"Please reauthenticate to safeguard your account.\" %}">` (the `text=` attribute renders the introductory paragraph)
   - `{% element hr %}` → `<c-card.divider text="{% trans "Alternative options" %}">`
   - `{% element h2 %}` → removed (divider text provides the label)
-  - `{% element button_group %}` → `<c-button.stack>`
+  - `{% element button_group %}` → `<c-group>`
   - `{% element button href=alt.url tags="primary,outline" %}` → `<c-button href="{{ alt.url }}" variant="outline-primary" text="{{ alt.description }}" />`
   - Remove `{% load allauth %}` (no longer needed)
   - Keep `{% block reauthenticate_content %}{% endblock %}` inside the section wrapper
@@ -57,11 +57,11 @@ No project setup required. All files exist; no migrations, no new Python files, 
     </c-entrance.section>
     {% if reauthentication_alternatives %}
       <c-card.divider text="{% trans "Alternative options" %}" />
-      <c-button.stack>
+      <c-group>
         {% for alt in reauthentication_alternatives %}
           <c-button href="{{ alt.url }}" variant="outline-primary" text="{{ alt.description }}" />
         {% endfor %}
-      </c-button.stack>
+      </c-group>
     {% endif %}
   {% endblock content %}
   ```
@@ -133,12 +133,12 @@ poetry run pytest tests/test_addons/test_allauth/test_password_change_view.py::T
                  :form-obj="form">
       {{ redirect_field }}
       <c-slot name="actions">
-        <c-button.stack>
+        <c-group>
           <c-button type="submit"
                     variant="primary"
                     text="{% trans "Change Password" %}" />
           <a href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
-        </c-button.stack>
+        </c-group>
       </c-slot>
     </c-form.card>
   {% endblock page.content %}
@@ -174,11 +174,11 @@ poetry run pytest tests/test_addons/test_allauth/test_password_change_view.py::T
                  :form-obj="form">
       {{ redirect_field }}
       <c-slot name="actions">
-        <c-button.stack>
+        <c-group>
           <c-button type="submit"
                     variant="primary"
                     text="{% trans "Set Password" %}" />
-        </c-button.stack>
+        </c-group>
       </c-slot>
     </c-form.card>
   {% endblock page.content %}
@@ -259,11 +259,11 @@ poetry run pytest tests/test_addons/test_allauth/test_password_change_view.py::T
             action="{% url 'account_reauthenticate' %}"
             :form-obj="form">
       {{ redirect_field }}
-      <c-button.stack>
+      <c-group>
         <c-button type="submit"
                   variant="primary"
                   text="{% trans "Confirm" %}" />
-      </c-button.stack>
+      </c-group>
     </c-form>
   {% endblock %}
   ```
@@ -271,7 +271,7 @@ poetry run pytest tests/test_addons/test_allauth/test_password_change_view.py::T
   Key changes from current template:
   - Remove `{% load allauth %}` (no longer needed)
   - `{% element p %}Enter your password:{% endelement %}` → removed (field label rendered by `<c-form>`)
-  - `{% element form … %}` + `{% slot body %}` + `{% slot actions %}` → `<c-form>` with inline `<c-button.stack>`
+  - `{% element form … %}` + `{% slot body %}` + `{% slot actions %}` → `<c-form>` with inline `<c-group>`
   - `{% element fields form=form unlabeled=True %}` → `:form-obj="form"` on `<c-form>`
   - `{% element button … %}` → `<c-button type="submit" variant="primary" …>`
 

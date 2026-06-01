@@ -54,7 +54,7 @@ tests are written in `screenshots/test_password_change_screenshots.py`.
 | VI. UI Verification | Playwright MCP verification required per implementation task | ✅ PASS |
 | VII. Documentation Retrieval | No new external APIs — reusing established patterns from Specs 001–006 | ✅ PASS (N/A) |
 | VIII. E2E Testing | Screenshot tests in `screenshots/test_password_change_screenshots.py`; 4 states × 3 viewports = 12 PNGs | ✅ PASS |
-| IX. Component Reuse | No new components; `<c-form.card>`, `<c-form>`, `<c-button>`, `<c-button.stack>` are all existing | ✅ PASS |
+| IX. Component Reuse | No new components; `<c-form.card>`, `<c-form>`, `<c-button>`, `<c-group>` are all existing | ✅ PASS |
 | X. Third-Party Integration | Template overrides primary; no view overrides introduced | ✅ PASS |
 | XI. Dual-Audience Stories | US1, US3, US4 [Developer] + US2 [End User] | ✅ PASS |
 | XII. View Docstrings | No view classes introduced or modified | ✅ PASS (N/A) |
@@ -162,11 +162,11 @@ Entrance templates (`base_reauthenticate.html`, `reauthenticate.html`) inherit t
   </c-entrance.section>
   {% if reauthentication_alternatives %}
     <c-card.divider text="{% trans "Alternative options" %}" />
-    <c-button.stack>
+    <c-group>
       {% for alt in reauthentication_alternatives %}
         <c-button href="{{ alt.url }}" variant="outline-primary" text="{{ alt.description }}" />
       {% endfor %}
-    </c-button.stack>
+    </c-group>
   {% endif %}
 {% endblock %}
 ```
@@ -180,9 +180,9 @@ Entrance templates (`base_reauthenticate.html`, `reauthenticate.html`) inherit t
 {% block reauthenticate_content %}
   <c-form method="post" action="{% url 'account_reauthenticate' %}" :form-obj="form">
     {{ redirect_field }}
-    <c-button.stack>
+    <c-group>
       <c-button type="submit" variant="primary" text="{% trans "Confirm" %}" />
-    </c-button.stack>
+    </c-group>
   </c-form>
 {% endblock %}
 ```
@@ -206,10 +206,10 @@ Entrance templates (`base_reauthenticate.html`, `reauthenticate.html`) inherit t
                :form-obj="form">
     {{ redirect_field }}
     <c-slot name="actions">
-      <c-button.stack>
+      <c-group>
         <c-button type="submit" variant="primary" text="{% trans "Change Password" %}" />
         <a href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
-      </c-button.stack>
+      </c-group>
     </c-slot>
   </c-form.card>
 {% endblock %}
@@ -234,9 +234,9 @@ Entrance templates (`base_reauthenticate.html`, `reauthenticate.html`) inherit t
                :form-obj="form">
     {{ redirect_field }}
     <c-slot name="actions">
-      <c-button.stack>
+      <c-group>
         <c-button type="submit" variant="primary" text="{% trans "Set Password" %}" />
-      </c-button.stack>
+      </c-group>
     </c-slot>
   </c-form.card>
 {% endblock %}

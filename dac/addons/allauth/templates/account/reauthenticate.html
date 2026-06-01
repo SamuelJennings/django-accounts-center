@@ -6,10 +6,10 @@
           action="{% url 'account_reauthenticate' %}"
           :form-obj="form">
     {{ redirect_field }}
-    <c-button.stack>
+    <c-group>
       <c-button type="submit"
                 variant="primary"
                 text="{% trans "Confirm" %}" />
-    </c-button.stack>
+    </c-group>
   </c-form>
 {% endblock %}

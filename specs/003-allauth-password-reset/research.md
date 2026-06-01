@@ -139,7 +139,7 @@ Block overrides in `confirm_password_reset_code.html`:
 | `{% element form %}` with `{% slot body/actions %}` | `<c-form>` with `<c-form.render />` + `<c-button>` |
 | `{% element button type="submit" %}` | `<c-button type="submit">` |
 | `{% element button type="submit" form="..." tags="link,cancel" %}` | `<c-button type="submit" form="logout-from-stage">` |
-| `{% element button_group %}` | `<c-button.stack>` |
+| `{% element button_group %}` | `<c-group>` |
 | `{% element fields form=... %}` | `<c-form.render form=... />` |
 | `{% element details %}` | `<details>` / `<summary>` |
 

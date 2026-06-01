@@ -3,7 +3,7 @@
 **Branch**: `001-allauth-signup-page` | **Date**: 2026-05-07 | **Spec**: [spec.md](spec.md)
 **Input**: Feature specification from `/specs/001-allauth-signup-page/spec.md`
 **Propagated**: 2026-05-07 — Added Principle XIII (FR-011) multi-viewport screenshot coverage: Constitution Check table updated with Principle XIII row; Project Structure updated with `docs/_static/` directories and `test_signup_screenshots.py`.
-**Propagated**: 2026-05-08 — Entrance layout architecture finalised. `<c-entrance>`, `<c-entrance.background>`, and `<c-entrance.logo>` Cotton components created in `dac/templates/cotton/entrance/`. The allauth layout template delegates entirely to `<c-entrance>`. Page templates (signup.html, signup_closed.html) are now content-only. Non-field error rendering moved into `<c-form.render>`. Submit button uses `<c-button.stack>` + `<c-button icon=...>`. Updated: Summary, Project Structure, Template Design sections, Constitution post-design check, Open Questions.
+**Propagated**: 2026-05-08 — Entrance layout architecture finalised. `<c-entrance>`, `<c-entrance.background>`, and `<c-entrance.logo>` Cotton components created in `dac/templates/cotton/entrance/`. The allauth layout template delegates entirely to `<c-entrance>`. Page templates (signup.html, signup_closed.html) are now content-only. Non-field error rendering moved into `<c-form.render>`. Submit button uses `<c-group>` + `<c-button icon=...>`. Updated: Summary, Project Structure, Template Design sections, Constitution post-design check, Open Questions.
 **Propagated**: 2026-05-08 — Passkey signup flow added (User Story 6, FR-012). `signup_by_passkey.html` template added to Project Structure and Template Design. Constitution Check Principle XIII updated to 6 permutations × 3 viewports = 18 screenshot files. Open Questions updated with passkey-specific risk.
 **Propagated**: 2026-05-08 — Constitution v1.1.2 (Principle XIII PATCH): screenshot-only test modules MUST live in the root `screenshots/` directory, not inside `tests/`. `test_signup_screenshots.py` moved from `tests/test_addons/test_allauth/` to `screenshots/`. Structure Decision updated. Constitution Check Principle XIII note updated.
 
@@ -11,7 +11,7 @@
 
 ## Summary
 
-Build a styled, modern allauth signup page for `django-accounts-center` by overriding allauth's template hierarchy to extend the `django-mvp` visual shell (AdminLTE4 + Bootstrap 5). The entrance page shell is owned by a first-class Cotton component family — `<c-entrance>` (layout), `<c-entrance.background>` (background style), `<c-entrance.logo>` (logo) — located in `dac/templates/cotton/entrance/`. The allauth layout template (`allauth/layouts/entrance.html`) delegates entirely to `<c-entrance>`; page templates (e.g. `signup.html`) are content-only. UI is composed from `django-mvp` Cotton components (`<c-card>`, `<c-card.divider>`, `<c-form.render>`, `<c-messages>`, `<c-button.stack>`) and `django-cotton-bs5` components (`<c-button>`, `<c-alert>`). Non-field form errors are rendered inside `<c-form.render>` and must not be duplicated in page templates. No new Python views, models, or forms are introduced.
+Build a styled, modern allauth signup page for `django-accounts-center` by overriding allauth's template hierarchy to extend the `django-mvp` visual shell (AdminLTE4 + Bootstrap 5). The entrance page shell is owned by a first-class Cotton component family — `<c-entrance>` (layout), `<c-entrance.background>` (background style), `<c-entrance.logo>` (logo) — located in `dac/templates/cotton/entrance/`. The allauth layout template (`allauth/layouts/entrance.html`) delegates entirely to `<c-entrance>`; page templates (e.g. `signup.html`) are content-only. UI is composed from `django-mvp` Cotton components (`<c-card>`, `<c-card.divider>`, `<c-form.render>`, `<c-messages>`, `<c-group>`) and `django-cotton-bs5` components (`<c-button>`, `<c-alert>`). Non-field form errors are rendered inside `<c-form.render>` and must not be duplicated in page templates. No new Python views, models, or forms are introduced.
 
 ---
 
@@ -210,7 +210,7 @@ screenshots/
 - Social provider buttons rendered via `{% include "socialaccount/snippets/provider_list.html" %}` — uses Bootstrap Icon `<a>` tags, not `<c-button>`, for layout flexibility
 - `<c-card.divider text="or">` separates social from email/password section (only when both present)
 - `<c-form.render />` renders all fields **and** non-field errors (FR-005/FR-006) — no `{% if form.non_field_errors %}` in this template
-- Submit button wrapped in `<c-button.stack>` for consistent full-width stacking
+- Submit button wrapped in `<c-group>` for consistent full-width stacking
 - Login link (`{% if login_url %}`) placed at the bottom of the content block, below the form
 
 ```html
@@ -233,23 +233,23 @@ screenshots/
     <c-form method="post" action="{% url 'account_signup' %}">
       <c-form.render />
       {{ redirect_field }}
-      <c-button.stack class="mt-4">
+      <c-group class="mt-4">
         <c-button text="{% trans \"Let's go!\" }"
                   icon="login"
                   type="submit"
                   variant="primary"
                   reverse />
-      </c-button.stack>
+      </c-group>
     </c-form>
   {% endif %}
   {% if PASSKEY_SIGNUP_ENABLED %}
     <c-card.divider />
-    <c-button.stack class="mt-4">
+    <c-group class="mt-4">
       <c-button href="{{ signup_by_passkey_url }}"
                 text="{% trans 'Sign up using a passkey' %}"
                 variant="outline-secondary"
                 class="w-100" />
-    </c-button.stack>
+    </c-group>
   {% endif %}
   {% if login_url %}
     <p class="text-center text-muted small mt-4 mb-0">
@@ -272,7 +272,7 @@ screenshots/
 - Extends `account/base_entrance.html` — inherits `<c-entrance>` shell from `entrance.html`
 - `{% block title %}` provides the card heading text
 - The passkey credential UI is rendered via allauth's template tags/context (the actual WebAuthn JS interaction is handled by allauth's bundled scripts)
-- Submit button wrapped in `<c-button.stack>` consistent with `signup.html`
+- Submit button wrapped in `<c-group>` consistent with `signup.html`
 - Back link to main signup page at the bottom
 
 ```html
@@ -285,14 +285,14 @@ screenshots/
   <c-form method="post">
     <c-form.render />
     {{ redirect_field }}
-    <c-button.stack class="mt-4">
+    <c-group class="mt-4">
       <c-button text="{% trans 'Create passkey' %}"
                 icon="passkey"
                 type="submit"
                 size="lg"
                 variant="primary"
                  />
-    </c-button.stack>
+    </c-group>
   </c-form>
   {% if signup_url %}
     <p class="text-center text-muted small mt-4 mb-0">
@@ -396,11 +396,11 @@ screenshots/
     <c-form method="post" action="{% url 'socialaccount_signup' %}">
       <c-form.render />
       {{ redirect_field }}
-      <c-button.stack class="mt-3">
+      <c-group class="mt-3">
         <c-button type="submit"
                   text="{% trans 'Sign Up' %}"
                   variant="primary" />
-      </c-button.stack>
+      </c-group>
     </c-form>
   </c-card>
 {% endblock %}

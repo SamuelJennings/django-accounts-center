@@ -159,7 +159,7 @@ A visitor on the signup page sees a "Sign up with a passkey" option when both `M
 - **`<c-entrance>` Component** (`dac/templates/cotton/entrance/index.html`): The entrance page shell component. Accepts a `title` slot (rendered as an `<h4>` inside the card header) and responsive-width attrs forwarded to `<c-col>`. Renders `<c-entrance.background>` → container → responsive column → card → `<c-entrance.logo>` → title → `{{ slot }}`.
 - **`<c-entrance.background>` Component** (`dac/templates/cotton/entrance/background.html`): Wraps the entire entrance page and controls the background style only. Default: `bg-primary-subtle bg-gradient`. Developers override this file to change the page background without modifying any other component.
 - **`<c-entrance.logo>` Component** (`dac/templates/cotton/entrance/logo.html`): Renders the site logo at the top of the entrance card. Default: DAC SVG logo at 120px height. Accepts `height`, `alt`, and `class` vars. Developers override the template file to change the logo; there is no `src` prop.
-- **`<c-button.stack>` Component** (`mvp/templates/cotton/button/stack.html`): A Bootstrap `vstack` wrapper with a configurable `gap` (default 2) and optional `class`. Used in page content blocks to stack one or more `<c-button>` elements as a full-width vertical group.
+- **`<c-group>` Component** (`mvp/templates/cotton/button/stack.html`): A Bootstrap `vstack` wrapper with a configurable `gap` (default 2) and optional `class`. Used in page content blocks to stack one or more `<c-button>` elements as a full-width vertical group.
 
 ## Success Criteria *(mandatory)*
 

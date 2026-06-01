@@ -103,7 +103,7 @@ A developer running the test suite expects all social account management templat
 - `dac/base.html` (from spec 005) and `account/base_manage.html` (corrected in spec 006) are fully implemented and provide the `page.content`, `title`, `page.breadcrumbs`, and `breadcrumbs` blocks; `socialaccount/base_manage.html` only needs its `extends` line changed to `dac/base.html`.
 - `socialaccount/base_entrance.html` already correctly extends `allauth/layouts/entrance.html`; no change to this file is required.
 - The allauth context variables (`form`, `form.accounts`, `form.fields.account.choices`) are provided by the `SocialAccountDisconnectView`; the templates do not need to fetch or transform this data.
-- The Cotton components used by `connections.html` (`<c-badge>`, `<c-card>`, `<c-form>`, `<c-button>`, `<c-button.stack>`) and `authentication_error.html` (`<c-text>`) are available through `django-mvp`, `django-cotton-bs5`, or existing DAC custom components.
+- The Cotton components used by `connections.html` (`<c-badge>`, `<c-card>`, `<c-form>`, `<c-button>`, `<c-group>`) and `authentication_error.html` (`<c-text>`) are available through `django-mvp`, `django-cotton-bs5`, or existing DAC custom components.
 - The `socialaccount_connections` URL is registered by allauth when `allauth.socialaccount` is in `INSTALLED_APPS`; templates may use `{% url 'socialaccount_connections' %}` freely.
 - `socialaccount/login.html`, `socialaccount/signup.html`, and `socialaccount/login_cancelled.html` already use Cotton components and are not in scope for this spec.
 - `socialaccount/login_redirect.html` is a standalone HTML redirect page with no DAC layout dependency and is explicitly out of scope.

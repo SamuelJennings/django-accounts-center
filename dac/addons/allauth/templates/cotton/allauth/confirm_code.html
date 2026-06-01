@@ -12,7 +12,7 @@
         :form-obj="verify_form"
         action="{{ action }}">
   {{ redirect_field }}
-  <c-button.stack>
+  <c-group>
     <c-button text="{% trans "Confirm" %}"
               icon="check-circle"
               type="submit"
@@ -37,7 +37,7 @@
               outline
               {% if cancel_url %} href="{{ cancel_url }}"{% else %} type="submit" form="logout-from-stage"{% endif %}>
     </c-button>
-  </c-button.stack>
+  </c-group>
 </c-form>
 {% if resend_supported %}
   <c-form id="resend"
