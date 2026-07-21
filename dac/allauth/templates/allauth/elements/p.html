@@ -1,0 +1,14 @@
+{% load allauth %}
+{% comment %}
+  Wrapper carries the dac-prose class (cotton drops a class passed to
+  <c-text>, so it can't hold one itself). dac-prose styles the bare inline
+  <a> tags allauth emits in paragraph copy — e.g. the "sign up"/"sign in"
+  link in the login/signup intro — which Tailwind's preflight would
+  otherwise leave looking like plain text.
+{% endcomment %}
+<div class="dac-prose text-base-content/80">
+  <c-text>
+    {% slot %}
+    {% endslot %}
+  </c-text>
+</div>

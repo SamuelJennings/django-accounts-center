@@ -1,0 +1,11 @@
+{% load allauth %}
+{% with tags=attrs.tags|default:"" %}
+  <c-alert soft
+           class="my-4"
+           variant="{% if "danger" in tags or "error" in tags %}error{% elif "warning" in tags %}warning{% elif "success" in tags %}success{% else %}info{% endif %}">
+    <span>
+      {% slot message %}
+      {% endslot %}
+    </span>
+  </c-alert>
+{% endwith %}

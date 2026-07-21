@@ -1,0 +1,13 @@
+{% load i18n %}
+
+{% comment %}
+  Curated override (see tests/test_architecture.py allowlist): the stock
+  snippet is a plain paragraph; a warning alert communicates the severity of
+  having no email address far better.
+{% endcomment %}
+<c-alert variant="warning" soft class="my-4">
+  <span>
+    <strong>{% trans "Warning:" %}</strong>
+    {% trans "You currently do not have any email address set up. You should really add an email address so you can receive notifications, reset your password, etc." %}
+  </span>
+</c-alert>

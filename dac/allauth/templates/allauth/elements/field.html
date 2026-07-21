@@ -1,0 +1,71 @@
+{% load allauth %}
+{% comment %}
+  Single hand-built field (allauth uses this directly for e.g. the email
+  radio list and verification-code inputs; whole forms go through
+  elements/fields.html instead).
+{% endcomment %}
+{% if attrs.type == "checkbox" or attrs.type == "radio" %}
+  <label class="label cursor-pointer justify-start gap-3 py-2"
+         for="{{ attrs.id }}">
+    <input type="{{ attrs.type }}"
+           class="{{ attrs.type }}"
+           {% if attrs.required %}required{% endif %}
+           {% if attrs.disabled %}disabled{% endif %}
+           {% if attrs.readonly %}readonly{% endif %}
+           {% if attrs.checked %}checked{% endif %}
+           {% if attrs.name %}name="{{ attrs.name }}"{% endif %}
+           {% if attrs.id %}id="{{ attrs.id }}"{% endif %}
+           {% if attrs.value is not None %}value="{{ attrs.value }}"{% endif %} />
+    <span class="flex flex-wrap items-center gap-2">
+      {% slot label %}
+      {% endslot %}
+    </span>
+  </label>
+{% elif attrs.type == "textarea" %}
+  <div class="w-full">
+    <label class="label" for="{{ attrs.id }}">
+      <span>
+        {% slot label %}
+        {% endslot %}
+      </span>
+    </label>
+    <textarea class="textarea w-full"
+              {% if attrs.required %}required{% endif %}
+              {% if attrs.rows %}rows="{{ attrs.rows }}"{% endif %}
+              {% if attrs.disabled %}disabled{% endif %}
+              {% if attrs.readonly %}readonly{% endif %}
+              {% if attrs.name %}name="{{ attrs.name }}"{% endif %}
+              {% if attrs.id %}id="{{ attrs.id }}"{% endif %}
+              {% if attrs.placeholder %}placeholder="{{ attrs.placeholder }}"{% endif %}>{% slot value %}{% endslot %}</textarea>
+  </div>
+{% else %}
+  <div class="w-full">
+    {% if slots.label %}
+      <label class="label" for="{{ attrs.id }}">
+        <span>
+          {% slot label %}
+          {% endslot %}
+        </span>
+      </label>
+    {% endif %}
+    <input class="input w-full"
+           {% if attrs.required %}required{% endif %}
+           {% if attrs.disabled %}disabled{% endif %}
+           {% if attrs.readonly %}readonly{% endif %}
+           {% if attrs.name %}name="{{ attrs.name }}"{% endif %}
+           {% if attrs.id %}id="{{ attrs.id }}"{% endif %}
+           {% if attrs.placeholder %}placeholder="{{ attrs.placeholder }}"{% endif %}
+           {% if attrs.autocomplete %}autocomplete="{{ attrs.autocomplete }}"{% endif %}
+           {% if attrs.value is not None %}value="{{ attrs.value }}"{% endif %}
+           type="{{ attrs.type }}" />
+  </div>
+{% endif %}
+{% if slots.help_text %}
+  <p class="text-xs text-base-content/60 -mt-2">
+    {% slot help_text %}
+    {% endslot %}
+  </p>
+{% endif %}
+{% if attrs.errors %}
+  <div class="dac-errors text-error text-sm -mt-2">{{ attrs.errors }}</div>
+{% endif %}

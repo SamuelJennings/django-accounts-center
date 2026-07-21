@@ -1,0 +1,12 @@
+{% load allauth i18n easy_icons %}
+{% comment %}
+  Brand icon comes from django-easy-icons' "svg" renderer (registered in the
+  project's EASY_ICONS setting; SVGs ship in dac.allauth's icons/ dir; sized
+  via that renderer's default_attrs). Fully overrideable by the host project,
+  and — per easy-icons — an unregistered provider raises IconNotFound so a
+  missing brand icon is caught in dev rather than shipped broken.
+{% endcomment %}
+<c-button href="{{ attrs.href }}" full title="{{ attrs.name }}">
+  {% icon attrs.provider_id renderer="svg" %}
+  <span>{% blocktrans with provider=attrs.name %}Continue with {{ provider }}{% endblocktrans %}</span>
+</c-button>

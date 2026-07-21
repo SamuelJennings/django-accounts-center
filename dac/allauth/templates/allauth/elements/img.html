@@ -1,0 +1,4 @@
+{% comment %} Used for the TOTP QR code — white padding keeps it scannable in dark themes. {% endcomment %}
+<img src="{{ attrs.src }}"
+     {% if attrs.alt %}alt="{{ attrs.alt }}"{% endif %}
+     class="mx-auto my-4 bg-white p-2 rounded-box max-w-full" />

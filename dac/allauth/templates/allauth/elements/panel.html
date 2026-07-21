@@ -1,0 +1,21 @@
+{% load allauth %}
+{% comment %}
+  Delegates the surface to <c-card>. The heading stays inline because
+  c-card's title is an attribute string while allauth provides it as a
+  rendered slot; allauth's actions land in the card footer.
+{% endcomment %}
+<c-card class="border border-base-300 mb-4">
+  {% if slots.title %}
+    <h2 class="card-title">
+      {% slot title %}
+      {% endslot %}
+    </h2>
+  {% endif %}
+  {% slot body %}
+  {% endslot %}
+  {% if slots.actions %}
+    <c-slot name="footer">
+      {% for action in slots.actions %}{{ action }}{% endfor %}
+    </c-slot>
+  {% endif %}
+</c-card>
