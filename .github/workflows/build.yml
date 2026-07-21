@@ -13,7 +13,7 @@ on:
 jobs:
   call-build:
     uses: django-mvp/shared/.github/workflows/build.yml@main
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     with:
       source-dir: dac
     secrets: inherit
