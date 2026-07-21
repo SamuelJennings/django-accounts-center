@@ -10,7 +10,7 @@ when testing optional features like passkeys, MFA, or social login.
 
 from pathlib import Path
 
-from example.settings import EASY_ICONS, FLEX_MENUS  # noqa: F401
+from example.settings import EASY_ICONS, FLEX_MENUS, MVP_CONFIG  # noqa: F401
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 
@@ -32,10 +32,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.humanize",
-    "compressor",
     "example",
     "dac",
-    "dac.addons.allauth",
+    "dac.allauth",
     "mvp",
     "allauth",
     "allauth.account",
@@ -46,11 +45,13 @@ INSTALLED_APPS = [
     "allauth.usersessions",
     "easy_icons",
     "crispy_forms",
-    "crispy_bootstrap5",
+    "crispy_tailwind",
     "flex_menu",
     "django_cotton",
-    "cotton_bs5",
 ]
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = ["tailwind"]
+CRISPY_TEMPLATE_PACK = "tailwind"
 
 SITE_ID = 1
 
@@ -78,6 +79,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "mvp.context_processors.mvp_config",
             ],
         },
     },
@@ -98,7 +100,6 @@ STATIC_ROOT = str(BASE_DIR / "static")
 STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-    "compressor.finders.CompressorFinder",
 )
 
 STORAGES = {
@@ -106,19 +107,6 @@ STORAGES = {
         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
 }
-
-COMPRESS_ENABLED = False
-COMPRESS_OFFLINE = False
-COMPRESS_PRECOMPILERS = (("text/x-scss", "django_libsass.SassCompiler"),)
-COMPRESS_FILTERS = {
-    "css": [
-        "compressor.filters.css_default.CssAbsoluteFilter",
-        "compressor.filters.cssmin.rCSSMinFilter",
-    ],
-    "js": ["compressor.filters.jsmin.JSMinFilter"],
-}
-COMPRESS_OUTPUT_DIR = "CACHE"
-COMPRESS_STORAGE = "compressor.storage.CompressorFileStorage"
 
 CACHES = {
     "default": {
@@ -131,15 +119,12 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
-CRISPY_ALLOWED_TEMPLATE_PACKS = ["bootstrap5"]
-CRISPY_TEMPLATE_PACK = "bootstrap5"
-
 # ======= Basic Allauth Settings for Tests =======
 # Tests start with username/password authentication only
 # Individual tests can override these to test optional features
 
 # Basic authentication - username or email
-ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+ACCOUNT_LOGIN_METHODS = {"username", "email"}
 
 # No email verification by default (tests can override)
 ACCOUNT_EMAIL_VERIFICATION = "none"
@@ -164,4 +149,11 @@ EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
 LOGIN_URL = "/"
 LOGIN_REDIRECT_URL = "/account-center/"
 
-# EASY_ICONS and FLEX_MENUS are imported from example.settings at the top of this file.
+# # EASY_ICONS and FLEX_MENUS are imported from example.settings at the top of this file.
+# PARLER_LANGUAGES = {
+#     None: ({"code": "en"},),
+#     "default": {
+#         "fallbacks": ["en"],
+#         "hide_untranslated": False,
+#     },
+# }

@@ -68,6 +68,17 @@ urlpatterns = [
         _reauthenticate_with_alternatives_view,
         name="test_reauthenticate_alternatives",
     ),
+    # Name alias so allauth's stock confirm_password_reset_code.html can
+    # reverse its action URL when rendered directly by template tests.
+    # (allauth only registers this name when
+    # ACCOUNT_PASSWORD_RESET_BY_CODE_ENABLED is True at import time, but
+    # enabling that globally would switch the whole reset flow to code mode
+    # and break the link-flow tests.)
+    path(
+        "test/confirm-password-reset-code/",
+        _verified_email_required_view,
+        name="account_confirm_password_reset_code",
+    ),
     # User menu screenshot test URLs
     path("test/user-menu/no-avatar/", _user_menu_no_avatar_view, name="test_user_menu_no_avatar"),
     path("test/user-menu/photo/", _user_menu_photo_view, name="test_user_menu_photo"),

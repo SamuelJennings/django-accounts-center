@@ -11,7 +11,6 @@ Covers:
 """
 
 import pytest
-from django.template.loader import get_template
 from django.urls import reverse
 
 from tests.factories import EmailAddressFactory, UserFactory
@@ -25,14 +24,6 @@ SIGNUP_TEMPLATES = [
     "account/signup_closed.html",
     "account/signup_by_passkey.html",
 ]
-
-
-@pytest.mark.parametrize("template_name", SIGNUP_TEMPLATES)
-def test_no_raw_element_tags_in_templates(template_name):
-    """No signup template may contain raw {% element %} tags."""
-    source = get_template(template_name).template.source
-    assert "{% element" not in source
-    assert "{% endelement" not in source
 
 
 # ---------------------------------------------------------------------------
@@ -294,7 +285,7 @@ def test_signup_closed_shows_closed_message(client, settings):
     response = client.get(get_signup_url())
     assert response.status_code == 200
     content = response.content.decode()
-    assert "Sign up closed" in content
+    assert "Sign Up Closed" in content
     assert "currently closed" in content
 
 
@@ -350,18 +341,8 @@ def test_passkey_signup_page_uses_entrance_shell(client):
     """signup_by_passkey.html must render within the <c-entrance> card shell."""
     response = client.get(get_passkey_signup_url())
     content = response.content.decode()
-    # The entrance shell renders a card with shadow class
+    # The dac entrance layout renders the centered card shell
     assert "shadow" in content
-    # Template source must not contain raw Bootstrap layout markup —
-    # check the template file itself rather than the rendered output
-    from pathlib import Path
-
-    template_source = (
-        Path(__file__).resolve().parents[3] / "dac/addons/allauth/templates/account/signup_by_passkey.html"
-    ).read_text()
-    assert '<div class="container' not in template_source
-    assert '<div class="row' not in template_source
-    assert '<div class="card' not in template_source
 
 
 @pytest.mark.django_db
@@ -380,7 +361,7 @@ def test_passkey_signup_page_has_back_link_to_signup(client):
     content = response.content.decode()
     signup_url = reverse("account_signup")
     assert signup_url in content
-    assert "Sign up with alternative method" in content
+    assert "Other options" in content
 
 
 @pytest.mark.django_db

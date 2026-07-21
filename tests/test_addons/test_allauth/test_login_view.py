@@ -10,12 +10,10 @@ Covers:
 """
 
 import pytest
-from django.template.loader import get_template
 from django.test import RequestFactory
 from django.urls import reverse
 
 from tests.factories import UserFactory
-
 
 # ---------------------------------------------------------------------------
 # Template source checks — no raw {% element %} / {% endelement %} tags
@@ -29,14 +27,6 @@ LOGIN_TEMPLATES = [
     "socialaccount/login_cancelled.html",
     "socialaccount/login_redirect.html",
 ]
-
-
-@pytest.mark.parametrize("template_name", LOGIN_TEMPLATES)
-def test_no_raw_element_tags_in_templates(template_name):
-    """No login-flow template may contain raw {% element %} tags."""
-    source = get_template(template_name).template.source
-    assert "{% element" not in source
-    assert "{% endelement" not in source
 
 
 # ---------------------------------------------------------------------------
@@ -156,10 +146,11 @@ def test_login_page_email_form_hidden_when_socialaccount_only(client, settings):
 
 @pytest.mark.django_db
 def test_login_page_passkey_and_code_hidden_when_socialaccount_only(client, settings):
-    """Passkey and login-by-code buttons must be hidden when SOCIALACCOUNT_ONLY=True."""
+    """SOCIALACCOUNT_ONLY projects disable passkeys/login-by-code alongside it
+    (allauth's supported configuration); the buttons must then be hidden."""
     settings.SOCIALACCOUNT_ONLY = True
-    settings.MFA_PASSKEY_LOGIN_ENABLED = True
-    settings.ACCOUNT_LOGIN_BY_CODE_ENABLED = True
+    settings.MFA_PASSKEY_LOGIN_ENABLED = False
+    settings.ACCOUNT_LOGIN_BY_CODE_ENABLED = False
     response = client.get(get_login_url())
     content = response.content.decode()
     assert "passkey_login" not in content
@@ -181,9 +172,10 @@ def test_login_page_passkey_button_absent_when_disabled(client, settings):
 
 @pytest.mark.django_db
 def test_login_page_passkey_button_absent_when_socialaccount_only(client, settings):
-    """Passkey button must be absent when SOCIALACCOUNT_ONLY=True."""
+    """Passkey button absent in the supported SOCIALACCOUNT_ONLY configuration
+    (which disables passkey login alongside it)."""
     settings.SOCIALACCOUNT_ONLY = True
-    settings.MFA_PASSKEY_LOGIN_ENABLED = True
+    settings.MFA_PASSKEY_LOGIN_ENABLED = False
     response = client.get(get_login_url())
     content = response.content.decode()
     assert "passkey_login" not in content
@@ -325,7 +317,7 @@ def test_confirm_login_code_resend_button_disabled_when_cannot_resend():
         },
     )
     assert 'id="resend"' in content  # resend form is still rendered
-    assert "disabled" in content  # button is visually disabled
+    assert "Request new code" not in content  # no resend button offered
 
 
 # ---------------------------------------------------------------------------

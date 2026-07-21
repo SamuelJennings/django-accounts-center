@@ -25,7 +25,6 @@ Spec scenarios targeted:
 
 import pytest
 from allauth.socialaccount.models import SocialAccount
-from django.template.loader import get_template
 from django.urls import reverse
 
 from tests.factories import (
@@ -59,14 +58,6 @@ SOCIAL_CONNECTIONS_TEMPLATES = [
 ]
 
 
-@pytest.mark.parametrize("template_name", SOCIAL_CONNECTIONS_TEMPLATES)
-def test_no_raw_element_tags_in_templates(template_name):
-    """No social-connections template may contain raw {% element %} tags."""
-    source = get_template(template_name).template.source
-    assert "{% element" not in source
-    assert "{% endelement" not in source
-
-
 # ---------------------------------------------------------------------------
 # T003 / US1: TestConnectionsLayoutAndStructure
 # ---------------------------------------------------------------------------
@@ -89,7 +80,7 @@ class TestConnectionsLayoutAndStructure:
         client.force_login(user)
         response = client.get(reverse("socialaccount_connections"))
         content = response.content.decode()
-        assert "app-sidebar" in content
+        assert "Account navigation" in content
 
     def test_breadcrumb_account_connections_present(self, client):
         """Rendered HTML must contain the 'Account Connections' breadcrumb leaf."""

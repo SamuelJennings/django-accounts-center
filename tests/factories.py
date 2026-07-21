@@ -89,5 +89,3 @@ class SocialAccountFactory(factory.django.DjangoModelFactory):
     provider = "google"
     uid = factory.Faker("uuid4")
     extra_data = factory.LazyFunction(dict)
-
-

@@ -32,9 +32,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.humanize",
-    "compressor",
     "dac",
-    "dac.addons.allauth",
+    "dac.allauth",
     "mvp",
     "example",
     "allauth",
@@ -47,16 +46,12 @@ INSTALLED_APPS = [
     "allauth.usersessions",
     "easy_icons",
     "crispy_forms",
-    "crispy_bootstrap5",
-    "debug_toolbar",
     "flex_menu",
     "django_cotton",
-    "cotton_bs5",
-    "rest_framework",
-    "drf_stripe",
     "django_extensions",
     "django_browser_reload",
     "dj_urls_panel",
+    "crispy_tailwind",
 ]
 
 SITE_ID = 1
@@ -70,7 +65,6 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "allauth.account.middleware.AccountMiddleware",
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django_browser_reload.middleware.BrowserReloadMiddleware",
     "django.contrib.sites.middleware.CurrentSiteMiddleware",
 ]
@@ -87,6 +81,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "mvp.context_processors.mvp_config",
             ],
         },
     },
@@ -116,15 +111,9 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
-CRISPY_ALLOWED_TEMPLATE_PACKS = ["bootstrap5", "tailwind"]
+CRISPY_ALLOWED_TEMPLATE_PACKS = ["tailwind"]
 
-CRISPY_TEMPLATE_PACK = "bootstrap5"
-# CRISPY_TEMPLATE_PACK = "tailwind"
-
-
-INTERNAL_IPS = [
-    "127.0.0.1",
-]
+CRISPY_TEMPLATE_PACK = "tailwind"
 
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#static-root
@@ -136,7 +125,6 @@ STATIC_URL = COMPRESS_URL = "/static/"
 STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-    "compressor.finders.CompressorFinder",
 )
 
 STORAGES = {
@@ -145,39 +133,8 @@ STORAGES = {
     },
 }
 
-COMPRESS_ENABLED = False
-COMPRESS_OFFLINE = False
-COMPRESS_STORAGE = "compressor.storage.GzipCompressorFileStorage"
-COMPRESS_FILTERS = {
-    "css": [
-        "compressor.filters.css_default.CssAbsoluteFilter",
-        "compressor.filters.cssmin.rCSSMinFilter",
-    ],
-    "js": ["compressor.filters.jsmin.JSMinFilter"],
-}
-COMPRESS_PRECOMPILERS = (("text/x-scss", "django_libsass.SassCompiler"),)
-LIBSASS_SOURCEMAPS = True
-
-
-# ======= DRF Stripe Subscription =======
-
-DRF_STRIPE = {
-    "STRIPE_API_SECRET": os.environ.get(
-        "STRIPE_SECRET_KEY"
-    ),  # Replace with your actual Stripe Secret Key
-    "STRIPE_WEBHOOK_SECRET": os.environ.get(
-        "STRIPE_WEBHOOK_SECRET"
-    ),  # Replace with your actual Webhook Secret
-    "FRONT_END_BASE_URL": "http://localhost:8000",  # Adjust based on your frontend setup
-}
-
-
-STRIPE_PRICING_TABLE_ID = "prctbl_1RH3JiQrz3Ww3AL2Air6FnEx"
-STRIPE_PUBLIC_KEY = "pk_test_51RGyRcQrz3Ww3AL29Iwcjvz650cLcZ87ZEHpPLyLocWmWHvfjHUw3gf976l0EqbXIIVLXRnSbPOl5h4rjG2m6yS1003UKRNEx6"  # Replace with your actual Stripe Public Key
-
-
 # ======= Allauth Settings =======
-LOGIN_URL = "/"
+LOGIN_URL = "account_login"
 LOGIN_REDIRECT_URL = "/account-center/"
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
@@ -203,59 +160,49 @@ DJ_URLS_PANEL_SETTINGS = {
 
 FLEX_MENUS = {
     "renderers": {
-        "adminlte": "mvp.renderers.AdminLTERenderer",
+        "sidebar": "mvp.renderers.SidebarRenderer",
+        "dock": "mvp.renderers.MobileFooterNavRenderer",
     },
     "log_url_failures": DEBUG,
 }
 
+MVP_CONFIG = {
+    "layout": {
+        "sidebar": {
+            "title": "DAC Example",
+            # The authenticated user menu (bottom of the sidebar) is where the
+            # "Account Center" entry appears once dac's URLs are installed.
+            "footer": ["user.sidebar-menu"],
+        },
+    },
+}
+
 EASY_ICONS = {
-    # Default renderer - used when no renderer specified
+    # Default renderer - used when no renderer specified.
     "default": {
         "renderer": "easy_icons.renderers.ProviderRenderer",
         "config": {"tag": "i"},
-        "packs": ["mvp.utils.BS5_ICONS"],
-        "icons": {
-            "arrow-left": "bi bi-arrow-left",
-            "refresh": "bi bi-arrow-clockwise",
-            "cancel": "bi bi-x-circle",
-            "delete": "bi bi-trash-fill",
-            "add": "bi bi-plus-lg",
-            "edit": "bi bi-pencil-fill",
-            "email": "bi bi-envelope-fill",
-            "error": "bi bi-x-circle-fill",
-            "info": "bi bi-info-circle-fill",
-            "link": "bi bi-link-45deg",
-            "login": "bi bi-box-arrow-in-right",
-            "logout": "bi bi-box-arrow-right",
-            "mfa": "bi bi-shield-fill-check",
-            "password_change": "bi bi-key-fill",
-            "password": "bi bi-lock-fill",
-            "sessions": "bi bi-display",
-            "success": "bi bi-check-circle-fill",
-            "submit": "bi bi-check-lg",
-            "warning": "bi bi-exclamation-triangle-fill",
-            "passkey": "bi bi-key-fill",
-            "passcode": "bi bi-braces-asterisk",
-            "send": "bi bi-send-fill",
-            "check-circle": "bi bi-check-circle",
-            "arrow-repeat": "bi bi-arrow-repeat",
-            "x-circle": "bi bi-x-circle",
-            "three-dots": "bi bi-three-dots",
-            "grid": "bi bi-grid",
-        },
+        "packs": ["mvp.utils.BS5_ICONS", "dac.icons.DAC_ICONS"],
     },
-    # Font Awesome for common UI icons
+    # Social-login brand icons. dac.allauth ships the SVGs (its icons/ dir);
+    # provider.html renders them via {% icon provider_id renderer="svg" %}.
+    # Override a mark by re-pointing its entry here or shadowing the template.
     "svg": {
         "renderer": "easy_icons.renderers.SvgRenderer",
-        "config": {"default_attrs": {"fill": "currentColor", "height": "1em"}},
+        "config": {"default_attrs": {"height": "1.25em", "width": "1.25em"}},
         "icons": {
-            "github": "github.svg",
             "google": "google.svg",
+            "github": "github.svg",
+            "microsoft": "microsoft.svg",
+            "apple": "apple.svg",
+            "facebook": "facebook.svg",
+            "twitter": "x.svg",
+            "twitter_oauth2": "x.svg",
+            "linkedin": "linkedin.svg",
+            "linkedin_oauth2": "linkedin.svg",
+            "gitlab": "gitlab.svg",
+            "discord": "discord.svg",
             "orcid": "orcid.svg",
-            "dac": "dac.svg",
-            "entrance_check": "check.svg",
-            "entrance_warning": "warning.svg",
-            "account_center": "dac",
         },
     },
 }

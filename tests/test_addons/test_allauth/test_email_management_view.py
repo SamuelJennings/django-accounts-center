@@ -23,7 +23,6 @@ Notes on test design:
 """
 
 import pytest
-from django.template.loader import get_template
 from django.urls import reverse
 
 from tests.factories import EmailAddressFactory, UserFactory
@@ -37,14 +36,6 @@ EMAIL_MANAGEMENT_TEMPLATES = [
     "account/email.html",
     "account/verified_email_required.html",
 ]
-
-
-@pytest.mark.parametrize("template_name", EMAIL_MANAGEMENT_TEMPLATES)
-def test_no_raw_element_tags_in_templates(template_name):
-    """No email-management template may contain raw {% element %} tags."""
-    source = get_template(template_name).template.source
-    assert "{% element" not in source
-    assert "{% endelement" not in source
 
 
 # ---------------------------------------------------------------------------

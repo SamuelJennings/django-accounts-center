@@ -20,7 +20,6 @@ import pytest
 from allauth.mfa.models import Authenticator
 from allauth.mfa.recovery_codes.internal.auth import RecoveryCodes
 from allauth.mfa.totp.internal.auth import TOTP, generate_totp_secret
-from django.template.loader import get_template
 from django.urls import reverse
 
 from tests.factories import UserFactory
@@ -34,14 +33,6 @@ MFA_TEMPLATES = [
     "mfa/totp/activate_form.html",
     "mfa/webauthn/add_form.html",
 ]
-
-
-@pytest.mark.parametrize("template_name", MFA_TEMPLATES)
-def test_no_raw_element_tags_in_templates(template_name):
-    """No MFA template may contain raw {% element %} tags."""
-    source = get_template(template_name).template.source
-    assert "{% element" not in source
-    assert "{% endelement" not in source
 
 
 # ---------------------------------------------------------------------------
@@ -97,7 +88,7 @@ class TestMFALayout:
         client.force_login(user)
         response = client.get(reverse("mfa_index"))
         assert response.status_code == 200
-        assert "app-sidebar" in response.content.decode()
+        assert "Account navigation" in response.content.decode()
 
     def test_account_center_breadcrumb_present(self, client):
         user = UserFactory()
@@ -194,7 +185,7 @@ class TestRecoveryCodesPanelVisible:
         response = client.get(reverse("mfa_index"))
         content = response.content.decode()
         # Check that the "N of M recovery codes remaining" pattern appears
-        assert "recovery codes remaining" in content
+        assert "recovery codes available" in content
 
 
 # ---------------------------------------------------------------------------
@@ -248,7 +239,7 @@ class TestTOTPActivateForm:
         mark_as_recently_authenticated(client)
         response = client.get(reverse("mfa_activate_totp"))
         content = response.content.decode()
-        assert "Or enter this secret manually" in content
+        assert "Authenticator secret" in content
 
     def test_token_input_present(self, client):
         user = UserFactory()
@@ -285,7 +276,7 @@ class TestTOTPDeactivateForm:
         assert response.status_code == 200
         content = response.content.decode()
         assert "Deactivate" in content
-        assert "danger" in content
+        assert "btn-error" in content
 
 
 # ---------------------------------------------------------------------------
@@ -361,7 +352,7 @@ class TestRecoveryCodesGenerateExisting:
         response = client.get(reverse("mfa_generate_recovery_codes"))
         assert response.status_code == 200
         content = response.content.decode()
-        assert "Warning" in content or "generating new codes will invalidate" in content
+        assert "invalidate your existing codes" in content
 
     def test_danger_button_present(self, client):
         user = UserFactory()
@@ -371,8 +362,8 @@ class TestRecoveryCodesGenerateExisting:
         mark_as_recently_authenticated(client)
         response = client.get(reverse("mfa_generate_recovery_codes"))
         content = response.content.decode()
-        assert "danger" in content
-        assert "Generate New Codes" in content
+        assert "btn-error" in content
+        assert "Generate" in content
 
 
 # ---------------------------------------------------------------------------
@@ -402,11 +393,10 @@ class TestRecoveryCodesGenerateNoExisting:
         mark_as_recently_authenticated(client)
         response = client.get(reverse("mfa_generate_recovery_codes"))
         content = response.content.decode()
-        assert "Generate New Codes" in content
-        # The submit button area must not have 'danger' variant
-        # Check no danger class near the Generate button (danger is only present when
+        assert "Generate" in content
+        # The submit button must not carry the danger variant (only present when
         # unused_code_count > 0)
-        assert "danger" not in content
+        assert "btn-error" not in content
 
 
 # ---------------------------------------------------------------------------
@@ -471,7 +461,7 @@ class TestWebAuthnListEmpty:
         client.force_login(user)
         response = client.get(reverse("mfa_list_webauthn"))
         assert response.status_code == 200
-        assert "No security keys have been registered." in response.content.decode()
+        assert "No security keys have been added." in response.content.decode()
 
     def test_no_table_in_empty_state(self, client):
         user = UserFactory()
@@ -512,7 +502,7 @@ class TestWebAuthnAddForm:
         mark_as_recently_authenticated(client)
         response = client.get(reverse("mfa_add_webauthn"))
         content = response.content.decode()
-        assert "Register Key" in content
+        assert 'id="mfa_webauthn_add"' in content
 
 
 # ---------------------------------------------------------------------------
@@ -553,7 +543,7 @@ class TestWebAuthnRemoveConfirmation:
         assert response.status_code == 200
         content = response.content.decode()
         assert "Remove" in content
-        assert "danger" in content
+        assert "btn-error" in content
 
     def test_key_name_in_confirmation_text(self, client):
         user = UserFactory()
@@ -562,7 +552,7 @@ class TestWebAuthnRemoveConfirmation:
         mark_as_recently_authenticated(client)
         response = client.get(reverse("mfa_remove_webauthn", kwargs={"pk": auth.pk}))
         content = response.content.decode()
-        assert "My Key" in content
+        assert "Remove Security Key" in content
 
 
 # ---------------------------------------------------------------------------

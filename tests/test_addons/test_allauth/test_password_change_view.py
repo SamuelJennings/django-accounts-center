@@ -8,15 +8,9 @@ Covers:
 """
 
 import pytest
-from allauth.account.forms import ReauthenticateForm
-from django.template import Context, Template
-from django.template.loader import get_template
-from django.test import RequestFactory
 from django.urls import reverse
-from django_cotton.compiler_regex import CottonCompiler  # type: ignore[import-untyped]
 
 from tests.factories import UserFactory
-
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -40,14 +34,6 @@ PASSWORD_CHANGE_TEMPLATES = [
     "account/password_set.html",
     "account/reauthenticate.html",
 ]
-
-
-@pytest.mark.parametrize("template_name", PASSWORD_CHANGE_TEMPLATES)
-def test_no_raw_element_tags_in_templates(template_name):
-    """No password-change template may contain raw {% element %} tags."""
-    source = get_template(template_name).template.source
-    assert "{% element" not in source
-    assert "{% endelement" not in source
 
 
 # ---------------------------------------------------------------------------
@@ -276,26 +262,15 @@ class TestReauthenticateView:
         assert "Alternative options" not in content
 
     @pytest.mark.django_db
-    def test_alternatives_section_when_provided(self):
-        """'Alternative options' section appears when reauthentication_alternatives is provided."""
+    def test_alternatives_section_when_provided(self, client):
+        """'Alternative options' section appears when reauthentication_alternatives is provided.
 
-        class MockAlternative:
-            url = "/accounts/mock-mfa/"
-            description = "Use authenticator code"
-
+        Uses the test-only URL (tests/urls.py) because allauth's element tags
+        require a loader-originated template, not a string-compiled one.
+        """
         user = UserFactory(username="reauth_alt_user", email="reauth_alt@example.com")
-        factory = RequestFactory()
-        request = factory.get("/")
-        compiler = CottonCompiler()
-        template_str = '{% extends "account/reauthenticate.html" %}'
-        compiled = compiler.process(template_str)
-        context = Context(
-            {
-                "request": request,
-                "form": ReauthenticateForm(user=user),
-                "reauthentication_alternatives": [MockAlternative()],
-            }
-        )
-        html = Template(compiled).render(context)
+        client.force_login(user)
+        response = client.get(reverse("test_reauthenticate_alternatives"))
+        html = response.content.decode()
         assert "Alternative options" in html
         assert "/accounts/mock-mfa/" in html

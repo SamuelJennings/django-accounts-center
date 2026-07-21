@@ -1,13 +1,8 @@
-{% extends "dac/base.html" %}
-{% load flex_menu %}
-
-{% block app.sidebar %}
-  <c-app.sidebar>
-    {% render_menu "Account Center Menu" renderer="adminlte" %}
-    <c-sidebar.footer>
-      <c-dac.user-menu>
-        <c-dropdown.item text="Settings" href="#" />
-      </c-dac.user-menu>
-    </c-sidebar.footer>
-  </c-app.sidebar>
-{% endblock app.sidebar %}
+{% extends "mvp/base.html" %}
+{% block content %}
+  <div class="w-56 p-2 bg-base-200">
+    <c-user.sidebar-menu>
+      <c-menu.item label="Settings" icon="settings" href="#" />
+    </c-user.sidebar-menu>
+  </div>
+{% endblock content %}

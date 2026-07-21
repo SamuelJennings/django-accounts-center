@@ -57,7 +57,7 @@ class TestUserSessionsLayout:
         client.force_login(user)
         response = client.get(reverse("usersessions_list"))
         assert response.status_code == 200
-        assert "app-sidebar" in response.content.decode()
+        assert "Account navigation" in response.content.decode()
 
     def test_account_center_breadcrumb_present(self, client):
         user = UserFactory()
@@ -147,7 +147,7 @@ class TestUserSessionsMultipleSignOut:
             user_agent="TestBrowser",
         )
         response = client.get(reverse("usersessions_list"))
-        assert "Sign out other sessions" in response.content.decode()
+        assert "Sign Out Other Sessions" in response.content.decode()
 
     def test_form_action_is_usersessions_list(self, client):
         user = UserFactory()

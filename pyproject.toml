@@ -7,10 +7,21 @@ dynamic = ["version"]
 readme = "README.md"
 authors = [{ name = "Sam", email = "samuel.scott.jennings@gmail.com" }]
 requires-python = ">=3.12,<4.0"
-dependencies = ["django (>=5,<6.0)", "django-mvp"]
+dependencies = [
+    "django (>=5,<6.0)",
+    "django-mvp",
+]
 
 [project.optional-dependencies]
-allauth = ["django-allauth (>=64.0)", "crispy-bootstrap5 (>=2024.2)"]
+# Each integration sub-app ("dac.allauth", …) has a matching extra.
+# crispy-forms/-tailwind back mvp's <c-form.render>, which dac.allauth uses to
+# render allauth forms; mvp treats crispy as consumer-provided, so declare it
+# here rather than relying on it transitively.
+allauth = [
+    "django-allauth[socialaccount,mfa] (>=65.0)",
+    "django-crispy-forms (>=2.6)",
+    "crispy-tailwind (>=1.0.3)",
+]
 
 [tool.poetry]
 version = "0.6.0"
@@ -18,18 +29,19 @@ packages = [{ include = "dac" }]
 requires-poetry = '>=2.0,<3.0'
 
 [tool.poetry.group.dev.dependencies]
-django-allauth = { extras = ["mfa", "socialaccount"], version = "*" }
-crispy-bootstrap5 = "^2024.2"
+django-allauth = { extras = ["mfa", "socialaccount"], version = "^65.18.0" }
+# Back mvp's <c-form.render> (used by dac.allauth's fields.html). Also declared
+# in the `allauth` extra for consumers; here so a dev `poetry install` gets a
+# working crispy_tailwind (tailwind_filters) rather than a partial one.
+django-crispy-forms = "^2.6"
+crispy-tailwind = "^1.0.3"
 python-dotenv = "^1.1.0"
-drf-stripe-subscription = "^1.2.2"
-django-activity-stream = "^2.0.0"
 django-extensions = "^4.1"
 beautifulsoup4 = "^4.14.3"
 fairdm-dev-tools = { git = "https://github.com/FAIR-DM/dev-tools", extras = [
     "test",
     "dev",
 ] }
-dj-urls-panel = "^0.2.0"
 pytest-playwright = "^0.7.2"
 
 # [tool.poetry.group.local.dependencies]
@@ -227,21 +239,23 @@ extend_exclude = ["tasks.py", "docs", ".*tests"]
 django-mvp = ["mvp"]
 django-allauth = ["allauth"]
 django-flex-menus = ["flex_menu"]
-crispy-bootstrap5 = ["crispy_forms"]
 python-dotenv = ["dotenv"]
-django-debug-toolbar = ["debug_toolbar"]
 
 [tool.deptry.per_rule_ignores]
-# flex_menu/allauth/crispy_forms are optional or transitive; debug_toolbar/pytest come via git deps
+# flex_menu/allauth/crispy_forms are optional or transitive; pytest comes via git deps
 DEP001 = [
     "invoke",
     "flex_menu",
-    "debug_toolbar",
     "pytest",
     "allauth",
     "crispy_forms",
 ]
-DEP003 = ["toml"]
+# django-crispy-forms/crispy-tailwind back mvp's <c-form.render> and dac's allauth
+# templates purely through crispy's Django template tags and CRISPY_TEMPLATE_PACK —
+# dac's own .py files never import them. flex_menu is a transitive dep of django-mvp
+# (see DEP001 above), same reasoning applies to its direct import in menus.py.
+DEP002 = ["django-crispy-forms", "crispy-tailwind"]
+DEP003 = ["toml", "flex_menu", "pytest"]
 # dotenv is used in example/ (dev-only app), not in the published package
 DEP004 = ["dotenv"]
 

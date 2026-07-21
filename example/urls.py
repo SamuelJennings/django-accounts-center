@@ -1,4 +1,3 @@
-from debug_toolbar.toolbar import debug_toolbar_urls
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.urls import include, path, reverse_lazy
@@ -19,7 +18,6 @@ urlpatterns = [
         ),
         name="profile-edit",
     ),
-    path("admin/dj-urls-panel/", include("dj_urls_panel.urls")),
     path("admin/", admin.site.urls),
     # Test-only URLs — not part of the production URL configuration
     path(
@@ -33,5 +31,4 @@ urlpatterns = [
         name="account_verified_email_required",
     ),
     path("__reload__/", include("django_browser_reload.urls")),
-    *debug_toolbar_urls(),
 ]

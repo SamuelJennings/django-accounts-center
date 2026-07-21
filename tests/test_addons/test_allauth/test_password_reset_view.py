@@ -11,11 +11,10 @@ Covers:
 import pytest
 from allauth.account.forms import ConfirmPasswordResetCodeForm, default_token_generator
 from allauth.account.utils import user_pk_to_url_str
-from django.template.loader import get_template, render_to_string
+from django.template.loader import render_to_string
 from django.urls import reverse
 
 from tests.factories import UserFactory
-
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -48,14 +47,6 @@ RESET_TEMPLATES = [
     "account/password_reset_from_key_done.html",
     "account/confirm_password_reset_code.html",
 ]
-
-
-@pytest.mark.parametrize("template_name", RESET_TEMPLATES)
-def test_no_raw_element_tags_in_templates(template_name):
-    """No password-reset template may contain raw {% element %} tags."""
-    source = get_template(template_name).template.source
-    assert "{% element" not in source
-    assert "{% endelement" not in source
 
 
 # ---------------------------------------------------------------------------
@@ -369,10 +360,11 @@ def test_confirm_password_reset_code_cancel_without_cancel_url(rf):
 
 
 @pytest.mark.django_db
-def test_confirm_password_reset_code_no_resend_form_by_default(rf):
-    """<form id='resend'> must be absent by default (can_resend=False)."""
+def test_confirm_password_reset_code_no_resend_button_when_cannot_resend(rf):
+    """No resend button is offered when can_resend=False (the hidden resend
+    form itself is always rendered by allauth's stock template)."""
     content = _render_confirm_code_template(rf)
-    assert 'id="resend"' not in content
+    assert 'form="resend"' not in content
 
 
 @pytest.mark.django_db
@@ -383,10 +375,10 @@ def test_confirm_password_reset_code_logout_form_when_no_cancel_url(rf):
 
 
 @pytest.mark.django_db
-def test_confirm_code_no_resend_supported_hides_button_regardless_of_can_resend(rf):
-    """Resend button must be absent when resend_supported is not set, even if can_resend=True."""
+def test_confirm_code_can_resend_true_shows_resend_button(rf):
+    """allauth's stock contract: can_resend alone controls the resend button."""
     content = _render_confirm_code_template(rf, {"can_resend": True})
-    assert 'form="resend"' not in content
+    assert 'form="resend"' in content
 
 
 @pytest.mark.django_db
