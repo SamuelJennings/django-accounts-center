@@ -27,7 +27,7 @@ docs/_static/mobile/*
 docs/_static/tablet/*
 .playwright-cli
 .playwright
-
+_old_template
 # Project files
 .ropeproject
 .project
@@ -96,3 +96,5 @@ dist
 #no migration files except __init__.py
 **/migrations/*
 !**/migrations/__init__.py
+node_modules
+shots/
