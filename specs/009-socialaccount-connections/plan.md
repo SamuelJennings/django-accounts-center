@@ -17,7 +17,7 @@ allauth `{% element %}` tags throughout. `authentication_error.html` also retain
 **Three template changes** (in dependency order):
 
 1. `socialaccount/base_manage.html` — change one `extends` line to `dac/base.html` (unblocks `connections.html`)
-2. `socialaccount/connections.html` — full rewrite: `{% block page.content %}`, `<c-list-group>` per connected account with inline remove form and provider badge; conditional empty-state message; "Add a Third-Party Account" section (FR-003/FR-004/FR-005)
+2. `socialaccount/connections.html` — full rewrite: `{% block page.content %}`, `<c-list>` per connected account with inline remove form and provider badge; conditional empty-state message; "Add a Third-Party Account" section (FR-003/FR-004/FR-005)
 3. `socialaccount/authentication_error.html` — corrections only: drop redundant `{% element h1 %}` (handled by entrance layout title slot), replace `{% element p %}` with `<c-text>`
 
 Integration tests and Playwright screenshot tests are **written as part of this
@@ -33,7 +33,7 @@ feature** in `tests/test_addons/test_allauth/test_social_connections_view.py` an
 **Target Platform**: Django web application (server-rendered templates)
 **Project Type**: Reusable Django extension library
 **Performance Goals**: Same as existing management-page templates
-**Constraints**: Zero `{% element %}` / `{% endelement %}` tags in modified files; `connections.html` content in `{% block page.content %}`; per-account `<c-list-group.item>` with inline form; no shared radio-select form; empty-state message for no accounts; "Add a Third-Party Account" include section
+**Constraints**: Zero `{% element %}` / `{% endelement %}` tags in modified files; `connections.html` content in `{% block page.content %}`; per-account `<c-list.item>` with inline form; no shared radio-select form; empty-state message for no accounts; "Add a Third-Party Account" include section
 **Scale/Scope**: 3 template files edited; 1 new integration test file; 1 new screenshot test file
 
 ## Constitution Check
@@ -50,7 +50,7 @@ feature** in `tests/test_addons/test_allauth/test_social_connections_view.py` an
 | VI. UI Verification | Playwright MCP verification required per implementation task | ✅ PASS |
 | VII. Documentation Retrieval | No new external APIs — reusing established patterns from Specs 001–008 | ✅ PASS (N/A) |
 | VIII. E2E Testing | Screenshot tests: 3 states × 3 viewports = 9 PNGs | ✅ PASS |
-| IX. Component Reuse | No new components; `<c-badge>`, `<c-list-group>`, `<c-form>`, `<c-button>`, `<c-card>`, `<c-text>` are all existing | ✅ PASS |
+| IX. Component Reuse | No new components; `<c-badge>`, `<c-list>`, `<c-form>`, `<c-button>`, `<c-card>`, `<c-text>` are all existing | ✅ PASS |
 | X. Third-Party Integration | Template overrides primary; no view overrides introduced | ✅ PASS |
 | XI. Dual-Audience Stories | US1, US3 [Developer] + US2 [End User] | ✅ PASS |
 | XII. View Docstrings | No view classes introduced or modified | ✅ PASS (N/A) |
@@ -82,7 +82,7 @@ specs/009-socialaccount-connections/
 ```text
 dac/addons/allauth/templates/socialaccount/
 ├── base_manage.html          ← EDIT: change extends from allauth/layouts/manage.html to dac/base.html
-├── connections.html          ← EDIT: full rewrite (block page.content, c-list-group per account, FR-003/FR-004/FR-005)
+├── connections.html          ← EDIT: full rewrite (block page.content, c-list per account, FR-003/FR-004/FR-005)
 └── authentication_error.html ← EDIT: corrections only (drop element h1, replace element p with c-text)
 
 tests/test_addons/test_allauth/

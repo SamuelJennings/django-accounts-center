@@ -29,7 +29,7 @@ These components are created and maintained by `django-accounts-center` in `dac/
 
 | Attr/Slot | Type | Purpose |
 |---|---|---|
-| `cols`, `md`, `lg`, etc. | `str` | Responsive width attrs forwarded to `<c-col>` |
+| `cols`, `md`, `lg`, etc. | `str` | Responsive width attrs forwarded to `` |
 | `title` (slot) | HTML | Rendered as `<h4 class="fw-semibold mt-3">` inside the card header |
 | default slot | HTML | Page content rendered below the logo/title area |
 
@@ -87,7 +87,7 @@ These components are consumed by the signup templates. They are defined in djang
 
 ---
 
-### `<c-card.divider>` — "or" Separator
+### `<c-divider>` — "or" Separator
 
 **Source**: `django-mvp` (`mvp/templates/cotton/card/divider.html`)
 
@@ -95,10 +95,10 @@ These components are consumed by the signup templates. They are defined in djang
 
 ```html
 {# Separator between social buttons and email/password form #}
-<c-card.divider text="{% trans 'or' %}" />
+<c-divider text="{% trans 'or' %}" />
 
 {# Plain separator before passkey button #}
-<c-card.divider />
+<c-divider />
 ```
 
 **Attributes**:

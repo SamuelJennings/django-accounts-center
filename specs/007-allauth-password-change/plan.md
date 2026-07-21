@@ -20,7 +20,7 @@ card-stack.
 2. `account/reauthenticate.html` — fill `{% block reauthenticate_content %}` with
    Cotton form components (`<c-form>`, `<c-button>`)
 3. `account/password_change.html` — full rewrite: `{% block page.content %}` +
-   `<c-form.card>` + breadcrumb + `{% trans %}` strings
+   `<c-form>` + breadcrumb + `{% trans %}` strings
 4. `account/password_set.html` — same structure as `password_change.html` but for
    the set-password flow (no "Forgot Password?" link)
 
@@ -37,7 +37,7 @@ tests are written in `screenshots/test_password_change_screenshots.py`.
 **Target Platform**: Django web application (server-rendered templates)
 **Project Type**: Reusable Django extension library
 **Performance Goals**: Same as existing management-page templates (no new DB queries)
-**Constraints**: Zero `{% element %}` / `{% endelement %}` tags in modified files; `password_change.html` and `password_set.html` MUST use `<c-form.card>` as form wrapper; all management-page content in `{% block page.content %}`; MFA reauthenticate templates explicitly out of scope
+**Constraints**: Zero `{% element %}` / `{% endelement %}` tags in modified files; `password_change.html` and `password_set.html` MUST use `<c-form>` as form wrapper; all management-page content in `{% block page.content %}`; MFA reauthenticate templates explicitly out of scope
 **Scale/Scope**: 4 template files rewritten; 1 new test module; 1 new screenshot module
 
 ## Constitution Check
@@ -54,7 +54,7 @@ tests are written in `screenshots/test_password_change_screenshots.py`.
 | VI. UI Verification | Playwright MCP verification required per implementation task | ✅ PASS |
 | VII. Documentation Retrieval | No new external APIs — reusing established patterns from Specs 001–006 | ✅ PASS (N/A) |
 | VIII. E2E Testing | Screenshot tests in `screenshots/test_password_change_screenshots.py`; 4 states × 3 viewports = 12 PNGs | ✅ PASS |
-| IX. Component Reuse | No new components; `<c-form.card>`, `<c-form>`, `<c-button>`, `<c-group>` are all existing | ✅ PASS |
+| IX. Component Reuse | No new components; `<c-form>`, `<c-form>`, `<c-button>`, `<c-group>` are all existing | ✅ PASS |
 | X. Third-Party Integration | Template overrides primary; no view overrides introduced | ✅ PASS |
 | XI. Dual-Audience Stories | US1, US3, US4 [Developer] + US2 [End User] | ✅ PASS |
 | XII. View Docstrings | No view classes introduced or modified | ✅ PASS (N/A) |
@@ -87,7 +87,7 @@ specs/007-allauth-password-change/
 dac/addons/allauth/templates/account/
 ├── base_reauthenticate.html  ← EDIT: replace all {% element %} tags with Cotton equivalents
 ├── reauthenticate.html       ← EDIT: full Cotton rewrite of reauthenticate_content block
-├── password_change.html      ← EDIT: full rewrite (block page.content + c-form.card + breadcrumb)
+├── password_change.html      ← EDIT: full rewrite (block page.content + c-form + breadcrumb)
 └── password_set.html         ← EDIT: full rewrite (same structure; no Forgot Password? link)
 
 tests/test_addons/test_allauth/
@@ -119,7 +119,7 @@ existing `allauth.urls` include in `tests/urls.py`.
 No unknowns requiring research. All patterns are established in Specs 001–006:
 
 - `{% block page.content %}` override in management templates: Spec 005 (`dac/base.html`)
-- `<c-form.card>` as management-page form wrapper: Spec 006 (`email_change.html`)
+- `<c-form>` as management-page form wrapper: Spec 006 (`email_change.html`)
 - Cotton rewrite replacing `{% element %}` tags: Specs 001–004
 - Test-only URL helper for pages without standalone URL: Spec 006 (`_verified_email_required_view` — **not needed here** since `account_reauthenticate` is a registered URL)
 
@@ -157,11 +157,11 @@ Entrance templates (`base_reauthenticate.html`, `reauthenticate.html`) inherit t
 {% block title %}{% trans "Confirm Access" %}{% endblock %}
 
 {% block content %}
-  <c-entrance.section text="{% trans "Please reauthenticate to safeguard your account." %}">
+  <c-section text="{% trans "Please reauthenticate to safeguard your account." %}">
     {% block reauthenticate_content %}{% endblock %}
-  </c-entrance.section>
+  </c-section>
   {% if reauthentication_alternatives %}
-    <c-card.divider text="{% trans "Alternative options" %}" />
+    <c-divider text="{% trans "Alternative options" %}" />
     <c-group>
       {% for alt in reauthentication_alternatives %}
         <c-button href="{{ alt.url }}" variant="outline-primary" text="{{ alt.description }}" />
@@ -174,7 +174,7 @@ Entrance templates (`base_reauthenticate.html`, `reauthenticate.html`) inherit t
 **`reauthenticate.html`** — rewritten structure:
 
 ```
-{% extends "account/base_reauthenticate.html" %}
+
 {% load i18n %}
 
 {% block reauthenticate_content %}
@@ -197,11 +197,11 @@ Entrance templates (`base_reauthenticate.html`, `reauthenticate.html`) inherit t
 
 {% block page.breadcrumbs %}
   {{ block.super }}
-  <c-breadcrumbs.item text="{% trans "Change Password" %}" />
+  <c-navigation.breadcrumbs.item text="{% trans "Change Password" %}" />
 {% endblock %}
 
 {% block page.content %}
-  <c-form.card method="post"
+  <c-form method="post"
                action="{% url 'account_change_password' %}"
                :form-obj="form">
     {{ redirect_field }}
@@ -211,7 +211,7 @@ Entrance templates (`base_reauthenticate.html`, `reauthenticate.html`) inherit t
         <a href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
       </c-group>
     </c-slot>
-  </c-form.card>
+  </c-form>
 {% endblock %}
 ```
 
@@ -225,11 +225,11 @@ Entrance templates (`base_reauthenticate.html`, `reauthenticate.html`) inherit t
 
 {% block page.breadcrumbs %}
   {{ block.super }}
-  <c-breadcrumbs.item text="{% trans "Set Password" %}" />
+  <c-navigation.breadcrumbs.item text="{% trans "Set Password" %}" />
 {% endblock %}
 
 {% block page.content %}
-  <c-form.card method="post"
+  <c-form method="post"
                action="{% url 'account_set_password' %}"
                :form-obj="form">
     {{ redirect_field }}
@@ -238,7 +238,7 @@ Entrance templates (`base_reauthenticate.html`, `reauthenticate.html`) inherit t
         <c-button type="submit" variant="primary" text="{% trans "Set Password" %}" />
       </c-group>
     </c-slot>
-  </c-form.card>
+  </c-form>
 {% endblock %}
 ```
 

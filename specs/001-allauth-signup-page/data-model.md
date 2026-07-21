@@ -86,13 +86,13 @@ allauth/layouts/entrance.html
                         ├── [card-header]      # "Sign Up" heading + login link
                         ├── [social section]   # Above <c-form>, outside <form> element
                         │   ├── <c-button>     # One per social provider (conditional)
-                        │   └── <c-card.divider>  # "or" separator (conditional)
+                        │   └── <c-divider>  # "or" separator (conditional)
                         ├── <c-form>           # <form> element (hidden if SOCIALACCOUNT_ONLY)
                         │   ├── <c-alert>      # Non-field errors (conditional)
                         │   ├── <c-form.render>  # Crispy-bootstrap5 field rendering
                         │   ├── [redirect_field] # Hidden input
                         │   └── <c-button>     # Submit button
-                        ├── <c-card.divider>   # Passkey separator (conditional)
+                        ├── <c-divider>   # Passkey separator (conditional)
                         └── <c-button>         # Passkey signup link (conditional)
 ```
 
@@ -107,7 +107,7 @@ signup.html rendering:
 ├── IF SOCIALACCOUNT_ENABLED AND socialaccount_providers:
 │   ├── Render social provider buttons (one per provider)
 │   └── IF NOT SOCIALACCOUNT_ONLY:
-│       └── Render "or" divider (<c-card.divider text="or">)
+│       └── Render "or" divider (<c-divider text="or">)
 ├── IF NOT SOCIALACCOUNT_ONLY:
 │   └── Render email/password form
 ├── IF PASSKEY_SIGNUP_ENABLED:

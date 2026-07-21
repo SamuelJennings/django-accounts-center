@@ -27,16 +27,16 @@ Sub-page templates interact only with these blocks.
 
 ### `page.breadcrumbs`
 
-- **Default**: Single `<c-breadcrumbs.item>` with text "Account Center" linking to
+- **Default**: Single `<c-navigation.breadcrumbs.item>` with text "Account Center" linking to
   the `account-center` URL.
-- **Type**: One or more `<c-breadcrumbs.item>` components
+- **Type**: One or more `<c-navigation.breadcrumbs.item>` components
 - **Usage**: Sub-pages MUST call `{{ block.super }}` to preserve the root item, then
   append their own breadcrumb items.
 
 ```django
 {% block page.breadcrumbs %}
   {{ block.super }}
-  <c-breadcrumbs.item text="{% trans "Change Password" %}" />
+  <c-navigation.breadcrumbs.item text="{% trans "Change Password" %}" />
 {% endblock page.breadcrumbs %}
 ```
 
@@ -63,7 +63,7 @@ Sub-page templates interact only with these blocks.
 
 ### `breadcrumbs` *(advanced)*
 
-- **Default**: `<c-mvp.toolbar fluid>` wrapping a `<c-breadcrumbs>` that contains
+- **Default**: `<c-mvp.toolbar fluid>` wrapping a `<c-navigation.breadcrumbs>` that contains
   the `page.breadcrumbs` block.
 - **Usage**: Override only when the header structure itself must change (e.g., adding
   a search bar or action buttons to the toolbar). Most sub-pages should NOT override
@@ -106,9 +106,9 @@ base.html
     └── <c-page>
         └── breadcrumbs
             └── <c-mvp.toolbar fluid>
-                └── <c-breadcrumbs>
+                └── <c-navigation.breadcrumbs>
                     └── page.breadcrumbs
-                        └── <c-breadcrumbs.item text="Account Center" href="..." />
+                        └── <c-navigation.breadcrumbs.item text="Account Center" href="..." />
         └── page.content-wrapper
             └── <c-page.content class="container">
                 └── <c-layouts.form-view>

@@ -80,7 +80,7 @@ Phase 1 (Setup) → Phase 2 (Foundational) → Phase 3 (US1) → Phase 4 (US2) �
   - Load `{% load i18n socialaccount %}` (for provider tags used by snippets)
   - Keep `{% block title %}` and `{% block page.breadcrumbs %}` unchanged
   - In `{% block page.content %}`:
-    - `{% if form.accounts %}` branch: `<c-card title="{% trans 'Account Connections' %}">` with `<c-list-group flush :border="False">` — one `<c-list-group.item>` per account; each item shows `<c-badge text="{{ provider_account.get_brand.name }}">` and an inline POST form to `{% url 'socialaccount_connections' %}` with a hidden `account` PK and `<c-button text="{% trans 'Remove' %}" variant="danger" />`
+    - `{% if form.accounts %}` branch: `<c-card title="{% trans 'Account Connections' %}">` with `<c-list flush :border="False">` — one `<c-list.item>` per account; each item shows `<c-badge text="{{ provider_account.get_brand.name }}">` and an inline POST form to `{% url 'socialaccount_connections' %}` with a hidden `account` PK and `<c-button text="{% trans 'Remove' %}" variant="danger" />`
     - `{% else %}` branch: empty-state `<c-card>` with `<c-text>{% trans "You currently have no third-party accounts connected to this account." %}</c-text>`
     - "Add a Third-Party Account" `<c-card>` in all cases: `{% include "socialaccount/snippets/provider_list.html" with process="connect" %}` and `{% include "socialaccount/snippets/login_extra.html" %}`
   - All user-visible strings in `{% trans %}`; zero `{% element %}` / `{% endelement %}` / `{% slot %}` tags
@@ -96,7 +96,7 @@ Phase 1 (Setup) → Phase 2 (Foundational) → Phase 3 (US1) → Phase 4 (US2) �
 
 ## Phase 4: User Story 2 — End User Manages Connected Social Accounts with a Consistent UI (Priority: P2)
 
-**Goal**: `socialaccount/connections.html` correctly renders connected accounts in a `<c-list-group>` with per-account remove forms, the empty-state message when no accounts are connected, and the "Add a Third-Party Account" section in all cases. `socialaccount/authentication_error.html` uses Cotton components (no `{% element %}` tags).
+**Goal**: `socialaccount/connections.html` correctly renders connected accounts in a `<c-list>` with per-account remove forms, the empty-state message when no accounts are connected, and the "Add a Third-Party Account" section in all cases. `socialaccount/authentication_error.html` uses Cotton components (no `{% element %}` tags).
 
 **Independent Test**: Render `connections.html` with a non-empty `form.accounts` and assert the provider badge and "Remove" button are present; render with an empty account list and assert the empty-state message and "Add a Third-Party Account" section are present. Render `authentication_error.html` and assert Cotton output with no element tags.
 

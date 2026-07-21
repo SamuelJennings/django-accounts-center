@@ -63,11 +63,11 @@ These templates extend `account/base_manage_password.html` which chains to
 
 {% block page.breadcrumbs %}
   {{ block.super }}
-  <c-breadcrumbs.item text="{% trans "Change Password" %}" />
+  <c-navigation.breadcrumbs.item text="{% trans "Change Password" %}" />
 {% endblock page.breadcrumbs %}
 
 {% block page.content %}
-  <c-form.card method="post" action="{% url 'account_change_password' %}" :form-obj="form">
+  <c-form method="post" action="{% url 'account_change_password' %}" :form-obj="form">
     {{ redirect_field }}
     <c-slot name="actions">
       <c-group>
@@ -75,7 +75,7 @@ These templates extend `account/base_manage_password.html` which chains to
         <a href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
       </c-group>
     </c-slot>
-  </c-form.card>
+  </c-form>
 {% endblock page.content %}
 ```
 
@@ -89,11 +89,11 @@ This template extends `account/base_entrance.html` and exposes
 
 ```django
 {% block content %}
-  <c-entrance.section text="{% trans "Please reauthenticate to safeguard your account." %}">
+  <c-section text="{% trans "Please reauthenticate to safeguard your account." %}">
     {% block reauthenticate_content %}{% endblock %}
-  </c-entrance.section>
+  </c-section>
   {% if reauthentication_alternatives %}
-    <c-card.divider text="{% trans "Alternative options" %}" />
+    <c-divider text="{% trans "Alternative options" %}" />
     <c-group>
       {% for alt in reauthentication_alternatives %}
         <c-button href="{{ alt.url }}" variant="outline-primary" text="{{ alt.description }}" />

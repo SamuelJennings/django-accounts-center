@@ -11,7 +11,7 @@ Build a styled, modern allauth login page for django-accounts-center by rewritin
 
 Three additional `socialaccount` entrance templates are also rewritten in this spec (FR-016, added 2026-05-09): `socialaccount/login.html` (OAuth confirmation step), `socialaccount/login_cancelled.html` (cancellation message), and `socialaccount/login_redirect.html` (ephemeral meta-refresh redirect). All three already exist as placeholder overrides using `{% element %}` syntax and must be converted to Cotton.
 
-The `<c-entrance>` shell — centred card, logo, background, and visual framework — is **already implemented** from spec 001 and requires no changes. All entrance-page templates inherit it automatically via the existing template chain. This spec's work is entirely at the page-content level: replacing `{% element %}` calls inside `{% block content %}` with the appropriate Cotton components (`<c-form>`, `<c-form.render>`, `<c-group>`, `<c-button>`, `<c-card.divider>`, `<c-text>`).
+The `<c-entrance>` shell — centred card, logo, background, and visual framework — is **already implemented** from spec 001 and requires no changes. All entrance-page templates inherit it automatically via the existing template chain. This spec's work is entirely at the page-content level: replacing `{% element %}` calls inside `{% block content %}` with the appropriate Cotton components (`<c-form>`, `<c-form.render>`, `<c-group>`, `<c-button>`, `<c-divider>`, `<c-text>`).
 
 Social provider rendering is also already Cotton-based (spec 001) via `socialaccount/snippets/provider_list.html`. The login page reuses it with `process="login"`.
 
@@ -45,7 +45,7 @@ No new Python views, models, forms, or migrations are introduced. No new Cotton 
 | VI. No Monkey-Patching | ✅ PASS | No Python view or adapter overrides. Template-only. |
 | VII. Graceful Degradation | ✅ PASS | `{% if SOCIALACCOUNT_ENABLED %}`, `{% if PASSKEY_LOGIN_ENABLED %}`, `{% if LOGIN_BY_CODE_ENABLED %}` guards throughout. |
 | VIII. i18n Throughout | ✅ PASS | All user-visible strings wrapped in `{% trans %}` or `{% blocktrans %}`. |
-| IX. Component Priority | ✅ PASS | django-mvp components first (`<c-form>`, `<c-card.divider>`, `<c-group>`), cotton-bs5 second (`<c-button>`). No new DAC-owned components needed. |
+| IX. Component Priority | ✅ PASS | django-mvp components first (`<c-form>`, `<c-divider>`, `<c-group>`), cotton-bs5 second (`<c-button>`). No new DAC-owned components needed. |
 | X. Template Overrides Primary | ✅ PASS | Entire feature is template overrides. |
 | XI. Test Coverage | ✅ PASS | Integration tests cover all rendering paths; screenshot tests cover all permutations × 3 viewports. |
 | XII. Documentation | ✅ PASS | `quickstart.md` covers setup, configuration, and customisation. |

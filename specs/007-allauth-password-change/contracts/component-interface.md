@@ -51,11 +51,11 @@ Four templates in `dac/addons/allauth/templates/account/` are rewritten.
 {% block title %}{% trans "Confirm Access" %}{% endblock title %}
 
 {% block content %}
-  <c-entrance.section text="{% trans "Please reauthenticate to safeguard your account." %}">
+  <c-section text="{% trans "Please reauthenticate to safeguard your account." %}">
     {% block reauthenticate_content %}{% endblock %}
-  </c-entrance.section>
+  </c-section>
   {% if reauthentication_alternatives %}
-    <c-card.divider text="{% trans "Alternative options" %}" />
+    <c-divider text="{% trans "Alternative options" %}" />
     <c-group>
       {% for alt in reauthentication_alternatives %}
         <c-button href="{{ alt.url }}" variant="outline-primary" text="{{ alt.description }}" />
@@ -68,9 +68,9 @@ Four templates in `dac/addons/allauth/templates/account/` are rewritten.
 **Key changes**:
 
 - Remove `{% load allauth %}` (no longer needed)
-- `{% element h1 %}` → removed; heading produced by `<c-entrance.section>` implicitly or kept as `<c-text tag="h1">`
-- `{% element p %}` → `<c-entrance.section text="…">` wrapper
-- `{% element hr %}` → `<c-card.divider>`
+- `{% element h1 %}` → removed; heading produced by `<c-section>` implicitly or kept as `<c-text tag="h1">`
+- `{% element p %}` → `<c-section text="…">` wrapper
+- `{% element hr %}` → `<c-divider>`
 - `{% element h2 %}` → removed; divider text serves as section label
 - `{% element button_group %}` → `<c-group>`
 - `{% element button href=… tags="primary,outline" %}` → `<c-button href=… variant="outline-primary">`
@@ -86,7 +86,7 @@ Four templates in `dac/addons/allauth/templates/account/` are rewritten.
 ### Before (current)
 
 ```django
-{% extends "account/base_reauthenticate.html" %}
+
 {% load allauth %}
 {% load i18n %}
 
@@ -109,7 +109,7 @@ Four templates in `dac/addons/allauth/templates/account/` are rewritten.
 ### After (target)
 
 ```django
-{% extends "account/base_reauthenticate.html" %}
+
 {% load i18n %}
 
 {% block reauthenticate_content %}
@@ -176,11 +176,11 @@ Four templates in `dac/addons/allauth/templates/account/` are rewritten.
 
 {% block page.breadcrumbs %}
   {{ block.super }}
-  <c-breadcrumbs.item text="{% trans "Change Password" %}" />
+  <c-navigation.breadcrumbs.item text="{% trans "Change Password" %}" />
 {% endblock page.breadcrumbs %}
 
 {% block page.content %}
-  <c-form.card method="post"
+  <c-form method="post"
                action="{% url 'account_change_password' %}"
                :form-obj="form">
     {{ redirect_field }}
@@ -192,7 +192,7 @@ Four templates in `dac/addons/allauth/templates/account/` are rewritten.
         <a href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
       </c-group>
     </c-slot>
-  </c-form.card>
+  </c-form>
 {% endblock page.content %}
 ```
 
@@ -202,8 +202,8 @@ Four templates in `dac/addons/allauth/templates/account/` are rewritten.
 - `{% block content %}` → `{% block page.content %}` (critical fix)
 - Add `{% block page.breadcrumbs %}` with leaf item
 - `{% element h1 %}` → removed (page title comes from `{% block title %}` in management shell)
-- `{% element form … %}` + slots → `<c-form.card>` with `<c-slot name="actions">`
-- `{% element fields form=form %}` → `:form-obj="form"` attribute on `<c-form.card>`
+- `{% element form … %}` + slots → `<c-form>` with `<c-slot name="actions">`
+- `{% element fields form=form %}` → `:form-obj="form"` attribute on `<c-form>`
 - `{% element button %}` → `<c-button type="submit" variant="primary" …>`
 
 ---
@@ -248,11 +248,11 @@ Four templates in `dac/addons/allauth/templates/account/` are rewritten.
 
 {% block page.breadcrumbs %}
   {{ block.super }}
-  <c-breadcrumbs.item text="{% trans "Set Password" %}" />
+  <c-navigation.breadcrumbs.item text="{% trans "Set Password" %}" />
 {% endblock page.breadcrumbs %}
 
 {% block page.content %}
-  <c-form.card method="post"
+  <c-form method="post"
                action="{% url 'account_set_password' %}"
                :form-obj="form">
     {{ redirect_field }}
@@ -263,7 +263,7 @@ Four templates in `dac/addons/allauth/templates/account/` are rewritten.
                   text="{% trans "Set Password" %}" />
       </c-group>
     </c-slot>
-  </c-form.card>
+  </c-form>
 {% endblock page.content %}
 ```
 
@@ -272,7 +272,7 @@ Four templates in `dac/addons/allauth/templates/account/` are rewritten.
 - Remove `{% load allauth %}` (no longer needed)
 - `{% block content %}` → `{% block page.content %}` (critical fix)
 - Add `{% block page.breadcrumbs %}` with leaf item
-- `{% element h1 %}`, `{% element form %}`, slots → `<c-form.card>` with `<c-slot name="actions">`
+- `{% element h1 %}`, `{% element form %}`, slots → `<c-form>` with `<c-slot name="actions">`
 - No "Forgot Password?" link (not present on set-password page)
 
 ---

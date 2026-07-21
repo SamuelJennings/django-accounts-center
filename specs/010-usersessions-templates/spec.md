@@ -105,7 +105,7 @@ A developer running the test suite expects all user sessions management template
 - `usersessions/base_manage.html` only needs its `extends` line changed to `dac/base.html`; no other changes are required to this file.
 - The allauth context variables (`sessions`, `session_count`, `show_last_seen_at`) are provided by `ListUserSessionsView`; the templates do not need to fetch or transform this data.
 - No `<c-table>` Cotton component exists in the project; the table MUST be rendered using raw Bootstrap HTML (`<table class="table">`) inside a `<c-card>`.
-- The Cotton components used by `usersession_list.html` (`<c-card>`, `<c-badge>`, `<c-button>`, `<c-breadcrumbs.item>`) are available through `django-mvp`, `django-cotton-bs5`, or existing DAC custom components.
+- The Cotton components used by `usersession_list.html` (`<c-card>`, `<c-badge>`, `<c-button>`, `<c-navigation.breadcrumbs.item>`) are available through `django-mvp`, `django-cotton-bs5`, or existing DAC custom components.
 - The `usersessions_list` URL is registered by allauth when `allauth.usersessions` is in `INSTALLED_APPS`; templates may use `{% url 'usersessions_list' %}` freely.
 - Screenshots are required per Constitution Principle XIII (Multi-Viewport Screenshot Coverage); pytest-playwright screenshot tests covering 2 page states × 2 viewports = 4 PNGs are written as part of this feature and live in the root `screenshots/` directory (states: multiple-sessions, single-session; viewports: desktop 1440×900, mobile 390×844).
 - `usersessions/messages/sessions_logged_out.txt` is a plain-text flash message template; it does not use `{% element %}` tags and is out of scope for this spec.

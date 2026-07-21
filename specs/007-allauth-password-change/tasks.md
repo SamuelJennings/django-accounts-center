@@ -35,8 +35,8 @@ No project setup required. All files exist; no migrations, no new Python files, 
   Replace every `{% element %}` / `{% endelement %}` tag with the Cotton equivalent per `contracts/component-interface.md`:
 
   - `{% element h1 %}{% trans "Confirm Access" %}{% endelement %}` → moved into `{% block title %}{% trans "Confirm Access" %}{% endblock %}` (the entrance layout renders this as the page heading; do NOT add a visible `<h1>` tag inside `{% block content %}`)
-  - `{% element p %}…{% endelement %}` → `<c-entrance.section text="{% trans \"Please reauthenticate to safeguard your account.\" %}">` (the `text=` attribute renders the introductory paragraph)
-  - `{% element hr %}` → `<c-card.divider text="{% trans "Alternative options" %}">`
+  - `{% element p %}…{% endelement %}` → `<c-section text="{% trans \"Please reauthenticate to safeguard your account.\" %}">` (the `text=` attribute renders the introductory paragraph)
+  - `{% element hr %}` → `<c-divider text="{% trans "Alternative options" %}">`
   - `{% element h2 %}` → removed (divider text provides the label)
   - `{% element button_group %}` → `<c-group>`
   - `{% element button href=alt.url tags="primary,outline" %}` → `<c-button href="{{ alt.url }}" variant="outline-primary" text="{{ alt.description }}" />`
@@ -52,11 +52,11 @@ No project setup required. All files exist; no migrations, no new Python files, 
   {% block title %}{% trans "Confirm Access" %}{% endblock title %}
 
   {% block content %}
-    <c-entrance.section text="{% trans "Please reauthenticate to safeguard your account." %}">
+    <c-section text="{% trans "Please reauthenticate to safeguard your account." %}">
       {% block reauthenticate_content %}{% endblock %}
-    </c-entrance.section>
+    </c-section>
     {% if reauthentication_alternatives %}
-      <c-card.divider text="{% trans "Alternative options" %}" />
+      <c-divider text="{% trans "Alternative options" %}" />
       <c-group>
         {% for alt in reauthentication_alternatives %}
           <c-button href="{{ alt.url }}" variant="outline-primary" text="{{ alt.description }}" />
@@ -124,11 +124,11 @@ poetry run pytest tests/test_addons/test_allauth/test_password_change_view.py::T
 
   {% block page.breadcrumbs %}
     {{ block.super }}
-    <c-breadcrumbs.item text="{% trans "Change Password" %}" />
+    <c-navigation.breadcrumbs.item text="{% trans "Change Password" %}" />
   {% endblock page.breadcrumbs %}
 
   {% block page.content %}
-    <c-form.card method="post"
+    <c-form method="post"
                  action="{% url 'account_change_password' %}"
                  :form-obj="form">
       {{ redirect_field }}
@@ -140,7 +140,7 @@ poetry run pytest tests/test_addons/test_allauth/test_password_change_view.py::T
           <a href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
         </c-group>
       </c-slot>
-    </c-form.card>
+    </c-form>
   {% endblock page.content %}
   ```
 
@@ -149,8 +149,8 @@ poetry run pytest tests/test_addons/test_allauth/test_password_change_view.py::T
   - `{% block content %}` → `{% block page.content %}` (critical fix)
   - Add `{% block page.breadcrumbs %}` with "Change Password" leaf item
   - `{% element h1 %}` → removed (management shell provides page title)
-  - `{% element form … %}` + `{% slot body %}` + `{% slot actions %}` → `<c-form.card>` with `<c-slot name="actions">`
-  - `{% element fields form=form %}` → `:form-obj="form"` attribute on `<c-form.card>`
+  - `{% element form … %}` + `{% slot body %}` + `{% slot actions %}` → `<c-form>` with `<c-slot name="actions">`
+  - `{% element fields form=form %}` → `:form-obj="form"` attribute on `<c-form>`
   - `{% element button %}` → `<c-button type="submit" variant="primary" …>`
 
 - [X] T003 [P] [US1] Rewrite `dac/addons/allauth/templates/account/password_set.html` to use `{% block page.content %}`, add `{% block page.breadcrumbs %}` override, and replace all `{% element %}` tags with Cotton components
@@ -165,11 +165,11 @@ poetry run pytest tests/test_addons/test_allauth/test_password_change_view.py::T
 
   {% block page.breadcrumbs %}
     {{ block.super }}
-    <c-breadcrumbs.item text="{% trans "Set Password" %}" />
+    <c-navigation.breadcrumbs.item text="{% trans "Set Password" %}" />
   {% endblock page.breadcrumbs %}
 
   {% block page.content %}
-    <c-form.card method="post"
+    <c-form method="post"
                  action="{% url 'account_set_password' %}"
                  :form-obj="form">
       {{ redirect_field }}
@@ -180,7 +180,7 @@ poetry run pytest tests/test_addons/test_allauth/test_password_change_view.py::T
                     text="{% trans "Set Password" %}" />
         </c-group>
       </c-slot>
-    </c-form.card>
+    </c-form>
   {% endblock page.content %}
   ```
 
@@ -193,7 +193,7 @@ poetry run pytest tests/test_addons/test_allauth/test_password_change_view.py::T
 - [X] TPWVI-1 [US1] Open the change-password and set-password pages in the Playwright MCP browser and visually confirm:
   - DAC Account Center sidebar is visible on both pages
   - Breadcrumb trail reads "Account Center › Change Password" (and "Set Password" respectively)
-  - `<c-form.card>` renders inside the card-stack (not a raw unstyled form)
+  - `<c-form>` renders inside the card-stack (not a raw unstyled form)
   - All form fields are rendered (current password, new password, confirmation for change; new password, confirmation for set)
   - "Change Password" submit button is visible; "Forgot Password?" link is below it
   - "Set Password" submit button is visible; no "Forgot Password?" link
@@ -251,7 +251,7 @@ poetry run pytest tests/test_addons/test_allauth/test_password_change_view.py::T
   Target structure:
 
   ```django
-  {% extends "account/base_reauthenticate.html" %}
+
   {% load i18n %}
 
   {% block reauthenticate_content %}

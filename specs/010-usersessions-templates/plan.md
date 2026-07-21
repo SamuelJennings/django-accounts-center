@@ -48,7 +48,7 @@ feature** in `tests/test_addons/test_allauth/test_usersessions_view.py` and
 | VI. UI Verification | playwright-cli skill is the first choice for all UI verification; screenshot file analysis is a token-expensive fallback only when interactive verification is insufficient; `.github/skills/playwright-cli/SKILL.md` MUST be consulted before any browser step (v1.1.5) | ✅ PASS |
 | VII. Documentation Retrieval | No new external APIs — reusing established patterns from Specs 001–009 | ✅ PASS (N/A) |
 | VIII. E2E Testing | Screenshot tests: 2 states × 2 viewports = 4 PNGs | ✅ PASS |
-| IX. Component Reuse | No new components; `<c-badge>`, `<c-button>`, `<c-card>`, `<c-breadcrumbs.item>` are all existing | ✅ PASS |
+| IX. Component Reuse | No new components; `<c-badge>`, `<c-button>`, `<c-card>`, `<c-navigation.breadcrumbs.item>` are all existing | ✅ PASS |
 | X. Third-Party Integration | Template overrides primary; no view overrides introduced | ✅ PASS |
 | XI. Dual-Audience Stories | US1, US3 [Developer] + US2 [End User] | ✅ PASS |
 | XII. View Docstrings | No view classes introduced or modified | ✅ PASS (N/A) |

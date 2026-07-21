@@ -59,7 +59,7 @@
 
   - `{% load i18n humanize %}` (remove `{% load allauth %}` — no allauth tags used)
   - `{% block title %}{% trans "Sessions" %}{% endblock title %}`
-  - `{% block page.breadcrumbs %}{{ block.super }}<c-breadcrumbs.item text="{% trans 'Sessions' %}" />{% endblock page.breadcrumbs %}`
+  - `{% block page.breadcrumbs %}{{ block.super }}<c-navigation.breadcrumbs.item text="{% trans 'Sessions' %}" />{% endblock page.breadcrumbs %}`
   - `{% block page.content %}` — containing:
     - URL resolution: `{% url 'usersessions_list' as action_url %}` / `{% url 'account_logout' as action_url %}` conditional on `session_count > 1`
     - `<c-card>` wrapping a `<form method="post" action="{{ action_url }}">`

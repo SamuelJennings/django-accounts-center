@@ -19,7 +19,7 @@ Extend `dac/base.html` from any management sub-page template:
 
 {% block page.breadcrumbs %}
   {{ block.super }}
-  <c-breadcrumbs.item text="{% trans "Change Password" %}" />
+  <c-navigation.breadcrumbs.item text="{% trans "Change Password" %}" />
 {% endblock page.breadcrumbs %}
 
 {% block page.content %}

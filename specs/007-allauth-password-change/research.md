@@ -19,13 +19,13 @@ inherited from the existing DAC addon template architecture.
 - **Conclusion**: `password_change.html` and `password_set.html` must use
   `{% block page.content %}` (not `{% block content %}`).
 
-### `<c-form.card>` as the preferred management-page form wrapper
+### `<c-form>` as the preferred management-page form wrapper
 
 - **Established in**: Spec 003 (`password_reset_from_key.html`)
 - **Confirmed in**: Spec 006 (`email_change.html`)
 - **Conclusion**: Both `password_change.html` and `password_set.html` use
-  `<c-form.card>`. Nested `<c-form>` + `<c-card>` is only acceptable when
-  `<c-form.card>` cannot provide the required functionality.
+  `<c-form>`. Nested `<c-form>` + `<c-card>` is only acceptable when
+  `<c-form>` cannot provide the required functionality.
 
 ### Cotton rewrite replacing `{% element %}` / `{% endelement %}` tags
 
@@ -33,10 +33,10 @@ inherited from the existing DAC addon template architecture.
 - **Conclusion**: `base_reauthenticate.html` and `reauthenticate.html` are rewritten
   the same way — direct Cotton component substitution, no Python changes needed.
 
-### `<c-entrance.section>` as introductory text wrapper on entrance pages
+### `<c-section>` as introductory text wrapper on entrance pages
 
 - **Established in**: Spec 001 (`signup.html`), Spec 002 (`login.html`)
-- **Conclusion**: `base_reauthenticate.html` uses `<c-entrance.section>` for the
+- **Conclusion**: `base_reauthenticate.html` uses `<c-section>` for the
   "Please reauthenticate…" introductory paragraph.
 
 ### Reauthenticate URL availability in tests

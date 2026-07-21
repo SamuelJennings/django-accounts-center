@@ -91,7 +91,7 @@
 
 **Rationale**:
 
-- The card + form structure involves conditional sections (social buttons, `SOCIALACCOUNT_ONLY` guard, passkey button) that make `<c-form.card>`'s slot system more complex than explicit markup.
+- The card + form structure involves conditional sections (social buttons, `SOCIALACCOUNT_ONLY` guard, passkey button) that make `<c-form>`'s slot system more complex than explicit markup.
 - `<c-form>` handles the `<form>` tag and auto-injects `{% csrf_token %}` for POST requests — the only boilerplate saved.
 - `<c-form.render />` renders `{{ form|crispy }}` which applies crispy-bootstrap5 styling to all fields (FR-006 satisfied automatically).
 - Social provider buttons (which are `<a>` links, not inputs) sit as direct card body children **above** the `<c-form>` element — cleanly outside the HTML form.
@@ -106,7 +106,7 @@
   {% if socialaccount_providers %}
     {% include "socialaccount/snippets/provider_list.html" with process="signup" %}
     {% if not SOCIALACCOUNT_ONLY %}
-      <c-card.divider text="{% trans 'or' %}" />
+      <c-divider text="{% trans 'or' %}" />
     {% endif %}
   {% endif %}
 {% endif %}
@@ -128,7 +128,7 @@
 
 {# Passkey option #}
 {% if PASSKEY_SIGNUP_ENABLED %}
-  <c-card.divider />
+  <c-divider />
   <c-group class="mt-4">
     <c-button href="{{ signup_by_passkey_url }}"
               text="{% trans 'Sign up using a passkey' %}"
@@ -139,7 +139,7 @@
 
 **Alternatives considered**:
 
-- **`<c-form.card>`**: Cleaner for simple forms but its slot system becomes unwieldy with the social/SOCIALACCOUNT_ONLY/passkey conditionals present on the signup page.
+- **`<c-form>`**: Cleaner for simple forms but its slot system becomes unwieldy with the social/SOCIALACCOUNT_ONLY/passkey conditionals present on the signup page.
 - **Manual `<form>` tag**: No advantage over `<c-form>` — `<c-form>` saves the `{% csrf_token %}` line and is a django-mvp component.
 - **`{% crispy form %}`** (tag, not filter): Renders a full `<form>` tag, preventing control over the form action, redirect field injection, and submit button placement.
 
@@ -147,7 +147,7 @@
 
 ## Decision 5: Cotton Component Stack for the Signup UI
 
-**Decision**: Use `<c-entrance>` (DAC Cotton component, `dac/templates/cotton/entrance/index.html`) as the entrance page shell, `<c-entrance.background>` for background styling, `<c-entrance.logo>` for the logo, `<c-card.divider>` for the "or" separator, `<c-group>` (django-mvp) + `<c-button>` (django-cotton-bs5) for submit and passkey buttons, and `<c-messages>` (django-mvp) for flash messages. Non-field errors are rendered inside `<c-form.render>` via `<c-alert variant="danger">` — not as a standalone block in page templates.
+**Decision**: Use `<c-entrance>` (DAC Cotton component, `dac/templates/cotton/entrance/index.html`) as the entrance page shell, `<c-entrance.background>` for background styling, `<c-entrance.logo>` for the logo, `<c-divider>` for the "or" separator, `<c-group>` (django-mvp) + `<c-button>` (django-cotton-bs5) for submit and passkey buttons, and `<c-messages>` (django-mvp) for flash messages. Non-field errors are rendered inside `<c-form.render>` via `<c-alert variant="danger">` — not as a standalone block in page templates.
 
 **Rationale**: The entrance shell pattern (full-viewport layout, card, logo, title) is shared across all entrance pages. Extracting it into `<c-entrance>` removes duplication and gives developers a clean, single-file override for background and logo without touching any page template. Social provider buttons use Bootstrap Icon `<a>` tags rather than `<c-button>` because the icon+label flex layout is simpler as raw HTML.
 
@@ -156,7 +156,7 @@
 | Entrance page shell | `<c-entrance>` | DAC (`dac/templates/cotton/entrance/`) |
 | Page background style | `<c-entrance.background>` | DAC (`dac/templates/cotton/entrance/`) |
 | Site logo | `<c-entrance.logo>` | DAC (`dac/templates/cotton/entrance/`) |
-| Form field "or" divider | `<c-card.divider text="or">` | django-mvp |
+| Form field "or" divider | `<c-divider text="or">` | django-mvp |
 | Social provider button | Bootstrap Icon `<a>` tag (raw HTML) | N/A |
 | Submit button stack | `<c-group>` | django-mvp |
 | Submit / passkey button | `<c-button>` | django-cotton-bs5 |
@@ -194,7 +194,7 @@
 
 ## Decision 7: Passkey Signup Support
 
-**Decision**: Render the "Sign up using a passkey" button conditionally using the `PASSKEY_SIGNUP_ENABLED` context variable, separated by a `<c-card.divider>` from the rest of the form.
+**Decision**: Render the "Sign up using a passkey" button conditionally using the `PASSKEY_SIGNUP_ENABLED` context variable, separated by a `<c-divider>` from the rest of the form.
 
 **Rationale**: `PASSKEY_SIGNUP_ENABLED` is a boolean already injected by allauth's `get_entrance_context_data()`. When `True`, the passkey signup URL is available in `signup_by_passkey_url`. No additional work is needed.
 

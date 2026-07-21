@@ -49,9 +49,9 @@ All shared infrastructure from spec 001 is in place. No foundational tasks neede
       - `{% block title %}{% trans "Sign In" %}{% endblock title %}`
       - `{% block title %}{% trans "Sign in" %}{% endblock title %}`
       - `{% block content %}` — ordered sections:
-          1. `{% if SOCIALACCOUNT_ENABLED %}` → `{% include "socialaccount/snippets/provider_list.html" with process="login" %}` → `{% if not SOCIALACCOUNT_ONLY %}<c-card.divider text="or" />{% endif %}` `{% endif %}`
+          1. `{% if SOCIALACCOUNT_ENABLED %}` → `{% include "socialaccount/snippets/provider_list.html" with process="login" %}` → `{% if not SOCIALACCOUNT_ONLY %}<c-divider text="or" />{% endif %}` `{% endif %}`
           2. `{% if not SOCIALACCOUNT_ONLY %}` → `<c-form method="post" action=".">` + `<c-form.render />` + `{{ redirect_field }}` + `<c-group class="mt-4">` + `<c-button text="Sign in" icon="login" size="lg" type="submit" variant="primary" reverse />` + `</c-group></c-form>` + `<c-text class="mt-2 mb-0">` "Forgot your password?" link to `{% url 'account_reset_password' %}` `</c-text>` `{% endif %}`
-          3. `{% if not SOCIALACCOUNT_ONLY and (PASSKEY_LOGIN_ENABLED or LOGIN_BY_CODE_ENABLED) %}` → `<c-card.divider text="or" />` + `<c-group>` + passkey `<c-button id="passkey_login" .../>` (if `PASSKEY_LOGIN_ENABLED`) + code `<c-button href="{{ request_login_code_url }}" .../>` (if `LOGIN_BY_CODE_ENABLED`) + `</c-group>` `{% endif %}`
+          3. `{% if not SOCIALACCOUNT_ONLY and (PASSKEY_LOGIN_ENABLED or LOGIN_BY_CODE_ENABLED) %}` → `<c-divider text="or" />` + `<c-group>` + passkey `<c-button id="passkey_login" .../>` (if `PASSKEY_LOGIN_ENABLED`) + code `<c-button href="{{ request_login_code_url }}" .../>` (if `LOGIN_BY_CODE_ENABLED`) + `</c-group>` `{% endif %}`
           4. `{% if signup_url %}` → `<c-text class="mt-4 mb-0">{% blocktrans %}Don't have an account? <a href="{{ signup_url }}">Sign up</a>.{% endblocktrans %}</c-text>` `{% endif %}`
       - `{% block extra_js %}{{ block.super }}{% if PASSKEY_LOGIN_ENABLED %}{% include "mfa/webauthn/snippets/login_script.html" with button_id="passkey_login" %}{% endif %}{% endblock extra_js %}`
 - [X] T003 [P] [US2] Write email/password login tests in tests/test_addons/test_allauth/test_login_view.py covering:

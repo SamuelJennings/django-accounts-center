@@ -17,7 +17,7 @@ tags with `<c-text>`.
 | File | Change |
 |---|---|
 | `dac/addons/allauth/templates/socialaccount/base_manage.html` | One-line fix: extends `dac/base.html` instead of `allauth/layouts/manage.html` |
-| `dac/addons/allauth/templates/socialaccount/connections.html` | Full rewrite: `{% block page.content %}`, `<c-list-group>` per-account forms, `<c-badge>` for provider |
+| `dac/addons/allauth/templates/socialaccount/connections.html` | Full rewrite: `{% block page.content %}`, `<c-list>` per-account forms, `<c-badge>` for provider |
 | `dac/addons/allauth/templates/socialaccount/authentication_error.html` | Corrections only: drop `{% element h1 %}`, replace `{% element p %}` with `<c-text>` |
 
 ## Prerequisites
@@ -40,7 +40,7 @@ the block contract from `dac/base.html`:
 
 {% block page.breadcrumbs %}
   {{ block.super }}
-  <c-breadcrumbs.item text="{% trans 'My Social Page' %}" />
+  <c-navigation.breadcrumbs.item text="{% trans 'My Social Page' %}" />
 {% endblock %}
 
 {% block page.content %}
@@ -50,7 +50,7 @@ the block contract from `dac/base.html`:
 
 ## Disconnect Form Mechanics
 
-Each connected account is shown in a `<c-list-group.item>`. Its remove button is
+Each connected account is shown in a `<c-list.item>`. Its remove button is
 part of an individual inline form, **not** a shared radio-select form:
 
 ```django

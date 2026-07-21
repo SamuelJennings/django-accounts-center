@@ -44,7 +44,7 @@ template extends, which blocks it overrides, and which Cotton components it uses
 | Block | Content |
 |---|---|
 | `title` | `{% trans "Email Address" %}` |
-| `page.breadcrumbs` | `{{ block.super }}` + `<c-breadcrumbs.item text="Email Address" />` |
+| `page.breadcrumbs` | `{{ block.super }}` + `<c-navigation.breadcrumbs.item text="Email Address" />` |
 | `page.content` | All form content (see structure below) |
 
 ### Cotton component structure
@@ -53,7 +53,7 @@ template extends, which blocks it overrides, and which Cotton components it uses
 {% block page.content %}
   [{% include "account/snippets/warn_no_email.html" %} if not emailaddresses]
 
-  <c-form.card method="post" action="{{ action_url }}">
+  <c-form method="post" action="{{ action_url }}">
     [if current_emailaddress]
       <div class="mb-3">
         <label class="form-label">{% trans "Current email" %}:</label>
@@ -84,7 +84,7 @@ template extends, which blocks it overrides, and which Cotton components it uses
     <c-slot name="actions">
       <c-button name="action_add" type="submit" variant="primary" text="{% trans 'Change Email' %}" />
     </c-slot>
-  </c-form.card>
+  </c-form>
 
   [if new_emailaddress]
     <form id="pending-email" method="post" action="{% url 'account_email' %}" style="display:none">

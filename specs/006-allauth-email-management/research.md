@@ -18,8 +18,8 @@ All implementation patterns required for this feature are established in prior s
 
 ### Decision 2: `email_change.html` form wrapper component
 
-**Decision**: Use `<c-form.card>` (not nested `<c-form>` + `<c-card>`).
-**Rationale**: `<c-form.card>` is the established management-page form wrapper (used in `password_change.html`, established in Spec 003). Consistency across management pages. Nested alternative is only acceptable when `<c-form.card>` lacks required functionality.
+**Decision**: Use `<c-form>` (not nested `<c-form>` + `<c-card>`).
+**Rationale**: `<c-form>` is the established management-page form wrapper (used in `password_change.html`, established in Spec 003). Consistency across management pages. Nested alternative is only acceptable when `<c-form>` lacks required functionality.
 **Alternatives considered**: `<c-form>` + `<c-card>` — rejected per spec clarification (Q4).
 
 ### Decision 3: `verified_email_required.html` content wrapper
@@ -39,7 +39,7 @@ All implementation patterns required for this feature are established in prior s
 | Pattern | Established in |
 |---|---|
 | `{% extends "dac/base.html" %}` chain fix | Spec 004 (`account_inactive.html`) |
-| `<c-form.card>` as management-page form wrapper | Spec 003 (`password_change.html`) |
+| `<c-form>` as management-page form wrapper | Spec 003 (`password_change.html`) |
 | `{% block page.content %}` override | Spec 005 (`dac/base.html` contract) |
 | `<c-card>` wrapper for informational content | Spec 004 (`email_confirm.html` invalid branch) |
 | Pre-written integration test + screenshot test pattern | Spec 005 |

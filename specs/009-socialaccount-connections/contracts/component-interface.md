@@ -44,7 +44,7 @@ now renders inside the DAC Account Center sidebar/breadcrumb/card-stack shell.
 | Block | Content |
 |---|---|
 | `title` | `{% trans "Account Connections" %}` (reuses allauth i18n key) |
-| `page.breadcrumbs` | `{{ block.super }}` + `<c-breadcrumbs.item text="Account Connections" />` |
+| `page.breadcrumbs` | `{{ block.super }}` + `<c-navigation.breadcrumbs.item text="Account Connections" />` |
 | `page.content` | Connected-accounts card + add-connections card (see structure below) |
 
 ### Cotton component structure
@@ -55,10 +55,10 @@ now renders inside the DAC Account Center sidebar/breadcrumb/card-stack shell.
   {# --- Connected accounts section --- #}
   {% if form.accounts %}
     <c-card title="{% trans 'Account Connections' %}" icon="person" fs="3">
-      <c-list-group flush :border="False">
+      <c-list flush :border="False">
         {% for account in form.accounts %}
           {% with provider_account=account.get_provider_account %}
-            <c-list-group.item>
+            <c-list.item>
               <div class="d-flex align-items-center w-100 gap-2">
                 <span>{{ provider_account }}</span>
                 <c-badge text="{{ provider_account.get_brand.name }}" />
@@ -74,10 +74,10 @@ now renders inside the DAC Account Center sidebar/breadcrumb/card-stack shell.
                             icon="delete" />
                 </form>
               </div>
-            </c-list-group.item>
+            </c-list.item>
           {% endwith %}
         {% endfor %}
-      </c-list-group>
+      </c-list>
     </c-card>
   {% else %}
     <c-card>
@@ -99,6 +99,7 @@ now renders inside the DAC Account Center sidebar/breadcrumb/card-stack shell.
 ### Form mechanics
 
 Each per-account remove form:
+
 - **Method**: `POST` to `{% url 'socialaccount_connections' %}`
 - **CSRF**: `{% csrf_token %}` required
 - **Payload**: `account=<pk>` as a hidden input
@@ -155,6 +156,7 @@ No shared radio-select form is present. Each item submits independently.
 ```
 
 **Changes**:
+
 1. `{% load allauth %}` removed (no allauth tags used)
 2. `{% element h1 %}...{% endelement %}` dropped — the DAC entrance layout
    (`allauth/layouts/entrance.html`) renders the `{% block title %}` content as a

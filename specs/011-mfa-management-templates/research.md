@@ -7,7 +7,7 @@
 
 All core implementation patterns are established in prior specs (001–010). Six targeted
 research areas were resolved: the allauth MFA context API, `<c-form.field>` textarea
-limitation, `<c-form.card>` slot mechanics (confirmed by `password_change.html`),
+limitation, `<c-form>` slot mechanics (confirmed by `password_change.html`),
 WebAuthn JS preservation, Bootstrap table pattern, and screenshot naming for 11 states.
 
 ## Decisions
@@ -78,24 +78,24 @@ is preserved via `{{ attrs }}`.
 **Alternatives considered**: Raw Bootstrap HTML `<textarea>` — superseded by the
 component extension, which keeps the wrapper markup consistent with other form fields.
 
-### Decision 4: `<c-form.card>` slot mechanics confirmed
+### Decision 4: `<c-form>` slot mechanics confirmed
 
-**Decision**: `<c-form.card>` with `<c-slot name="actions">` places submit buttons
+**Decision**: `<c-form>` with `<c-slot name="actions">` places submit buttons
 in the card-header toolbar (not the card body). Default slot content is rendered
 inside the card body when `form-obj` is not passed (or is falsy).
 **Rationale**: Confirmed by `account/password_change.html` which uses exactly this
-pattern — `<c-form.card ... :form-obj="form">` with `<c-slot name="actions">`.
-`<c-form.card>` passes undeclared attrs (including `title`) through to `<c-card :attrs="attrs">`,
+pattern — `<c-form ... :form-obj="form">` with `<c-slot name="actions">`.
+`<c-form>` passes undeclared attrs (including `title`) through to `<c-card :attrs="attrs">`,
 so `<c-card>` renders the card-header toolbar when `title` is provided. `<c-form>` inside
-`<c-form.card>` handles CSRF automatically for POST forms — no explicit `{% csrf_token %}`
+`<c-form>` handles CSRF automatically for POST forms — no explicit `{% csrf_token %}`
 is needed in template content.
 **For templates with custom content** (TOTP activate form, WebAuthn add/edit):
-do not pass `form-obj`; put content in the default slot. `<c-form.card>` renders
+do not pass `form-obj`; put content in the default slot. `<c-form>` renders
 `{{ slot }}` (default) when `form_obj` is falsy.
 **For simple no-visible-field forms** (deactivate, generate, remove):
 pass `:form-obj="form"` with default `renderer="crispy"` to handle form rendering.
 **Alternatives considered**: Manual `{% csrf_token %}` in every template — rejected;
-`<c-form.card>` + `<c-form>` handle it automatically.
+`<c-form>` + `<c-form>` handle it automatically.
 
 ### Decision 5: WebAuthn JavaScript preservation
 
@@ -171,7 +171,7 @@ namespace all MFA screenshots at a glance in `docs/_static/`.
 | `<c-badge variant="primary/secondary/warning">` | Spec 009 (`socialaccount/connections.html`) |
 | `<c-button variant="danger">` for destructive actions | Spec 009 (`socialaccount/connections.html`) |
 | `<c-card title="...">` + `<c-slot name="actions">` for overview panels | Spec 006 (`account/email.html`) |
-| `<c-form.card>` + `<c-slot name="actions">` for form submit | Spec 007 (`account/password_change.html`) |
+| `<c-form>` + `<c-slot name="actions">` for form submit | Spec 007 (`account/password_change.html`) |
 | Bootstrap table inside `<c-card>` (no `<c-table>`) | Spec 010 (`usersessions/usersession_list.html`) |
 | Integration test pattern for allauth addon views | Spec 006 (`test_email_management_view.py`) |
 | Screenshot test pattern (N states × 2 viewports: desktop + mobile) | Spec 006 (`test_email_management_screenshots.py`) |

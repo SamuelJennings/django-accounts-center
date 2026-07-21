@@ -16,7 +16,7 @@ compounding the layout escape.
 **Four template changes** (in dependency order):
 
 1. `account/base_manage.html` — change one `extends` line to `dac/base.html` (unblocks all other templates)
-2. `account/email_change.html` — full rewrite to clean Cotton structure with `{% block page.content %}` and `<c-form.card>`
+2. `account/email_change.html` — full rewrite to clean Cotton structure with `{% block page.content %}` and `<c-form>`
 3. `account/verified_email_required.html` — switch to `{% block page.content %}` with an explicit `<c-card>` wrapper
 4. `account/email.html` — functional-errors-only audit; correct any broken form actions or button `name` attributes
 
@@ -34,7 +34,7 @@ make those tests pass.
 **Target Platform**: Django web application (server-rendered templates)
 **Project Type**: Reusable Django extension library
 **Performance Goals**: Same as existing management-page templates (no new DB queries)
-**Constraints**: Zero `{% element %}` / `{% endelement %}` tags in modified files; `email_change.html` must use `<c-form.card>` as form wrapper; all content in `{% block page.content %}`; `email.html` is corrections-only (no cosmetic refactoring)
+**Constraints**: Zero `{% element %}` / `{% endelement %}` tags in modified files; `email_change.html` must use `<c-form>` as form wrapper; all content in `{% block page.content %}`; `email.html` is corrections-only (no cosmetic refactoring)
 **Scale/Scope**: 4 template files edited; integration tests and screenshot tests pre-written
 
 ## Constitution Check
@@ -51,7 +51,7 @@ make those tests pass.
 | VI. UI Verification | Playwright MCP verification required per implementation task | ✅ PASS |
 | VII. Documentation Retrieval | No new external APIs — reusing established patterns from Specs 001–005 | ✅ PASS (N/A) |
 | VIII. E2E Testing | Screenshot tests pre-written: 6 states × 3 viewports = 18 PNGs | ✅ PASS |
-| IX. Component Reuse | No new components; `<c-form.card>`, `<c-card>`, `<c-button>`, `<c-badge>`, `<c-dropdown>` are all existing | ✅ PASS |
+| IX. Component Reuse | No new components; `<c-form>`, `<c-card>`, `<c-button>`, `<c-badge>`, `<c-dropdown>` are all existing | ✅ PASS |
 | X. Third-Party Integration | Template overrides primary; no view overrides introduced | ✅ PASS |
 | XI. Dual-Audience Stories | US1, US3 [Developer] + US2 [End User] | ✅ PASS |
 | XII. View Docstrings | No view classes introduced or modified | ✅ PASS (N/A) |
@@ -83,7 +83,7 @@ specs/006-allauth-email-management/
 ```text
 dac/addons/allauth/templates/account/
 ├── base_manage.html          ← EDIT: change extends from allauth/layouts/manage.html to dac/base.html
-├── email_change.html         ← EDIT: full rewrite (block page.content + c-form.card)
+├── email_change.html         ← EDIT: full rewrite (block page.content + c-form)
 ├── verified_email_required.html  ← EDIT: block page.content + explicit c-card wrapper
 └── email.html                ← AUDIT: correct any broken form actions / button name attributes
 
@@ -115,7 +115,7 @@ addon. Tests and screenshot files are pre-written; no new Python files are neede
 No unknowns requiring research. All patterns are established in Specs 001–005:
 
 - Template inheritance chain corrections: established in Specs 003–004
-- `<c-form.card>` usage: established in Spec 003 (`password_change.html`)
+- `<c-form>` usage: established in Spec 003 (`password_change.html`)
 - `{% block page.content %}` override: established in Spec 005 (`dac/base.html` spec)
 - `<c-card>` wrapper for informational pages: established in Spec 004
 
@@ -155,18 +155,18 @@ to:
   {% block title %} "Email Address" {% endblock %}
   {% block page.breadcrumbs %}
     {{ block.super }}
-    <c-breadcrumbs.item text="Email Address" />
+    <c-navigation.breadcrumbs.item text="Email Address" />
   {% endblock %}
   {% block page.content %}
     [warn_no_email snippet if no emailaddresses]
-    <c-form.card method="post" action=account_email :form-obj="form">
+    <c-form method="post" action=account_email :form-obj="form">
       [disabled current email input if current_emailaddress]
       [disabled pending email input + resend/cancel buttons if new_emailaddress]
       [crispy email field]
       <c-slot name="actions">
         <c-button name="action_add" type="submit" variant="primary" text="Change Email" />
       </c-slot>
-    </c-form.card>
+    </c-form>
     [hidden #pending-email form if new_emailaddress]
   {% endblock %}
 ```

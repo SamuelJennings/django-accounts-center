@@ -144,7 +144,7 @@ The "Forgot password?" link must only appear when the password form is visible (
 | Block | Condition |
 |---|---|
 | Social provider buttons (via `provider_list.html`) | `SOCIALACCOUNT_ENABLED` and providers exist |
-| "or" divider (`<c-card.divider>`) | Social buttons shown AND `not SOCIALACCOUNT_ONLY` |
+| "or" divider (`<c-divider>`) | Social buttons shown AND `not SOCIALACCOUNT_ONLY` |
 | Email/password form + "Forgot password?" | `not SOCIALACCOUNT_ONLY` |
 | "or" divider + passkey/code buttons | `not SOCIALACCOUNT_ONLY` AND (`PASSKEY_LOGIN_ENABLED` OR `LOGIN_BY_CODE_ENABLED`) |
 | "Don't have an account? Sign up" | `signup_url` is truthy |

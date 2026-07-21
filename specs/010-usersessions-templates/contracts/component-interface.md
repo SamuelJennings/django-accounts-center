@@ -41,7 +41,7 @@ Appends a "Sessions" leaf to the breadcrumb trail rooted at "Account Center".
 ```django
 {% block page.breadcrumbs %}
   {{ block.super }}
-  <c-breadcrumbs.item text="{% trans 'Sessions' %}" />
+  <c-navigation.breadcrumbs.item text="{% trans 'Sessions' %}" />
 {% endblock page.breadcrumbs %}
 ```
 
@@ -103,14 +103,14 @@ Contains all session list content. Structure:
 
 ## Component API Reference
 
-### `<c-breadcrumbs.item>`
+### `<c-navigation.breadcrumbs.item>`
 
 | Attribute | Type | Required | Description |
 |---|---|---|---|
 | `text` | string | Yes | Display text for the breadcrumb item |
 | `href` | string | No | URL; omit for the current (last) page item |
 
-**Usage**: `<c-breadcrumbs.item text="{% trans 'Sessions' %}" />`
+**Usage**: `<c-navigation.breadcrumbs.item text="{% trans 'Sessions' %}" />`
 
 ---
 

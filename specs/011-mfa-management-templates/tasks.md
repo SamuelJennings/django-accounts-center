@@ -53,7 +53,7 @@
 
 ## Phase 3: User Story 2 — End User Manages Two-Factor Authentication (Priority: P2)
 
-**Goal**: Fully rewrite `mfa/index.html`, the TOTP templates (`activate_form.html`, `deactivate_form.html`), and the Recovery Codes templates (`index.html`, `generate.html`) as clean Cotton templates using `<c-card>`, `<c-form.card>`, `<c-button>`, and raw HTML where needed. Zero allauth `{% element %}` tags.
+**Goal**: Fully rewrite `mfa/index.html`, the TOTP templates (`activate_form.html`, `deactivate_form.html`), and the Recovery Codes templates (`index.html`, `generate.html`) as clean Cotton templates using `<c-card>`, `<c-form>`, `<c-button>`, and raw HTML where needed. Zero allauth `{% element %}` tags.
 
 **Independent Test**: Render each template with representative context; assert correct panels, status text, action buttons, QR code presence, textarea with `id="recovery_codes"`, and conditional danger buttons are all present.
 
@@ -61,7 +61,7 @@
 
   - `{% load i18n %}` (remove `{% load allauth %}` — no allauth tags used)
   - `{% block title %}{% trans "Two-Factor Authentication" %}{% endblock title %}`
-  - `{% block page.breadcrumbs %}{{ block.super }}<c-breadcrumbs.item text="{% trans 'Two-Factor Authentication' %}" />{% endblock page.breadcrumbs %}`
+  - `{% block page.breadcrumbs %}{{ block.super }}<c-navigation.breadcrumbs.item text="{% trans 'Two-Factor Authentication' %}" />{% endblock page.breadcrumbs %}`
   - `{% block page.content %}` — containing one `<c-card>` per enabled method:
 
     **TOTP panel** (when `"totp"` in `MFA_SUPPORTED_TYPES`):
@@ -117,11 +117,11 @@
 
   - `{% load i18n %}`
   - `{% block title %}{% trans "Activate Authenticator App" %}{% endblock title %}`
-  - `{% block page.breadcrumbs %}{{ block.super }}<c-breadcrumbs.item href="{% url 'mfa_index' %}" text="{% trans 'Two-Factor Authentication' %}" /><c-breadcrumbs.item text="{% trans 'Activate' %}" />{% endblock page.breadcrumbs %}`
-  - `{% block page.content %}` — using `<c-form.card>` without `form-obj` (custom content in default slot):
+  - `{% block page.breadcrumbs %}{{ block.super }}<c-navigation.breadcrumbs.item href="{% url 'mfa_index' %}" text="{% trans 'Two-Factor Authentication' %}" /><c-navigation.breadcrumbs.item text="{% trans 'Activate' %}" />{% endblock page.breadcrumbs %}`
+  - `{% block page.content %}` — using `<c-form>` without `form-obj` (custom content in default slot):
 
     ```django
-    <c-form.card title="{% trans 'Activate Authenticator App' %}" method="post" action="{% url 'mfa_activate_totp' %}">
+    <c-form title="{% trans 'Activate Authenticator App' %}" method="post" action="{% url 'mfa_activate_totp' %}">
       {% csrf_token %}
       <c-slot name="form_actions">
         <c-button type="submit" variant="primary" text="{% trans 'Activate' %}" />
@@ -139,22 +139,22 @@
                         value="{{ form.code.value|default_if_none:'' }}"
                         class="{% if form.code.errors %}is-invalid{% endif %}" />
       {% for error in form.code.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
-    </c-form.card>
+    </c-form>
     ```
 
 - [X] T006 [P] [US2] Fully rewrite `dac/addons/allauth/templates/mfa/totp/deactivate_form.html`:
 
   - `{% load i18n %}`
   - `{% block title %}{% trans "Deactivate Authenticator App" %}{% endblock title %}`
-  - `{% block page.breadcrumbs %}{{ block.super }}<c-breadcrumbs.item href="{% url 'mfa_index' %}" text="{% trans 'Two-Factor Authentication' %}" /><c-breadcrumbs.item text="{% trans 'Deactivate' %}" />{% endblock page.breadcrumbs %}`
-  - `{% block page.content %}` — using `<c-form.card>` with `:form-obj="form"`:
+  - `{% block page.breadcrumbs %}{{ block.super }}<c-navigation.breadcrumbs.item href="{% url 'mfa_index' %}" text="{% trans 'Two-Factor Authentication' %}" /><c-navigation.breadcrumbs.item text="{% trans 'Deactivate' %}" />{% endblock page.breadcrumbs %}`
+  - `{% block page.content %}` — using `<c-form>` with `:form-obj="form"`:
 
     ```django
-    <c-form.card title="{% trans 'Deactivate Authenticator App' %}" method="post" action="{% url 'mfa_deactivate_totp' %}" :form-obj="form">
+    <c-form title="{% trans 'Deactivate Authenticator App' %}" method="post" action="{% url 'mfa_deactivate_totp' %}" :form-obj="form">
       <c-slot name="form_actions">
         <c-button type="submit" variant="danger" text="{% trans 'Deactivate' %}" />
       </c-slot>
-    </c-form.card>
+    </c-form>
     ```
 
 - [X] T007 [P] [US2] Fully rewrite `dac/addons/allauth/templates/mfa/recovery_codes/index.html`:
@@ -163,7 +163,7 @@
 
   - `{% load i18n %}`
   - `{% block title %}{% trans "Recovery Codes" %}{% endblock title %}`
-  - `{% block page.breadcrumbs %}{{ block.super }}<c-breadcrumbs.item href="{% url 'mfa_index' %}" text="{% trans 'Two-Factor Authentication' %}" /><c-breadcrumbs.item text="{% trans 'Recovery Codes' %}" />{% endblock page.breadcrumbs %}`
+  - `{% block page.breadcrumbs %}{{ block.super }}<c-navigation.breadcrumbs.item href="{% url 'mfa_index' %}" text="{% trans 'Two-Factor Authentication' %}" /><c-navigation.breadcrumbs.item text="{% trans 'Recovery Codes' %}" />{% endblock page.breadcrumbs %}`
   - `{% block page.content %}` — a `<c-card>` containing:
 
     ```django
@@ -198,11 +198,11 @@
 
   - `{% load i18n %}`
   - `{% block title %}{% trans "Generate Recovery Codes" %}{% endblock title %}`
-  - `{% block page.breadcrumbs %}{{ block.super }}<c-breadcrumbs.item href="{% url 'mfa_index' %}" text="{% trans 'Two-Factor Authentication' %}" /><c-breadcrumbs.item href="{% url 'mfa_view_recovery_codes' %}" text="{% trans 'Recovery Codes' %}" /><c-breadcrumbs.item text="{% trans 'Generate' %}" />{% endblock page.breadcrumbs %}`
-  - `{% block page.content %}` — using `<c-form.card>` with explicit `{% csrf_token %}` and single inline-conditional button:
+  - `{% block page.breadcrumbs %}{{ block.super }}<c-navigation.breadcrumbs.item href="{% url 'mfa_index' %}" text="{% trans 'Two-Factor Authentication' %}" /><c-navigation.breadcrumbs.item href="{% url 'mfa_view_recovery_codes' %}" text="{% trans 'Recovery Codes' %}" /><c-navigation.breadcrumbs.item text="{% trans 'Generate' %}" />{% endblock page.breadcrumbs %}`
+  - `{% block page.content %}` — using `<c-form>` with explicit `{% csrf_token %}` and single inline-conditional button:
 
     ```django
-    <c-form.card title="{% trans 'Generate Recovery Codes' %}" method="post" action="{% url 'mfa_generate_recovery_codes' %}">
+    <c-form title="{% trans 'Generate Recovery Codes' %}" method="post" action="{% url 'mfa_generate_recovery_codes' %}">
       {% csrf_token %}
       <c-slot name="form_actions">
         <c-button type="submit"
@@ -216,7 +216,7 @@
           {% endblocktrans %}
         </p>
       {% endif %}
-    </c-form.card>
+    </c-form>
     ```
 
 - [ ] T009 [P] [US2] playwright-cli skill verify — consult `.github/skills/playwright-cli/SKILL.md` before executing; navigate to `/accounts/2fa/` with TOTP active and recovery codes set up; confirm TOTP panel shows "active" status and "Deactivate" button, Recovery Codes panel shows unused/total count, page is inside the DAC layout
@@ -243,7 +243,7 @@
 
   - `{% load i18n %}`
   - `{% block title %}{% trans "Security Keys" %}{% endblock title %}`
-  - `{% block page.breadcrumbs %}{{ block.super }}<c-breadcrumbs.item href="{% url 'mfa_index' %}" text="{% trans 'Two-Factor Authentication' %}" /><c-breadcrumbs.item text="{% trans 'Security Keys' %}" />{% endblock page.breadcrumbs %}`
+  - `{% block page.breadcrumbs %}{{ block.super }}<c-navigation.breadcrumbs.item href="{% url 'mfa_index' %}" text="{% trans 'Two-Factor Authentication' %}" /><c-navigation.breadcrumbs.item text="{% trans 'Security Keys' %}" />{% endblock page.breadcrumbs %}`
   - `{% block page.content %}` — `<c-card>` with Add button in card body:
 
     ```django
@@ -296,11 +296,11 @@
 
   - `{% load i18n %}`
   - `{% block title %}{% trans "Add Security Key" %}{% endblock title %}`
-  - `{% block page.breadcrumbs %}{{ block.super }}<c-breadcrumbs.item href="{% url 'mfa_index' %}" text="{% trans 'Two-Factor Authentication' %}" /><c-breadcrumbs.item href="{% url 'mfa_list_webauthn' %}" text="{% trans 'Security Keys' %}" /><c-breadcrumbs.item text="{% trans 'Add' %}" />{% endblock page.breadcrumbs %}`
-  - `{% block page.content %}` — `<c-form.card>` without `form-obj`:
+  - `{% block page.breadcrumbs %}{{ block.super }}<c-navigation.breadcrumbs.item href="{% url 'mfa_index' %}" text="{% trans 'Two-Factor Authentication' %}" /><c-navigation.breadcrumbs.item href="{% url 'mfa_list_webauthn' %}" text="{% trans 'Security Keys' %}" /><c-navigation.breadcrumbs.item text="{% trans 'Add' %}" />{% endblock page.breadcrumbs %}`
+  - `{% block page.content %}` — `<c-form>` without `form-obj`:
 
     ```django
-    <c-form.card title="{% trans 'Add Security Key' %}" method="post" action="{% url 'mfa_add_webauthn' %}">
+    <c-form title="{% trans 'Add Security Key' %}" method="post" action="{% url 'mfa_add_webauthn' %}">
       {% csrf_token %}
       <c-slot name="form_actions">
         <c-button type="submit" id="mfa_webauthn_add" variant="primary" text="{% trans 'Register Key' %}" />
@@ -319,7 +319,7 @@
         </div>
       {% endif %}
       {{ form.credential }}
-    </c-form.card>
+    </c-form>
     ```
 
   - `{% block extra_js %}{{ block.super }}` — preserved verbatim:
@@ -344,32 +344,32 @@
 
   - `{% load i18n %}`
   - `{% block title %}{% trans "Edit Security Key" %}{% endblock title %}`
-  - `{% block page.breadcrumbs %}{{ block.super }}<c-breadcrumbs.item href="{% url 'mfa_index' %}" text="{% trans 'Two-Factor Authentication' %}" /><c-breadcrumbs.item href="{% url 'mfa_list_webauthn' %}" text="{% trans 'Security Keys' %}" /><c-breadcrumbs.item text="{% trans 'Edit' %}" />{% endblock page.breadcrumbs %}`
-  - `{% block page.content %}` — `<c-form.card>` with `:form-obj="form"`:
+  - `{% block page.breadcrumbs %}{{ block.super }}<c-navigation.breadcrumbs.item href="{% url 'mfa_index' %}" text="{% trans 'Two-Factor Authentication' %}" /><c-navigation.breadcrumbs.item href="{% url 'mfa_list_webauthn' %}" text="{% trans 'Security Keys' %}" /><c-navigation.breadcrumbs.item text="{% trans 'Edit' %}" />{% endblock page.breadcrumbs %}`
+  - `{% block page.content %}` — `<c-form>` with `:form-obj="form"`:
 
     ```django
-    <c-form.card title="{% trans 'Edit Security Key' %}" method="post" action="{% url 'mfa_edit_webauthn' authenticator.pk %}" :form-obj="form">
+    <c-form title="{% trans 'Edit Security Key' %}" method="post" action="{% url 'mfa_edit_webauthn' authenticator.pk %}" :form-obj="form">
       <c-slot name="form_actions">
         <c-button type="submit" variant="primary" text="{% trans 'Save' %}" />
       </c-slot>
-    </c-form.card>
+    </c-form>
     ```
 
 - [X] T014 [P] [US3] Rewrite `dac/addons/allauth/templates/mfa/webauthn/authenticator_confirm_delete.html`:
 
   - `{% load i18n %}`
   - `{% block title %}{% trans "Remove Security Key" %}{% endblock title %}`
-  - `{% block page.breadcrumbs %}{{ block.super }}<c-breadcrumbs.item href="{% url 'mfa_index' %}" text="{% trans 'Two-Factor Authentication' %}" /><c-breadcrumbs.item href="{% url 'mfa_list_webauthn' %}" text="{% trans 'Security Keys' %}" /><c-breadcrumbs.item text="{% trans 'Remove' %}" />{% endblock page.breadcrumbs %}`
-  - `{% block page.content %}` — `<c-form.card>` with `:form-obj="form"`:
+  - `{% block page.breadcrumbs %}{{ block.super }}<c-navigation.breadcrumbs.item href="{% url 'mfa_index' %}" text="{% trans 'Two-Factor Authentication' %}" /><c-navigation.breadcrumbs.item href="{% url 'mfa_list_webauthn' %}" text="{% trans 'Security Keys' %}" /><c-navigation.breadcrumbs.item text="{% trans 'Remove' %}" />{% endblock page.breadcrumbs %}`
+  - `{% block page.content %}` — `<c-form>` with `:form-obj="form"`:
 
     ```django
-    <c-form.card title="{% trans 'Remove Security Key' %}" method="post" action="{% url 'mfa_remove_webauthn' pk=authenticator.pk %}">
+    <c-form title="{% trans 'Remove Security Key' %}" method="post" action="{% url 'mfa_remove_webauthn' pk=authenticator.pk %}">
       {% csrf_token %}
       <c-slot name="form_actions">
         <c-button type="submit" variant="danger" text="{% trans 'Remove' %}" />
       </c-slot>
       <p>{% blocktrans with name=authenticator.wrap.name %}Are you sure you want to remove the security key "{{ name }}"?{% endblocktrans %}</p>
-    </c-form.card>
+    </c-form>
     ```
 
 - [ ] T015 [P] [US3] playwright-cli skill verify — consult `.github/skills/playwright-cli/SKILL.md` before executing; navigate to `/accounts/2fa/webauthn/` with registered security keys; confirm table rows appear with name, type badge, Edit and Remove action links, and the page is inside the DAC layout

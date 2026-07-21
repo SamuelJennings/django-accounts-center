@@ -35,7 +35,7 @@ Extends `mfa/base_manage.html`. Overrides three blocks from `dac/base.html`:
 ```django
 {% block page.breadcrumbs %}
   {{ block.super }}
-  <c-breadcrumbs.item text="{% trans 'Two-Factor Authentication' %}" />
+  <c-navigation.breadcrumbs.item text="{% trans 'Two-Factor Authentication' %}" />
 {% endblock page.breadcrumbs %}
 ```
 
@@ -62,11 +62,11 @@ Three `<c-card>` panels (TOTP, Recovery Codes, WebAuthn) each using
 
 Extends `mfa/totp/base.html` (unchanged). Overrides `{% block page.content %}`.
 
-Uses `<c-form.card>` without `form-obj` (custom content in default slot):
+Uses `<c-form>` without `form-obj` (custom content in default slot):
 
 ```django
 {% block page.content %}
-  <c-form.card title="{% trans 'Activate TOTP' %}" method="post">
+  <c-form title="{% trans 'Activate TOTP' %}" method="post">
     {% csrf_token %}
     <c-slot name="actions">
       <c-button type="submit" variant="primary" text="{% trans 'Activate' %}" />
@@ -82,7 +82,7 @@ Uses `<c-form.card>` without `form-obj` (custom content in default slot):
 
     {# Token input field #}
     {{ form.token }}
-  </c-form.card>
+  </c-form>
 {% endblock page.content %}
 ```
 
@@ -94,11 +94,11 @@ Extends `mfa/totp/base.html` (unchanged). Overrides `{% block page.content %}`.
 
 ```django
 {% block page.content %}
-  <c-form.card title="{% trans 'Deactivate TOTP' %}" method="post" :form-obj="form">
+  <c-form title="{% trans 'Deactivate TOTP' %}" method="post" :form-obj="form">
     <c-slot name="actions">
       <c-button type="submit" variant="danger" text="{% trans 'Deactivate' %}" />
     </c-slot>
-  </c-form.card>
+  </c-form>
 {% endblock page.content %}
 ```
 
@@ -145,7 +145,7 @@ Submit button uses `variant="danger"` only when `unused_code_count > 0`.
 
 ```django
 {% block page.content %}
-  <c-form.card title="{% trans 'Generate Recovery Codes' %}" method="post" :form-obj="form">
+  <c-form title="{% trans 'Generate Recovery Codes' %}" method="post" :form-obj="form">
     <c-slot name="actions">
       {% if unused_code_count > 0 %}
         <c-button type="submit" variant="danger" text="{% trans 'Generate New Codes' %}" />
@@ -153,7 +153,7 @@ Submit button uses `variant="danger"` only when `unused_code_count > 0`.
         <c-button type="submit" text="{% trans 'Generate New Codes' %}" />
       {% endif %}
     </c-slot>
-  </c-form.card>
+  </c-form>
 {% endblock page.content %}
 ```
 
@@ -215,14 +215,14 @@ submit button is a hard JS dependency.
 
 ```django
 {% block page.content %}
-  <c-form.card title="{% trans 'Add Security Key' %}" method="post">
+  <c-form title="{% trans 'Add Security Key' %}" method="post">
     {% csrf_token %}
     <c-slot name="actions">
       <c-button type="submit" id="mfa_webauthn_add" text="{% trans 'Register Key' %}" />
     </c-slot>
     {{ form.passwordless }}
     {{ form.credential }}
-  </c-form.card>
+  </c-form>
 {% endblock page.content %}
 
 {% block extra_js %}{{ block.super }}
@@ -251,11 +251,11 @@ Extends `mfa/webauthn/base.html` (unchanged). Overrides `{% block page.content %
 
 ```django
 {% block page.content %}
-  <c-form.card title="{% trans 'Edit Security Key' %}" method="post" :form-obj="form">
+  <c-form title="{% trans 'Edit Security Key' %}" method="post" :form-obj="form">
     <c-slot name="actions">
       <c-button type="submit" variant="primary" text="{% trans 'Save' %}" />
     </c-slot>
-  </c-form.card>
+  </c-form>
 {% endblock page.content %}
 ```
 
@@ -267,11 +267,11 @@ Extends `mfa/webauthn/base.html` (unchanged). Overrides `{% block page.content %
 
 ```django
 {% block page.content %}
-  <c-form.card title="{% trans 'Remove Security Key' %}" method="post" :form-obj="form">
+  <c-form title="{% trans 'Remove Security Key' %}" method="post" :form-obj="form">
     <c-slot name="actions">
       <c-button type="submit" variant="danger" text="{% trans 'Remove' %}" />
     </c-slot>
-  </c-form.card>
+  </c-form>
 {% endblock page.content %}
 ```
 
@@ -279,7 +279,7 @@ Extends `mfa/webauthn/base.html` (unchanged). Overrides `{% block page.content %
 
 ## Component API Reference
 
-### `<c-breadcrumbs.item>`
+### `<c-navigation.breadcrumbs.item>`
 
 | Attribute | Required | Description |
 |---|---|---|
@@ -298,7 +298,7 @@ Extends `mfa/webauthn/base.html` (unchanged). Overrides `{% block page.content %
 
 ---
 
-### `<c-form.card>`
+### `<c-form>`
 
 | Attribute/Slot | Required | Description |
 |---|---|---|
@@ -309,7 +309,7 @@ Extends `mfa/webauthn/base.html` (unchanged). Overrides `{% block page.content %
 | `<c-slot name="form_actions">` | No | Placed in card footer |
 | Default slot | No | Rendered in card body when `form-obj` is falsy |
 
-`<c-form>` inside `<c-form.card>` handles CSRF automatically. When `method="post"`,
+`<c-form>` inside `<c-form>` handles CSRF automatically. When `method="post"`,
 no explicit `{% csrf_token %}` is needed in the default slot unless the template
 manually constructs its own `<form>` tag.
 

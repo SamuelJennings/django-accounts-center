@@ -130,7 +130,7 @@ The public block interface of `dac/base.html` for downstream sub-page authors:
 
 {% block page.breadcrumbs %}
   {{ block.super }}
-  <c-breadcrumbs.item text="{% trans "Change Password" %}" />
+  <c-navigation.breadcrumbs.item text="{% trans "Change Password" %}" />
 {% endblock page.breadcrumbs %}
 
 {% block page.content %}

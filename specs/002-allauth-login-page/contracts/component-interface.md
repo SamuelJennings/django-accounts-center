@@ -18,7 +18,7 @@ The login page benefits from `<c-entrance>` automatically via template inheritan
 
 | Attr/Slot | Type | Purpose |
 |---|---|---|
-| `cols`, `md`, `lg`, etc. | `str` | Responsive width passed to `<c-col>` |
+| `cols`, `md`, `lg`, etc. | `str` | Responsive width passed to `` |
 | `title` (slot) | HTML | Card heading rendered as `<h4 class="fw-semibold mt-3">` |
 | default slot | HTML | Card body content |
 
@@ -115,13 +115,13 @@ The login page benefits from `<c-entrance>` automatically via template inheritan
 
 ---
 
-### `<c-card.divider>` — Visual Separator Between Sections
+### `<c-divider>` — Visual Separator Between Sections
 
 **Source**: django-mvp (`mvp/templates/cotton/card/divider.html`)
 **Used in**: `account/login.html` — between social and form, and before passwordless options
 
 ```html
-<c-card.divider text="or" />
+<c-divider text="or" />
 ```
 
 | Attr | Default | Purpose |
@@ -211,17 +211,17 @@ account/login.html
   │   ├─ <c-entrance.background>
   │   ├─ <c-entrance.logo>
   │   ├─ <c-messages>
-  │   ├─ <c-container> / <c-row> / <c-col>
+  │   ├─ <c-container> /  /
   │   └─ <c-card>
   ├─ (included) socialaccount/snippets/provider_list.html
   │   └─ <c-group> + <c-button> per provider
-  ├─ <c-card.divider>
+  ├─ <c-divider>
   ├─ <c-form>
   │   └─ <c-form.render>
   ├─ <c-group>
   │   └─ <c-button> (submit)
   ├─ <c-text> (forgot password, signup cross-link)
-  ├─ <c-card.divider> (before passkey/code section)
+  ├─ <c-divider> (before passkey/code section)
   └─ <c-group> (passkey + code buttons)
       └─ <c-button> (×2 if both enabled)
 

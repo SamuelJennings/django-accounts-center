@@ -12,7 +12,7 @@ The root cause is identical to specs 006/007/009/010: `mfa/base_manage.html` ext
 `allauth/layouts/manage.html` instead of `dac/base.html`. The single-line base fix
 propagates the layout to all nine templates. The nine content templates then receive a full
 Cotton rewrite, replacing all allauth `{% element %}` / `{% slot %}` / `{% endelement %}`
-tags with `<c-card>`, `<c-form.card>`, `<c-button>`, `<c-badge>`, `<c-form.field>`,
+tags with `<c-card>`, `<c-form>`, `<c-button>`, `<c-badge>`, `<c-form.field>`,
 and raw Bootstrap HTML where no component applies. WebAuthn JavaScript is preserved intact.
 
 Integration tests and Playwright screenshot tests are written as part of this feature in
@@ -51,7 +51,7 @@ Integration tests and Playwright screenshot tests are written as part of this fe
 | VI. UI Verification | playwright-cli skill is the first choice for all UI verification; screenshot file analysis is a token-expensive fallback only when interactive verification is insufficient; `.github/skills/playwright-cli/SKILL.md` MUST be consulted before any browser step (v1.1.5) | ✅ PASS |
 | VII. Documentation Retrieval | No new external APIs — reusing established patterns from Specs 001–010 | ✅ PASS (N/A) |
 | VIII. E2E Testing | Screenshot tests: 11 states × 2 viewports = 22 PNGs | ✅ PASS |
-| IX. Component Reuse | No new components; `<c-badge>`, `<c-button>`, `<c-card>`, `<c-form.card>`, `<c-form.field>`, `<c-dropdown>`, `<c-dropdown.item>`, `<c-breadcrumbs.item>` are all existing; raw Bootstrap table used for WebAuthn list (Principle IX one-off exemption); raw HTML textarea used for recovery codes (self-closing limitation of `<c-form.field>`, one-off exemption) | ✅ PASS |
+| IX. Component Reuse | No new components; `<c-badge>`, `<c-button>`, `<c-card>`, `<c-form>`, `<c-form.field>`, `<c-dropdown>`, `<c-dropdown.item>`, `<c-navigation.breadcrumbs.item>` are all existing; raw Bootstrap table used for WebAuthn list (Principle IX one-off exemption); raw HTML textarea used for recovery codes (self-closing limitation of `<c-form.field>`, one-off exemption) | ✅ PASS |
 | X. Third-Party Integration | Template overrides primary; no view overrides introduced | ✅ PASS |
 | XI. Dual-Audience Stories | US1, US4 [Developer] + US2, US3 [End User] | ✅ PASS |
 | XII. View Docstrings | No view classes introduced or modified | ✅ PASS (N/A) |
@@ -85,16 +85,16 @@ dac/addons/allauth/templates/mfa/
 ├── base_manage.html                    ← EDIT: extends line only (allauth/layouts/manage.html → dac/base.html)
 ├── index.html                          ← FULL REWRITE (block page.content; 3 × <c-card> panels)
 ├── totp/
-│   ├── activate_form.html              ← FULL REWRITE (<c-form.card>; QR code + secret + form fields)
-│   └── deactivate_form.html            ← FULL REWRITE (<c-form.card>; danger submit)
+│   ├── activate_form.html              ← FULL REWRITE (<c-form>; QR code + secret + form fields)
+│   └── deactivate_form.html            ← FULL REWRITE (<c-form>; danger submit)
 ├── recovery_codes/
 │   ├── index.html                      ← FULL REWRITE (raw textarea; Download/Generate buttons below)
-│   └── generate.html                   ← FULL REWRITE (<c-form.card>; conditional danger submit)
+│   └── generate.html                   ← FULL REWRITE (<c-form>; conditional danger submit)
 └── webauthn/
     ├── authenticator_list.html         ← FULL REWRITE (<c-card> + Bootstrap table; <c-badge> types; <c-dropdown> for edit/remove actions)
     ├── add_form.html                   ← REWRITE (preserve JS block exactly; id="mfa_webauthn_add")
-    ├── edit_form.html                  ← REWRITE (<c-form.card> or block page.content)
-    └── authenticator_confirm_delete.html  ← REWRITE (<c-form.card> or block page.content; danger submit)
+    ├── edit_form.html                  ← REWRITE (<c-form> or block page.content)
+    └── authenticator_confirm_delete.html  ← REWRITE (<c-form> or block page.content; danger submit)
 
 tests/test_addons/test_allauth/
 └── test_mfa_management_view.py         ← NEW: integration tests (all US1–US4 acceptance scenarios)

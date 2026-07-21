@@ -91,7 +91,7 @@ with 0 failures and covers all 7 acceptance scenarios from spec US1.
   - Render with:
 
     ```
-    {% block page.breadcrumbs %}{{ block.super }}<c-breadcrumbs.item text="Sub Page" />{% endblock page.breadcrumbs %}
+    {% block page.breadcrumbs %}{{ block.super }}<c-navigation.breadcrumbs.item text="Sub Page" />{% endblock page.breadcrumbs %}
     ```
 
   - Assert the rendered HTML contains both `"Account Center"` and `"Sub Page"` as breadcrumb-related text
@@ -137,7 +137,7 @@ positions, confirming structural legibility without rendering.
 
 - [x] T008 [US3] Add `test_page_breadcrumbs_default_has_one_item` to `tests/test_components/test_dac_base.py`:
   - Render a bare extend
-  - Assert exactly one `<c-breadcrumbs.item>` equivalent element (or its rendered `<li>` / `<a>`) labelled `"Account Center"` appears in the breadcrumb region with a non-empty `href`
+  - Assert exactly one `<c-navigation.breadcrumbs.item>` equivalent element (or its rendered `<li>` / `<a>`) labelled `"Account Center"` appears in the breadcrumb region with a non-empty `href`
 
 - [x] T009 [US3] Add `test_card_stack_wraps_page_content` to `tests/test_components/test_dac_base.py`:
   - Render a bare extend

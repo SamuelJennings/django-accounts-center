@@ -48,7 +48,7 @@ poetry run pytest tests/test_addons/test_allauth/test_email_management_view.py::
 
 ### Implementation for User Story 1
 
-- [ ] T002 [US1] Rewrite `email_change.html` to use `{% block page.content %}` (not `{% block content %}`), add `{% block page.breadcrumbs %}` override, and keep `<c-form.card>` as the form wrapper in `dac/addons/allauth/templates/account/email_change.html`
+- [ ] T002 [US1] Rewrite `email_change.html` to use `{% block page.content %}` (not `{% block content %}`), add `{% block page.breadcrumbs %}` override, and keep `<c-form>` as the form wrapper in `dac/addons/allauth/templates/account/email_change.html`
 
   Exact structure required (from `contracts/component-interface.md`):
 
@@ -60,11 +60,11 @@ poetry run pytest tests/test_addons/test_allauth/test_email_management_view.py::
 
   {% block page.breadcrumbs %}
     {{ block.super }}
-    <c-breadcrumbs.item text="{% trans "Email Address" %}" />
+    <c-navigation.breadcrumbs.item text="{% trans "Email Address" %}" />
   {% endblock page.breadcrumbs %}
 
   {% block page.content %}
-    {# warn_no_email snippet, conditional current/pending fields, c-form.card, hidden #pending-email form #}
+    {# warn_no_email snippet, conditional current/pending fields, c-form, hidden #pending-email form #}
   {% endblock page.content %}
   ```
 
@@ -87,7 +87,7 @@ poetry run pytest tests/test_addons/test_allauth/test_email_management_view.py::
 - [ ] TPWVI-1 [US1] Open the email change and verified-email-required pages in the Playwright MCP browser and visually confirm:
   - DAC Account Center sidebar is visible on both pages
   - Breadcrumb trail on `email_change_test` reads "Account Center › Email Address"
-  - The `<c-form.card>` renders inside the card-stack (not a raw unstyled form)
+  - The `<c-form>` renders inside the card-stack (not a raw unstyled form)
   - Current email disabled input is present on the change page
   - "Change Email" submit button is visible
   - On the verified-email-required page: a card wrapping the explanation text is visible, and the link to the email management page is rendered

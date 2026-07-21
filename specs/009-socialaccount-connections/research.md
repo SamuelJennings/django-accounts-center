@@ -69,8 +69,8 @@ heading; a second heading would be semantically wrong (two h1s on one page).
 
 ### Decision 5: List-group structure for `connections.html`
 
-**Decision**: Use `<c-card>` (with title and icon) wrapping a `<c-list-group flush>`
-for the connected-accounts section. Each item is a `<c-list-group.item>` containing
+**Decision**: Use `<c-card>` (with title and icon) wrapping a `<c-list flush>`
+for the connected-accounts section. Each item is a `<c-list.item>` containing
 the account display name, a `<c-badge>` for the provider brand, and an inline `<c-form>`
 with a "Remove" `<c-button>`. The "Add a Third-Party Account" section is a separate
 `<c-card>` below, including the `provider_list.html` and `login_extra.html` includes.
@@ -85,7 +85,7 @@ clarification (Q2).
 | Pattern | Established in |
 |---|---|
 | `{% extends "dac/base.html" %}` chain fix on base_manage | Spec 006 (`account/base_manage.html`) |
-| `<c-list-group>` + per-item inline form | Spec 006 (`account/email.html`) |
+| `<c-list>` + per-item inline form | Spec 006 (`account/email.html`) |
 | `<c-badge>` for status/provider labels | Spec 006 (`account/email.html`) |
 | `{% block page.content %}` override | Spec 005 (`dac/base.html` contract) |
 | `<c-text>` for entrance-page paragraphs | Spec 002 (`login_cancelled.html`) |

@@ -56,8 +56,8 @@ allauth/layouts/entrance.html          ← allauth entrance shell
 | Block name | Required? | Content |
 |---|---|---|
 | `title` | Yes | Localised page title string |
-| `page.breadcrumbs` | Yes | `{{ block.super }}` + `<c-breadcrumbs.item>` leaf |
-| `page.content` | Yes | `<c-form.card>` wrapping form fields and actions |
+| `page.breadcrumbs` | Yes | `{{ block.super }}` + `<c-navigation.breadcrumbs.item>` leaf |
+| `page.content` | Yes | `<c-form>` wrapping form fields and actions |
 
 ### Entrance templates (via `base_entrance.html`)
 

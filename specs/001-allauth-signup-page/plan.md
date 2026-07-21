@@ -11,7 +11,7 @@
 
 ## Summary
 
-Build a styled, modern allauth signup page for `django-accounts-center` by overriding allauth's template hierarchy to extend the `django-mvp` visual shell (AdminLTE4 + Bootstrap 5). The entrance page shell is owned by a first-class Cotton component family — `<c-entrance>` (layout), `<c-entrance.background>` (background style), `<c-entrance.logo>` (logo) — located in `dac/templates/cotton/entrance/`. The allauth layout template (`allauth/layouts/entrance.html`) delegates entirely to `<c-entrance>`; page templates (e.g. `signup.html`) are content-only. UI is composed from `django-mvp` Cotton components (`<c-card>`, `<c-card.divider>`, `<c-form.render>`, `<c-messages>`, `<c-group>`) and `django-cotton-bs5` components (`<c-button>`, `<c-alert>`). Non-field form errors are rendered inside `<c-form.render>` and must not be duplicated in page templates. No new Python views, models, or forms are introduced.
+Build a styled, modern allauth signup page for `django-accounts-center` by overriding allauth's template hierarchy to extend the `django-mvp` visual shell (AdminLTE4 + Bootstrap 5). The entrance page shell is owned by a first-class Cotton component family — `<c-entrance>` (layout), `<c-entrance.background>` (background style), `<c-entrance.logo>` (logo) — located in `dac/templates/cotton/entrance/`. The allauth layout template (`allauth/layouts/entrance.html`) delegates entirely to `<c-entrance>`; page templates (e.g. `signup.html`) are content-only. UI is composed from `django-mvp` Cotton components (`<c-card>`, `<c-divider>`, `<c-form.render>`, `<c-messages>`, `<c-group>`) and `django-cotton-bs5` components (`<c-button>`, `<c-alert>`). Non-field form errors are rendered inside `<c-form.render>` and must not be duplicated in page templates. No new Python views, models, or forms are introduced.
 
 ---
 
@@ -171,8 +171,8 @@ screenshots/
             {{ slot }}
           </div>
         </c-card>
-      </c-col>
-    </c-row>
+
+
   </c-container>
 </c-entrance.background>
 ```
@@ -208,7 +208,7 @@ screenshots/
 
 - `{% block title %}` provides the card heading text to `<c-entrance>` — no `<h4>` in the page template
 - Social provider buttons rendered via `{% include "socialaccount/snippets/provider_list.html" %}` — uses Bootstrap Icon `<a>` tags, not `<c-button>`, for layout flexibility
-- `<c-card.divider text="or">` separates social from email/password section (only when both present)
+- `<c-divider text="or">` separates social from email/password section (only when both present)
 - `<c-form.render />` renders all fields **and** non-field errors (FR-005/FR-006) — no `{% if form.non_field_errors %}` in this template
 - Submit button wrapped in `<c-group>` for consistent full-width stacking
 - Login link (`{% if login_url %}`) placed at the bottom of the content block, below the form
@@ -225,7 +225,7 @@ screenshots/
     {% if socialaccount_providers %}
       {% include "socialaccount/snippets/provider_list.html" with process="signup" %}
       {% if not SOCIALACCOUNT_ONLY %}
-        <c-card.divider text="{% trans 'or' %}" />
+        <c-divider text="{% trans 'or' %}" />
       {% endif %}
     {% endif %}
   {% endif %}
@@ -243,7 +243,7 @@ screenshots/
     </c-form>
   {% endif %}
   {% if PASSKEY_SIGNUP_ENABLED %}
-    <c-card.divider />
+    <c-divider />
     <c-group class="mt-4">
       <c-button href="{{ signup_by_passkey_url }}"
                 text="{% trans 'Sign up using a passkey' %}"

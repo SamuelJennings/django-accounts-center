@@ -144,7 +144,7 @@ Create `templates/allauth/layouts/entrance.html` in your project to change the c
 |---|---|---|
 | Page outer container | `<c-card>` (django-mvp) | `account/signup.html` |
 | Social provider buttons | `<c-button>` (cotton_bs5) | `socialaccount/snippets/provider_list.html` |
-| "or" divider | `<c-card.divider>` (django-mvp) | `account/signup.html` |
+| "or" divider | `<c-divider>` (django-mvp) | `account/signup.html` |
 | Form fields | `<c-form.render>` (django-mvp) | `account/signup.html` |
 | Submit button | `<c-button>` (cotton_bs5) | `account/signup.html` |
 | Flash messages | `<c-messages>` (django-mvp) | `allauth/layouts/entrance.html` |

@@ -123,7 +123,7 @@ valid HTML containing the `<c-entrance>` wrapper.
 - What happens when the verification link token is malformed (not merely expired)? → Allauth normalises this to the same invalid-key branch; the template must handle it identically.
 - What happens when `ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED = True` but the user navigates directly to the link-based confirmation URL? → Allauth handles the redirect; the template does not need to handle this case.
 - What happens when `can_resend` is `False` on the code-entry page? → The "Request new code" button remains visible but is rendered `disabled`. The resend `<form>` is always present when the flow supports resend (controlled by the `resend-supported` attribute on `<c-allauth.confirm-code>`). For flows that never support resend (password reset), `resend-supported` is not set and the button is omitted entirely.
-- What happens when `can_change` is `True` on `<c-allauth.confirm-code>`? → A change-form section is rendered below the confirm form inside a `<c-entrance.section>` wrapper.
+- What happens when `can_change` is `True` on `<c-allauth.confirm-code>`? → A change-form section is rendered below the confirm form inside a `<c-section>` wrapper.
 - What happens when `account_inactive.html` is visited by a user whose account has been reactivated? → Allauth prevents the redirect from happening at the view layer; the template does not need to guard against this.
 
 ## Requirements *(mandatory)*

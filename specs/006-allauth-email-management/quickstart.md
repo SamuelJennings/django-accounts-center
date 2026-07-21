@@ -34,7 +34,7 @@ All email management pages inherit the block contract from `dac/base.html`:
 
 {% block page.breadcrumbs %}
   {{ block.super }}
-  <c-breadcrumbs.item text="{% trans 'My Email Page' %}" />
+  <c-navigation.breadcrumbs.item text="{% trans 'My Email Page' %}" />
 {% endblock %}
 
 {% block page.content %}

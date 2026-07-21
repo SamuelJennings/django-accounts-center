@@ -60,14 +60,14 @@ No additional URL patterns are required.
 |---|---|
 | `mfa/base_manage.html` | `extends` changed from `allauth/layouts/manage.html` to `dac/base.html` |
 | `mfa/index.html` | Full Cotton rewrite — 3 × `<c-card>` panels (TOTP, Recovery Codes, WebAuthn) |
-| `mfa/totp/activate_form.html` | Full rewrite — `<c-form.card>` with QR code + secret display |
-| `mfa/totp/deactivate_form.html` | Full rewrite — `<c-form.card>` with danger submit |
+| `mfa/totp/activate_form.html` | Full rewrite — `<c-form>` with QR code + secret display |
+| `mfa/totp/deactivate_form.html` | Full rewrite — `<c-form>` with danger submit |
 | `mfa/recovery_codes/index.html` | Full rewrite — raw textarea + Download/Generate buttons |
-| `mfa/recovery_codes/generate.html` | Full rewrite — `<c-form.card>` with conditional danger submit |
+| `mfa/recovery_codes/generate.html` | Full rewrite — `<c-form>` with conditional danger submit |
 | `mfa/webauthn/authenticator_list.html` | Full rewrite — `<c-card>` + Bootstrap table + `<c-badge>` |
-| `mfa/webauthn/add_form.html` | Rewrite — `<c-form.card>` + preserved WebAuthn JS block |
-| `mfa/webauthn/edit_form.html` | Rewrite — `<c-form.card>` |
-| `mfa/webauthn/authenticator_confirm_delete.html` | Rewrite — `<c-form.card>` with danger submit |
+| `mfa/webauthn/add_form.html` | Rewrite — `<c-form>` + preserved WebAuthn JS block |
+| `mfa/webauthn/edit_form.html` | Rewrite — `<c-form>` |
+| `mfa/webauthn/authenticator_confirm_delete.html` | Rewrite — `<c-form>` with danger submit |
 
 ## Out of Scope
 
