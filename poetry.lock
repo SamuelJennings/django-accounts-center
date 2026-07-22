@@ -931,14 +931,14 @@ dev = ["black (==23.3.0)", "coverage (>=7)", "coverage (>=7)", "flake8 (==6.0.0)
 
 [[package]]
 name = "django-mvp"
-version = "0.14.1"
+version = "0.15.0"
 description = "MVP framework for Django - scaffold production-ready applications with sophisticated layouts and UI patterns designed for data-centric applications."
 optional = false
 python-versions = "<4.0,>=3.12"
 groups = ["main"]
 files = [
-    {file = "django_mvp-0.14.1-py3-none-any.whl", hash = "sha256:71625db369f96767bf6ef72b8a273689cecf67e0b5af0d8ce7f3cebba6ae6362"},
-    {file = "django_mvp-0.14.1.tar.gz", hash = "sha256:91062c71a9eff9f51701835025e33e8c3587c4792a390bee58fef4ee04bb5160"},
+    {file = "django_mvp-0.15.0-py3-none-any.whl", hash = "sha256:b8bf2038accc7c881d050246f476de46265a0384c054f832bd4744ce3751cfbb"},
+    {file = "django_mvp-0.15.0.tar.gz", hash = "sha256:a9a02dabb17902eae2aa4531dd94b733a6b70c9a136b16d71bf0f55ccd7c261c"},
 ]
 
 [package.dependencies]
