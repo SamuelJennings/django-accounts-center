@@ -1,12 +1,12 @@
 {% extends "mvp/base.html" %}
 {% load i18n mvp static %}
+
 {% comment %}
   Entrance layout for all anonymous-facing allauth pages (login, signup,
   password reset, login codes, …): a centered card with the site logo and no
   app shell. Every stock allauth entrance template renders through this
   layout via account/base_entrance.html.
 {% endcomment %}
-
 {% block title %}
   {% block head_title %}
   {% endblock head_title %}
@@ -19,7 +19,8 @@
 {% endblock head %}
 
 {% block styles %}
-  <link rel="stylesheet" href="{% static 'css/dac.css' %}" />
+  <link rel="stylesheet"
+        href="{% static 'css/dac.css' %}" />
 {% endblock styles %}
 
 {% block app %}
@@ -29,9 +30,10 @@
          alt="{% trans "Site Logo" %}"
          width="auto"
          height="auto"
-         class="max-h-16 mb-4 mx-auto" />
+         class="h-34 w-auto max-w-full mb-4 mx-auto" />
     {% block content %}
     {% endblock content %}
+
   </c-entrance>
 {% endblock app %}
 
