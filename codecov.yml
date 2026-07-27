@@ -3,6 +3,12 @@ codecov:
   notify:
     wait_for_ci: yes
 
+# Family coverage gating.
+# 100% is brittle (it fails a PR over a single defensive branch or unreachable
+# guard). These are floors with headroom, not a ratchet.
+#   project — overall coverage floor for the package.
+#   patch   — coverage required of the lines changed in a PR (new code).
+# The 1% threshold absorbs rounding and small, justified dips.
 coverage:
   precision: 2
   round: down
@@ -10,22 +16,12 @@ coverage:
   status:
     project:
       default:
-        target: auto
+        target: 90%
         threshold: 1%
-        base: auto
     patch:
       default:
-        target: auto
+        target: 85%
         threshold: 1%
-        base: auto
-
-parsers:
-  gcov:
-    branch_detection:
-      conditional: yes
-      loop: yes
-      method: no
-      macro: no
 
 comment:
   layout: "reach,diff,flags,files,footer"
@@ -34,7 +30,8 @@ comment:
 
 ignore:
   - "tests/**"
-  - "demo/**"
+  - "screenshots/**"
+  - "example/**"
   - "docs/**"
   - "**/migrations/**"
   - "**/__pycache__/**"

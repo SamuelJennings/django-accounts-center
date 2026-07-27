@@ -24,9 +24,7 @@ class DacAllauthConfig(AppConfig):
         from mvp.utils import app_is_installed
 
         user = request.user
-        emailaddresses = EmailAddress.objects.filter(user=user).order_by(
-            "-primary", "-verified", "email"
-        )
+        emailaddresses = EmailAddress.objects.filter(user=user).order_by("-primary", "-verified", "email")
         context = {
             "emailaddresses": emailaddresses,
             "unverified_email_count": sum(1 for e in emailaddresses if not e.verified),
@@ -45,8 +43,7 @@ class DacAllauthConfig(AppConfig):
             authenticators = Authenticator.objects.filter(user=user)
             context["authenticators"] = authenticators
             context["mfa_active"] = any(
-                a.type in (Authenticator.Type.TOTP, Authenticator.Type.WEBAUTHN)
-                for a in authenticators
+                a.type in (Authenticator.Type.TOTP, Authenticator.Type.WEBAUTHN) for a in authenticators
             )
 
         if context["usersessions_enabled"]:

@@ -48,11 +48,7 @@ def get_active_section(request):
     section matches.
     """
     processed = AccountCenterMenu.process(request)
-    leaves = [
-        item
-        for item in _iter_leaves(processed)
-        if item.visible and item.name != "overview"
-    ]
+    leaves = [item for item in _iter_leaves(processed) if item.visible and item.name != "overview"]
 
     for item in leaves:
         if item.selected:

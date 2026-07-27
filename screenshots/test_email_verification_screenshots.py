@@ -3,7 +3,7 @@ Playwright screenshot tests for the allauth email verification flow.
 
 Covers FR-007 / Principle XIII: Multi-Viewport Screenshot Coverage.
 
-5 page states × 3 viewports = 15 PNG files written to docs/_static/{tier}/.
+5 page states × 2 viewports = 10 PNG files written to docs/_static/{tier}/.
 
 Page states:
   - email-verification-sent      : account/verification_sent.html (anonymous)
@@ -14,7 +14,7 @@ Page states:
 
 Agent visual verification (Principle XIII, NON-NEGOTIABLE):
   After TVAL-3 runs this test suite, the implementing agent MUST open and inspect
-  every generated docs/_static/{desktop,tablet,mobile}/email-*.png and
+  every generated docs/_static/{desktop,mobile}/email-*.png and
   account-inactive.png file before marking T011 complete.
 """
 
@@ -30,15 +30,11 @@ def test_email_verification_sent_page(live_server, settings, capture_screenshot)
     """Screenshot: verification_sent.html (anonymous, no social providers)."""
     settings.SOCIALACCOUNT_ENABLED = False
     settings.ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED = False
-    capture_screenshot(
-        reverse("account_email_verification_sent"), "email-verification-sent"
-    )
+    capture_screenshot(reverse("account_email_verification_sent"), "email-verification-sent")
 
 
 @pytest.mark.django_db(transaction=True)
-def test_email_confirm_valid_page(
-    page, live_server, settings, django_user_model, save_screenshot
-):
+def test_email_confirm_valid_page(page, live_server, settings, django_user_model, save_screenshot):
     """Screenshot: email_confirm.html with a valid confirmation key (can_confirm=True branch)."""
     settings.ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED = False
     # Disable HMAC so the view uses DB-backed EmailConfirmation.from_key().
@@ -56,9 +52,9 @@ def test_email_confirm_valid_page(
     url = reverse("account_confirm_email", kwargs={"key": key})
     response = page.goto(live_server.url + url)
     page.wait_for_load_state("networkidle")
-    assert (
-        response is not None and response.status < 500
-    ), f"Server returned HTTP {response.status} for email confirm URL"
+    assert response is not None and response.status < 500, (
+        f"Server returned HTTP {response.status} for email confirm URL"
+    )
     save_screenshot("email-confirm-valid")
 
 
@@ -66,16 +62,12 @@ def test_email_confirm_valid_page(
 def test_email_confirm_invalid_page(live_server, settings, capture_screenshot):
     """Screenshot: email_confirm.html with an invalid/expired key (no-confirmation branch)."""
     settings.ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED = False
-    url = reverse(
-        "account_confirm_email", kwargs={"key": "invalid-key-that-will-never-match"}
-    )
+    url = reverse("account_confirm_email", kwargs={"key": "invalid-key-that-will-never-match"})
     capture_screenshot(url, "email-confirm-invalid")
 
 
 @pytest.mark.django_db(transaction=True)
-def test_email_verification_code_page(
-    page, live_server, settings, django_user_model, save_screenshot
-):
+def test_email_verification_code_page(page, live_server, settings, django_user_model, save_screenshot):
     """
     Screenshot: confirm_email_verification_code.html.
 
@@ -106,9 +98,9 @@ def test_email_verification_code_page(
     # confirm_email_verification_code.html (the resumable stage)
     response = page.goto(live_server.url + reverse("account_email_verification_sent"))
     page.wait_for_load_state("networkidle")
-    assert (
-        response is not None and response.status < 500
-    ), f"Server returned HTTP {response.status} for email verification code URL"
+    assert response is not None and response.status < 500, (
+        f"Server returned HTTP {response.status} for email verification code URL"
+    )
     save_screenshot("email-verification-code")
 
 

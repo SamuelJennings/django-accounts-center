@@ -3,7 +3,7 @@ Playwright screenshot tests for the allauth social account connections flow.
 
 Covers T013–T015 / Principles VIII and XIII: Multi-Viewport Screenshot Coverage.
 
-3 page states × 3 viewports = 9 PNG files written to docs/_static/{tier}/.
+3 page states × 2 viewports = 6 PNG files written to docs/_static/{tier}/.
 
 Page states:
   - connections-has-accounts   : connections.html — user with 1 Google social account
@@ -12,12 +12,11 @@ Page states:
 
 Viewports:
   - desktop : 1440×900
-  - tablet  : 768×1024
   - mobile  : 390×844
 
 Agent visual verification (Principle XIII, NON-NEGOTIABLE):
   After running this test suite the implementing agent MUST open and inspect
-  every generated docs/_static/{desktop,tablet,mobile}/connections-*.png and
+  every generated docs/_static/{desktop,mobile}/connections-*.png and
   authentication-error.png before marking T015 complete.
 """
 
@@ -26,7 +25,6 @@ from allauth.socialaccount.models import SocialAccount
 from django.urls import reverse
 
 from screenshots.conftest import create_google_social_app, create_test_user
-
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -37,9 +35,7 @@ def _browser_login(page, live_server, username, password="testpass123"):
     """Log in through the allauth login form and wait for the redirect."""
     response = page.goto(live_server.url + reverse("account_login"))
     page.wait_for_load_state("networkidle")
-    assert (
-        response is not None and response.status < 500
-    ), f"Login page returned HTTP {response.status}"
+    assert response is not None and response.status < 500, f"Login page returned HTTP {response.status}"
     page.fill("input[name=login]", username)
     page.fill("input[name=password]", password)
     with page.expect_navigation(wait_until="networkidle"):
@@ -62,9 +58,7 @@ def _create_google_social_account(user):
 
 
 @pytest.mark.django_db(transaction=True)
-def test_connections_has_accounts(
-    page, live_server, settings, django_user_model, save_screenshot
-):
+def test_connections_has_accounts(page, live_server, settings, django_user_model, save_screenshot):
     """Screenshot: connections.html — authenticated user with 1 Google account connected."""
     user = create_test_user(django_user_model)
     create_google_social_app()
@@ -73,9 +67,9 @@ def test_connections_has_accounts(
     _browser_login(page, live_server, user.username)
     response = page.goto(live_server.url + reverse("socialaccount_connections"))
     page.wait_for_load_state("networkidle")
-    assert (
-        response is not None and response.status < 500
-    ), f"Server returned HTTP {response.status} for connections-has-accounts"
+    assert response is not None and response.status < 500, (
+        f"Server returned HTTP {response.status} for connections-has-accounts"
+    )
     save_screenshot("connections-has-accounts")
 
 
@@ -85,18 +79,16 @@ def test_connections_has_accounts(
 
 
 @pytest.mark.django_db(transaction=True)
-def test_connections_no_accounts(
-    page, live_server, settings, django_user_model, save_screenshot
-):
+def test_connections_no_accounts(page, live_server, settings, django_user_model, save_screenshot):
     """Screenshot: connections.html — authenticated user with no social accounts (empty state)."""
     user = create_test_user(django_user_model)
 
     _browser_login(page, live_server, user.username)
     response = page.goto(live_server.url + reverse("socialaccount_connections"))
     page.wait_for_load_state("networkidle")
-    assert (
-        response is not None and response.status < 500
-    ), f"Server returned HTTP {response.status} for connections-no-accounts"
+    assert response is not None and response.status < 500, (
+        f"Server returned HTTP {response.status} for connections-no-accounts"
+    )
     save_screenshot("connections-no-accounts")
 
 

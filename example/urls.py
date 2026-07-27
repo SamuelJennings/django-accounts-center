@@ -7,15 +7,11 @@ from django.views.generic.edit import UpdateView
 from example.views import EmailChangeTestView, _verified_email_required_view
 
 urlpatterns = [
-    path(
-        "", RedirectView.as_view(url=reverse_lazy("account_login")), name="example-home"
-    ),
+    path("", RedirectView.as_view(url=reverse_lazy("account_login")), name="example-home"),
     path("account-center/", include("dac.urls")),
     path(
         "profile/<pk>/",
-        UpdateView.as_view(
-            model=get_user_model(), fields=["username", "first_name", "last_name"]
-        ),
+        UpdateView.as_view(model=get_user_model(), fields=["username", "first_name", "last_name"]),
         name="profile-edit",
     ),
     path("admin/", admin.site.urls),
