@@ -5,8 +5,8 @@
 This document was designed against [GOALS.md](../GOALS.md). See also [CONTEXT.md](../CONTEXT.md) for
 domain terminology and [memory/constitution.md](../memory/constitution.md) for project standards.
 
-The first four items are already delivered. They are carried here so the sequence reads whole and
-so later work has something to cite.
+The first five items are already delivered. They are carried so the sequence reads whole and so
+later work has something to cite.
 
 ## Versioning
 
@@ -34,46 +34,59 @@ has been mapped onto the next minor rather than applied literally.
 
 Everything needed before an integration that is not allauth can be built against this package.
 
-### R1 — The Account Center shell
+The package provides exactly three page layouts, and the first three items are those. Everything
+an integration renders is one of them.
 
-*Delivered · needs verification · advances G3, G5*
+### R1 — The management page
 
-A management layout with a sub menu beside the content and breadcrumbs that name the section a
-page belongs to. Every management page an integration serves renders inside it, so pages
-contributed by different sources look and behave alike.
+*Delivered · needs verification · advances G3*
 
-Serves G3 and G5.
+A single page style for any view where a person controls one aspect of their account. It carries
+the sub menu, the breadcrumbs, and the content area, so a management view written by one
+integration is indistinguishable in shape from one written by another.
 
-### R2 — Entrance and management pages for allauth
+Serves G3.
 
-*Delivered · needs verification · advances G2, G9*
-
-Sign-in, sign-up and recovery render as a centered card outside the app shell. Email, password,
-MFA, sessions and connected accounts render inside it. Styling is applied to the parts allauth
-composes its pages from rather than to the pages themselves, so allauth features the package has
-never seen arrive already styled.
-
-Serves G2 and G9.
-
-### R3 — An overview page assembled from installed apps
+### R2 — The account center dashboard
 
 *Delivered · needs verification · advances G4*
 
-A landing page for the Account Center whose cards are contributed by whichever apps are installed,
-collected without the core app knowing which apps those are.
+The landing page of the Account Center: a dashboard of cards, each owned and rendered by the
+integration that contributed it. The page collects whatever is installed without knowing what any
+of it is.
 
 Serves G4.
+
+### R3 — The entrance page
+
+*Delivered · needs verification · advances G2*
+
+A full-screen page holding a single centered card, for anything a signed-out visitor sees. It is
+built from django-mvp's entrance component rather than restyled here.
+
+Serves G2. Where it lives and how far it can be configured are open — see R7.
 
 ### R4 — Integrations as gated sub-apps
 
 *Delivered · needs verification · advances G1, G8*
 
 Each integration is a separate sub-app with its own optional dependencies, enabled by adding it to
-`INSTALLED_APPS`. A project carries only the dependencies of the integrations it turns on.
+`INSTALLED_APPS`. A project carries only the dependencies of the integrations it turns on, and
+contributes its menu group and its cards through documented hooks.
 
 Serves G1 and G8.
 
-### R5 — Integrations mount their own URLs
+### R5 — The allauth integration
+
+*Delivered · needs verification · advances G8, G9*
+
+The first integration built on the three layouts above. It styles allauth by overriding the parts
+allauth composes its pages from rather than the pages themselves, so allauth features this package
+has never seen arrive already styled.
+
+Serves G8 and G9.
+
+### R6 — Integrations mount their own URLs
 
 *feature · advances G1, G5*
 
@@ -83,37 +96,56 @@ is false for any integration that does not already exist, and G5 has no single o
 Account Center lives under is chosen by each consuming project, and this repo's own README,
 example project and test project each pick a different one.
 
-This is first because R8 cannot be attempted while adding an integration means patching the core.
+This is first among the open items because R9 cannot be attempted while adding an integration
+means patching the core.
 
 **Deliverables:**
 
 - An integration's URLs are reachable purely as a consequence of it being installed.
 - One predictable path for account management, owned by this package rather than by the consuming
   project, and consistent across the README, the example project and the tests.
-- A stated position on where entrance pages live relative to that path, given they serve
-  anonymous visitors rather than the Account Center.
+- A stated position on where entrance pages sit relative to that path, given they serve anonymous
+  visitors rather than the Account Center.
 
 Serves G1 and G5. Does not cover what an integration must provide to be discovered beyond its
-URLs — that is R10.
+URLs — that is R11.
 
-### R6 — Per-user visibility
+### R7 — The entrance page belongs to the framework
+
+*feature · advances G2*
+
+The entrance page exists only inside the allauth integration. An integration with its own pages
+for signed-out visitors has nothing to inherit, and would have to extend a template named for
+another integration to get the same treatment.
+
+It also offers no configuration. The card is one fixed size, and a page whose content does not
+suit that size has no recourse.
+
+**Deliverables:**
+
+- The entrance page is owned by the core app and reachable by any integration.
+- The card size is configurable, to the extent django-mvp's entrance component supports it. Where
+  it does not, the shortfall is raised on django-mvp rather than solved here.
+- The allauth integration reaches the shared page rather than defining its own, with no visible
+  change to what it already renders.
+
+Serves G2. Does not change how the entrance page looks by default.
+
+### R8 — Per-user visibility
 
 *feature · advances G6*
 
-Menu entries and overview cards are decided once, when the process starts, from which apps are
+Menu entries and dashboard cards are decided once, when the process starts, from which apps are
 installed. Every signed-in person sees the same Account Center. An integration whose pages only
 apply to some users — a billing area for subscribers, a team area for people in a team — has no
 way to say so, and the person it does not apply to gets a card or a menu entry that leads
 somewhere useless.
 
-The menu library already carries per-request evaluation, so this is largely a matter of the
-Account Center using it and extending the same treatment to cards.
-
 **Deliverables:**
 
 - An integration can declare, per request, whether each of its menu entries applies to the current
   visitor.
-- The same for overview cards, including suppressing a card entirely rather than rendering an
+- The same for dashboard cards, including suppressing a card entirely rather than rendering an
   empty one.
 - Installation continues to decide whether a contribution exists. The request decides whether it
   is shown.
@@ -122,30 +154,14 @@ Account Center using it and extending the same treatment to cards.
 Serves G6. Does not cover authorization inside an integration's own views, which remains the
 integration's responsibility.
 
-### R7 — An entrance layout that belongs to the framework
-
-*feature · advances G2*
-
-The entrance layout exists only as an allauth template override. An integration with its own pages
-for anonymous visitors has nothing to inherit, and would have to extend a template named for
-another integration to get the branded card treatment.
-
-**Deliverables:**
-
-- An entrance layout owned by the core app that any integration can build on.
-- The allauth integration reaches the shared layout rather than defining its own, with no visible
-  change to the pages it already renders.
-
-Serves G2. Does not change what the entrance pages look like.
-
-### R8 — A second integration
+### R9 — A second integration
 
 *multi-feature · advances G1, G4, G8*
 
 Every framework claim in GOALS is currently demonstrated by exactly one integration, which was
 also the integration the framework was extracted from. Nothing proves a second one is possible,
-and the parts that only allauth exercises are the parts most likely to be wrong. A second
-integration built in-tree is the forcing function that turns R5, R6 and R7 from assertions into
+and the parts that only one integration exercises are the parts most likely to be wrong. A second
+integration built in-tree is the forcing function that turns R6, R7 and R8 from assertions into
 facts, and it delivers a capability the projects this package serves actually need.
 
 Which integration comes first is a scoping question for the feature work rather than something to
@@ -154,14 +170,14 @@ settle here.
 **Deliverables:**
 
 - A second integration shipped in-tree, gated and optional on the same terms as the first.
-- Its menu group, cards and pages reach the Account Center through the documented mechanisms only,
-  with no core changes made on its behalf.
+- Its menu group, its cards and its pages reach the Account Center through the documented
+  mechanisms only, with no core changes made on its behalf.
 - Any gap it exposes in the framework surfaced as a correction rather than worked around inside
   the integration.
 
-Serves G1, G4 and G8. Does not include the contract documentation, which is R10.
+Serves G1, G4 and G8. Does not include the contract documentation, which is R11.
 
-### R9 — Verify the gate holds without allauth
+### R10 — Verify the gate holds without allauth
 
 *resolve · advances G1, G8*
 
@@ -177,7 +193,7 @@ run — has never executed. The branches that skip an absent app have never been
 
 Serves G1 and G8.
 
-### R10 — The integration contract, documented
+### R11 — The integration contract, documented
 
 *feature · advances G7*
 
@@ -187,7 +203,7 @@ expressed in code — the order an integration must appear in relative to the pa
 what a contributed card may assume about the surrounding page, what happens when two integrations
 contribute the same thing — are discoverable only by reading the source or getting it wrong.
 
-This comes after R5 to R8 because documenting the contract before the second integration has
+This comes after R6 to R9 because documenting the contract before a second integration has
 stressed it would document guesses.
 
 **Deliverables:**
@@ -197,13 +213,13 @@ stressed it would document guesses.
 - The rules that are not enforced by code, stated as rules.
 - The shipped integrations readable as worked examples against that reference.
 
-Serves G7. Does not include machine-checkable conformance, which is R14.
+Serves G7. Does not include machine-checkable conformance, which is R15.
 
 ## Expected goals: v1.0.0
 
 The capabilities a complete, dependable version is expected to have.
 
-### R11 — A user can export and delete their own data
+### R12 — A user can export and delete their own data
 
 *multi-feature · advances G10*
 
@@ -224,14 +240,14 @@ scoping question for the feature work.
 
 Serves G10. Does not cover an operator-facing compliance console.
 
-### R12 — Allauth coverage that survives upstream releases
+### R13 — Allauth coverage that survives upstream releases
 
 *feature · advances G9*
 
-The package tracks allauth by styling the parts its pages are composed from, and a check asserts
-every one of those parts has an override. The list of parts is written down by hand. When allauth
-adds one, the check stays green and the new part renders unstyled, which is precisely the failure
-the architecture was chosen to avoid.
+The allauth integration tracks upstream by styling the parts its pages are composed from, and a
+check asserts every one of those parts has an override. The list of parts is written down by hand.
+When allauth adds one, the check stays green and the new part renders unstyled, which is precisely
+the failure the approach was chosen to avoid.
 
 **Deliverables:**
 
@@ -242,14 +258,14 @@ the architecture was chosen to avoid.
 
 Serves G9.
 
-### R13 — Profile management
+### R14 — Profile management
 
 *feature · advances G8*
 
 Editing your own name, and whatever else a project considers part of a person's profile, is the
 most common thing an account area does and the one capability every comparable product has. This
-package has no answer for it today, because the integration it was built around does not cover it
-and no other integration exists.
+package has no answer for it, because the integration it was built around does not cover it and no
+other integration exists.
 
 **Deliverables:**
 
@@ -263,7 +279,7 @@ than an account-management one.
 
 Genuine wants whose absence never makes the package incomplete.
 
-### R14 — A conformance kit for integration authors
+### R15 — A conformance kit for integration authors
 
 *feature · advances G11*
 
