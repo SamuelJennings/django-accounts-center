@@ -148,7 +148,7 @@ guesses.
 - The rules that are not enforced by code, stated as rules.
 - A worked example an author can follow end to end.
 
-Serves G7. Machine-checkable conformance is R10.
+Serves G7. Documentation is the whole of it — machine-checkable conformance is not planned.
 
 ## Expected goals: v1.0.0
 
@@ -219,17 +219,3 @@ real test of the per-request visibility built in R2 and R3.
 - The integration is gated and optional on the same terms as every other.
 
 Serves G8. Does not cover operator-facing billing administration.
-
-## Aspirational goals: v2.0
-
-Genuine wants whose absence never makes the package incomplete.
-
-### R10 — A conformance kit for integration authors
-
-*feature · advances G11*
-
-Once the contract is a public API and several integrations exist in-tree, an author has no way to
-check their integration behaves before shipping it, and the maintainers have no shared check
-across the bundled set. Documentation covers this need while the count is small.
-
-Serves G11.
