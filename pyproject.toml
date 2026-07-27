@@ -82,7 +82,6 @@ exclude = [
     "staticfiles/*",
     "docs/",
     ".github/",
-    "screenshots/",
 ]
 line-length = 120
 fix = true
@@ -140,9 +139,9 @@ ignore = [
 # nothing under tests/test_allauth/ was covered. "tests/**" matches the tree.
 # S101 asserts are the point of a test; S105/S106 flag the dummy credentials
 # every auth test needs; RUF002/003 flag en dashes in test prose.
-"tests/**" = ["S101", "S105", "S106", "RUF002", "RUF003"]
-"screenshots/**" = ["S101", "S105", "S106", "RUF002", "RUF003"]
-"example/**" = ["S105", "S106", "RUF002", "RUF003"]
+"tests/**" = ["S101", "S105", "S106", "S107", "RUF002", "RUF003"]
+"screenshots/**" = ["S101", "S105", "S106", "S107", "RUF002", "RUF003"]
+"example/**" = ["S105", "S106", "S107", "RUF002", "RUF003"]
 
 [tool.ruff.format]
 docstring-code-format = true
@@ -247,5 +246,3 @@ DEP002 = ["django-crispy-forms", "crispy-tailwind"]
 DEP003 = ["toml", "flex_menu", "pytest"]
 # dotenv is used in example/ (dev-only app), not in the published package
 DEP004 = ["dotenv"]
-
-

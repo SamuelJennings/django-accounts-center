@@ -40,18 +40,14 @@ def test_signup_page_social_enabled(live_server, settings, capture_screenshot):
 def test_signup_page_social_only(live_server, settings, capture_screenshot):
     settings.SOCIALACCOUNT_ENABLED = True
     settings.SOCIALACCOUNT_ONLY = True
-    settings.MFA_PASSKEY_SIGNUP_ENABLED = (
-        False  # Avoid passkey UI elements interfering with social-only test
-    )
+    settings.MFA_PASSKEY_SIGNUP_ENABLED = False  # Avoid passkey UI elements interfering with social-only test
     create_google_social_app()
     capture_screenshot(reverse("account_signup"), "signup-page-social-only")
 
 
 @pytest.mark.django_db(transaction=True)
 def test_signup_page_signup_closed(live_server, settings, capture_screenshot):
-    settings.ACCOUNT_ADAPTER = (
-        "tests.test_allauth.adapters.ClosedSignupAdapter"
-    )
+    settings.ACCOUNT_ADAPTER = "tests.test_allauth.adapters.ClosedSignupAdapter"
     capture_screenshot(reverse("account_signup"), "signup-page-signup-closed")
 
 
