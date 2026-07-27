@@ -3100,4 +3100,4 @@ allauth = ["crispy-tailwind", "django-allauth", "django-crispy-forms"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<4.0"
-content-hash = "193e3e232b45585832444f1bcd56ed6d203a8c36b8747fd310d341cb4a920390"
+content-hash = "20295782474d51c3ec1f9a514d797524f8dfa81d92cd9fe9462c4678ed4b43c5"
