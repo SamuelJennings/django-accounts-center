@@ -8,8 +8,9 @@ readme = "README.md"
 authors = [{ name = "Sam", email = "samuel.scott.jennings@gmail.com" }]
 requires-python = ">=3.12,<4.0"
 dependencies = [
-    "django (>=5,<6.0)",
-    "django-mvp",
+    # Bounds are the ranges CI actually verifies (5.2 and 6.0), per Article XV.
+    "django (>=5.2,<7.0)",
+    "django-mvp (>=0.15,<1.0)",
 ]
 
 [project.optional-dependencies]
@@ -18,9 +19,11 @@ dependencies = [
 # render allauth forms; mvp treats crispy as consumer-provided, so declare it
 # here rather than relying on it transitively.
 allauth = [
-    "django-allauth[socialaccount,mfa] (>=65.0)",
-    "django-crispy-forms (>=2.6)",
-    "crispy-tailwind (>=1.0.3)",
+    # Capped at the current major: the integration is coupled to allauth's
+    # element and layout template vocabulary, which a major release may change.
+    "django-allauth[socialaccount,mfa] (>=65.18,<66.0)",
+    "django-crispy-forms (>=2.6,<3.0)",
+    "crispy-tailwind (>=1.0.3,<2.0)",
 ]
 
 [tool.poetry]
