@@ -19,8 +19,7 @@ This package is not usable on its own. It renders on the django-mvp app shell
 ## Integrations
 
 An integration is a gated sub-app that teaches the Account Center about one
-third-party package. You enable one by adding it to `INSTALLED_APPS`, and that
-is the whole wiring step:
+third-party package. You enable one by adding it to `INSTALLED_APPS`:
 
 ```python
 INSTALLED_APPS = ["dac", "dac.allauth", ...]   # future: "dac.stripe", …
@@ -28,15 +27,17 @@ INSTALLED_APPS = ["dac", "dac.allauth", ...]   # future: "dac.stripe", …
 
 From there the integration contributes its own labelled menu group, any
 overview cards it needs (through the `dac_overview_template` and
-`dac_overview_context` hooks on its `AppConfig`), its URLs beneath the Account
-Center path, and its template overrides. Menu entries and cards resolve per
-request, so an entry appears only for a user it applies to.
+`dac_overview_context` hooks on its `AppConfig`), and its template overrides.
+What is installed decides which contributions exist.
 
 Because every integration is gated, a project carries only the dependencies of
 the integrations it turns on. Installing this package pulls in nothing you have
 not enabled.
 
-Shipped today: `dac.allauth`.
+Shipped today: `dac.allauth`, and it is the only one. Two limitations are worth
+knowing before you write your own: an integration's URLs are still mounted by
+the core app rather than contributed by the integration, and menu entries and
+cards are decided once at startup rather than per visitor.
 
 ## The allauth integration
 
