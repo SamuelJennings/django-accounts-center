@@ -19,18 +19,17 @@ Tailwind CSS v4 + django-cotton) and expects it.
 ## Integrations
 
 An integration is a gated sub-app that teaches the Account Center about one third-party package.
-You enable one by adding it to `INSTALLED_APPS`, and that is the whole wiring step:
+You enable one by adding it to `INSTALLED_APPS`:
 
 ```python
 INSTALLED_APPS = ["dac", "dac.allauth", ...]
 ```
 
 From there the integration contributes its own labelled menu group, any overview cards it needs,
-its URLs beneath the Account Center path, and its template overrides. Menu entries and cards
-resolve per request, so an entry appears only for a user it applies to.
+and its template overrides. What is installed decides which contributions exist.
 
 Because every integration is gated, a project carries only the dependencies of the integrations it
-turns on. Shipped today: `dac.allauth`.
+turns on. Shipped today: `dac.allauth`, and it is the only one.
 
 ## Installation
 

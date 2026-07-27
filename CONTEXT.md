@@ -41,10 +41,14 @@ An integration may contribute any of:
 - **Menu items** — appended to `AccountCenterMenu` from its own `menus.py`
 - **Overview cards** — through the two `AppConfig` hooks described below
 
-Menu items and cards are resolved per request, so an integration can show a
-person only what applies to them rather than everything its package supports.
-Installation decides whether a contribution *exists*, and the request decides
-whether it is *shown*.
+Installation decides which contributions exist, and it decides them once, at
+startup. Every signed-in person currently sees the same Account Center. Showing
+a contribution only to the people it applies to is a stated goal, not a
+description of today.
+
+URLs are the exception to "the integration contributes it": `dac/urls.py` names
+each integration explicitly, so a new integration is not reachable without an
+edit to the core app.
 
 **Avoid: "addon".** This was the earlier name. It survives in `specs-overview.md`,
 which refers to a `dac.addons.allauth` import path that was never built, and
