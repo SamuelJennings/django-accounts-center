@@ -9,9 +9,10 @@ wrong in English, but because two names for one concept costs more than it saves
 
 ## Account Center
 
-The account-management area this package provides: a landing page plus the
-allauth pages reachable from it, rendered inside the django-mvp app shell with
-their own sub navigation.
+The account-management area this package provides: an overview page plus the
+management pages reachable from it, rendered inside the django-mvp app shell
+with their own sub navigation. Which management pages exist depends on the
+integrations a project installs. Today they all come from `dac.allauth`.
 
 Singular **Account Center**, not "Accounts Center" — even though the distribution
 is named `django-accounts-center`. The code is consistent on this
@@ -40,6 +41,11 @@ An integration may contribute any of:
 - **Menu items** — appended to `AccountCenterMenu` from its own `menus.py`
 - **Overview cards** — through the two `AppConfig` hooks described below
 
+Menu items and cards are resolved per request, so an integration can show a
+person only what applies to them rather than everything its package supports.
+Installation decides whether a contribution *exists*, and the request decides
+whether it is *shown*.
+
 **Avoid: "addon".** This was the earlier name. It survives in `specs-overview.md`,
 which refers to a `dac.addons.allauth` import path that was never built, and
 throughout `specs/001`–`011`, which are kept as the historical record and are not
@@ -59,19 +65,23 @@ Defined at `dac/views.py:25-37`. The worked example is `dac/allauth/apps.py:20-5
 
 ## Entrance layout
 
-The allauth layout for pages shown to anonymous users — login, signup, password
-reset, sign-in codes. Renders as a centered card with the site logo and no app
-shell.
+The layout for pages shown to anonymous users — login, signup, password reset,
+sign-in codes. Renders as a centered card with the site logo and no app shell.
 
-`dac/allauth/templates/allauth/layouts/entrance.html`
+Today it exists only as an allauth layout override, at
+`dac/allauth/templates/allauth/layouts/entrance.html`. The concept is
+framework-level: an integration with its own anonymous pages is meant to share
+this layout rather than write another one.
 
 ## Manage layout
 
-The allauth layout for pages shown to signed-in users — email, password, MFA,
-sessions, connected accounts. Renders inside the django-mvp shell via
-`dac/base.html`, with the Account Center sub menu beside the content.
+The layout for pages shown to signed-in users — email, password, MFA, sessions,
+connected accounts. Renders inside the django-mvp shell via `dac/base.html`,
+with the Account Center sub menu beside the content.
 
-`dac/allauth/templates/allauth/layouts/manage.html`
+Today it exists only as an allauth layout override, at
+`dac/allauth/templates/allauth/layouts/manage.html`, over the core
+`dac/base.html` that every integration's management page is meant to reach.
 
 Together with `base.html` these are the three layout overrides that
 `tests/test_architecture.py::test_layouts_overridden` requires.

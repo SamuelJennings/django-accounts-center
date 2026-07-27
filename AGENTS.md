@@ -2,10 +2,14 @@
 
 <!-- Thin index only — bloat here = ignored instructions. Details live in the pointed-to files. -->
 
-An account-management UI for django-allauth, rendered on the django-mvp app shell. The package
-restyles allauth by overriding its layouts and elements rather than forking its pages, and adds
-an Account Center overview page and sub menu on top. Third-party support ships as gated
-**integrations** (`dac.allauth` today) that a project opts into through `INSTALLED_APPS`.
+The account-management layer for django-mvp projects: an entrance layout, an Account Center
+(management layout, sub menu, overview page), and the integration system that lets a third-party
+app add its own pages to that Account Center. An **integration** is a gated sub-app a project
+opts into through `INSTALLED_APPS` and nothing else. `dac.allauth` is the only one today, and it
+restyles allauth by overriding its layouts and elements rather than forking its pages.
+
+The framework is the product and allauth is its first integration, not the other way round. Goals
+are recorded in `GOALS.md`.
 
 ## Stack & commands
 
