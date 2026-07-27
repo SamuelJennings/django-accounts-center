@@ -41,14 +41,18 @@ An integration may contribute any of:
 - **Menu items** — appended to `AccountCenterMenu` from its own `menus.py`
 - **Overview cards** — through the two `AppConfig` hooks described below
 
-Installation decides which contributions exist, and it decides them once, at
-startup. Every signed-in person currently sees the same Account Center. Showing
-a contribution only to the people it applies to is a stated goal, not a
-description of today.
+Installation decides whether a contribution **exists**. The request decides
+whether it is **shown** — see
+[ADR 0002](docs/adr/0002-account-center-visibility-is-per-request.md).
 
-URLs are the exception to "the integration contributes it": `dac/urls.py` names
-each integration explicitly, so a new integration is not reachable without an
-edit to the core app.
+The second half is decided but not built: today visibility is settled once at
+startup from `app_is_installed()`, so every signed-in person sees the same
+Account Center. Write new integrations to the ADR, not to the current
+behaviour.
+
+URLs are a further exception to "the integration contributes it": `dac/urls.py`
+names each integration explicitly, so a new integration is not reachable
+without an edit to the core app.
 
 **Avoid: "addon".** This was the earlier name. It survives in `specs-overview.md`,
 which refers to a `dac.addons.allauth` import path that was never built, and
