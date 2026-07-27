@@ -1,69 +1,42 @@
-# Django Easy Icons
+# Django Accounts Center
 
-Django Easy Icons is a flexible icon rendering system for Django that supports multiple icon sources and rendering methods. It provides a unified interface for working with different types of icons in your Django templates and Python code.
+The account-management layer for [django-mvp](https://github.com/SamuelJennings/django-mvp)
+projects. It gives a signed-in user one place to manage their account, and gives you a way to put
+more things there as the project grows.
 
-## Key Features
+This package is not usable on its own. It renders on the django-mvp app shell (DaisyUI 5 +
+Tailwind CSS v4 + django-cotton) and expects it.
 
-- **Configurable**: Supports multiple icon sets across multiple rendering strategies (e.g. SVG files, fontawesome, sprites).
-- **Flexible**: Easily switch icons or rendering strategies at any time across your entire project.
-- **Customisable**: Define default attributes in your settings, override them (if required) in templates.
-- **Template Integration**: Simple, unified `{% icon %}` template tag that handles everything.
-- **Type Safety**: Full type hints throughout the codebase for better IDE support
-- **Comprehensive test suite**: 135+ tests covering all functionality.
+## What it provides
 
-## Quick Start
+- **An entrance layout.** Sign-in, sign-up and recovery pages render as a centered card with your
+  site logo, outside the app shell.
+- **An Account Center.** A management layout, a sub menu, and an overview page whose cards come
+  from whatever you have installed.
+- **An integration system.** The machinery that lets a third-party app add its own
+  account-management pages to that Account Center.
 
-### Installation
+## Integrations
+
+An integration is a gated sub-app that teaches the Account Center about one third-party package.
+You enable one by adding it to `INSTALLED_APPS`, and that is the whole wiring step:
+
+```python
+INSTALLED_APPS = ["dac", "dac.allauth", ...]
+```
+
+From there the integration contributes its own labelled menu group, any overview cards it needs,
+its URLs beneath the Account Center path, and its template overrides. Menu entries and cards
+resolve per request, so an entry appears only for a user it applies to.
+
+Because every integration is gated, a project carries only the dependencies of the integrations it
+turns on. Shipped today: `dac.allauth`.
+
+## Installation
 
 ```bash
-pip install django-easy-icons
+pip install django-accounts-center[allauth]
 ```
 
-### Add `easy_icons` to your `INSTALLED_APPS`:
-
-```python   
-INSTALLED_APPS = [
-    # ... other apps
-    'easy_icons',
-]
-```
-
-### Configure Icon Renderers
-
-Add configuration to your Django settings:
-
-```python
-EASY_ICONS = {
-    "default": {
-        "renderer": "easy_icons.renderers.SvgRenderer",
-        "config": {
-            "svg_dir": "icons",  # default template directory for SVG files
-            "default_attrs": {
-                "height": "1em",
-                "fill": "currentColor"
-            }
-        },
-    }
-}
-```
-
-### Use in Templates
-
-```html
-<!-- template.html -->
-{% load easy_icons %}
-{% icon "home" class="text-primary nav-icon" height="1em" width="auto" %}
-```
-
-### Use in Python Code
-
-```python
-from easy_icons import icon
-
-html_icon = icon("home", height="1em", width="auto")
-```
-
-```{toctree}
-renderers
-usage-examples
-```
+Settings, URLs and customisation are covered in the
+[README](https://github.com/django-mvp/django-accounts-center#installation).

@@ -1,5 +1,15 @@
 # Specs Overview: django-accounts-center
 
+> **Historical record. Do not plan from this file.**
+>
+> Written before the architecture settled in 0.7 and before goals were recorded. It describes a
+> `dac.addons.allauth` module that was never built, uses "addon" for what is now an
+> **integration**, and assumes per-page Cotton template forks — the approach
+> [ADR 0001](docs/adr/0001-elements-first-allauth-integration.md) rejected. It is kept alongside
+> `specs/001`–`011` as a record of how the package was designed, and is not retrofitted.
+>
+> For where the package is going, read [GOALS.md](GOALS.md).
+
 This document catalogues proposed future feature specifications for the `django-accounts-center` package,
 ordered by recommended implementation priority. Each entry describes the scope and intent of a prospective
 spec in the same narrative style used in individual `spec.md` files, enabling them to be promoted directly

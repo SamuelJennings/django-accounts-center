@@ -1,12 +1,46 @@
 # Django Accounts Center
 
-A complete, polished account-management UI for [django-allauth](https://docs.allauth.org/),
-built on the [django-mvp](https://github.com/SamuelJennings/django-mvp) app shell
-(DaisyUI 5 + Tailwind CSS v4 + django-cotton).
+The account-management layer for [django-mvp](https://github.com/SamuelJennings/django-mvp)
+projects. It gives a signed-in user one place to manage their account, and gives
+you a way to put more things there as the project grows.
 
-## How it works
+This package is not usable on its own. It renders on the django-mvp app shell
+(DaisyUI 5 + Tailwind CSS v4 + django-cotton) and expects it.
 
-dac does **not** fork allauth's page templates. Instead it overrides allauth's
+## What it provides
+
+- **An entrance layout.** Sign-in, sign-up and recovery pages render as a
+  centered card with your site logo, outside the app shell.
+- **An Account Center.** A management layout, a sub menu, and an overview page
+  whose cards come from whatever you have installed.
+- **An integration system.** The machinery that lets a third-party app add its
+  own account-management pages to that Account Center.
+
+## Integrations
+
+An integration is a gated sub-app that teaches the Account Center about one
+third-party package. You enable one by adding it to `INSTALLED_APPS`, and that
+is the whole wiring step:
+
+```python
+INSTALLED_APPS = ["dac", "dac.allauth", ...]   # future: "dac.stripe", …
+```
+
+From there the integration contributes its own labelled menu group, any
+overview cards it needs (through the `dac_overview_template` and
+`dac_overview_context` hooks on its `AppConfig`), its URLs beneath the Account
+Center path, and its template overrides. Menu entries and cards resolve per
+request, so an entry appears only for a user it applies to.
+
+Because every integration is gated, a project carries only the dependencies of
+the integrations it turns on. Installing this package pulls in nothing you have
+not enabled.
+
+Shipped today: `dac.allauth`.
+
+## The allauth integration
+
+`dac.allauth` does **not** fork allauth's page templates. It overrides allauth's
 three **layouts** and its ~22 **element** templates:
 
 - `allauth/layouts/entrance.html` — login, signup, password reset, sign-in
@@ -21,29 +55,32 @@ Because allauth's own stock page templates do the rendering, **every allauth
 feature and configuration variation works automatically** — passkeys,
 login-by-code, email verification by code, phone numbers, `SOCIALACCOUNT_ONLY`,
 MFA (TOTP / WebAuthn / recovery codes / trust), user sessions — now and in
-future allauth releases. dac adds on top:
+future allauth releases. On top of that it contributes overview cards for
+email, password, 2FA, sessions and connected accounts, and a menu group whose
+items appear only for the allauth apps you install.
 
-- **Account Center overview page** (`account-center` URL): dashboard cards
-  summarising email, password, 2FA, sessions and connected accounts.
-- **Sidebar user menu integration**: django-mvp's `<c-user.sidebar-menu>`
-  automatically shows an "Account Center" entry and a POST logout form once
-  dac's URLs are installed.
-- **`AccountCenterMenu`** (django-flex-menus): the internal sub menu, with
-  items appearing only for the allauth apps you actually install.
-- **`DAC_ICONS`** easy-icons pack and a prebuilt `dac.css` stylesheet.
+The core `dac` app adds the pieces that are not allauth's business: the Account
+Center overview page (`account-center` URL), the `AccountCenterMenu` the
+integrations append to, a `DAC_ICONS` easy-icons pack, and a prebuilt `dac.css`
+stylesheet. django-mvp's `<c-user.sidebar-menu>` picks up an "Account Center"
+entry and a POST logout form once the URLs are installed.
 
-Integrations are **gated sub-apps**: the core `dac` app ships the Account
-Center shell (layout, overview page, menu), and each third-party integration
-is opted into individually via `INSTALLED_APPS` — mirroring django-mvp's
-guarded-integrations philosophy. Install only what you use:
+## Scope
 
-```python
-INSTALLED_APPS = ["dac", "dac.allauth", ...]   # future: "dac.stripe", …
-```
+This package is deliberately narrow.
 
-Each integration contributes its own labelled menu group, overview cards
-(via `dac_overview_template` / `dac_overview_context` hooks on its
-`AppConfig`), URLs, and template overrides.
+- **It requires django-mvp.** Account management was taken out of django-mvp
+  core so it could be maintained on its own, not so it could be used
+  elsewhere. There is no standalone mode.
+- **It does not provide authentication.** allauth does that. This package
+  presents it.
+- **It is not a plugin marketplace.** The integration pattern is open, so
+  write one for your own project's apps whenever you need to. The set that
+  ships here is curated: an integration is bundled only when it has broad
+  appeal, a clear purpose, and a well-maintained package behind it. Anything
+  narrower belongs in the project that needs it.
+
+The goals this package steers toward are recorded in [GOALS.md](GOALS.md).
 
 ## Installation
 
@@ -140,7 +177,7 @@ allauth's URLs (`/accounts/login/`, `/accounts/email/`, `/accounts/2fa/`, …).
 python manage.py migrate
 ```
 
-That's it. Anonymous users get centered entrance pages; authenticated users
+That's it. Anonymous users get centered entrance pages. Authenticated users
 reach the Account Center from the user menu at the bottom of the sidebar.
 
 ## Customisation
@@ -158,7 +195,7 @@ reach the Account Center from the user menu at the bottom of the sidebar.
   `account-center` URL at it, or override `dac/account_center.html`.
 - **Social login icons**: `dac.allauth` ships brand SVGs for the major
   providers (Google, GitHub, Microsoft, Apple, Facebook, X, LinkedIn, GitLab,
-  Discord, ORCID) in its `icons/` template dir; register them under a
+  Discord, ORCID) in its `icons/` template dir. Register them under a
   django-easy-icons `"svg"` renderer keyed by allauth provider id (see the
   example `EASY_ICONS` setting). `provider.html` renders them with
   `{% icon provider_id renderer="svg" %}`, so a provider without a registered

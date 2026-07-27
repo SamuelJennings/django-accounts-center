@@ -1,7 +1,7 @@
 
 [project]
 name = "django-accounts-center"
-description = "Tools for managing django user accounts."
+description = "The account-management layer for django-mvp projects: an Account Center, an entrance layout, and a system for integrating third-party account apps."
 license = "MIT"
 dynamic = ["version"]
 readme = "README.md"
