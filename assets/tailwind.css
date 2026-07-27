@@ -16,7 +16,12 @@
 @source "../../django-mvp/mvp";
 @source "../dac";
 
-/* Crispy-tailwind renders a field's help text immediately below its input.
+/* Everything below this line is a temporary workaround for a gap in django-mvp,
+   not a styling decision (constitution Article XVII). Each rule names the
+   upstream issue it waits on and is removed when that issue closes. */
+
+/* WORKAROUND — django-mvp#125.
+   Crispy-tailwind renders a field's help text immediately below its input.
    Give it a little breathing room so it doesn't read as part of the control —
    e.g. allauth's login form puts the "Forgot your password?" reset link in the
    password field's help_text. Targets crispy's `id="…_helptext"` elements. */
@@ -24,11 +29,14 @@
   margin-top: 0.5rem;
 }
 
-/* Inline links inside allauth prose (the "sign up" / "sign in" link in the
-   login/signup intro, etc.) are bare <a> tags from allauth's blocktranslate;
-   Tailwind's preflight strips their styling so they read as plain text. Scope
-   link styling to these paragraphs only (dac.allauth's elements/p.html) — a
-   broad `a` rule would also restyle <c-button href> anchors. */
+/* WORKAROUND — django-mvp#124.
+   Inline links inside allauth prose (the "sign up" / "sign in" link in the
+   login/signup intro, etc.) are bare <a> tags from allauth's blocktranslate.
+   Tailwind's preflight strips their styling so they read as plain text, and a
+   class passed to <c-text> is dropped, so there is nowhere to scope it without
+   a wrapper. Scope link styling to these paragraphs only (dac.allauth's
+   elements/p.html) — a broad `a` rule would also restyle <c-button href>
+   anchors. */
 .dac-prose a {
   color: var(--color-primary);
   text-decoration-line: underline;

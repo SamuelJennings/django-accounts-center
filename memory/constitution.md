@@ -197,6 +197,26 @@ Poetry-managed, Python ≥ 3.12, Django ≥ 5. Dev and test dependencies come fr
 djlint owns template formatting, and templates are never committed with djlint violations. The
 UI stack is Tailwind CSS v4 + DaisyUI 5 on the django-mvp app shell.
 
+### Article XVII — Composition, not custom styling
+The visual layer belongs to django-mvp. This package composes mvp's cotton components and the
+DaisyUI utilities they are built from. It does not author components of its own, and it does not
+ship its own design decisions as CSS.
+
+- **A gap in mvp's component set is an issue on django-mvp**, not a bespoke component here. If a
+  page cannot be built from what mvp offers, the answer is to say so upstream and wait, because
+  a component written here serves one package and diverges from the family the day it lands.
+- **A rule in this package's stylesheet is a temporary workaround, never a decision.** Where one
+  has to ship before upstream lands, it carries a comment naming the issue it is waiting on and
+  is removed when that issue closes. Two exist today, both raised:
+  [django-mvp#124](https://github.com/django-mvp/django-mvp/issues/124) (inline links in body
+  copy) and [django-mvp#125](https://github.com/django-mvp/django-mvp/issues/125) (help-text
+  spacing).
+- The shipped `dac.css` is a **build** of the utilities this package's templates use, not a place
+  to put styles. Adding a rule to `assets/tailwind.css` is the thing this article governs.
+
+Reviewers check this by asking where a class came from. A DaisyUI utility or an mvp component is
+fine. A name invented here is the thing to question.
+
 ## Quality bar
 
 Read at plan and review; applies to every change.
