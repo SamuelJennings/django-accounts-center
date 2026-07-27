@@ -45,7 +45,8 @@ def _reauthenticate_with_alternatives_view(request):
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("accounts/", include("allauth.urls")),
+    # dac.urls includes allauth.urls, so mounting allauth separately would
+    # register every allauth URL name twice and resolve by last registration.
     path("account-center/", include("dac.urls")),
     # Test-only URLs — not part of the production URL configuration
     path(
