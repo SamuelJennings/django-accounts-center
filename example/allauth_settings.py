@@ -12,7 +12,7 @@ ACCOUNT_SIGNUP_FIELDS = (
 ACCOUNT_LOGIN_METHODS = ("username", "email")
 
 # Uncomment to disable signups
-# ACCOUNT_ADAPTER = "tests.test_addons.test_allauth.adapters.ClosedSignupAdapter"
+# ACCOUNT_ADAPTER = "tests.test_allauth.adapters.ClosedSignupAdapter"
 
 # Social account settings
 SOCIALACCOUNT_ENABLED = True

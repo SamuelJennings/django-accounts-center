@@ -24,7 +24,6 @@ COMPREHENSIVE_TESTING_STRATEGY.md
 .github/instructions/
 docs/_static/desktop/*
 docs/_static/mobile/*
-docs/_static/tablet/*
 .playwright-cli
 .playwright
 _old_template

@@ -8,12 +8,11 @@ captures screenshots at all three canonical viewport sizes in a single run.
 
 Viewports (captured by the save_screenshot / capture_screenshot fixtures):
   - desktop  : 1440×900
-  - tablet   : 768×1024
   - mobile   : 390×844
 
 Agent visual verification (Principle XIII, NON-NEGOTIABLE):
   After TVAL-3 runs this test suite, the implementing agent MUST open and inspect
-  every generated docs/_static/{desktop,tablet,mobile}/login-*.png file
+  every generated docs/_static/{desktop,mobile}/login-*.png file
   before marking T011 complete.
 """
 

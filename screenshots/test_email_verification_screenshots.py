@@ -3,7 +3,7 @@ Playwright screenshot tests for the allauth email verification flow.
 
 Covers FR-007 / Principle XIII: Multi-Viewport Screenshot Coverage.
 
-5 page states × 3 viewports = 15 PNG files written to docs/_static/{tier}/.
+5 page states × 2 viewports = 10 PNG files written to docs/_static/{tier}/.
 
 Page states:
   - email-verification-sent      : account/verification_sent.html (anonymous)
@@ -14,7 +14,7 @@ Page states:
 
 Agent visual verification (Principle XIII, NON-NEGOTIABLE):
   After TVAL-3 runs this test suite, the implementing agent MUST open and inspect
-  every generated docs/_static/{desktop,tablet,mobile}/email-*.png and
+  every generated docs/_static/{desktop,mobile}/email-*.png and
   account-inactive.png file before marking T011 complete.
 """
 

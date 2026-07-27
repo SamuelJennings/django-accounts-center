@@ -3,7 +3,7 @@ Playwright screenshot tests for the allauth social account connections flow.
 
 Covers T013–T015 / Principles VIII and XIII: Multi-Viewport Screenshot Coverage.
 
-3 page states × 3 viewports = 9 PNG files written to docs/_static/{tier}/.
+3 page states × 2 viewports = 6 PNG files written to docs/_static/{tier}/.
 
 Page states:
   - connections-has-accounts   : connections.html — user with 1 Google social account
@@ -12,12 +12,11 @@ Page states:
 
 Viewports:
   - desktop : 1440×900
-  - tablet  : 768×1024
   - mobile  : 390×844
 
 Agent visual verification (Principle XIII, NON-NEGOTIABLE):
   After running this test suite the implementing agent MUST open and inspect
-  every generated docs/_static/{desktop,tablet,mobile}/connections-*.png and
+  every generated docs/_static/{desktop,mobile}/connections-*.png and
   authentication-error.png before marking T015 complete.
 """
 

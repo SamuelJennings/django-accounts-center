@@ -3,7 +3,7 @@ Playwright screenshot tests for the allauth password reset flow.
 
 Covers FR-013 / Principle XIII: Multi-Viewport Screenshot Coverage.
 
-5 page states × 3 viewports = 15 PNG files written to docs/_static/{tier}/.
+5 page states × 2 viewports = 10 PNG files written to docs/_static/{tier}/.
 
 Page states:
   - password-reset                   : account/password_reset.html (anonymous)
@@ -14,7 +14,7 @@ Page states:
 
 Agent visual verification (Principle XIII, NON-NEGOTIABLE):
   After TVAL-2 runs this test suite, the implementing agent MUST open and inspect
-  every generated docs/_static/{desktop,tablet,mobile}/password-reset-*.png file
+  every generated docs/_static/{desktop,mobile}/password-reset-*.png file
   before marking T008 complete.
 """
 

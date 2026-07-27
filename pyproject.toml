@@ -38,25 +38,24 @@ crispy-tailwind = "^1.0.3"
 python-dotenv = "^1.1.0"
 django-extensions = "^4.1"
 beautifulsoup4 = "^4.14.3"
-fairdm-dev-tools = { git = "https://github.com/FAIR-DM/dev-tools", extras = [
-    "test",
+# Family dev/test toolchain: ruff, mypy, deptry, pre-commit, pytest,
+# pytest-django, factory-boy, coverage, django-stubs. Pinned to the shared
+# release tag — never @main (django-mvp/shared ADR 0001).
+mvp-shared = { git = "https://github.com/django-mvp/shared.git", tag = "v0.2.0", extras = [
     "dev",
+    "test",
 ] }
 pytest-playwright = "^0.7.2"
 
 # [tool.poetry.group.local.dependencies]
 # django-mvp = { path = "../django-mvp", develop = true }
 
-
-
-
-[tool.poetry.dependencies]
 [build-system]
 requires = ['poetry-core (>=2.0,<3.0)']
 build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]
-target-version = "py311"
+target-version = "py312"
 exclude = [
     ".bzr",
     ".direnv",
@@ -137,7 +136,12 @@ ignore = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"**/tests/*" = ["S101", "S105"]
+# The old "**/tests/*" glob only matched files directly inside a tests dir, so
+# nothing under tests/test_allauth/ was covered. "tests/**" matches the tree.
+# S101 asserts are the point of a test; S105/S106 flag the dummy credentials
+# every auth test needs; RUF002/003 flag en dashes in test prose.
+"tests/**" = ["S101", "S105", "S106", "RUF002", "RUF003"]
+"screenshots/**" = ["S101", "S105", "S106", "RUF002", "RUF003"]
 "example/**" = ["S105", "S106", "RUF002", "RUF003"]
 
 [tool.ruff.format]
@@ -169,7 +173,7 @@ indent_size = 2
 
 
 [tool.mypy]
-files = ["geoluminate"]
+files = ["dac"]
 disallow_untyped_defs = "False"
 disallow_any_unimported = "False"
 ignore_missing_imports = "True"
@@ -183,26 +187,11 @@ exclude = [
     "docs/",
     "migrations/",
     "tests/settings.py",
-    "geoluminate/conf/*",
-    "geoluminate/contrib/user/forms/*",
 ]
-mypy_path = "./geoluminate/"
 plugins = ["mypy_django_plugin.main"]
 
-[[tool.mypy.overrides]]
-module = "geoluminate.models"
-disable_error_code = ["var-annotated"]
-
-[[tool.mypy.overrides]]
-module = "geoluminate.db.gis.base"
-disable_error_code = ["var-annotated"]
-
-[[tool.mypy.overrides]]
-module = "geoluminate.models"
-disable_error_code = ["var-annotated"]
-
 [tool.django-stubs]
-django_settings_module = "example.settings"
+django_settings_module = "tests.settings"
 
 
 [tool.pytest.ini_options]
@@ -260,22 +249,3 @@ DEP003 = ["toml", "flex_menu", "pytest"]
 DEP004 = ["dotenv"]
 
 
-[tool.tox]
-legacy_tox_ini = """
-[tox]
-skipsdist = true
-envlist = py310, py311
-
-[gh-actions]
-python =
-    3.10: py310
-    3.11: py311
-
-[testenv]
-passenv = PYTHON_VERSION
-allowlist_externals = poetry
-commands =
-    poetry install -v --without docs
-    pytest --doctest-modules tests --cov --cov-config=pyproject.toml --cov-report=xml
-    mypy
-"""

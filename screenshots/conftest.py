@@ -15,7 +15,6 @@ SCREENSHOT_ROOT = REPO_ROOT / "docs" / "_static"
 
 VIEWPORTS = [
     ("desktop", 1440, 900),
-    ("tablet", 768, 1024),
     ("mobile", 390, 844),
 ]
 

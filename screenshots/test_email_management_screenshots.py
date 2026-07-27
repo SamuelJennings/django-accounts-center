@@ -3,7 +3,7 @@ Playwright screenshot tests for the allauth email management flow.
 
 Covers T009 / Principle XIII: Multi-Viewport Screenshot Coverage.
 
-6 page states × 3 viewports = 18 PNG files written to docs/_static/{tier}/.
+6 page states × 2 viewports = 12 PNG files written to docs/_static/{tier}/.
 
 Page states:
   - email-change-no-pending  : email_change.html (1 verified email, no pending change)

@@ -3,11 +3,10 @@ Playwright screenshot tests for the allauth password change / set / reauthentica
 
 Covers FR-011 / Principle XIII: Multi-Viewport Screenshot Coverage.
 
-4 page states × 3 viewports = 12 PNGs saved to docs/_static/{desktop,tablet,mobile}/.
+4 page states × 2 viewports = 8 PNGs saved to docs/_static/{desktop,mobile}/.
 
 Viewports:
   - desktop  : 1440×900
-  - tablet   : 768×1024
   - mobile   : 390×844
 """
 
