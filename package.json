@@ -1,6 +1,8 @@
 {
   "scripts": {
+    "prebuild:css": "poetry run python assets/resolve_sources.py",
     "build:css": "tailwindcss -i assets/tailwind.css -o dac/static/css/dac.css --minify",
+    "prewatch:css": "poetry run python assets/resolve_sources.py",
     "watch:css": "tailwindcss -i assets/tailwind.css -o dac/static/css/dac.css --watch"
   },
   "devDependencies": {

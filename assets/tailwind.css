@@ -9,11 +9,11 @@
 @plugin "daisyui";
 @plugin "@tailwindcss/typography";
 
-/* django-mvp's shared preset (custom variants, runtime-class safelist). */
-@import "../../django-mvp/mvp/tailwind/base.css";
+/* django-mvp's preset and template tree, resolved from the installed package by
+   resolve_sources.py. Generated, gitignored, rewritten before every build. */
+@import "./_sources.css";
 
-/* Explicit sources: mvp's templates plus dac's. */
-@source "../../django-mvp/mvp";
+/* This package's own templates. */
 @source "../dac";
 
 /* Crispy-tailwind renders a field's help text immediately below its input.
