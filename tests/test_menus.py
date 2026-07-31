@@ -83,6 +83,19 @@ class TestGatedEntryVisibilityCheck:
 
 
 @pytest.mark.django_db
+class TestUngatedEntryStaysVisible:
+    """FR-005: an entry contributed with no visibility check stays visible
+    whenever its integration is installed, regardless of who is looking —
+    declaring a check is optional, and silence means visible."""
+
+    def test_ungated_entry_present_for_both_people(self, gated_client, ungated_client):
+        gated_labels = _menu_labels(gated_client.get(reverse("account-center")))
+        ungated_labels = _menu_labels(ungated_client.get(reverse("account-center")))
+        assert "Ungated" in gated_labels
+        assert "Ungated" in ungated_labels
+
+
+@pytest.mark.django_db
 class TestPageUnaffectedByHiddenEntry:
     def test_other_entries_content_and_messages_render_the_same(self, gated_client, ungated_client):
         """The gated entry's own page renders the same for the person it is
