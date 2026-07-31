@@ -432,6 +432,40 @@ the declared menu independent of any entry's visibility.
 
 **Watch:** nothing new.
 
+### 2026-07-31 · Implementer US-4 · T022
+
+**Did:** Ran the humanizer checklist over every hunk touched by T019–T021 (the ADR, `CONTEXT.md`,
+`docs/index.md`) — not a handle grep alone. Checked for: inflated-significance language,
+promotional wording, vague attribution, AI-vocabulary words (delve, crucial, underscore, pivotal,
+tapestry, testament, vibrant, foster, garner, intricate, enhance, showcase, leverage, robust,
+seamless), copula avoidance, negative parallelisms, rule-of-three padding, synonym cycling, false
+ranges, inline-bold-header lists, title-case headings, emoji, curly quotes, sycophantic tone,
+filler phrases and knowledge-cutoff disclaimers. None present. Em dashes appear at roughly the same
+density as the surrounding untouched prose (`CONTEXT.md` already carries 18 outside this story's
+additions) — kept as the file's established style rather than stripped, since removing them here
+alone would make the new prose inconsistent with its neighbours. Separately grepped all three files
+for internal handles — `forge`, `AEO`, `engineering.org`, `US-[0-9]`, `T0[0-9]{2}`, `lane` — case
+insensitive: zero matches. Headings added (`## Visibility check`, `### Menu entries`) use sentence
+case, matching the glossary's existing `## Overview card hooks` / `## Entrance layout` style.
+
+Logged one implementer decision from T021 in `decisions.md` (D30): the worked example is a fresh
+`_has_a_team`/`team_settings` check rather than `tests/testapp/menus.py`'s real
+`_visible_to_gated_group` copied verbatim, because that fixture's `getattr(request, "user", None)`
+guard exists only for a rendering-harness reason (D14) that would be noise or a silent gap in a
+public worked example.
+
+**Verified:** `poetry run djlint .` — 36 files, 0 errors. `poetry run pytest -q` — **263 passed**
+(no code or tests touched across T019–T022).
+
+**US-4 done (T019–T022).** ADR 0002, `CONTEXT.md` and `docs/index.md` describe the shipped
+menu-entry visibility mechanism, cite R2, and state plainly that cards remain decided-not-built.
+No internal handles or lane references in any of the three files. Full suite still green at 263,
+unchanged from the US-3 baseline, since this story edited no code and no test.
+
+**Next:** none for this story — T023–T025 (convergence) are the orchestrator's.
+
+**Watch:** nothing new.
+
 **Next:** T012 (orchestrator) — browser confirmation at desktop and mobile widths, including the
 mobile dropdown button label on `testapp_gated`'s page for `ungated_client` (the exact case D17
 surfaced) — that button should read "Gated", not fall back to "Account Center", which is the

@@ -359,3 +359,27 @@ guessing at a fix. The `<li>` filter is exact rather than heuristic (e.g. exclud
 so it does not need updating if the dropdown button's markup changes shape later.
 
 **Revisit if:** mvp changes the menu item/group templates to render outside an `<li>`.
+
+## US-4 — The recorded decision matches the built behaviour (Implementer, 2026-07-31)
+
+### D30 — `docs/index.md`'s worked example is a fresh team/billing-style check, not `tests/testapp/menus.py` reused verbatim
+
+**Ambiguous:** T021 asks for "one worked example short enough to copy" without saying whether it
+should be the actual test fixture (`_visible_to_gated_group`, gating on `testapp-gated` group
+membership) or an invented one.
+
+**Chosen:** a new, shorter example — a `_has_a_team` check on a `team_settings` entry — built the
+same way (`MenuGroup`, `MenuItem`, `check=`, `AccountCenterMenu.append`) but not copied from the
+test fixture.
+
+**Why:** `tests/testapp/menus.py`'s real check carries harness-specific reasoning that has nothing
+to do with the contract being taught (the `getattr(request, "user", None)` guard exists only
+because one rendering fixture uses a bare `RequestFactory` request with no `AuthenticationMiddleware`
+— see D14). Copying it into public docs would either drag that caveat into a worked example where
+it is noise, or silently drop it and leave the example subtly wrong for its own stated reason to
+exist. A fresh example matching the spec's own billing/team illustrations (spec.md's User Story 1)
+teaches the same three moving parts — `check=`, per-request evaluation, `view_name` for breadcrumb
+resolution — without importing test-only concerns into the manual.
+
+**Revisit if:** `tests/testapp/menus.py`'s shape changes in a way that makes this example diverge
+from what `check=` actually requires.
