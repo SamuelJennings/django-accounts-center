@@ -173,3 +173,38 @@ passed, 2 failed** (the two new tests above; baseline unchanged).
 **Next:** T008 — rewrite `get_active_section()` per research.md R2 so these pass.
 
 **Watch:** nothing new.
+
+### 2026-07-31 · Implementer US-2 · T008
+
+**Did:** Rewrote `get_active_section()` in `dac/menus.py` per research.md R2 (option C). It now
+resolves the section from `AccountCenterMenu`'s *declared* children — walked with a simplified
+`_iter_leaves()` that recurses on `node.children` unconditionally — instead of a processed copy,
+matching the current page on URL name taken from `request.resolver_match`:
+
+- **Exact match first, across every leaf**, before any prefix match is considered:
+  `resolver_match.view_name` when the item's `view_name` contains a namespace colon, otherwise
+  `resolver_match.url_name`. Kept as one complete pass over all leaves before the second pass
+  starts — the ordering research.md flags as load-bearing (a section root's own name must never
+  lose to another entry's `url_names` prefix).
+- **Prefix match second**: `resolver_match.url_name` against each leaf's declared `url_names`.
+  The crumb's link is resolved with `reverse(item.view_name)`, guarded against `NoReverseMatch` —
+  an unreachable entry degrades the whole call to `None` (no breadcrumb) rather than a 500.
+- The `overview` entry and any leaf with no `view_name` (the `ungated` entry, a non-link item) are
+  excluded from the candidate list up front.
+
+`_iter_leaves()` no longer special-cases `_processed_children`: that branch existed only to walk a
+*processed* copy, which this function no longer touches, and `_processed_children` is never
+actually absent on a raw node (`MenuItem.__init__` sets it to `[]`, not `None`) — checked against
+the raw tree directly (`poetry run python` one-off, not committed) before relying on it, since
+research.md's claim that the existing fallback "works unchanged" does not hold for the *unprocessed*
+tree the rewrite needs to walk. See decisions.md D16.
+
+**Verified:** `poetry run ruff check .` — all checks passed. `poetry run djlint .` — 36 files, 0
+errors. `poetry run mypy .` — 2 pre-existing errors only (`example/settings.py:97`,
+`tests/test_components/conftest.py:17`), unchanged from the US0 baseline; `dac/menus.py` itself
+clean. `poetry run pytest -q` — **254 passed** (252 baseline + T007's two tests, both now green).
+
+**Next:** T009 — confirm `tests/test_components/test_breadcrumbs.py` is unmodified and still green.
+
+**Watch:** nothing new.
+
