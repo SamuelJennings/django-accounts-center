@@ -52,7 +52,10 @@ AccountCenterMenu.append(
             MenuItem(
                 name="team_settings",
                 view_name="team_settings",
-                extra_context={"label": "Settings"},
+                extra_context={
+                    "label": "Settings",
+                    "url_names": ("team_settings", "team_member_"),
+                },
                 check=_has_a_team,
             ),
         ],
@@ -72,6 +75,10 @@ A few things to know before you write one:
 - Give a section root — an entry other pages' breadcrumbs resolve against — a `view_name`, not a
   bare `url=`. The Account Center names the current page's section by reading the menu's declared
   entries, and a `url=` entry has no resolved URL for it to read there.
+- List your sub-pages' URL-name prefixes in `url_names` if the section has pages below its root.
+  A page whose URL name starts with one of them is named as belonging to that section, so it gets
+  the section's breadcrumb and, on a narrow screen, the section's name on the menu button. Leave
+  `url_names` off and only the section root itself is recognised.
 
 ## Installation
 
