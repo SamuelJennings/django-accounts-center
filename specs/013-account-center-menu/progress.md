@@ -364,3 +364,32 @@ visible proof that FR-006a holds.
 
 **Watch:** the mobile dropdown toggle button and the real menu items share one `<aside>` — any
 future test parsing that markup needs the same `<li>` filter D17 uses, not a blanket span scan.
+
+## US-1 — An integration says who each menu entry is for (Implementer, 2026-07-31)
+
+### 2026-07-31 · Implementer US-1 · T013
+
+**Did:** Added `TestGatedEntryVisibilityCheck` to `tests/test_menus.py` — two cases, both against
+`/account-center/`: `gated_client` sees `"Gated"` in the rendered menu, `ungated_client` does not.
+Reused `_menu_labels()` (T010) rather than writing a second extractor, per the brief's scaffold
+note. Left it in place in `tests/test_menus.py` rather than moving it — every task in this story
+needed it, and no consumer outside this file exists yet.
+
+Confirmed each assertion fails for the right reason before it passed: mutated the expected label
+in each test in turn (`"Gated"` → `"Gated-NOPE"`, and inverted the negative assertion), watched
+each fail on its own line, then reverted. Both passed immediately once written — the mechanism
+(flex-menus' `check` argument, wired up in US0's `tests/testapp/menus.py`) already does this; this
+story adds no code under `dac/` or `tests/testapp/`.
+
+This overlaps `TestMenuDiffersByPerson` (T010, US-2), which already asserts the same two facts on
+its way to a different conclusion. Recorded as a deliberate choice, not an oversight — see
+decisions.md D20.
+
+**Verified:** `poetry run ruff check .` — all checks passed. `poetry run djlint .` — 36 files, 0
+errors. `poetry run mypy .` — 2 pre-existing errors only (`example/settings.py:97`,
+`tests/test_components/conftest.py:17`), unchanged. `poetry run pytest -q` — **265 passed** (263
+baseline + 2).
+
+
+
+
