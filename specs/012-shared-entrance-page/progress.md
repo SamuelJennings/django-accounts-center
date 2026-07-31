@@ -63,7 +63,8 @@ the re-dispatch resumed at T002 with T001 pinned read-only, plus a per-task prog
 working run can no longer be mistaken for a dead one. US-2 and US-3 ran clean.
 
 Three verification tasks were answered without leaving a test behind, which is what the plan asked
-for in each case. Evidence is in `feature-state.json` under `verification`:
+for in each case. Their findings are recorded here, and the ledger's `evidence` for those tasks
+points at this section:
 
 - **T006** — the four anonymous allauth pages rendered through the real stack before and after the
   rewiring. Identical once HTML whitespace is collapsed; the only source differences are
@@ -94,3 +95,41 @@ public prose. Four findings were real and are fixed on the branch:
 One thing found and deliberately left alone: the committed `dac/static/css/dac.css` is unminified
 and stale, while `npm run build:css` minifies. That predates this feature, and correcting it
 rewrites a 7,000-line generated artifact inside a feature PR. Filed separately.
+
+## 2026-07-31 — S7 PR_READY, corrections
+
+Two conventions were corrected after the fact, both cases of following a written instruction past
+the point where the repository's own history contradicted it:
+
+- The PR carried a `[WIP]` prefix. Every merged feature PR in the family reads `FS-NNN: <title>`
+  with no status marker. Retitled to match the epic exactly, and the prefix removed from the
+  process docs so it cannot recur.
+- The three story completion comments had never been posted, so `check-story-comments` was red.
+  Written from the delivered work and posted before the merge gate.
+
+Both machine gates are green and all seven required CI checks passed.
+
+These corrections were made *after* the PR had already merged, which was not noticed at the time:
+every state query asked for `isDraft`/`mergeStateStatus`/`reviewDecision` and never `state`, so
+`reviewDecision: APPROVED` was read as "approved, awaiting merge" rather than "approved and
+merged". The PR title edit and the story comments applied anyway. The ledger repair did not, and
+is landing separately.
+
+## 2026-07-31 — Ledger repair
+
+The ledger had been schema-invalid since S4, in two ways, and neither had been caught because
+nothing re-validated it after the run wrote to it:
+
+- A top-level `verification` block the schema does not permit. Its content already lived in this
+  file, so it was removed rather than widening the schema to accept it. Fitting the rule to the
+  mistake would have retired the guardrail.
+- Every task was marked `done` with no `evidence`, which the schema requires precisely so that
+  evidence rather than assertion advances the ledger. Evidence has been transcribed from what is
+  actually on the branch and what was actually run — named tests for the twelve tasks that left a
+  test behind, and a command plus a pointer to this file for the three that answered a question
+  once.
+
+Both were caught by validating before the merge gate. The checkpoint invariant says to validate
+before *every* transition, which would have caught it at S5.
+
+Landed after the fact: see the ledger-repair PR, not #24.
