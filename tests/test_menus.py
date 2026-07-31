@@ -65,6 +65,24 @@ class TestMenuDiffersByPerson:
 
 
 @pytest.mark.django_db
+class TestGatedEntryVisibilityCheck:
+    """FR-001, FR-002, FR-003: the developer-facing contract US-1 rests on —
+    an integration attaches a visibility check to a menu entry, and the
+    Account Center asks it per request for whoever is looking. Not tested
+    here: that ``check`` is called or that a false result hides an item —
+    that is flex-menus' own behaviour (tasks.md Phase 3, "Not tested here").
+    """
+
+    def test_gated_entry_present_for_the_person_it_applies_to(self, gated_client):
+        response = gated_client.get(reverse("account-center"))
+        assert "Gated" in _menu_labels(response)
+
+    def test_gated_entry_absent_for_the_person_it_does_not_apply_to(self, ungated_client):
+        response = ungated_client.get(reverse("account-center"))
+        assert "Gated" not in _menu_labels(response)
+
+
+@pytest.mark.django_db
 class TestPageUnaffectedByHiddenEntry:
     def test_other_entries_content_and_messages_render_the_same(self, gated_client, ungated_client):
         """The gated entry's own page renders the same for the person it is
