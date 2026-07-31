@@ -76,10 +76,15 @@ Defined at `dac/views.py:25-37`. The worked example is `dac/allauth/apps.py:20-5
 The layout for pages shown to anonymous users — login, signup, password reset,
 sign-in codes. Renders as a centered card with the site logo and no app shell.
 
-Today it exists only as an allauth layout override, at
-`dac/allauth/templates/allauth/layouts/entrance.html`. The concept is
-framework-level: an integration with its own anonymous pages is meant to share
-this layout rather than write another one.
+The core package owns it, in two files:
+
+- `dac/templates/dac/entrance.html` — the page an app extends. Carries the mvp
+  base shell, the stylesheet link, the messages region and `{% block content %}`
+- `dac/templates/cotton/dac/entrance.html` — the `<c-dac.entrance>` component:
+  mvp's `<c-entrance>` card with the site logo above the slot
+
+Any installed app reaches it with a bare `{% extends "dac/entrance.html" %}`,
+without referencing a template that belongs to an integration.
 
 ## Manage layout
 

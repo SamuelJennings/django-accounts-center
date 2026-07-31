@@ -7,7 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- The entrance page is now part of the core package, at `dac/entrance.html`.
+  Any installed app can give itself a signed-out page of its own — an
+  invitation flow, say — by extending it and filling `{% block content %}`,
+  instead of reaching into the allauth integration for a template. A page that
+  wants a wider card overrides `{% block entrance %}` and nests its content
+  inside a `<c-dac.entrance size="full">`. Anything else keeps the width
+  entrance pages have today.
+
 ### Changed
+
+- The allauth entrance layout no longer authors any chrome of its own. It maps
+  allauth's blocks onto `dac/entrance.html`, and that is all it now contains.
+  Its pages render as they did before.
 
 - Dependency constraints now match what is verified. Django widens to
   `>=5.2,<7.0`, which is the range CI tests — the previous `<6.0` cap declared

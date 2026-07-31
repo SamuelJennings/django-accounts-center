@@ -1,0 +1,208 @@
+{
+  "feature": "012-shared-entrance-page",
+  "branch": "012-shared-entrance-page",
+  "repo": "django-mvp/django-accounts-center",
+  "state": "REVIEW",
+  "state_history": [
+    {
+      "state": "INTAKE",
+      "at": "2026-07-31T08:40:00Z",
+      "note": "grilled from issue #19"
+    },
+    {
+      "state": "SPECIFY",
+      "at": "2026-07-31T09:05:00Z"
+    },
+    {
+      "state": "SETUP",
+      "at": "2026-07-31T09:25:00Z",
+      "note": "epic promoted, stories #21-23, draft PR #24"
+    },
+    {
+      "state": "GATE_SPEC",
+      "at": "2026-07-31T09:35:00Z",
+      "note": "approved; plan gate waived"
+    },
+    {
+      "state": "PLAN",
+      "at": "2026-07-31T09:40:00Z"
+    },
+    {
+      "state": "IMPLEMENT",
+      "at": "2026-07-31T09:48:45Z"
+    },
+    {
+      "state": "CONVERGE",
+      "at": "2026-07-31T12:20:00Z",
+      "note": "US1-US3 landed on the feature branch as two commits"
+    },
+    {
+      "state": "REVIEW",
+      "at": "2026-07-31T12:55:00Z",
+      "note": "three-reviewer panel; findings addressed on the branch"
+    }
+  ],
+  "gates": {
+    "spec": {
+      "approved_by": "SamuelJennings",
+      "at": "2026-07-31T09:35:00Z",
+      "self_resolved": [
+        "D1 entrance page is a template extension point, not a view",
+        "D2 card width is per page, chosen by the page author",
+        "D3 declarable widths capped at what django-mvp expresses today",
+        "D4 logo, stylesheet and messages region move to the shared page",
+        "D5 default width is today's width"
+      ]
+    },
+    "plan": {
+      "approved_by": "SamuelJennings",
+      "at": "2026-07-31T09:36:00Z",
+      "self_resolved": [
+        "Plan gate waived by the maintainer at spec approval; review happens at the merge gate"
+      ]
+    },
+    "merge": {
+      "approved_by": null,
+      "at": null
+    }
+  },
+  "stories": [
+    {
+      "id": "US1",
+      "priority": "P1",
+      "issue": 21,
+      "worktree": ".worktrees/dac-012-us1-us2",
+      "status": "done",
+      "replans": 0,
+      "tasks": [
+        {
+          "id": "T001",
+          "status": "done",
+          "attempts": 2
+        },
+        {
+          "id": "T002",
+          "status": "done",
+          "attempts": 1
+        },
+        {
+          "id": "T003",
+          "status": "done",
+          "attempts": 1
+        },
+        {
+          "id": "T004",
+          "status": "done",
+          "attempts": 1
+        },
+        {
+          "id": "T005",
+          "status": "done",
+          "attempts": 1
+        }
+      ]
+    },
+    {
+      "id": "US2",
+      "priority": "P1",
+      "issue": 22,
+      "worktree": ".worktrees/dac-012-us1-us2",
+      "status": "done",
+      "replans": 0,
+      "tasks": [
+        {
+          "id": "T006",
+          "status": "done",
+          "attempts": 1
+        },
+        {
+          "id": "T007",
+          "status": "done",
+          "attempts": 1
+        },
+        {
+          "id": "T008",
+          "status": "done",
+          "attempts": 1
+        },
+        {
+          "id": "T009",
+          "status": "done",
+          "attempts": 1
+        }
+      ]
+    },
+    {
+      "id": "US3",
+      "priority": "P2",
+      "issue": 23,
+      "worktree": ".worktrees/dac-012-us1-us2",
+      "status": "done",
+      "replans": 0,
+      "tasks": [
+        {
+          "id": "T010",
+          "status": "done",
+          "attempts": 1
+        },
+        {
+          "id": "T011",
+          "status": "done",
+          "attempts": 1
+        },
+        {
+          "id": "T012",
+          "status": "done",
+          "attempts": 1
+        },
+        {
+          "id": "T013",
+          "status": "done",
+          "attempts": 1
+        },
+        {
+          "id": "T014",
+          "status": "done",
+          "attempts": 1
+        },
+        {
+          "id": "T015",
+          "status": "done",
+          "attempts": 1
+        }
+      ]
+    }
+  ],
+  "budgets": {
+    "converge_cycles": {
+      "used": 1,
+      "max": 2
+    },
+    "review_cycles": {
+      "used": 1,
+      "max": 2
+    },
+    "tokens": {
+      "used": 0,
+      "max": 4000000
+    }
+  },
+  "pr": {
+    "number": 24,
+    "draft": true
+  },
+  "verification": {
+    "T006": {
+      "how": "Rendered login, signup, password reset and request-login-code through the real allauth stack before and after the rewiring and diffed. Not committed: the plan called for one answer to one question, and Article XIII declines standing baselines.",
+      "result": "Identical after collapsing HTML whitespace. The only source differences are indentation and blank lines around the logo and the card close, which HTML collapses. No tag, attribute, class or text difference on any of the four pages."
+    },
+    "T013": {
+      "how": "npm run build:css, then a second build from the pre-change templates, and diffed the two outputs.",
+      "result": "Byte-identical. The move reuses the same classes, so the shipped stylesheet needs no update from this feature. dac/static/css/dac.css is left untouched."
+    },
+    "T015": {
+      "how": "pytest screenshots/ for login, signup and password reset at 1440x900 and 390x844; read the images.",
+      "result": "Centred card, width cap, logo and absent app shell all as before, at both viewports."
+    }
+  }
+}

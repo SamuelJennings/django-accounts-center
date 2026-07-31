@@ -188,6 +188,15 @@ reach the Account Center from the user menu at the bottom of the sidebar.
 - **Page-level tweaks**: override individual allauth page templates the normal
   Django way (your project templates win over dac's and allauth's). Prefer
   element overrides — per-page forks are what this package exists to avoid.
+- **Entrance pages**: give your own app a signed-out page by extending
+  `dac/entrance.html` and filling `{% block content %}`. It brings the same
+  chrome dac's own signed-out pages use. For a wider card, override
+  `{% block entrance %}` instead, wrapping `<c-dac.entrance size="full">`
+  around your `{% block content %}` — the content block moves inside the
+  override, because a template can declare a block only once. The default
+  width and `full` are the only two until
+  [django-mvp#126](https://github.com/django-mvp/django-mvp/issues/126)
+  widens the underlying component.
 - **Sub menu**: append items (or a labelled `mvp.menus.MenuGroup`) to
   `dac.menus.AccountCenterMenu` from your own `menus.py` (e.g. a profile-edit
   page). Items may declare `url_names` prefixes in `extra_context` so
