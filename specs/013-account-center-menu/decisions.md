@@ -229,3 +229,49 @@ Confirmed by a throwaway smoke test exercising both fixtures together against th
 
 **Revisit if:** a later story's fixtures need cookie/session isolation beyond what a fresh
 `Client()` gives for free.
+
+### D16 — `tests/urls_minimal.py` mounts the test integration's own URLs
+
+**Ambiguous:** T017's brief says to use "the existing minimal-URLconf pattern... exactly as
+`tests/test_components/test_dac_base.py:180` does," but that file's `tests/urls_minimal.py` only
+ever mounted `admin/` — no route the test integration's view could be reached through. Reusing the
+file unmodified would 404 before the test could assert anything about the response.
+
+**Chosen:** added one `path("test/testapp/", include("tests.testapp.urls"))` line to
+`tests/urls_minimal.py` — the same mount `tests/urls.py` already uses — and nothing else. No
+`dac.urls` route, so the file still carries no dac-owned URL at all, which is what the six
+pre-existing `TestUserSidebarMenuIntegration` tests in `test_dac_base.py` depend on.
+
+**Why:** the brief's instruction is "follow that file's *approach* … rather than inventing a new
+isolation mechanism" — the approach is overriding `settings.ROOT_URLCONF` to a URLconf carrying no
+dac route, not "never add a line to that file." Extending it purely additively keeps the one
+isolation mechanism the suite already has, rather than adding a second, parallel "minimal-2"
+module. Verified the pre-existing tests that use this file are unaffected: full suite green at 259
+(D17 below covers the other surprise this uncovered).
+
+**Revisit if:** a future story needs a URLconf with dac's own core route (`account-center`) but
+not `dac.allauth`'s — `tests/urls_minimal.py` currently mounts neither.
+
+### D17 — `dac/base.html`'s breadcrumb root link never actually evaluates its `href`
+
+**Found by:** designing T017. The concern going in was that opening the test integration's page
+under a URLconf with no `account-center` route registered would 500 — `dac/base.html`'s breadcrumb
+block unconditionally renders `<c-breadcrumbs.item … href="{% url 'account-center' %}" />`
+whenever a section is active, and `{% url %}` normally raises `NoReverseMatch` when the name isn't
+registered.
+
+**What actually happens:** it doesn't raise. The rendered markup shows the literal string
+`{% url 'account-center' %}` (once HTML-escaped, once not — two `href` attributes on the same
+`<a>`) instead of a resolved path, on every page this template renders, `dac.allauth` installed or
+not. django-cotton is not evaluating that `{% url %}` tag as a Django template tag inside the
+component's attribute value. The root breadcrumb link has never pointed anywhere; this predates
+this story.
+
+**Not fixed here:** `dac/base.html` is off-limits for this story (the forbidden list), and this is
+unrelated to FR-008. Reported as a concern in the completion report instead. Recorded here because
+it's why T017's tests don't assert on the breadcrumb root crumb's `href` (D16's URLconf choice
+turned out not to need working around it, but a test asserting the href resolved would have failed
+for a reason this story has no mandate to fix).
+
+**Revisit if:** a story touching `dac/base.html`'s breadcrumbs fixes the root crumb — worth adding
+a regression test for the fix at that point.

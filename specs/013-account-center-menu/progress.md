@@ -124,3 +124,88 @@ assertions: (1) any check added to this test app must tolerate a request with no
 at all (dac/base.html's own structural tests render that way), and (2) `gated_client` and
 `ungated_client` are independent `Client()` instances specifically so both can be signed in within
 one test — don't "simplify" them back onto the shared `client` fixture.
+
+### 2026-07-31 · Implementer US3 · T016
+
+**Did:** Added `tests/test_integration_contract.py` with
+`TestSecondIntegrationServesManagementPage`, asserting `authenticated_client.get(reverse
+("testapp_settings"))` returns 200 and the response carries the Account Center sub menu (`aside`
+with `aria-label="Account navigation"`, the "Test App" group, a link back to `account-center`),
+the breadcrumbs region (`aria-label="Breadcrumbs"` with the current-page "Settings" crumb), and the
+view's own content ("Test App Settings").
+
+Confirmed each assertion fails for the right reason before it passed: mutated each expected string
+in turn (e.g. `"Test App Settings"` → `"Test App Settings NOPE"`), watched the test fail on that
+exact line, then reverted. All four assertions passed immediately once written — the scaffold from
+US0 (T001–T006) already satisfies FR-008's first scenario, since nothing about serving this page
+depends on the sub menu, breadcrumbs or content block knowing the requesting app is or isn't
+`dac.allauth`. That is what this establishes: the existing shared-page contract already holds for
+a second integration. It does not establish anything about `dac.allauth`'s *absence* — that's T017.
+
+**Verified:** `poetry run ruff check .`, `poetry run djlint .`, `poetry run mypy .` — clean (2
+pre-existing mypy errors, unrelated files, unchanged). `poetry run pytest -q` — 256 passed (252 +
+4).
+
+**Next:** T017 — the same page with `dac.allauth` absent.
+
+**Watch:** nothing new.
+
+### 2026-07-31 · Implementer US3 · T017
+
+**Did:** Added `TestSecondIntegrationServesManagementPageWithoutAllauth` to
+`tests/test_integration_contract.py`: with `settings.ROOT_URLCONF = "tests.urls_minimal"`, the same
+page still returns 200, still shows "Test App Settings", and `response.templates` contains no
+template name starting with `account/`, `allauth/` or `dac/allauth/`.
+
+Extended `tests/urls_minimal.py` to mount `tests.testapp.urls` (decisions.md D16) — without it the
+request 404s before the test can assert anything, since the file previously carried only `admin/`.
+No `dac.urls` route was added, so the six pre-existing `TestUserSidebarMenuIntegration` tests in
+`test_dac_base.py`, which depend on this file carrying no dac-owned URL name, are unaffected.
+
+Ran the new tests against the *unmodified* `urls_minimal.py` first and watched all three fail with
+`NoReverseMatch: Reverse for 'testapp_settings' not found` — confirming the failure was "route not
+mounted," the thing the fix addresses, not something else. Added the mount, reran, all three
+passed. Also mutation-tested `test_references_no_integration_template` by narrowing
+`integration_prefixes` to a tuple that couldn't match anything real (`("dac/base.html",)` — a
+template that legitimately is used) and confirmed it failed as expected, then reverted.
+
+Going in, expected the page might 500 under a URLconf with no `account-center` route, since
+`dac/base.html`'s breadcrumb block unconditionally builds `{% url 'account-center' %}`. It doesn't
+— see decisions.md D17: that `href` is never actually evaluated by django-cotton, on every page
+this template renders, not just this one. Pre-existing, out of scope, reported as a concern.
+
+Also tightened T016's `test_sub_menu_present`/`test_breadcrumbs_present`: the `href` assertion for
+`account-center` moved out of the breadcrumbs test and into the sub-menu test, since D17 showed the
+breadcrumb root crumb's own `href` never renders — the assertion was passing only because the sub
+menu's overview link carries the same href elsewhere on the page. Keeping it under
+`test_breadcrumbs_present` would have implied the breadcrumb link itself resolves, which it doesn't.
+
+**Verified:** `poetry run ruff check .`, `poetry run djlint .`, `poetry run mypy .` — clean (same 2
+pre-existing errors, unchanged). `poetry run pytest -q` — 259 passed (252 + 7).
+
+**Next:** T018 — the module comment stating what these tests do and don't establish.
+
+**Watch:** decisions.md D17 (the breadcrumb `href` bug) is worth a maintainer's attention outside
+this story — it means the "Account Center" root crumb has never linked anywhere, on any page.
+
+### 2026-07-31 · Implementer US3 · T018
+
+**Did:** Added a module-level docstring paragraph to `tests/test_integration_contract.py` stating
+what T016/T017 establish (the test integration reaches `dac/base.html` purely by being installed
+and mounting its own URLs, no core-package edit) and what they don't (that URL contribution without
+a core edit is possible — that's roadmap R4, out of scope here). No test code changed; this is
+documentation only, verified by rerunning the full suite unchanged.
+
+**Verified:** `poetry run ruff check .`, `poetry run djlint .`, `poetry run mypy .` — clean.
+`poetry run pytest -q` — 259 passed, same as T017 (no assertions added).
+
+**US-3 done.** FR-008 is proven end to end: a second integration (`tests/testapp`, not `dac.*`)
+serves a management view through the shared `dac/base.html`, carrying the sub menu, the
+breadcrumbs and its own content, both with `dac.allauth` present and with no dac-owned URL
+registered at all. No file under `dac/` was touched.
+
+**Next:** none — this story's tasks (T016–T018) are complete. US-4 (T019–T021, the ADR update) is
+a separate story.
+
+**Watch:** decisions.md D17 — the breadcrumb root crumb's dead `href` — is a real bug independent
+of this story and worth a follow-up issue.
