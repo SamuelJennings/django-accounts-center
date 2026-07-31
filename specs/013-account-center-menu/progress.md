@@ -124,3 +124,52 @@ assertions: (1) any check added to this test app must tolerate a request with no
 at all (dac/base.html's own structural tests render that way), and (2) `gated_client` and
 `ungated_client` are independent `Client()` instances specifically so both can be signed in within
 one test — don't "simplify" them back onto the shared `client` fixture.
+
+## US-2 — The menu lists only what applies to me (Implementer)
+
+### 2026-07-31 · Implementer US-2 · T007
+
+**Did:** Added `tests/test_menus.py` — `TestBreadcrumbSurvivesHiddenEntry`, two cases: the person
+the `gated` entry does not apply to (`ungated_client`) requests the entry's own page
+(`testapp_gated`) and its sub-page (`testapp_gated_sub`), asserting the response still carries the
+section breadcrumb (`aria-label="Breadcrumbs"` and the section's label, "Gated"; the sub-page case
+also asserts the crumb links back to `testapp_gated`).
+
+**Confirmed failing against current `dac/menus.py`** (Article I red step) — both cases fail because
+`get_active_section()` resolves the breadcrumb from the *processed* menu tree, which drops the
+`gated` leaf entirely once its check returns `False`, so no section matches and no breadcrumb
+renders at all:
+
+```
+tests/test_menus.py::TestBreadcrumbSurvivesHiddenEntry::test_section_page_breadcrumb_survives_hidden_entry FAILED
+tests/test_menus.py::TestBreadcrumbSurvivesHiddenEntry::test_subpage_breadcrumb_survives_hidden_entry FAILED
+
+    def test_section_page_breadcrumb_survives_hidden_entry(self, ungated_client):
+        """The gated entry's own page still carries its section breadcrumb
+        for the person the entry is hidden from."""
+        response = ungated_client.get(reverse("testapp_gated"))
+        content = response.content.decode()
+>       assert 'aria-label="Breadcrumbs"' in content
+E       assert 'aria-label="Breadcrumbs"' in '...<h1>Test App Settings</h1>...'
+tests/test_menus.py:21: AssertionError
+
+    def test_subpage_breadcrumb_survives_hidden_entry(self, ungated_client):
+        response = ungated_client.get(reverse("testapp_gated_sub"))
+        content = response.content.decode()
+>       assert 'aria-label="Breadcrumbs"' in content
+E       assert 'aria-label="Breadcrumbs"' in '...<h1>Test App Settings</h1>...'
+tests/test_menus.py:29: AssertionError
+
+2 failed, 252 passed in 37.65s
+```
+
+The page frame still renders (content, sidebar menu, messages region) — only the breadcrumb block
+is silently empty, exactly the defect research.md R2 and decisions.md D9 describe.
+
+**Verified:** `poetry run ruff check tests/test_menus.py` — clean. `poetry run djlint .` — 36
+files, 0 errors. `poetry run mypy tests/test_menus.py` — no issues. `poetry run pytest -q` — **252
+passed, 2 failed** (the two new tests above; baseline unchanged).
+
+**Next:** T008 — rewrite `get_active_section()` per research.md R2 so these pass.
+
+**Watch:** nothing new.
