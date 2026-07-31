@@ -23,3 +23,19 @@ stories #43–#46, draft PR #47.
 **Next:** T002 — contribute a gated `MenuGroup` from `tests/testapp/menus.py`.
 
 **Watch:** nothing yet.
+
+### 2026-07-31 · Implementer US0 · T002
+
+**Did:** Added `tests/testapp/menus.py`, appending a `MenuGroup` ("Test App") to
+`AccountCenterMenu` with three entries — `gated` (check reads membership in the
+`testapp-gated` group), `ungated` (no `check` argument), `sectioned` (`view_name` +
+`url_names=("testapp_settings",)`). All labels use `gettext_lazy`. See decisions.md D11–D13.
+
+**Verified:** `poetry run ruff check tests/testapp/` and `poetry run mypy tests/testapp/` — both
+clean. `poetry run pytest -q` — 252 passed (app still not in `INSTALLED_APPS`, so this module is
+not yet imported).
+
+**Next:** T003 — the test integration's management view and template.
+
+**Watch:** `sectioned`'s `view_name="testapp_settings"` doesn't resolve to a real URL yet — that
+lands in T003/T004. Harmless until the app is installed and the menu is actually rendered.

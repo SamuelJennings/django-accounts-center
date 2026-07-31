@@ -135,3 +135,54 @@ an integration declares, across one document.
 Integration entry frames installation against "whether it is shown", and ADR 0002 is titled
 "Account Center visibility is resolved per request". The underlying menu library also calls the
 predicate a check, so one term now spans docs, spec and code without translation.
+
+## US0 — Foundational (Implementer, 2026-07-31)
+
+### D11 — `gated` and `ungated` carry no `view_name`
+
+**Ambiguous:** T002 asks for three entries (`gated`, `ungated`, `sectioned`); T003 asks for exactly
+one management view. Whether the first two also needed their own page was not stated.
+
+**Chosen:** `gated` and `ungated` are non-link leaf items — a label and, for `gated`, a check, and
+nothing else. Only `sectioned` carries `view_name` and a real page. `MenuItem` explicitly supports
+a leaf with neither URL nor children (flex_menu/menu.py's own docstring: "Non-clickable items
+(headers, dividers)"), and mvp's sidebar item component already renders that case as a `<button>`
+rather than an `<a>` (`href|yesno:"a,button"` in `cotton/menu/item.html`) — `MobileFooterMenu`'s
+`sidebar_toggle` entry uses the same shape today.
+
+**Why:** T003's brief is singular — "one management view" — and inventing a second and third page
+to give `gated`/`ungated` a destination would be scope beyond what this task asked for, for a
+question (does a gated entry need its own page?) that belongs to whichever later story needs it.
+If US-2 (breadcrumb-survives-a-hidden-entry, T007) turns out to need `gated` to resolve to its own
+page, that is that story's task to add — this entry is deliberately minimal.
+
+**Revisit if:** a later story's test needs the `gated` entry to be a real destination rather than a
+menu-presence demonstration.
+
+### D12 — The visibility check reads group membership
+
+**Ambiguous:** T002 leaves the check's mechanism to the implementer ("a callable reading an
+attribute or group membership... keep it obvious").
+
+**Chosen:** `request.user.groups.filter(name="testapp-gated").exists()`, with the group name as a
+module-level constant (`GATED_GROUP_NAME`) that `tests/conftest.py`'s fixtures import rather than
+duplicating the literal string.
+
+**Why:** `django.contrib.auth`'s `Group` model is already installed and needs no new field on the
+user model or a bespoke attribute, and "which group a person is in" is a realistic stand-in for the
+billing/team-membership examples the spec itself uses.
+
+**Revisit if:** a later story needs the check to depend on something other than group membership.
+
+### D13 — `sectioned`'s `url_names` prefix is its own view name
+
+**Ambiguous:** whether the declared prefix should include the sub-page URL name pattern only, or
+also match the section's own page.
+
+**Chosen:** `url_names=("testapp_settings",)`, matching `dac.allauth`'s existing convention (e.g.
+`mfa_index` / `url_names=("mfa_",)`) — the prefix also matches the section's own page, which is
+harmless because `get_active_section()` checks `item.selected` in an exact-match pass before it
+ever consults `url_names`.
+
+**Why:** consistency with the one existing integration's pattern, and it needed no third URL name
+just to exclude the redundant self-match.
