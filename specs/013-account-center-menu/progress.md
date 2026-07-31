@@ -390,6 +390,30 @@ errors. `poetry run mypy .` — 2 pre-existing errors only (`example/settings.py
 `tests/test_components/conftest.py:17`), unchanged. `poetry run pytest -q` — **265 passed** (263
 baseline + 2).
 
+**Next:** T014 — the ungated entry stays visible for both people.
+
+**Watch:** nothing new.
+
+### 2026-07-31 · Implementer US-1 · T014
+
+**Did:** Added `TestUngatedEntryStaysVisible` to `tests/test_menus.py`: both `gated_client` and
+`ungated_client` see `"Ungated"` in the rendered menu at `/account-center/` (FR-005 — an entry
+contributed with no visibility check stays visible regardless of who is looking). Reused
+`_menu_labels()` again.
+
+Confirmed failing for the right reason before passing: mutated the first assertion
+(`"Ungated"` → `"Ungated-NOPE"`), watched it fail on that line, reverted. Passed immediately once
+written, for the same reason as T013 — the `ungated` entry (no `check` argument) has worked this
+way since US0.
+
+**Verified:** `poetry run ruff check .` — all checks passed. `poetry run djlint .` — 36 files, 0
+errors. `poetry run mypy .` — 2 pre-existing errors only, unchanged. `poetry run pytest -q` —
+**266 passed** (265 + 1).
+
+**Next:** T015 — `dac.allauth`'s own entries are unchanged.
+
+**Watch:** nothing new.
+
 
 
 
