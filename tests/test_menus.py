@@ -83,6 +83,26 @@ class TestGatedEntryVisibilityCheck:
 
 
 @pytest.mark.django_db
+class TestAllauthEntriesUnchanged:
+    """FR-007: dac.allauth's own entries continue to appear exactly as they
+    did before this feature, for a signed-in person. dac.allauth contributes
+    no visibility check on any of its entries, so this is US-1's compatibility
+    guarantee (FR-005) exercised against the one real integration shipped in
+    this repo, not the test integration."""
+
+    def test_allauth_entries_render_as_before(self, authenticated_client):
+        response = authenticated_client.get(reverse("account-center"))
+        labels = _menu_labels(response)
+        assert {
+            "Email",
+            "Password",
+            "Connected accounts",
+            "Two-factor authentication",
+            "Sessions",
+        } <= labels
+
+
+@pytest.mark.django_db
 class TestUngatedEntryStaysVisible:
     """FR-005: an entry contributed with no visibility check stays visible
     whenever its integration is installed, regardless of who is looking —
