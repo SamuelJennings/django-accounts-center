@@ -2,7 +2,7 @@
   "feature": "012-shared-entrance-page",
   "branch": "012-shared-entrance-page",
   "repo": "django-mvp/django-accounts-center",
-  "state": "IMPLEMENT",
+  "state": "REVIEW",
   "state_history": [
     {
       "state": "INTAKE",
@@ -30,6 +30,16 @@
     {
       "state": "IMPLEMENT",
       "at": "2026-07-31T09:48:45Z"
+    },
+    {
+      "state": "CONVERGE",
+      "at": "2026-07-31T12:20:00Z",
+      "note": "US1-US3 landed on the feature branch as two commits"
+    },
+    {
+      "state": "REVIEW",
+      "at": "2026-07-31T12:55:00Z",
+      "note": "three-reviewer panel; findings addressed on the branch"
     }
   ],
   "gates": {
@@ -61,34 +71,34 @@
       "id": "US1",
       "priority": "P1",
       "issue": 21,
-      "worktree": null,
-      "status": "todo",
+      "worktree": ".worktrees/dac-012-us1-us2",
+      "status": "done",
       "replans": 0,
       "tasks": [
         {
           "id": "T001",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 2
         },
         {
           "id": "T002",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 1
         },
         {
           "id": "T003",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 1
         },
         {
           "id": "T004",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 1
         },
         {
           "id": "T005",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 1
         }
       ]
     },
@@ -96,29 +106,29 @@
       "id": "US2",
       "priority": "P1",
       "issue": 22,
-      "worktree": null,
-      "status": "todo",
+      "worktree": ".worktrees/dac-012-us1-us2",
+      "status": "done",
       "replans": 0,
       "tasks": [
         {
           "id": "T006",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 1
         },
         {
           "id": "T007",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 1
         },
         {
           "id": "T008",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 1
         },
         {
           "id": "T009",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 1
         }
       ]
     },
@@ -126,50 +136,50 @@
       "id": "US3",
       "priority": "P2",
       "issue": 23,
-      "worktree": null,
-      "status": "todo",
+      "worktree": ".worktrees/dac-012-us1-us2",
+      "status": "done",
       "replans": 0,
       "tasks": [
         {
           "id": "T010",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 1
         },
         {
           "id": "T011",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 1
         },
         {
           "id": "T012",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 1
         },
         {
           "id": "T013",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 1
         },
         {
           "id": "T014",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 1
         },
         {
           "id": "T015",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 1
         }
       ]
     }
   ],
   "budgets": {
     "converge_cycles": {
-      "used": 0,
+      "used": 1,
       "max": 2
     },
     "review_cycles": {
-      "used": 0,
+      "used": 1,
       "max": 2
     },
     "tokens": {
@@ -180,5 +190,19 @@
   "pr": {
     "number": 24,
     "draft": true
+  },
+  "verification": {
+    "T006": {
+      "how": "Rendered login, signup, password reset and request-login-code through the real allauth stack before and after the rewiring and diffed. Not committed: the plan called for one answer to one question, and Article XIII declines standing baselines.",
+      "result": "Identical after collapsing HTML whitespace. The only source differences are indentation and blank lines around the logo and the card close, which HTML collapses. No tag, attribute, class or text difference on any of the four pages."
+    },
+    "T013": {
+      "how": "npm run build:css, then a second build from the pre-change templates, and diffed the two outputs.",
+      "result": "Byte-identical. The move reuses the same classes, so the shipped stylesheet needs no update from this feature. dac/static/css/dac.css is left untouched."
+    },
+    "T015": {
+      "how": "pytest screenshots/ for login, signup and password reset at 1440x900 and 390x844; read the images.",
+      "result": "Centred card, width cap, logo and absent app shell all as before, at both viewports."
+    }
   }
 }

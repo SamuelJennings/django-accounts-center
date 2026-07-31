@@ -191,9 +191,10 @@ reach the Account Center from the user menu at the bottom of the sidebar.
 - **Entrance pages**: give your own app a signed-out page by extending
   `dac/entrance.html` and filling `{% block content %}`. It brings the same
   chrome dac's own signed-out pages use. For a wider card, override
-  `{% block entrance %}` around `<c-dac.entrance>` and pass `size="full"`.
-  Any other value, or none, gives the default width — those are the only two
-  widths until
+  `{% block entrance %}` instead, wrapping `<c-dac.entrance size="full">`
+  around your `{% block content %}` — the content block moves inside the
+  override, because a template can declare a block only once. The default
+  width and `full` are the only two until
   [django-mvp#126](https://github.com/django-mvp/django-mvp/issues/126)
   widens the underlying component.
 - **Sub menu**: append items (or a labelled `mvp.menus.MenuGroup`) to

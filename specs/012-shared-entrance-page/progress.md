@@ -54,3 +54,43 @@ so no future run repeats it. See D6 in `decisions.md`.
 
 The implementation run for US-1 was unaffected: Implementers hold no tokens and never touch the
 issue tracker.
+
+## 2026-07-31 — S4 IMPLEMENT
+
+US-1 dispatched, stalled with no output after 33 minutes and was killed. T001's test file was
+already on disk and failing for the right reason (`TemplateDoesNotExist: dac/entrance.html`), so
+the re-dispatch resumed at T002 with T001 pinned read-only, plus a per-task progress line so a
+working run can no longer be mistaken for a dead one. US-2 and US-3 ran clean.
+
+Three verification tasks were answered without leaving a test behind, which is what the plan asked
+for in each case. Evidence is in `feature-state.json` under `verification`:
+
+- **T006** — the four anonymous allauth pages rendered through the real stack before and after the
+  rewiring. Identical once HTML whitespace is collapsed; the only source differences are
+  indentation and blank lines the browser discards.
+- **T013** — the stylesheet was rebuilt, and a second build from the pre-change templates produced
+  byte-identical output. The move reuses the same classes, so `dac/static/css/dac.css` is untouched.
+- **T015** — login, signup and password reset screenshotted at both canonical viewports and read.
+
+## 2026-07-31 — S5 CONVERGE, S6 REVIEW
+
+Both stories' work merged onto the feature branch as one implementation commit plus a
+documentation commit. Three reviewers ran against the diff: correctness, recorded standards, and
+public prose. Four findings were real and are fixed on the branch:
+
+1. The README described the width override without saying that `{% block content %}` has to move
+   inside it. Followed literally it produced a template with the block declared twice, which
+   Django rejects. Reworded, and `test_size_full_renders_wider_card` now asserts the content
+   survives the override.
+2. `test_messages_region_present` only checked that an empty toast container rendered, so it
+   would have passed with the messages region broken. A second test queues a real message.
+3. `test_core_entrance_templates_reference_no_integration` grepped the templates for integration
+   names, which is a guardrail, not the claim. A new test renders the page with `dac.allauth`
+   removed from `INSTALLED_APPS` — verified to bite, by confirming dac's own allauth templates
+   become unreachable under the same fixture.
+4. `CONTEXT.md` read "the core-owned page for pages shown to anonymous users" and drifted from
+   "layout", the term its own heading uses. Rewritten, with the two files as a list.
+
+One thing found and deliberately left alone: the committed `dac/static/css/dac.css` is unminified
+and stale, while `npm run build:css` minifies. That predates this feature, and correcting it
+rewrites a 7,000-line generated artifact inside a feature PR. Filed separately.

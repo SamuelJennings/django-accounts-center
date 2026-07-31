@@ -9,6 +9,10 @@ the site logo, the package stylesheet and the messages region for free —
 without depending on, or referencing, any integration template.
 """
 
+from types import SimpleNamespace
+
+import pytest
+
 # Bare-minimum child template: extends the core entrance page, no block
 # overrides. This belongs to no app, which is the point (SC-001).
 _ENTRANCE = '{% extends "dac/entrance.html" %}{% load i18n %}'
@@ -56,6 +60,35 @@ class TestEntrancePageBlockContract:
         toast = soup.find("div", class_="toast")
         assert toast is not None
 
+    def test_queued_message_displays(self, cotton_render_string_soup):
+        """A queued message reaches the page, so an extending page inherits a
+        working messages region rather than an empty container (FR-011)."""
+        message = SimpleNamespace(level_tag="error", tags="error", message="Wrong password.")
+        soup = cotton_render_string_soup(_ENTRANCE, {"messages": [message]})
+        toast = soup.find("div", class_="toast")
+        assert toast is not None
+        assert "Wrong password." in toast.get_text()
+
+
+class TestEntranceStandsAloneWithoutAnIntegration:
+    """The whole point of moving the page into the core package: it must render
+    with no integration installed (SC-004). The architecture guardrail checks
+    the templates name no integration; this renders one with dac.allauth taken
+    out of INSTALLED_APPS, which is the claim itself."""
+
+    @pytest.fixture
+    def without_allauth_integration(self, settings):
+        settings.INSTALLED_APPS = [app for app in settings.INSTALLED_APPS if app != "dac.allauth"]
+        return settings
+
+    def test_page_renders_without_the_allauth_integration(self, without_allauth_integration, cotton_render_string_soup):
+        template = _ENTRANCE + '{% block content %}<p id="mine">Mine</p>{% endblock content %}'
+        soup = cotton_render_string_soup(template)
+        assert soup.find("div", class_="min-h-screen") is not None
+        assert soup.find("div", class_="card") is not None
+        assert soup.find("img", alt="Site Logo") is not None
+        assert soup.find(id="mine") is not None
+
 
 class TestEntranceComponentConsistency:
     def test_two_distinct_pages_share_structure(self, cotton_render_string_soup):
@@ -69,14 +102,15 @@ class TestEntranceComponentConsistency:
 
 
 def _entrance_with_size(size):
-    """A layout overriding {% block entrance %} to declare a card width,
-    with {% block content %} already filled (so a caller does not also
-    need to append its own, which would duplicate the block name)."""
+    """A layout declaring a card width, written exactly as the README documents
+    it: {% block entrance %} is overridden and {% block content %} is nested
+    inside that override. A page cannot also declare content at the top level —
+    Django rejects the same block name twice in one template."""
     return (
         '{% extends "dac/entrance.html" %}{% load i18n %}'
         "{% block entrance %}"
         f'<c-dac.entrance size="{size}">'
-        "{% block content %}Hi{% endblock content %}"
+        '{% block content %}<p id="mine">Hi</p>{% endblock content %}'
         "</c-dac.entrance>"
         "{% endblock entrance %}"
     )
@@ -103,6 +137,9 @@ class TestEntranceComponentWidth:
         card = soup.find("div", class_="card")
         assert card is not None
         assert _SMALL_WIDTH_CLASS not in card.get("class", [])
+        # Declaring a width must not cost the page its content: {% block content %}
+        # moves inside the {% block entrance %} override, and still has to arrive.
+        assert soup.find(id="mine") is not None
 
     def test_default_and_full_card_classes_differ(self, cotton_render_string_soup):
         """The default and size="full" branches render distinct card classes."""
