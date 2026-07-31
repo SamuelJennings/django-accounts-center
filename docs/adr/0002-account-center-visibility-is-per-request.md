@@ -44,6 +44,11 @@ heading along with its entries — this package relies on that rather than reimp
 entry that declares no check stays visible whenever its integration is installed, exactly as
 before this decision existed, so an existing integration needs no change to keep working.
 
+A check that raises is not caught. The error surfaces as an error rather than being read as "does
+not apply", because an entry that silently disappears leaves a developer with a missing menu item
+and no stack trace, and swallowing the exception would also hide genuine failures in the
+integration's own data access.
+
 Breadcrumb resolution (`get_active_section()`) reads the menu's declared entries rather than the
 per-request tree django-flex-menus builds from them, so which section a URL belongs to does not
 depend on whether the current person can see that section's entry — the breadcrumb and the mobile

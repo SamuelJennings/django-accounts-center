@@ -606,3 +606,22 @@ desktop overview, and `ungated_person`'s mobile view of the page whose entry is 
 **Watch:** the throwaway harness needed the two accounts' email addresses marked verified before
 sign-in would complete, because the example project runs allauth with mandatory verification. Worth
 knowing for any future browser check against this project.
+
+### 2026-07-31 · Forge convergence
+
+**Did:** T023–T025. Triaged four tamper flags (all test infrastructure, approved — D40). Fixed the
+one red machine gate: `forge verify`'s conformance step rejected
+`tests/test_integration_contract.py` as mirroring no source module, so its two classes moved into
+`tests/test_components/test_dac_base.py`, whose subject they already were (D41). Confirmed the
+package has no migrations to squash — it declares no models and has no `dac/migrations/` at all.
+Ran the ADR graduation scan: D5 does not become its own ADR, its substance goes into ADR 0002's
+State section instead (D42). Corrected the task-to-requirement map, which still credited T013 with
+FR-003 after the review narrowed it to FR-002.
+
+**Verified:** `forge verify --base origin/main` — lint, typecheck, test, build and conformance all
+green (node steps skipped, not configured). `forge tamper-check` — 4 flags, all triaged in D40.
+`poetry run pytest -q` — **266 passed**. mypy carries its 2 pre-existing errors, unchanged.
+
+**Next:** PR gate.
+
+**Watch:** nothing new.

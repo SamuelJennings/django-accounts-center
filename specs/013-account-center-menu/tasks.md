@@ -149,8 +149,9 @@ behaviour, covered by flex-menus.
 
 | Requirement | Tasks |
 |---|---|
-| FR-001, FR-002 | T002, T013 |
-| FR-003 | T013 |
+| FR-001 | T002, T014 |
+| FR-002 | T002, T013 |
+| FR-003 | T010 |
 | FR-004 | covered by the dependency; asserted incidentally by T010 |
 | FR-005 | T002, T014 |
 | FR-006 | T011 |

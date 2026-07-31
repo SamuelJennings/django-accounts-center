@@ -440,3 +440,61 @@ resolution — without importing test-only concerns into the manual.
 
 **Revisit if:** `tests/testapp/menus.py`'s shape changes in a way that makes this example diverge
 from what `check=` actually requires.
+
+## Convergence (Forge, 2026-07-31)
+
+### D40 — The four tamper flags are approved: test infrastructure, not test assertions
+
+**Ambiguous:** `forge tamper-check` flags four pre-existing files as modified — `tests/conftest.py`,
+`tests/settings.py`, `tests/urls.py`, `tests/urls_minimal.py`. Policy (D4) pauses the pipeline for
+triage rather than blocking outright.
+
+**Chosen:** approved, all four.
+
+**Why:** none of the four contains a test. They are the harness a second integration needs in order
+to exist at all — an entry in `INSTALLED_APPS`, two URL mounts, and the person fixtures. Every
+change is additive: across the four files the branch adds 66 lines and deletes two, and both
+deletions are an import line and a docstring sentence being extended, not an assertion. No
+`def test` or `assert` line in any pre-existing file was touched, which was checked directly rather
+than inferred from the flag type. The one behavioural change in the set — `gated_client` and
+`ungated_client` being separate `Client()` instances — fixes a defect rather than accommodating
+one (D15).
+
+**Revisit if:** a later story needs to change an assertion in one of these files, which is a
+different question and gets its own entry.
+
+### D41 — The FR-008 tests move into `test_dac_base.py` rather than keeping their own file
+
+**Ambiguous:** `forge verify`'s conformance step failed on `tests/test_integration_contract.py` —
+Article X requires the test tree to mirror the source tree, and there is no source module
+for it to mirror.
+
+**Chosen:** the two classes move into `tests/test_components/test_dac_base.py` under a section
+comment carrying the original module docstring's scope note. The file is deleted.
+
+**Why:** the subject of those tests is `dac/base.html` — they assert that an integration outside
+the core package reaches the shared management page and renders through it. `test_dac_base.py` is
+already that file's mirror, and its own docstring already says it covers dac's integration contract
+rather than component internals. A cross-cutting name for a test whose subject is a single template
+was the thing the conformance rule exists to catch. A red machine gate does not get an override, and
+in this case the gate was right: the file name described how the tests were written, not what they
+are about.
+
+**Revisit if:** FR-008's surface grows past `dac/base.html` — automatic URL contribution (R4) would
+give these tests a second subject and probably its own mirror.
+
+### D42 — D5 does not graduate to its own ADR
+
+**Ambiguous:** T025 asks whether any decision here is durable and cross-cutting enough to become an
+ADR. D5 (a failing visibility check surfaces rather than hiding the entry) was the candidate.
+
+**Chosen:** no new ADR. D5's substance is added to ADR 0002's State section instead.
+
+**Why:** D5 is not a separate decision, it is a property of the one ADR 0002 already records. This
+package writes no code to produce that behaviour — it follows from declining to wrap flex-menus'
+`check`, which ADR 0002 already states. A second ADR would describe an unimplemented mechanism and
+split one contract across two documents, and an integration author reading about visibility should
+find what happens when their check raises in the same place they find everything else about it.
+
+**Revisit if:** dac ever does wrap the check, at which point the error-handling stance becomes this
+package's own code and its own decision.
