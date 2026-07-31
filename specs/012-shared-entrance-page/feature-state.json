@@ -1,0 +1,199 @@
+{
+  "feature": "012-shared-entrance-page",
+  "branch": "012-shared-entrance-page",
+  "repo": "django-mvp/django-accounts-center",
+  "state": "IMPLEMENT",
+  "state_history": [
+    {
+      "state": "INTAKE",
+      "at": "2026-07-31T08:40:00Z",
+      "note": "grilled from issue #19"
+    },
+    {
+      "state": "SPECIFY",
+      "at": "2026-07-31T09:05:00Z"
+    },
+    {
+      "state": "SETUP",
+      "at": "2026-07-31T09:25:00Z",
+      "note": "epic promoted, stories #21-23, draft PR #24"
+    },
+    {
+      "state": "GATE_SPEC",
+      "at": "2026-07-31T09:35:00Z",
+      "note": "approved; plan gate waived"
+    },
+    {
+      "state": "PLAN",
+      "at": "2026-07-31T09:40:00Z"
+    },
+    {
+      "state": "IMPLEMENT",
+      "at": "2026-07-31T09:48:45Z"
+    }
+  ],
+  "gates": {
+    "spec": {
+      "approved_by": "SamuelJennings",
+      "at": "2026-07-31T09:35:00Z",
+      "self_resolved": [
+        "D1 entrance page is a template extension point, not a view",
+        "D2 card width is per page, chosen by the page author",
+        "D3 declarable widths capped at what django-mvp expresses today",
+        "D4 logo, stylesheet and messages region move to the shared page",
+        "D5 default width is today's width"
+      ]
+    },
+    "plan": {
+      "approved_by": "SamuelJennings",
+      "at": "2026-07-31T09:36:00Z",
+      "self_resolved": [
+        "Plan gate waived by the maintainer at spec approval; review happens at the merge gate"
+      ]
+    },
+    "merge": {
+      "approved_by": null,
+      "at": null
+    }
+  },
+  "stories": [
+    {
+      "id": "US1",
+      "priority": "P1",
+      "issue": 21,
+      "worktree": null,
+      "status": "todo",
+      "replans": 0,
+      "tasks": [
+        {
+          "id": "T001",
+          "status": "todo",
+          "attempts": 0,
+          "issue": 25
+        },
+        {
+          "id": "T002",
+          "status": "todo",
+          "attempts": 0,
+          "issue": 26
+        },
+        {
+          "id": "T003",
+          "status": "todo",
+          "attempts": 0,
+          "issue": 27
+        },
+        {
+          "id": "T004",
+          "status": "todo",
+          "attempts": 0,
+          "issue": 28
+        },
+        {
+          "id": "T005",
+          "status": "todo",
+          "attempts": 0,
+          "issue": 29
+        }
+      ]
+    },
+    {
+      "id": "US2",
+      "priority": "P1",
+      "issue": 22,
+      "worktree": null,
+      "status": "todo",
+      "replans": 0,
+      "tasks": [
+        {
+          "id": "T006",
+          "status": "todo",
+          "attempts": 0,
+          "issue": 30
+        },
+        {
+          "id": "T007",
+          "status": "todo",
+          "attempts": 0,
+          "issue": 31
+        },
+        {
+          "id": "T008",
+          "status": "todo",
+          "attempts": 0,
+          "issue": 32
+        },
+        {
+          "id": "T009",
+          "status": "todo",
+          "attempts": 0,
+          "issue": 33
+        }
+      ]
+    },
+    {
+      "id": "US3",
+      "priority": "P2",
+      "issue": 23,
+      "worktree": null,
+      "status": "todo",
+      "replans": 0,
+      "tasks": [
+        {
+          "id": "T010",
+          "status": "todo",
+          "attempts": 0,
+          "issue": 34
+        },
+        {
+          "id": "T011",
+          "status": "todo",
+          "attempts": 0,
+          "issue": 35
+        },
+        {
+          "id": "T012",
+          "status": "todo",
+          "attempts": 0,
+          "issue": 36
+        },
+        {
+          "id": "T013",
+          "status": "todo",
+          "attempts": 0,
+          "issue": 37
+        },
+        {
+          "id": "T014",
+          "status": "todo",
+          "attempts": 0,
+          "issue": 38
+        },
+        {
+          "id": "T015",
+          "status": "todo",
+          "attempts": 0,
+          "issue": 39
+        }
+      ]
+    }
+  ],
+  "budgets": {
+    "converge_cycles": {
+      "used": 0,
+      "max": 2
+    },
+    "review_cycles": {
+      "used": 0,
+      "max": 2
+    },
+    "tokens": {
+      "used": 0,
+      "max": 4000000
+    }
+  },
+  "pr": {
+    "number": 24,
+    "draft": true
+  }
+}
