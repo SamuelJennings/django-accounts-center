@@ -68,32 +68,27 @@
         {
           "id": "T001",
           "status": "todo",
-          "attempts": 0,
-          "issue": 25
+          "attempts": 0
         },
         {
           "id": "T002",
           "status": "todo",
-          "attempts": 0,
-          "issue": 26
+          "attempts": 0
         },
         {
           "id": "T003",
           "status": "todo",
-          "attempts": 0,
-          "issue": 27
+          "attempts": 0
         },
         {
           "id": "T004",
           "status": "todo",
-          "attempts": 0,
-          "issue": 28
+          "attempts": 0
         },
         {
           "id": "T005",
           "status": "todo",
-          "attempts": 0,
-          "issue": 29
+          "attempts": 0
         }
       ]
     },
@@ -108,26 +103,22 @@
         {
           "id": "T006",
           "status": "todo",
-          "attempts": 0,
-          "issue": 30
+          "attempts": 0
         },
         {
           "id": "T007",
           "status": "todo",
-          "attempts": 0,
-          "issue": 31
+          "attempts": 0
         },
         {
           "id": "T008",
           "status": "todo",
-          "attempts": 0,
-          "issue": 32
+          "attempts": 0
         },
         {
           "id": "T009",
           "status": "todo",
-          "attempts": 0,
-          "issue": 33
+          "attempts": 0
         }
       ]
     },
@@ -142,38 +133,32 @@
         {
           "id": "T010",
           "status": "todo",
-          "attempts": 0,
-          "issue": 34
+          "attempts": 0
         },
         {
           "id": "T011",
           "status": "todo",
-          "attempts": 0,
-          "issue": 35
+          "attempts": 0
         },
         {
           "id": "T012",
           "status": "todo",
-          "attempts": 0,
-          "issue": 36
+          "attempts": 0
         },
         {
           "id": "T013",
           "status": "todo",
-          "attempts": 0,
-          "issue": 37
+          "attempts": 0
         },
         {
           "id": "T014",
           "status": "todo",
-          "attempts": 0,
-          "issue": 38
+          "attempts": 0
         },
         {
           "id": "T015",
           "status": "todo",
-          "attempts": 0,
-          "issue": 39
+          "attempts": 0
         }
       ]
     }

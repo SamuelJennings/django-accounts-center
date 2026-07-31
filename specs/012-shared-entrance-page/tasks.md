@@ -5,6 +5,9 @@
 Test-first throughout (Article I): each implementation task has a test task before it that fails
 for the right reason first.
 
+This file is the task list. Tasks do not get issues — the issue graph is Epic (#19) and its three
+story sub-issues, and stops there.
+
 US-1 and US-2 are dispatched as one unit of work. They are the two halves of a single move — the
 core page does not exist until US-1 lands, and it has no consumer until US-2 does — so splitting
 them across worktrees would mean the second rebasing onto the first for no gain.

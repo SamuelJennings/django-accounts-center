@@ -65,3 +65,21 @@ new.
 **Defensible because**: US-2 requires the allauth pages to come through the rewiring with
 unchanged output. Any other default makes that story fail by construction, and Article XV asks for
 default behaviour to stay stable across minor releases.
+
+## D6 — Tasks get no issues *(correction, 2026-07-31)*
+
+**What happened**: S3 filed one GitHub issue per task, #25 to #39, following
+`kit/checklists/issue-contract.md`, which specified a `T###` sub-issue tier. Fifteen issues landed
+on a tracker whose entire backlog was seven. Sam rejected it and they were deleted.
+
+**Chosen**: the issue graph is Epic ← Story and stops there. The task list is `tasks.md` on the
+branch plus `feature-state.json`. Where a human needs to see it, it goes as a comment on the story
+issue or in the draft PR.
+
+**Defensible because**: an issue records intent someone might act on or object to. A task records
+how the machine decomposed work already agreed at the Spec gate, and putting it on the tracker
+buries the real reports under bookkeeping. Deleted rather than closed — a closed issue still
+occupies every search result and milestone view.
+
+**Recorded at source** so it cannot recur: the contract, the issue-graph and pipeline references,
+and the ledger schema were all amended the same day.

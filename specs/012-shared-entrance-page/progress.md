@@ -44,3 +44,13 @@ a block override wrapping a small composition component. Recorded as P1–P5 in 
 
 US-1 and US-2 dispatch as one unit — they are the two halves of one move, and splitting them
 across worktrees would only mean the second rebasing onto the first.
+
+## 2026-07-31 — Correction: task issues deleted
+
+S3 filed 15 task issues (#25–#39) per the then-current issue contract. Sam rejected it as tracker
+noise and they were deleted (not closed — a closed issue still shows in search and milestone
+views). Task issue references stripped from the ledger. The rule was fixed at source the same day
+so no future run repeats it. See D6 in `decisions.md`.
+
+The implementation run for US-1 was unaffected: Implementers hold no tokens and never touch the
+issue tracker.
