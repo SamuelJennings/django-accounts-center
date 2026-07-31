@@ -252,7 +252,31 @@ module. Verified the pre-existing tests that use this file are unaffected: full 
 **Revisit if:** a future story needs a URLconf with dac's own core route (`account-center`) but
 not `dac.allauth`'s — `tests/urls_minimal.py` currently mounts neither.
 
-### D17 — `dac/base.html`'s breadcrumb root link never actually evaluates its `href`
+### D17 — the breadcrumb root link renders a duplicated `href`
+
+**Corrected after the story landed.** The original entry (kept below, struck through) concluded the
+root crumb's `href` is never evaluated and "has never pointed anywhere". That is wrong, and the
+correction matters because a future story would otherwise start from a false premise.
+
+**What actually happens**, confirmed by rendering the test integration's page under both URLconfs:
+
+- Under the normal URLconf the tag *is* evaluated. The markup is
+  `<a href="/account-center/" href="/account-center/">Account Center</a>` — resolved correctly, but
+  the attribute is emitted twice. Browsers honour the first, so the link works and the defect is
+  invalid markup rather than a dead link.
+- Under `tests/urls_minimal.py`, where the name cannot be reversed, the unresolved tag text leaks
+  into the page as the attribute value instead of raising. That is the only condition under which
+  the literal appears, and it is why the page did not 500.
+
+**Cause**, and it is not in this package: `mvp/templates/cotton/breadcrumbs/item.html` renders
+`<a href="{{ href }}" {{ attrs }}>` while its `<c-vars text class />` does not declare `href`, so
+the attribute stays in the `attrs` passthrough and is written a second time verbatim. Every
+breadcrumb link in every app using the component carries it. Filed upstream against `django-mvp`;
+no change here, and nothing in this feature depends on it.
+
+<del>
+
+#### Original entry — `dac/base.html`'s breadcrumb root link never actually evaluates its `href`
 
 **Found by:** designing T017. The concern going in was that opening the test integration's page
 under a URLconf with no `account-center` route registered would 500 — `dac/base.html`'s breadcrumb
@@ -275,3 +299,5 @@ for a reason this story has no mandate to fix).
 
 **Revisit if:** a story touching `dac/base.html`'s breadcrumbs fixes the root crumb — worth adding
 a regression test for the fix at that point.
+
+</del>
