@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     "example",
     "dac",
     "dac.allauth",
+    "tests.testapp",
     "mvp",
     "allauth",
     "allauth.account",
