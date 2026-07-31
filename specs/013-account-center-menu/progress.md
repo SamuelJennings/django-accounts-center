@@ -220,3 +220,24 @@ unmodified against the T008 rewrite. No edit made to the file (`git diff --stat`
 **Next:** T010 — the per-person menu-markup comparison test.
 
 **Watch:** nothing new.
+
+### 2026-07-31 · Implementer US-2 · T010
+
+**Did:** Added `TestMenuDiffersByPerson` to `tests/test_menus.py`: `gated_client` and
+`ungated_client` each request `/account-center/`, and a shared `_menu_labels()` helper parses each
+response with `BeautifulSoup`, collecting the set of `<span>` texts inside
+`<aside aria-label="Account navigation">` (both the mobile dropdown and the desktop card render
+the same menu inside that one `aside`, per `dac/base.html`, so this counts each label once
+regardless of which render site shows it — Article XII: asserted on rendered markup, not
+`get_active_section()`'s return value). Asserts `"Gated"` is present for `gated_client`, absent for
+`ungated_client`, and the set difference between the two menus is exactly `{"Gated"}` in both
+directions — i.e. the menus differ in that one entry and nothing else.
+
+**Verified:** `poetry run ruff check .` — all checks passed. `poetry run djlint .` — 36 files, 0
+errors. `poetry run mypy tests/test_menus.py` — no issues. `poetry run pytest -q` — **255 passed**
+(254 baseline + this test).
+
+**Next:** T011 — confirm the rest of the page (other entries, content, messages) is unaffected for
+the person the gated entry is hidden from.
+
+**Watch:** nothing new.
