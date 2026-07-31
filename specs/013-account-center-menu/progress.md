@@ -357,6 +357,115 @@ visibility, the pre-existing breadcrumb suite is untouched and green, and the pe
 rendering, page content and messages region are all covered by markup-level tests without
 duplicating flex-menus' own test surface.
 
+## US-4 — The recorded decision matches the built behaviour (Implementer, 2026-07-31)
+
+### 2026-07-31 · Implementer US-4 · T019
+
+**Did:** Rewrote `docs/adr/0002-account-center-visibility-is-per-request.md` against
+`dac/menus.py` and `tests/test_menus.py` as they stand on this branch, not against the brief's
+summary of them. Status changes from "accepted, not yet implemented" to "accepted, implemented for
+menu entries". The **State** section now describes the actual mechanism: an integration passes
+flex-menus' `check` argument to a `MenuItem` from its own `menus.py`, flex-menus evaluates it per
+request, an entry whose check returns false is absent from the rendered tree, flex-menus hides a
+group left with no visible children, an entry with no check stays visible unconditionally, and
+`get_active_section()` reads the menu's declared entries rather than the per-request tree so
+breadcrumb resolution does not depend on any entry's visibility. Added an explicit line that cards
+are unchanged — still decided from `app_is_installed()` alone with no per-request check — so the
+ADR does not read as though R3's own feature already landed. Roadmap reference changes from R6 to
+R2 (confirmed against `docs/ROADMAP.md`: R2 is "The management page", under Essential goals,
+matching the ADR's existing "Essential phase" claim; R6 is "The allauth integration", under
+Expected goals). The original **Decision** and **Why** sections are untouched — nothing there was
+wrong, only **Status** and **State** described a build that had not happened yet.
+
+**Verified:** `poetry run djlint docs/adr/0002-account-center-visibility-is-per-request.md` — 1
+file, 0 errors. No code or tests touched, so no case to run `pytest` yet for this task alone.
+
+**Next:** T020 — add the Visibility check glossary entry to `CONTEXT.md` and correct the
+Integration entry.
+
+**Watch:** nothing new.
+
+### 2026-07-31 · Implementer US-4 · T020
+
+**Did:** Added a **Visibility check** entry to `CONTEXT.md` (FR-011), defining it as an
+integration's per-request answer for one menu entry, naming django-flex-menus' own `check`
+argument as the mechanism (no package-level API over it — the plan explicitly rules that out),
+noting it is optional and defaults to visible, and pointing at `dac/menus.py` and
+`tests/testapp/menus.py` as the worked example. Placed it directly after **Integration**, which it
+corrects: that entry's "second half is decided but not built" line becomes "for menu entries the
+second half is built", naming the visibility check mechanism, while leaving overview cards
+described as still decided-not-built — matching T019's ADR correction so the two documents agree.
+
+**Verified:** `poetry run djlint CONTEXT.md` — 3 pre-existing orphan-tag warnings at
+(now-shifted) lines 35, 101 and 102, confirmed unrelated to this change by diffing against the
+pre-edit file (`git stash`); no new warnings. `poetry run pytest -q` — **263 passed** (no code or
+tests touched).
+
+**Next:** T021 — the Integrations contract and worked example in `docs/index.md`.
+
+**Watch:** nothing new.
+
+### 2026-07-31 · Implementer US-4 · T021
+
+**Did:** Added a **Menu entries** subsection to `docs/index.md`'s Integrations section: a worked
+example (a `_has_a_team` check on a `team_settings` entry, short enough to copy, mirroring the
+shape `tests/testapp/menus.py` actually uses) followed by three bullets stating the contract —
+pass `check=` for an entry that applies to only some people, hiding is presentation only so the
+integration's own view still owns access, and a section root needs `view_name` rather than a bare
+`url=` because `get_active_section()` reads the declared menu, where a `url=` entry has no
+resolved URL yet (confirmed against `MenuItem.__init__`'s signature — `view_name` and `url` are
+separate parameters — and `dac/menus.py:59`, which filters leaves on `item.view_name`).
+
+**Verified:** `poetry run djlint docs/index.md` — first pass found two `H014` "extra blank lines"
+warnings inside the code fence (djlint checks blank-line runs inside fenced code, not just HTML);
+fixed by dropping the worked example's two-blank-line PEP8 spacing to single blank lines, which
+`djlint` and `ruff format --diff` (checked ad hoc, not committed) both accept for a four-line
+module. Re-ran — 1 file, 0 errors. `poetry run pytest -q` — **263 passed** (no code or tests
+touched).
+
+**US-4 documents done (T019–T021).** ADR 0002, `CONTEXT.md` and `docs/index.md` now describe the
+same thing the code and `tests/test_menus.py` do: visibility checks are implemented for menu
+entries via flex-menus' `check`, cards remain decided-not-built, and breadcrumb resolution reads
+the declared menu independent of any entry's visibility.
+
+**Next:** T022 — run the humanizer skill over every public markdown file this story touched.
+
+**Watch:** nothing new.
+
+### 2026-07-31 · Implementer US-4 · T022
+
+**Did:** Ran the humanizer checklist over every hunk touched by T019–T021 (the ADR, `CONTEXT.md`,
+`docs/index.md`) — not a handle grep alone. Checked for: inflated-significance language,
+promotional wording, vague attribution, AI-vocabulary words (delve, crucial, underscore, pivotal,
+tapestry, testament, vibrant, foster, garner, intricate, enhance, showcase, leverage, robust,
+seamless), copula avoidance, negative parallelisms, rule-of-three padding, synonym cycling, false
+ranges, inline-bold-header lists, title-case headings, emoji, curly quotes, sycophantic tone,
+filler phrases and knowledge-cutoff disclaimers. None present. Em dashes appear at roughly the same
+density as the surrounding untouched prose (`CONTEXT.md` already carries 18 outside this story's
+additions) — kept as the file's established style rather than stripped, since removing them here
+alone would make the new prose inconsistent with its neighbours. Separately grepped all three files
+for internal handles — `forge`, `AEO`, `engineering.org`, `US-[0-9]`, `T0[0-9]{2}`, `lane` — case
+insensitive: zero matches. Headings added (`## Visibility check`, `### Menu entries`) use sentence
+case, matching the glossary's existing `## Overview card hooks` / `## Entrance layout` style.
+
+Logged one implementer decision from T021 in `decisions.md` (D30): the worked example is a fresh
+`_has_a_team`/`team_settings` check rather than `tests/testapp/menus.py`'s real
+`_visible_to_gated_group` copied verbatim, because that fixture's `getattr(request, "user", None)`
+guard exists only for a rendering-harness reason (D14) that would be noise or a silent gap in a
+public worked example.
+
+**Verified:** `poetry run djlint .` — 36 files, 0 errors. `poetry run pytest -q` — **263 passed**
+(no code or tests touched across T019–T022).
+
+**US-4 done (T019–T022).** ADR 0002, `CONTEXT.md` and `docs/index.md` describe the shipped
+menu-entry visibility mechanism, cite R2, and state plainly that cards remain decided-not-built.
+No internal handles or lane references in any of the three files. Full suite still green at 263,
+unchanged from the US-3 baseline, since this story edited no code and no test.
+
+**Next:** none for this story — T023–T025 (convergence) are the orchestrator's.
+
+**Watch:** nothing new.
+
 **Next:** T012 (orchestrator) — browser confirmation at desktop and mobile widths, including the
 mobile dropdown button label on `testapp_gated`'s page for `ungated_client` (the exact case D17
 surfaced) — that button should read "Gated", not fall back to "Account Center", which is the
