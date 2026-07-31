@@ -94,3 +94,17 @@ public prose. Four findings were real and are fixed on the branch:
 One thing found and deliberately left alone: the committed `dac/static/css/dac.css` is unminified
 and stale, while `npm run build:css` minifies. That predates this feature, and correcting it
 rewrites a 7,000-line generated artifact inside a feature PR. Filed separately.
+
+## 2026-07-31 — S7 PR_READY, corrections
+
+Two conventions were corrected after the fact, both cases of following a written instruction past
+the point where the repository's own history contradicted it:
+
+- The PR carried a `[WIP]` prefix. Every merged feature PR in the family reads `FS-NNN: <title>`
+  with no status marker. Retitled to match the epic exactly, and the prefix removed from the
+  process docs so it cannot recur.
+- The three story completion comments had never been posted, so `check-story-comments` was red.
+  Written from the delivered work and posted before the merge gate.
+
+Both machine gates are green. All seven required CI checks pass. The bot is author, committer and
+last pusher, so the approval gate will clear.

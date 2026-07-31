@@ -2,7 +2,7 @@
   "feature": "012-shared-entrance-page",
   "branch": "012-shared-entrance-page",
   "repo": "django-mvp/django-accounts-center",
-  "state": "REVIEW",
+  "state": "GATE_MERGE",
   "state_history": [
     {
       "state": "INTAKE",
@@ -40,6 +40,16 @@
       "state": "REVIEW",
       "at": "2026-07-31T12:55:00Z",
       "note": "three-reviewer panel; findings addressed on the branch"
+    },
+    {
+      "state": "PR_READY",
+      "at": "2026-07-31T13:30:00Z",
+      "note": "PR body rewritten; PR title corrected to the family convention (no [WIP])"
+    },
+    {
+      "state": "GATE_MERGE",
+      "at": "2026-07-31T13:40:00Z",
+      "note": "story-comment and issue-title gates green; 7/7 CI checks green; awaiting Sam"
     }
   ],
   "gates": {
@@ -189,7 +199,7 @@
   },
   "pr": {
     "number": 24,
-    "draft": true
+    "draft": false
   },
   "verification": {
     "T006": {
