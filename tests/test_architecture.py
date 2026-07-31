@@ -105,9 +105,7 @@ def test_core_entrance_templates_reference_no_integration():
     integration installed, so neither may reference a template path under an
     integration sub-app — dac/allauth/ today, or any future dac/<package>/."""
     dac_root = DAC_CORE_TEMPLATES.parent
-    integrations = {
-        p.name for p in dac_root.iterdir() if p.is_dir() and (p / "templates").exists()
-    }
+    integrations = {p.name for p in dac_root.iterdir() if p.is_dir() and (p / "templates").exists()}
     entrance_files = (
         DAC_CORE_TEMPLATES / "dac" / "entrance.html",
         DAC_CORE_TEMPLATES / "cotton" / "dac" / "entrance.html",

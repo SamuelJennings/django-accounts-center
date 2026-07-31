@@ -81,6 +81,7 @@ def _entrance_with_size(size):
         "{% endblock entrance %}"
     )
 
+
 # mvp's <c-entrance small> branch adds this class (see the `small` c-var in
 # django-mvp's cotton/entrance/index.html); its absence is the "full" branch.
 _SMALL_WIDTH_CLASS = "md:max-w-2xl"
