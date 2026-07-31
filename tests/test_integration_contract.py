@@ -23,19 +23,20 @@ class TestSecondIntegrationServesManagementPage:
 
     def test_sub_menu_present(self, authenticated_client):
         """The Account Center sub menu (dac/base.html's own aside) renders,
-        and it carries the test integration's own group."""
+        carries the test integration's own group, and links back to the
+        Account Center overview."""
         response = authenticated_client.get(reverse("testapp_settings"))
         content = response.content.decode()
         assert 'aria-label="Account navigation"' in content
         assert "Test App" in content
+        assert f'href="{reverse("account-center")}"' in content
 
     def test_breadcrumbs_present(self, authenticated_client):
-        """The trail is 'Account Center' (link) -> 'Settings' (current, plain
-        text) — the same shape dac.allauth's own pages carry."""
+        """The trail carries 'Settings' as the current (leaf) crumb — the
+        same shape dac.allauth's own pages carry."""
         response = authenticated_client.get(reverse("testapp_settings"))
         content = response.content.decode()
         assert 'aria-label="Breadcrumbs"' in content
-        assert f'href="{reverse("account-center")}"' in content
         assert "Settings" in content
 
     def test_own_content_present(self, authenticated_client):
@@ -43,3 +44,39 @@ class TestSecondIntegrationServesManagementPage:
         response = authenticated_client.get(reverse("testapp_settings"))
         content = response.content.decode()
         assert "Test App Settings" in content
+
+
+@pytest.mark.django_db
+class TestSecondIntegrationServesManagementPageWithoutAllauth:
+    """FR-008, scenario 3 — the page still renders, and references no
+    integration-owned template, when ``dac.allauth`` is absent.
+
+    Uses the suite's existing minimal-URLconf isolation pattern rather than a
+    new mechanism (see tests/test_components/test_dac_base.py's
+    ``settings.ROOT_URLCONF = "tests.urls_minimal"`` tests): tests/urls_minimal.py
+    mounts nothing dac-related at all, so it stands in for "dac.allauth
+    absent" a fortiori — the test integration's own view still reaches the
+    page with no dac URL, allauth or otherwise, registered.
+    """
+
+    def test_response_is_successful(self, authenticated_client, settings):
+        settings.ROOT_URLCONF = "tests.urls_minimal"
+        response = authenticated_client.get(reverse("testapp_settings"))
+        assert response.status_code == 200
+
+    def test_own_content_still_present(self, authenticated_client, settings):
+        settings.ROOT_URLCONF = "tests.urls_minimal"
+        response = authenticated_client.get(reverse("testapp_settings"))
+        content = response.content.decode()
+        assert "Test App Settings" in content
+
+    def test_references_no_integration_template(self, authenticated_client, settings):
+        """No template from ``dac.allauth`` (or any other integration) is
+        used to render this page — it reaches ``dac/base.html`` and its own
+        ``testapp/settings.html`` only."""
+        settings.ROOT_URLCONF = "tests.urls_minimal"
+        response = authenticated_client.get(reverse("testapp_settings"))
+        template_names = {t.name for t in response.templates if t.name}
+        integration_prefixes = ("account/", "allauth/", "dac/allauth/")
+        offending = {name for name in template_names if name.startswith(integration_prefixes)}
+        assert not offending
