@@ -414,6 +414,35 @@ errors. `poetry run mypy .` — 2 pre-existing errors only, unchanged. `poetry r
 
 **Watch:** nothing new.
 
+### 2026-07-31 · Implementer US-1 · T015
+
+**Did:** Added `TestAllauthEntriesUnchanged` to `tests/test_menus.py`: `authenticated_client` (a
+plain signed-in person, not a member of the test app's gated group) requests `/account-center/`
+and the rendered menu carries all five of `dac.allauth`'s labels — `"Email"`, `"Password"`,
+`"Connected accounts"`, `"Two-factor authentication"`, `"Sessions"` — asserted individually
+(`<=` on a set of literals) rather than as a substring check, so the test fails if the feature
+changed any one of them (FR-007). All five appear because `tests/settings.py` installs
+`allauth.socialaccount`, `allauth.mfa` and `allauth.usersessions`.
+
+Confirmed failing for the right reason before passing: mutated one expected label
+(`"Two-factor authentication"` → `"Two-factor authentication-NOPE"`), watched the assertion fail
+listing that exact extra item, reverted. Passed immediately once written — `dac/allauth/menus.py`
+contributes none of its entries with a `check`, so US-1's mechanism has nothing to act on here;
+this test is a regression guard for FR-007, not a proof of new behaviour.
+
+**Verified:** `poetry run ruff check .` — all checks passed. `poetry run djlint .` — 36 files, 0
+errors. `poetry run mypy .` — 2 pre-existing errors only, unchanged. `poetry run pytest -q` —
+**267 passed** (266 + 1).
+
+**US-1 done (T013–T015).** No file under `dac/` or `tests/testapp/` was touched — every assertion
+runs against the mechanism US0 already wired up. `tests/test_menus.py` now covers the full US-1
+acceptance surface: a declared check is asked per person (T013), an absent check keeps an entry
+visible (T014), and the one real integration in this repo is unaffected (T015).
+
+**Next:** none — this story's tasks are complete. Convergence (Phase 6) is the orchestrator's.
+
+**Watch:** nothing new.
+
 
 
 
