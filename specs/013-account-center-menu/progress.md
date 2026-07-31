@@ -443,6 +443,26 @@ visible (T014), and the one real integration in this repo is unaffected (T015).
 
 **Watch:** nothing new.
 
+### 2026-07-31 · Forge review of US-1
+
+**Did:** Replaced T013's two tests with one that asserts FR-002 directly — the same signed-in
+person, the same session, reads a different menu once the group membership their entry's check
+consults changes. The pair it replaces (`"Gated"` present for `gated_client`, absent for
+`ungated_client`) were strict subsets of `TestMenuDiffersByPerson`'s assertions on the same
+fixtures, so nothing could fail them without failing T010 first. D20 defended that overlap on
+story-independence grounds; D21 supersedes it and records why independence is owned by the
+requirement, not by the assertion. T014 and T015 accepted unchanged.
+
+**Verified:** mutation-checked the replacement — with the membership change removed, it fails on the
+second assertion, which is the per-request evaluation the test exists to prove. `poetry run ruff
+check .` clean, `poetry run djlint .` 36 files 0 errors, `poetry run mypy .` 2 pre-existing errors
+only, `poetry run pytest -q` — **266 passed** (263 baseline + 3).
+
+**Next:** merge US-1 onto the feature branch; US-4 outstanding.
+
+**Watch:** T010 is now the sole holder of the presence/absence assertions. If US-2's test is ever
+narrowed, US-1 loses that coverage silently.
+
 
 
 

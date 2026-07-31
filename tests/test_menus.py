@@ -66,20 +66,28 @@ class TestMenuDiffersByPerson:
 
 @pytest.mark.django_db
 class TestGatedEntryVisibilityCheck:
-    """FR-001, FR-002, FR-003: the developer-facing contract US-1 rests on —
-    an integration attaches a visibility check to a menu entry, and the
-    Account Center asks it per request for whoever is looking. Not tested
-    here: that ``check`` is called or that a false result hides an item —
-    that is flex-menus' own behaviour (tasks.md Phase 3, "Not tested here").
+    """FR-002: the visibility check an integration declares is asked on every
+    request, not once when the menu is built. ``AccountCenterMenu`` is
+    assembled at import, so the answer must not be captured at import, at
+    sign-in, or in any cache in between. Not tested here: that ``check`` is
+    called or that a false result hides an item — that is flex-menus' own
+    behaviour (tasks.md Phase 3, "Not tested here"). That an entry is present
+    for one person and absent for another is TestMenuDiffersByPerson.
     """
 
-    def test_gated_entry_present_for_the_person_it_applies_to(self, gated_client):
-        response = gated_client.get(reverse("account-center"))
-        assert "Gated" in _menu_labels(response)
+    def test_check_is_asked_again_when_the_answer_changes(self, ungated_client, ungated_person):
+        """The same signed-in person, unchanged session, reads a different
+        menu once the fact their entry's check consults changes."""
+        from django.contrib.auth.models import Group
 
-    def test_gated_entry_absent_for_the_person_it_does_not_apply_to(self, ungated_client):
-        response = ungated_client.get(reverse("account-center"))
-        assert "Gated" not in _menu_labels(response)
+        from tests.testapp.menus import GATED_GROUP_NAME
+
+        assert "Gated" not in _menu_labels(ungated_client.get(reverse("account-center")))
+
+        group, _ = Group.objects.get_or_create(name=GATED_GROUP_NAME)
+        ungated_person.groups.add(group)
+
+        assert "Gated" in _menu_labels(ungated_client.get(reverse("account-center")))
 
 
 @pytest.mark.django_db
