@@ -2,7 +2,7 @@
   "feature": "012-shared-entrance-page",
   "branch": "012-shared-entrance-page",
   "repo": "django-mvp/django-accounts-center",
-  "state": "REVIEW",
+  "state": "MERGED",
   "state_history": [
     {
       "state": "INTAKE",
@@ -40,6 +40,20 @@
       "state": "REVIEW",
       "at": "2026-07-31T12:55:00Z",
       "note": "three-reviewer panel; findings addressed on the branch"
+    },
+    {
+      "state": "PR_READY",
+      "at": "2026-07-31T11:20:00Z"
+    },
+    {
+      "state": "GATE_MERGE",
+      "at": "2026-07-31T11:32:29Z",
+      "note": "approved by Sam"
+    },
+    {
+      "state": "MERGED",
+      "at": "2026-07-31T11:32:40Z",
+      "note": "PR #24 merged by Sam as 5f55521"
     }
   ],
   "gates": {
@@ -62,8 +76,8 @@
       ]
     },
     "merge": {
-      "approved_by": null,
-      "at": null
+      "approved_by": "SamuelJennings",
+      "at": "2026-07-31T11:32:40Z"
     }
   },
   "stories": [
@@ -78,27 +92,73 @@
         {
           "id": "T001",
           "status": "done",
-          "attempts": 2
+          "attempts": 2,
+          "evidence": {
+            "tests": [
+              "tests/test_components/test_dac_entrance.py::TestEntrancePageBlockContract"
+            ],
+            "commands": [
+              "/home/sam/.cache/pypoetry/virtualenvs/django-accounts-center-hZ4gdO7I-py3.14/bin/python -m pytest tests/test_components/test_dac_entrance.py tests/test_architecture.py -q"
+            ],
+            "verified_by_ci": true
+          }
         },
         {
           "id": "T002",
           "status": "done",
-          "attempts": 1
+          "attempts": 1,
+          "evidence": {
+            "tests": [
+              "tests/test_components/test_dac_entrance.py::TestEntrancePageBlockContract::test_one_centered_card_present",
+              "tests/test_components/test_dac_entrance.py::TestEntrancePageBlockContract::test_site_logo_present"
+            ],
+            "commands": [
+              "/home/sam/.cache/pypoetry/virtualenvs/django-accounts-center-hZ4gdO7I-py3.14/bin/python -m pytest tests/test_components/test_dac_entrance.py tests/test_architecture.py -q"
+            ],
+            "verified_by_ci": true
+          }
         },
         {
           "id": "T003",
           "status": "done",
-          "attempts": 1
+          "attempts": 1,
+          "evidence": {
+            "tests": [
+              "tests/test_components/test_dac_entrance.py::TestEntrancePageBlockContract::test_content_block_override_renders",
+              "tests/test_components/test_dac_entrance.py::TestEntrancePageBlockContract::test_stylesheet_link_present",
+              "tests/test_components/test_dac_entrance.py::TestEntrancePageBlockContract::test_queued_message_displays"
+            ],
+            "commands": [
+              "/home/sam/.cache/pypoetry/virtualenvs/django-accounts-center-hZ4gdO7I-py3.14/bin/python -m pytest tests/test_components/test_dac_entrance.py tests/test_architecture.py -q"
+            ],
+            "verified_by_ci": true
+          }
         },
         {
           "id": "T004",
           "status": "done",
-          "attempts": 1
+          "attempts": 1,
+          "evidence": {
+            "tests": [
+              "tests/test_architecture.py::test_core_entrance_templates_reference_no_integration",
+              "tests/test_components/test_dac_entrance.py::TestEntranceStandsAloneWithoutAnIntegration::test_page_renders_without_the_allauth_integration"
+            ],
+            "commands": [
+              "/home/sam/.cache/pypoetry/virtualenvs/django-accounts-center-hZ4gdO7I-py3.14/bin/python -m pytest tests/test_components/test_dac_entrance.py tests/test_architecture.py -q"
+            ],
+            "verified_by_ci": true
+          }
         },
         {
           "id": "T005",
           "status": "done",
-          "attempts": 1
+          "attempts": 1,
+          "evidence": {
+            "commands": [
+              "git diff origin/main...HEAD -- CONTEXT.md"
+            ],
+            "verified_by_ci": false
+          }
         }
       ]
     },
@@ -113,22 +173,56 @@
         {
           "id": "T006",
           "status": "done",
-          "attempts": 1
+          "attempts": 1,
+          "evidence": {
+            "commands": [
+              "rendered login/signup/password-reset/request-login-code before and after the rewiring and diffed; see progress.md S4"
+            ],
+            "verified_by_ci": false
+          }
         },
         {
           "id": "T007",
           "status": "done",
-          "attempts": 1
+          "attempts": 1,
+          "evidence": {
+            "tests": [
+              "tests/test_architecture.py::test_allauth_entrance_layout_delegates_its_chrome"
+            ],
+            "commands": [
+              "/home/sam/.cache/pypoetry/virtualenvs/django-accounts-center-hZ4gdO7I-py3.14/bin/python -m pytest tests/test_components/test_dac_entrance.py tests/test_architecture.py -q"
+            ],
+            "verified_by_ci": true
+          }
         },
         {
           "id": "T008",
           "status": "done",
-          "attempts": 1
+          "attempts": 1,
+          "evidence": {
+            "tests": [
+              "tests/test_architecture.py::test_allauth_entrance_layout_delegates_its_chrome"
+            ],
+            "commands": [
+              "/home/sam/.cache/pypoetry/virtualenvs/django-accounts-center-hZ4gdO7I-py3.14/bin/python -m pytest tests/test_components/test_dac_entrance.py tests/test_architecture.py -q"
+            ],
+            "verified_by_ci": true
+          }
         },
         {
           "id": "T009",
           "status": "done",
-          "attempts": 1
+          "attempts": 1,
+          "evidence": {
+            "tests": [
+              "tests/test_architecture.py::test_no_unexpected_page_template_forks",
+              "tests/test_architecture.py::test_layouts_overridden"
+            ],
+            "commands": [
+              "/home/sam/.cache/pypoetry/virtualenvs/django-accounts-center-hZ4gdO7I-py3.14/bin/python -m pytest tests/test_components/test_dac_entrance.py tests/test_architecture.py -q"
+            ],
+            "verified_by_ci": true
+          }
         }
       ]
     },
@@ -143,32 +237,75 @@
         {
           "id": "T010",
           "status": "done",
-          "attempts": 1
+          "attempts": 1,
+          "evidence": {
+            "tests": [
+              "tests/test_components/test_dac_entrance.py::TestEntranceComponentWidth"
+            ],
+            "commands": [
+              "/home/sam/.cache/pypoetry/virtualenvs/django-accounts-center-hZ4gdO7I-py3.14/bin/python -m pytest tests/test_components/test_dac_entrance.py tests/test_architecture.py -q"
+            ],
+            "verified_by_ci": true
+          }
         },
         {
           "id": "T011",
           "status": "done",
-          "attempts": 1
+          "attempts": 1,
+          "evidence": {
+            "tests": [
+              "tests/test_components/test_dac_entrance.py::TestEntranceComponentWidth::test_size_full_renders_wider_card",
+              "tests/test_components/test_dac_entrance.py::TestEntranceComponentWidth::test_unrecognised_size_falls_back_to_default_width"
+            ],
+            "commands": [
+              "/home/sam/.cache/pypoetry/virtualenvs/django-accounts-center-hZ4gdO7I-py3.14/bin/python -m pytest tests/test_components/test_dac_entrance.py tests/test_architecture.py -q"
+            ],
+            "verified_by_ci": true
+          }
         },
         {
           "id": "T012",
           "status": "done",
-          "attempts": 1
+          "attempts": 1,
+          "evidence": {
+            "commands": [
+              "git diff origin/main...HEAD -- README.md"
+            ],
+            "verified_by_ci": false
+          }
         },
         {
           "id": "T013",
           "status": "done",
-          "attempts": 1
+          "attempts": 1,
+          "evidence": {
+            "commands": [
+              "npm run build:css, rebuilt from pre-change templates and diffed: byte-identical; see progress.md S4"
+            ],
+            "verified_by_ci": false
+          }
         },
         {
           "id": "T014",
           "status": "done",
-          "attempts": 1
+          "attempts": 1,
+          "evidence": {
+            "commands": [
+              "git diff origin/main...HEAD -- CHANGELOG.md"
+            ],
+            "verified_by_ci": false
+          }
         },
         {
           "id": "T015",
           "status": "done",
-          "attempts": 1
+          "attempts": 1,
+          "evidence": {
+            "commands": [
+              "pytest screenshots/ at 1440x900 and 390x844, images read; see progress.md S4"
+            ],
+            "verified_by_ci": false
+          }
         }
       ]
     }
@@ -189,20 +326,6 @@
   },
   "pr": {
     "number": 24,
-    "draft": true
-  },
-  "verification": {
-    "T006": {
-      "how": "Rendered login, signup, password reset and request-login-code through the real allauth stack before and after the rewiring and diffed. Not committed: the plan called for one answer to one question, and Article XIII declines standing baselines.",
-      "result": "Identical after collapsing HTML whitespace. The only source differences are indentation and blank lines around the logo and the card close, which HTML collapses. No tag, attribute, class or text difference on any of the four pages."
-    },
-    "T013": {
-      "how": "npm run build:css, then a second build from the pre-change templates, and diffed the two outputs.",
-      "result": "Byte-identical. The move reuses the same classes, so the shipped stylesheet needs no update from this feature. dac/static/css/dac.css is left untouched."
-    },
-    "T015": {
-      "how": "pytest screenshots/ for login, signup and password reset at 1440x900 and 390x844; read the images.",
-      "result": "Centred card, width cap, logo and absent app shell all as before, at both viewports."
-    }
+    "draft": false
   }
 }
