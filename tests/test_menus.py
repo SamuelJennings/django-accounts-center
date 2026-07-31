@@ -65,6 +65,65 @@ class TestMenuDiffersByPerson:
 
 
 @pytest.mark.django_db
+class TestGatedEntryVisibilityCheck:
+    """FR-002: the visibility check an integration declares is asked on every
+    request, not once when the menu is built. ``AccountCenterMenu`` is
+    assembled at import, so the answer must not be captured at import, at
+    sign-in, or in any cache in between. Not tested here: that ``check`` is
+    called or that a false result hides an item — that is flex-menus' own
+    behaviour (tasks.md Phase 3, "Not tested here"). That an entry is present
+    for one person and absent for another is TestMenuDiffersByPerson.
+    """
+
+    def test_check_is_asked_again_when_the_answer_changes(self, ungated_client, ungated_person):
+        """The same signed-in person, unchanged session, reads a different
+        menu once the fact their entry's check consults changes."""
+        from django.contrib.auth.models import Group
+
+        from tests.testapp.menus import GATED_GROUP_NAME
+
+        assert "Gated" not in _menu_labels(ungated_client.get(reverse("account-center")))
+
+        group, _ = Group.objects.get_or_create(name=GATED_GROUP_NAME)
+        ungated_person.groups.add(group)
+
+        assert "Gated" in _menu_labels(ungated_client.get(reverse("account-center")))
+
+
+@pytest.mark.django_db
+class TestAllauthEntriesUnchanged:
+    """FR-007: dac.allauth's own entries continue to appear exactly as they
+    did before this feature, for a signed-in person. dac.allauth contributes
+    no visibility check on any of its entries, so this is US-1's compatibility
+    guarantee (FR-005) exercised against the one real integration shipped in
+    this repo, not the test integration."""
+
+    def test_allauth_entries_render_as_before(self, authenticated_client):
+        response = authenticated_client.get(reverse("account-center"))
+        labels = _menu_labels(response)
+        assert {
+            "Email",
+            "Password",
+            "Connected accounts",
+            "Two-factor authentication",
+            "Sessions",
+        } <= labels
+
+
+@pytest.mark.django_db
+class TestUngatedEntryStaysVisible:
+    """FR-005: an entry contributed with no visibility check stays visible
+    whenever its integration is installed, regardless of who is looking —
+    declaring a check is optional, and silence means visible."""
+
+    def test_ungated_entry_present_for_both_people(self, gated_client, ungated_client):
+        gated_labels = _menu_labels(gated_client.get(reverse("account-center")))
+        ungated_labels = _menu_labels(ungated_client.get(reverse("account-center")))
+        assert "Ungated" in gated_labels
+        assert "Ungated" in ungated_labels
+
+
+@pytest.mark.django_db
 class TestPageUnaffectedByHiddenEntry:
     def test_other_entries_content_and_messages_render_the_same(self, gated_client, ungated_client):
         """The gated entry's own page renders the same for the person it is

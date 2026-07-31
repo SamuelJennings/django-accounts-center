@@ -360,6 +360,63 @@ so it does not need updating if the dropdown button's markup changes shape later
 
 **Revisit if:** mvp changes the menu item/group templates to render outside an `<li>`.
 
+## US-1 — An integration says who each menu entry is for (Implementer, 2026-07-31)
+
+### D20 — T013 overlaps T010's assertion, deliberately
+
+> **Superseded at review (Forge, 2026-07-31) — see D21.** The reasoning below defends writing
+> assertions that already exist elsewhere. Independent demonstrability is a property of the story,
+> not a licence for a test that cannot fail alone.
+
+~~**Ambiguous:** none at design time — noticed while writing T013.~~
+~~`TestMenuDiffersByPerson` (T010, US-2) already asserts `"Gated" in gated_labels` and `"Gated" not~~
+~~in ungated_labels` on the way to its own conclusion (the menus differ in exactly that one entry).~~
+~~T013's brief (US-1) asks for exactly the same two facts, on their own.~~
+
+~~**Chosen:** wrote `TestGatedEntryVisibilityCheck` as two focused tests — presence for the person~~
+~~the entry applies to, absence for the person it does not — rather than treating T010 as already~~
+~~satisfying T013 and skipping it.~~
+
+~~**Why:** spec.md gives US-1 and US-2 separate Independent Tests on purpose — a developer's "I can~~
+~~declare a check and it's asked per request" (FR-001, FR-002, FR-003) and an end user's "my menu~~
+~~only lists what applies to me" are two different scenarios that happen to share a fixture and a~~
+~~first assertion, not one test wearing two names. Each user story is independently testable and~~
+~~independently demoable per spec-kit's own methodology; collapsing them into one test would make~~
+~~US-1 undemonstrable on its own once US-2's assertion changed shape. This is not the cross-package~~
+~~duplication the forbidden list rules out (D2, and tasks.md's "Not tested here") — both tests assert~~
+~~this package's own contract, not flex-menus' internals, and neither re-derives the other's~~
+~~conclusion (T010 additionally proves the set-difference is exactly `{"Gated"}`, which T013 does not~~
+~~assert).~~
+
+~~**Revisit if:** a future refactor of either story's tests wants to fold the shared premise into one~~
+~~parametrized case — worth doing then, not speculatively now.~~
+
+### D21 — T013 tests FR-002 directly instead of restating T010
+
+**Ambiguous:** what T013 should assert, given T010 already covers presence-for-one-and-absence-for-
+the-other. D20 answered "both, separately". That answer was wrong.
+
+**Chosen:** `TestGatedEntryVisibilityCheck` holds one test — the same signed-in person, the same
+session, reads a different menu once the fact their entry's check consults changes. The two
+presence/absence assertions D20 added are gone; `TestMenuDiffersByPerson` (T010) keeps them.
+
+**Why:** the two tests D20 defended were strict subsets of T010's assertions on the same fixtures,
+so no bug could fail them without failing T010 first. A test with no independent failure it can
+detect is maintenance cost with nothing bought. Story independence is satisfied by US-1 owning a
+requirement of its own, not by re-asserting a neighbour's lines. FR-002 is that requirement — the
+check is evaluated *per request* rather than once when the menu is built — and it was the one FR in
+US-1's brief nothing asserted directly. `AccountCenterMenu` is assembled at import, so an answer
+captured at import, at sign-in, or in any cache in between is a live failure mode this package owns;
+T010's two-people comparison is only a proxy for it and passes against a per-user cache. Mutation-
+checked: with the membership change removed, the test fails on the second assertion.
+
+FR-001 and FR-005 remain covered by T014 (an entry declaring nothing stays visible for everyone) and
+by the test integration itself, which cannot be constructed at all if an integration cannot attach a
+check.
+
+**Revisit if:** flex-menus grows a documented per-request caching layer — the test then needs to say
+which cache boundary it is asserting across.
+
 ## US-4 — The recorded decision matches the built behaviour (Implementer, 2026-07-31)
 
 ### D30 — `docs/index.md`'s worked example is a fresh team/billing-style check, not `tests/testapp/menus.py` reused verbatim

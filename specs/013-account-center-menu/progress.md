@@ -365,6 +365,104 @@ visible proof that FR-006a holds.
 **Watch:** the mobile dropdown toggle button and the real menu items share one `<aside>` — any
 future test parsing that markup needs the same `<li>` filter D17 uses, not a blanket span scan.
 
+## US-1 — An integration says who each menu entry is for (Implementer, 2026-07-31)
+
+### 2026-07-31 · Implementer US-1 · T013
+
+**Did:** Added `TestGatedEntryVisibilityCheck` to `tests/test_menus.py` — two cases, both against
+`/account-center/`: `gated_client` sees `"Gated"` in the rendered menu, `ungated_client` does not.
+Reused `_menu_labels()` (T010) rather than writing a second extractor, per the brief's scaffold
+note. Left it in place in `tests/test_menus.py` rather than moving it — every task in this story
+needed it, and no consumer outside this file exists yet.
+
+Confirmed each assertion fails for the right reason before it passed: mutated the expected label
+in each test in turn (`"Gated"` → `"Gated-NOPE"`, and inverted the negative assertion), watched
+each fail on its own line, then reverted. Both passed immediately once written — the mechanism
+(flex-menus' `check` argument, wired up in US0's `tests/testapp/menus.py`) already does this; this
+story adds no code under `dac/` or `tests/testapp/`.
+
+This overlaps `TestMenuDiffersByPerson` (T010, US-2), which already asserts the same two facts on
+its way to a different conclusion. Recorded as a deliberate choice, not an oversight — see
+decisions.md D20.
+
+**Verified:** `poetry run ruff check .` — all checks passed. `poetry run djlint .` — 36 files, 0
+errors. `poetry run mypy .` — 2 pre-existing errors only (`example/settings.py:97`,
+`tests/test_components/conftest.py:17`), unchanged. `poetry run pytest -q` — **265 passed** (263
+baseline + 2).
+
+**Next:** T014 — the ungated entry stays visible for both people.
+
+**Watch:** nothing new.
+
+### 2026-07-31 · Implementer US-1 · T014
+
+**Did:** Added `TestUngatedEntryStaysVisible` to `tests/test_menus.py`: both `gated_client` and
+`ungated_client` see `"Ungated"` in the rendered menu at `/account-center/` (FR-005 — an entry
+contributed with no visibility check stays visible regardless of who is looking). Reused
+`_menu_labels()` again.
+
+Confirmed failing for the right reason before passing: mutated the first assertion
+(`"Ungated"` → `"Ungated-NOPE"`), watched it fail on that line, reverted. Passed immediately once
+written, for the same reason as T013 — the `ungated` entry (no `check` argument) has worked this
+way since US0.
+
+**Verified:** `poetry run ruff check .` — all checks passed. `poetry run djlint .` — 36 files, 0
+errors. `poetry run mypy .` — 2 pre-existing errors only, unchanged. `poetry run pytest -q` —
+**266 passed** (265 + 1).
+
+**Next:** T015 — `dac.allauth`'s own entries are unchanged.
+
+**Watch:** nothing new.
+
+### 2026-07-31 · Implementer US-1 · T015
+
+**Did:** Added `TestAllauthEntriesUnchanged` to `tests/test_menus.py`: `authenticated_client` (a
+plain signed-in person, not a member of the test app's gated group) requests `/account-center/`
+and the rendered menu carries all five of `dac.allauth`'s labels — `"Email"`, `"Password"`,
+`"Connected accounts"`, `"Two-factor authentication"`, `"Sessions"` — asserted individually
+(`<=` on a set of literals) rather than as a substring check, so the test fails if the feature
+changed any one of them (FR-007). All five appear because `tests/settings.py` installs
+`allauth.socialaccount`, `allauth.mfa` and `allauth.usersessions`.
+
+Confirmed failing for the right reason before passing: mutated one expected label
+(`"Two-factor authentication"` → `"Two-factor authentication-NOPE"`), watched the assertion fail
+listing that exact extra item, reverted. Passed immediately once written — `dac/allauth/menus.py`
+contributes none of its entries with a `check`, so US-1's mechanism has nothing to act on here;
+this test is a regression guard for FR-007, not a proof of new behaviour.
+
+**Verified:** `poetry run ruff check .` — all checks passed. `poetry run djlint .` — 36 files, 0
+errors. `poetry run mypy .` — 2 pre-existing errors only, unchanged. `poetry run pytest -q` —
+**267 passed** (266 + 1).
+
+**US-1 done (T013–T015).** No file under `dac/` or `tests/testapp/` was touched — every assertion
+runs against the mechanism US0 already wired up. `tests/test_menus.py` now covers the full US-1
+acceptance surface: a declared check is asked per person (T013), an absent check keeps an entry
+visible (T014), and the one real integration in this repo is unaffected (T015).
+
+**Next:** none — this story's tasks are complete. Convergence (Phase 6) is the orchestrator's.
+
+**Watch:** nothing new.
+
+### 2026-07-31 · Forge review of US-1
+
+**Did:** Replaced T013's two tests with one that asserts FR-002 directly — the same signed-in
+person, the same session, reads a different menu once the group membership their entry's check
+consults changes. The pair it replaces (`"Gated"` present for `gated_client`, absent for
+`ungated_client`) were strict subsets of `TestMenuDiffersByPerson`'s assertions on the same
+fixtures, so nothing could fail them without failing T010 first. D20 defended that overlap on
+story-independence grounds; D21 supersedes it and records why independence is owned by the
+requirement, not by the assertion. T014 and T015 accepted unchanged.
+
+**Verified:** mutation-checked the replacement — with the membership change removed, it fails on the
+second assertion, which is the per-request evaluation the test exists to prove. `poetry run ruff
+check .` clean, `poetry run djlint .` 36 files 0 errors, `poetry run mypy .` 2 pre-existing errors
+only, `poetry run pytest -q` — **266 passed** (263 baseline + 3).
+
+**Next:** merge US-1 onto the feature branch; US-4 outstanding.
+
+**Watch:** T010 is now the sole holder of the presence/absence assertions. If US-2's test is ever
+narrowed, US-1 loses that coverage silently.
+
 ## US-4 — The recorded decision matches the built behaviour (Implementer, 2026-07-31)
 
 ### 2026-07-31 · Implementer US-4 · T019
