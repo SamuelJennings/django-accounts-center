@@ -5,6 +5,15 @@ the shared management page (``dac/base.html``). These tests serve one from
 ``tests/testapp`` — a plain installed app the core package knows nothing
 about — to prove the contract holds for any integration, not just the one
 that happens to exist.
+
+What this establishes: ``tests/testapp`` reaches ``dac/base.html`` purely by
+being an installed app that mounts its own URLs and registers its own menu
+group — no line of ``dac/`` (the core package) was changed to make this
+work. What it does not establish: that a project can mount an integration's
+URLs *without* editing its own root URLconf. Automatic URL contribution is
+roadmap item R4 and is out of scope here — this app's URLs are mounted by
+hand in ``tests/urls.py`` / ``tests/urls_minimal.py``, the same way any
+integration's URLs are mounted today.
 """
 
 import pytest

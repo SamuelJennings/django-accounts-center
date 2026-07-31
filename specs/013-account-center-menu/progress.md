@@ -187,3 +187,25 @@ pre-existing errors, unchanged). `poetry run pytest -q` — 259 passed (252 + 7)
 
 **Watch:** decisions.md D17 (the breadcrumb `href` bug) is worth a maintainer's attention outside
 this story — it means the "Account Center" root crumb has never linked anywhere, on any page.
+
+### 2026-07-31 · Implementer US3 · T018
+
+**Did:** Added a module-level docstring paragraph to `tests/test_integration_contract.py` stating
+what T016/T017 establish (the test integration reaches `dac/base.html` purely by being installed
+and mounting its own URLs, no core-package edit) and what they don't (that URL contribution without
+a core edit is possible — that's roadmap R4, out of scope here). No test code changed; this is
+documentation only, verified by rerunning the full suite unchanged.
+
+**Verified:** `poetry run ruff check .`, `poetry run djlint .`, `poetry run mypy .` — clean.
+`poetry run pytest -q` — 259 passed, same as T017 (no assertions added).
+
+**US-3 done.** FR-008 is proven end to end: a second integration (`tests/testapp`, not `dac.*`)
+serves a management view through the shared `dac/base.html`, carrying the sub menu, the
+breadcrumbs and its own content, both with `dac.allauth` present and with no dac-owned URL
+registered at all. No file under `dac/` was touched.
+
+**Next:** none — this story's tasks (T016–T018) are complete. US-4 (T019–T021, the ADR update) is
+a separate story.
+
+**Watch:** decisions.md D17 — the breadcrumb root crumb's dead `href` — is a real bug independent
+of this story and worth a follow-up issue.
