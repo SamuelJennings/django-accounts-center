@@ -405,6 +405,33 @@ tests touched).
 
 **Watch:** nothing new.
 
+### 2026-07-31 · Implementer US-4 · T021
+
+**Did:** Added a **Menu entries** subsection to `docs/index.md`'s Integrations section: a worked
+example (a `_has_a_team` check on a `team_settings` entry, short enough to copy, mirroring the
+shape `tests/testapp/menus.py` actually uses) followed by three bullets stating the contract —
+pass `check=` for an entry that applies to only some people, hiding is presentation only so the
+integration's own view still owns access, and a section root needs `view_name` rather than a bare
+`url=` because `get_active_section()` reads the declared menu, where a `url=` entry has no
+resolved URL yet (confirmed against `MenuItem.__init__`'s signature — `view_name` and `url` are
+separate parameters — and `dac/menus.py:59`, which filters leaves on `item.view_name`).
+
+**Verified:** `poetry run djlint docs/index.md` — first pass found two `H014` "extra blank lines"
+warnings inside the code fence (djlint checks blank-line runs inside fenced code, not just HTML);
+fixed by dropping the worked example's two-blank-line PEP8 spacing to single blank lines, which
+`djlint` and `ruff format --diff` (checked ad hoc, not committed) both accept for a four-line
+module. Re-ran — 1 file, 0 errors. `poetry run pytest -q` — **263 passed** (no code or tests
+touched).
+
+**US-4 documents done (T019–T021).** ADR 0002, `CONTEXT.md` and `docs/index.md` now describe the
+same thing the code and `tests/test_menus.py` do: visibility checks are implemented for menu
+entries via flex-menus' `check`, cards remain decided-not-built, and breadcrumb resolution reads
+the declared menu independent of any entry's visibility.
+
+**Next:** T022 — run the humanizer skill over every public markdown file this story touched.
+
+**Watch:** nothing new.
+
 **Next:** T012 (orchestrator) — browser confirmation at desktop and mobile widths, including the
 mobile dropdown button label on `testapp_gated`'s page for `ungated_client` (the exact case D17
 surfaced) — that button should read "Gated", not fall back to "Account Center", which is the
