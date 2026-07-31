@@ -1,6 +1,6 @@
 # ADR 0002 — Account Center visibility is resolved per request
 
-**Status:** accepted, not yet implemented
+**Status:** accepted, implemented for menu entries
 
 ## Decision
 
@@ -34,13 +34,27 @@ you cannot use is worse than a shorter menu.
 
 ## State
 
-Decided, not built. The code decides visibility once, at import, from `app_is_installed()`; no
-menu item carries a check predicate and the overview page has no visibility predicate at all.
+Implemented for menu entries. An integration passes django-flex-menus' own `check` argument to a
+`MenuItem` it contributes from its `menus.py` — a callable that takes the request and returns
+whether that entry applies to the person making it. django-flex-menus evaluates `check` while
+building the menu for each request, so two people loading the same page are answered separately,
+and an entry whose check returns false is absent from the rendered tree. django-flex-menus already
+hides a group left with no visible children, so a section with nothing left in it loses its
+heading along with its entries — this package relies on that rather than reimplementing it. An
+entry that declares no check stays visible whenever its integration is installed, exactly as
+before this decision existed, so an existing integration needs no change to keep working.
 
-The goal is G6. The work is R6 in the roadmap, in the Essential phase. The mechanism is open —
-django-flex-menus already evaluates a `check` predicate per request, and cards may turn out to be
-better expressed as menu nodes than as the current `AppConfig` attributes. That is a question for
-the feature's own design work, not for this decision.
+Breadcrumb resolution (`get_active_section()`) reads the menu's declared entries rather than the
+per-request tree django-flex-menus builds from them, so which section a URL belongs to does not
+depend on whether the current person can see that section's entry — the breadcrumb and the mobile
+menu's button label name the section for everyone who reaches one of its pages, whether or not
+their menu shows the entry that leads there.
+
+Cards are unchanged. The overview page still decides which cards to render from
+`app_is_installed()` alone, with no per-request check, so that half of this decision stays decided,
+not built. It is roadmap item R3's own feature.
+
+The goal is G6. The work is R2 in the roadmap, in the Essential phase.
 
 ## Revisit if
 

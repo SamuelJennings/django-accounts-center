@@ -357,6 +357,34 @@ visibility, the pre-existing breadcrumb suite is untouched and green, and the pe
 rendering, page content and messages region are all covered by markup-level tests without
 duplicating flex-menus' own test surface.
 
+## US-4 — The recorded decision matches the built behaviour (Implementer, 2026-07-31)
+
+### 2026-07-31 · Implementer US-4 · T019
+
+**Did:** Rewrote `docs/adr/0002-account-center-visibility-is-per-request.md` against
+`dac/menus.py` and `tests/test_menus.py` as they stand on this branch, not against the brief's
+summary of them. Status changes from "accepted, not yet implemented" to "accepted, implemented for
+menu entries". The **State** section now describes the actual mechanism: an integration passes
+flex-menus' `check` argument to a `MenuItem` from its own `menus.py`, flex-menus evaluates it per
+request, an entry whose check returns false is absent from the rendered tree, flex-menus hides a
+group left with no visible children, an entry with no check stays visible unconditionally, and
+`get_active_section()` reads the menu's declared entries rather than the per-request tree so
+breadcrumb resolution does not depend on any entry's visibility. Added an explicit line that cards
+are unchanged — still decided from `app_is_installed()` alone with no per-request check — so the
+ADR does not read as though R3's own feature already landed. Roadmap reference changes from R6 to
+R2 (confirmed against `docs/ROADMAP.md`: R2 is "The management page", under Essential goals,
+matching the ADR's existing "Essential phase" claim; R6 is "The allauth integration", under
+Expected goals). The original **Decision** and **Why** sections are untouched — nothing there was
+wrong, only **Status** and **State** described a build that had not happened yet.
+
+**Verified:** `poetry run djlint docs/adr/0002-account-center-visibility-is-per-request.md` — 1
+file, 0 errors. No code or tests touched, so no case to run `pytest` yet for this task alone.
+
+**Next:** T020 — add the Visibility check glossary entry to `CONTEXT.md` and correct the
+Integration entry.
+
+**Watch:** nothing new.
+
 **Next:** T012 (orchestrator) — browser confirmation at desktop and mobile widths, including the
 mobile dropdown button label on `testapp_gated`'s page for `ungated_client` (the exact case D17
 surfaced) — that button should read "Gated", not fall back to "Account Center", which is the
