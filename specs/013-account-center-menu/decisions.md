@@ -159,6 +159,10 @@ page, that is that story's task to add — this entry is deliberately minimal.
 **Revisit if:** a later story's test needs the `gated` entry to be a real destination rather than a
 menu-presence demonstration.
 
+**Superseded 2026-07-31 (US-2):** that revisit condition was met before US-2 was dispatched — T007
+needs a page to open as the person the entry is hidden from. The orchestrator gave `gated` a
+`view_name` (`testapp_gated`) and a sub-page at commit `6df57ac`. `ungated` still carries none.
+
 ### D12 — The visibility check reads group membership
 
 **Ambiguous:** T002 leaves the check's mechanism to the implementer ("a callable reading an
@@ -301,3 +305,57 @@ for a reason this story has no mandate to fix).
 a regression test for the fix at that point.
 
 </del>
+
+## US-2 — The menu lists only what applies to me (Implementer, 2026-07-31)
+
+### D18 — `_iter_leaves()` drops its `_processed_children` fallback entirely
+
+**Ambiguous:** none at design time, but research.md R2 states "`_iter_leaves()` already falls back
+to `node.children` when `_processed_children` is absent, so it works unchanged" when walking the
+*declared* (unprocessed) `AccountCenterMenu` tree.
+
+**Found:** that fallback never actually triggers on a raw node. `MenuItem.__init__`
+(django-flex-menus, `flex_menu/menu.py:143`) sets `_processed_children = []` unconditionally, on
+every instance, whether or not it has ever been processed — the attribute is never *absent*
+(`getattr(..., None)` returns `[]`, not `None`), it is merely empty until `process()` populates it.
+Checked directly against the raw tree (`poetry run python -c "..."`, not committed): every node's
+`_processed_children` reads `[]`. The old `_iter_leaves()`'s `if children is None:` guard therefore
+never falls through to `node.children` for a raw node — it would treat every group as a childless
+leaf and yield the group itself, never descending to its actual entries.
+
+**Chosen:** rewrote `_iter_leaves()` to walk `node.children` unconditionally, dropping the
+`_processed_children` special case altogether. It is private, used nowhere but
+`get_active_section()` (confirmed by `grep -rn "_iter_leaves"`), and `get_active_section()` no
+longer processes the menu at all, so nothing needs the processed-tree branch any more.
+
+**Why:** the function's one caller changed shape entirely (declared tree, not processed copy), and
+carrying dead logic that silently mismatches its own docstring's claim is a worse hazard than
+deleting it. Verified against both the raw tree (this function's new input) and by the full suite
+staying green, including `tests/test_components/test_breadcrumbs.py` unmodified (T009).
+
+**Revisit if:** a future caller needs to walk a *processed* tree's leaves again — that would need
+the `_processed_children` branch back, written against the processed copy's actual behaviour
+(populated only for nodes that had children, `[]` for processed leaves) rather than the mixed
+raw/processed assumption this entry replaces.
+
+### D19 — Menu-label extraction in tests excludes the mobile dropdown's toggle button
+
+**Ambiguous:** none at design time — found while writing T011's page-comparison test.
+`tests/test_menus.py`'s `_menu_labels()` helper (T010) collected every `<span>` inside
+`<aside aria-label="Account navigation">`. On `testapp_gated`'s own page, that made the gated
+entry look present for `ungated_client` too: the mobile dropdown's toggle button
+(`dac/base.html`, `{% if section %}{{ section.label }}{% else %}...`) renders the *active
+section's* label in its own `<span>`, and that button lives in the same `aside` as the actual menu
+— this is T008's own fix working correctly (FR-006a: the button still names the section for the
+person the entry is hidden from), not a menu-entry leak.
+
+**Chosen:** `_menu_labels()` only counts `<span>` elements nested inside an `<li>` — every real
+menu item and group heading renders inside one (`cotton/menu/item.html`, `cotton/menu/group.html`);
+the dropdown's toggle button does not.
+
+**Why:** confirmed by inspecting the parent chain of the false positive (`span.find_parent("li")`
+was `None`; its ancestors were `button > div > aside`) before changing the helper, rather than
+guessing at a fix. The `<li>` filter is exact rather than heuristic (e.g. excluding by class name),
+so it does not need updating if the dropdown button's markup changes shape later.
+
+**Revisit if:** mvp changes the menu item/group templates to render outside an `<li>`.
