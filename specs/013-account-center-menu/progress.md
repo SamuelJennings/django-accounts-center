@@ -364,3 +364,38 @@ visible proof that FR-006a holds.
 
 **Watch:** the mobile dropdown toggle button and the real menu items share one `<aside>` — any
 future test parsing that markup needs the same `<li>` filter D17 uses, not a blanket span scan.
+
+### 2026-07-31 · Orchestrator · T012
+
+**Did:** Confirmed the feature in a real browser (Article XIII) at 1440×900 and 390×844, signed in
+as each of the two people in turn, on three pages each: the Account Center overview, the gated
+entry's own page, and its sub-page. Driven with the repo's own Playwright (chromium, headless)
+against a live `runserver`. The example project does not install the test integration, so the run
+used a throwaway settings overlay outside the repo (`/tmp/dac_browser/`) that extends
+`example.settings` with `tests.testapp` and mounts its URLs — nothing in the repo was added or
+changed for this check, and no fixture, screenshot harness or `example/` edit was committed.
+
+**What the two people see:**
+
+- The desktop menus differ in exactly one entry. `gated_person` reads Gated, Ungated, Settings
+  under "Test App"; `ungated_person` reads Ungated, Settings. Every `dac.allauth` entry (Email,
+  Password, Connected accounts, Two-factor authentication, Sessions) is identical for both, as is
+  the whole card grid.
+- The "Test App" heading still renders for `ungated_person`, correctly — that group has two other
+  visible entries. The all-entries-hidden case is flex-menus' own behaviour and its own test.
+- On `/test/testapp/gated/` and its sub-page, `ungated_person` — the person the entry is hidden
+  from — gets the full page: the "Account Center › Gated" breadcrumb, the section name, and the
+  view's own content. That is FR-006a holding in a browser rather than only in a test.
+- At 390px the persistent card is replaced by the collapsed dropdown, and its button label reads
+  "Gated" on the gated page for **both** people, "Account Center" on the overview. The mobile
+  label follows the section, not the entry's visibility.
+
+**Verified:** three screenshots kept in the run record
+(`engineering-org/runs/django-accounts-center/013-account-center-menu/evidence/`): both people's
+desktop overview, and `ungated_person`'s mobile view of the page whose entry is hidden from them.
+
+**Next:** US-1 (T013–T015) and US-4 (T019–T022) are running; then convergence.
+
+**Watch:** the throwaway harness needed the two accounts' email addresses marked verified before
+sign-in would complete, because the example project runs allauth with mandatory verification. Worth
+knowing for any future browser check against this project.
