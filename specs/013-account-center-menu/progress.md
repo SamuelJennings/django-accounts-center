@@ -76,3 +76,26 @@ tests/testapp/` — all clean. `poetry run pytest -q` — 252 passed, all pre-ex
 **Watch:** any future check added to this test app should account for the same
 no-`AuthenticationMiddleware` rendering path until dac/base.html tests move to
 `cotton_render_string_soup_authenticated` or an equivalent.
+
+### 2026-07-31 · Implementer US0 · T005
+
+**Did:** Added `gated_person`/`gated_client` and `ungated_person`/`ungated_client` fixtures to
+`tests/conftest.py` — the gated person is a member of `GATED_GROUP_NAME` (imported from
+`tests.testapp.menus`), the ungated person is not.
+
+Smoke-tested the fixtures end-to-end before committing (throwaway, not part of the suite — this
+story writes no assertions): rendering `/account-center/` as `gated_client` showed "Gated" and
+"Ungated"; as `ungated_client` showed only "Ungated"; `gated_client` at
+`/test/testapp/settings/` rendered "Test App Settings". That surfaced a real bug — see decisions.md
+D15 — `gated_client` and `ungated_client` initially shared pytest-django's `client` fixture, so
+requesting both in one test silently collapsed them into the same signed-in person. Fixed with an
+independent `Client()` per fixture, deviating from the brief's "reuse the `authenticated_client`
+style" suggestion for a stated reason.
+
+**Verified:** `poetry run ruff check tests/conftest.py`, `poetry run mypy tests/conftest.py` —
+clean. `poetry run pytest -q` — 252 passed. Smoke test (not committed) confirmed both fixtures
+work correctly together.
+
+**Next:** T006 — confirm the full suite is green as the story's final checkpoint.
+
+**Watch:** nothing new.

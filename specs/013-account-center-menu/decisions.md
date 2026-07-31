@@ -206,3 +206,26 @@ user as "does not apply" (`False`), before falling through to the real group-mem
 `AuthenticationMiddleware`). Handling a request with no `user` attribute at all is not the same as
 swallowing a broken check (D5 still holds: a check that raises for a signed-in person's request
 still propagates the error).
+
+### D15 — `gated_client`/`ungated_client` use a fresh `Client()`, not the shared `client` fixture
+
+**Ambiguous:** none at design time — found by smoke-testing the fixtures end-to-end before
+committing T005 (not part of the story's own suite; this story writes no assertions). T005's brief
+says to follow the existing `authenticated_client` style, which builds on pytest-django's `client`
+fixture.
+
+**Chosen:** both fixtures construct their own `django.test.Client()` instead of depending on the
+shared `client` fixture.
+
+**Why:** pytest caches a fixture's value per fixture *name* for the life of a test. `client` is
+itself function-scoped, so a test requesting both `gated_client(client, ...)` and
+`ungated_client(client, ...)` would receive the *same* `client` object from both — the second
+`force_login()` call silently signs out the first person, and both "different" clients render the
+menu for whichever person was logged in last. `authenticated_client` never hits this because no
+test needs a second, independently-signed-in client alongside it; this story's whole point is a
+test needing exactly that (US1's independent test: two people, one page, compared side by side).
+Confirmed by a throwaway smoke test exercising both fixtures together against the real
+`AccountCenterMenu` and `/account-center/` — not committed, since this story adds no assertions.
+
+**Revisit if:** a later story's fixtures need cookie/session isolation beyond what a fresh
+`Client()` gives for free.
