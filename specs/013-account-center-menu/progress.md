@@ -208,3 +208,15 @@ clean. `poetry run pytest -q` — **254 passed** (252 baseline + T007's two test
 
 **Watch:** nothing new.
 
+### 2026-07-31 · Implementer US-2 · T009
+
+**Did:** Confirmed `tests/test_components/test_breadcrumbs.py` — the pre-existing suite covering
+today's breadcrumb behaviour (section-page trail, sub-page link, overview has none) — passes
+unmodified against the T008 rewrite. No edit made to the file (`git diff --stat` on it is empty).
+
+**Verified:** `poetry run pytest tests/test_components/test_breadcrumbs.py -v` — 3 passed. Full
+`poetry run pytest -q` — 254 passed, confirming the rewrite is not a checkpoint-local pass.
+
+**Next:** T010 — the per-person menu-markup comparison test.
+
+**Watch:** nothing new.
