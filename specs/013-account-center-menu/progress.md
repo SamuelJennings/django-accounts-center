@@ -99,3 +99,28 @@ work correctly together.
 **Next:** T006 — confirm the full suite is green as the story's final checkpoint.
 
 **Watch:** nothing new.
+
+### 2026-07-31 · Implementer US0 · T006
+
+**Did:** Final checkpoint for the story — confirmed the scaffold leaves the suite exactly where it
+started.
+
+**Verified:** `poetry run ruff check .` — all checks passed. `poetry run djlint .` — 36 files, 0
+errors. `poetry run mypy .` — 2 pre-existing errors, both in files this story never touched
+(`example/settings.py:97`, `tests/test_components/conftest.py:17`; confirmed via `git diff a38cbf3
+--stat` against both showing no changes). `poetry run pytest -q` — **252 passed**, matching the
+baseline in progress.md's spec-gate entry exactly. No new failures, no skips, no xfails.
+
+**US0 done.** `tests/testapp/` exists as a plain installed app (not `dac.*`), contributing a
+`MenuGroup` with a `check`-gated entry, a check-free entry, and a URL-backed sectioned entry with
+`url_names`; a management view rendering through `dac/base.html`; and fixtures for two people the
+gated entry does and does not apply to. No file under `dac/` was touched. No assertions about the
+feature were written — that is later stories' job.
+
+**Next:** US-2 (Phase 2, T007–T012) — the breadcrumb fix in `dac/menus.py` and its tests.
+
+**Watch:** decisions.md D14/D15 are two real, non-obvious footguns for whoever writes US-1/US-2's
+assertions: (1) any check added to this test app must tolerate a request with no `user` attribute
+at all (dac/base.html's own structural tests render that way), and (2) `gated_client` and
+`ungated_client` are independent `Client()` instances specifically so both can be signed in within
+one test — don't "simplify" them back onto the shared `client` fixture.
