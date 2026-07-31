@@ -357,6 +357,14 @@ visibility, the pre-existing breadcrumb suite is untouched and green, and the pe
 rendering, page content and messages region are all covered by markup-level tests without
 duplicating flex-menus' own test surface.
 
+**Next:** T012 (orchestrator) — browser confirmation at desktop and mobile widths, including the
+mobile dropdown button label on `testapp_gated`'s page for `ungated_client` (the exact case D17
+surfaced) — that button should read "Gated", not fall back to "Account Center", which is the
+visible proof that FR-006a holds.
+
+**Watch:** the mobile dropdown toggle button and the real menu items share one `<aside>` — any
+future test parsing that markup needs the same `<li>` filter D17 uses, not a blanket span scan.
+
 ## US-4 — The recorded decision matches the built behaviour (Implementer, 2026-07-31)
 
 ### 2026-07-31 · Implementer US-4 · T019
@@ -465,14 +473,6 @@ unchanged from the US-3 baseline, since this story edited no code and no test.
 **Next:** none for this story — T023–T025 (convergence) are the orchestrator's.
 
 **Watch:** nothing new.
-
-**Next:** T012 (orchestrator) — browser confirmation at desktop and mobile widths, including the
-mobile dropdown button label on `testapp_gated`'s page for `ungated_client` (the exact case D17
-surfaced) — that button should read "Gated", not fall back to "Account Center", which is the
-visible proof that FR-006a holds.
-
-**Watch:** the mobile dropdown toggle button and the real menu items share one `<aside>` — any
-future test parsing that markup needs the same `<li>` filter D17 uses, not a blanket span scan.
 
 ### 2026-07-31 · Orchestrator · T012
 
