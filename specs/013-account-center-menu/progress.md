@@ -8,3 +8,18 @@ the merge gate: decisions inside the approved scope are self-resolved and record
 
 Approved artefacts: `spec.md` at 4fa40f5 (12 FRs, 4 stories, 2 clarifications integrated), epic #42,
 stories #43–#46, draft PR #47.
+
+## US0 — Foundational (Implementer)
+
+### 2026-07-31 · Implementer US0 · T001
+
+**Did:** Scaffolded `tests/testapp/` — `__init__.py`, `apps.py` (`TestappConfig`, app name
+`tests.testapp`, label `testapp`), and an empty `templates/testapp/` directory (tracked with
+`.gitkeep`). Not installed yet, so it has no effect on the suite.
+
+**Verified:** `poetry run ruff check tests/testapp/` — all checks passed. `poetry run pytest -q` —
+252 passed (baseline unchanged, app not yet in `INSTALLED_APPS`).
+
+**Next:** T002 — contribute a gated `MenuGroup` from `tests/testapp/menus.py`.
+
+**Watch:** nothing yet.
