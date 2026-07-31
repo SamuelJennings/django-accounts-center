@@ -1,0 +1,9 @@
+{% load i18n mvp %}<c-vars size="sm" />
+<c-entrance small="{% if size != 'full' %}1{% endif %}">
+  <img src="{% logo_url "md" %}"
+       alt="{% trans "Site Logo" %}"
+       width="auto"
+       height="auto"
+       class="h-34 w-auto max-w-full mb-4 mx-auto" />
+  {{ slot }}
+</c-entrance>

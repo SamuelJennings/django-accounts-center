@@ -82,3 +82,39 @@ def test_layouts_overridden():
     layouts_dir = DAC_ALLAUTH_TEMPLATES / "allauth" / "layouts"
     present = {p.stem for p in layouts_dir.glob("*.html")}
     assert {"base", "entrance", "manage"} <= present
+
+
+def test_allauth_entrance_layout_delegates_its_chrome():
+    """The allauth entrance layout (dac/allauth/templates/allauth/layouts/entrance.html)
+    must be a thin block-mapping shim over the core-owned dac/entrance.html: it
+    extends that page and keeps only the allauth block mapping, with no card,
+    background or logo markup of its own."""
+    path = DAC_ALLAUTH_TEMPLATES / "allauth" / "layouts" / "entrance.html"
+    source = path.read_text(encoding="utf-8")
+    assert '{% extends "dac/entrance.html" %}' in source
+    for forbidden in ("c-entrance", "c-messages", "<img", "logo_url", "{% block app %}", "{% block styles %}"):
+        assert forbidden not in source, (
+            f"{path.relative_to(DAC_ALLAUTH_TEMPLATES.parent.parent)} still authors '{forbidden}' "
+            "directly instead of delegating to dac/entrance.html"
+        )
+
+
+def test_core_entrance_templates_reference_no_integration():
+    """The shared entrance page (dac/templates/dac/entrance.html) and its
+    component (dac/templates/cotton/dac/entrance.html) must stand up with no
+    integration installed, so neither may reference a template path under an
+    integration sub-app — dac/allauth/ today, or any future dac/<package>/."""
+    dac_root = DAC_CORE_TEMPLATES.parent
+    integrations = {
+        p.name for p in dac_root.iterdir() if p.is_dir() and (p / "templates").exists()
+    }
+    entrance_files = (
+        DAC_CORE_TEMPLATES / "dac" / "entrance.html",
+        DAC_CORE_TEMPLATES / "cotton" / "dac" / "entrance.html",
+    )
+    for path in entrance_files:
+        source = path.read_text(encoding="utf-8")
+        for integration in integrations:
+            assert integration not in source, (
+                f"{path.relative_to(dac_root.parent)} references integration '{integration}'"
+            )
