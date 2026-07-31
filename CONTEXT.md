@@ -45,10 +45,12 @@ Installation decides whether a contribution **exists**. The request decides
 whether it is **shown** — see
 [ADR 0002](docs/adr/0002-account-center-visibility-is-per-request.md).
 
-The second half is decided but not built: today visibility is settled once at
-startup from `app_is_installed()`, so every signed-in person sees the same
-Account Center. Write new integrations to the ADR, not to the current
-behaviour.
+For menu entries the second half is built: an integration attaches a
+**visibility check** to an entry it wants shown to only some people, and the
+Account Center asks it while building the menu for whoever is looking.
+Overview cards are still decided once at startup from `app_is_installed()`,
+so every signed-in person sees the same cards — that half stays decided, not
+built.
 
 URLs are a further exception to "the integration contributes it": `dac/urls.py`
 names each integration explicitly, so a new integration is not reachable
@@ -58,6 +60,22 @@ without an edit to the core app.
 which refers to a `dac.addons.allauth` import path that was never built, and
 throughout `specs/001`–`011`, which are kept as the historical record and are not
 retrofitted. The real module is `dac.allauth`, app label `dac_allauth`.
+
+## Visibility check
+
+An integration's per-request answer to whether one menu entry applies to the
+person making the current request. It is a property of one entry, answered
+fresh for every request, so two people loading the same page can be answered
+differently.
+
+An integration gives this answer by passing a callable to django-flex-menus'
+own `check` argument on the `MenuItem` it contributes — there is no
+package-specific API layered over it, only this name for the concept. A
+check is optional: an entry that declares none stays visible whenever its
+integration is installed, exactly as an entry without one always has.
+
+`dac/menus.py`, `tests/testapp/menus.py` (the worked example). See
+[ADR 0002](docs/adr/0002-account-center-visibility-is-per-request.md).
 
 ## Overview card hooks
 

@@ -385,6 +385,26 @@ Integration entry.
 
 **Watch:** nothing new.
 
+### 2026-07-31 · Implementer US-4 · T020
+
+**Did:** Added a **Visibility check** entry to `CONTEXT.md` (FR-011), defining it as an
+integration's per-request answer for one menu entry, naming django-flex-menus' own `check`
+argument as the mechanism (no package-level API over it — the plan explicitly rules that out),
+noting it is optional and defaults to visible, and pointing at `dac/menus.py` and
+`tests/testapp/menus.py` as the worked example. Placed it directly after **Integration**, which it
+corrects: that entry's "second half is decided but not built" line becomes "for menu entries the
+second half is built", naming the visibility check mechanism, while leaving overview cards
+described as still decided-not-built — matching T019's ADR correction so the two documents agree.
+
+**Verified:** `poetry run djlint CONTEXT.md` — 3 pre-existing orphan-tag warnings at
+(now-shifted) lines 35, 101 and 102, confirmed unrelated to this change by diffing against the
+pre-edit file (`git stash`); no new warnings. `poetry run pytest -q` — **263 passed** (no code or
+tests touched).
+
+**Next:** T021 — the Integrations contract and worked example in `docs/index.md`.
+
+**Watch:** nothing new.
+
 **Next:** T012 (orchestrator) — browser confirmation at desktop and mobile widths, including the
 mobile dropdown button label on `testapp_gated`'s page for `ungated_client` (the exact case D17
 surfaced) — that button should read "Gated", not fall back to "Account Center", which is the
