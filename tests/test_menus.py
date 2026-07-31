@@ -1,10 +1,11 @@
-"""Breadcrumb resolution independent of a hidden entry's visibility.
+"""Account Center menu entries appear only for the people they apply to.
 
-``dac.menus.get_active_section`` names the current page's section for the
-breadcrumb (``dac/base.html``). FR-006a requires that naming to survive a
-menu entry hidden from the person viewing it — hiding is presentation only,
-and the page frame around a hidden entry's own page must render exactly as
-it does for anyone else. See specs/013-account-center-menu/research.md R2.
+An integration attaches a visibility check to a menu entry it contributes,
+and the entry is absent for anyone the check declines. These tests assert
+what this package contributes: that an entry renders per person, that an
+entry with no check stays visible, and that hiding one entry leaves the rest
+of the page alone. That the check is called at all, and that a false result
+hides an item, is django-flex-menus' behaviour and is tested there.
 """
 
 import pytest
@@ -22,32 +23,12 @@ def _menu_labels(response):
     counts each label once regardless of which of the two render sites shows
     it. The ``<li>`` filter excludes the mobile dropdown's own toggle button,
     which also carries a ``<span>`` with the active section's label
-    (``dac/base.html``'s ``account_section`` mobile button, FR-006a) but is
-    not itself a menu entry.
+    (``dac/base.html``'s ``account_section`` mobile button) but is not itself
+    a menu entry.
     """
     soup = BeautifulSoup(response.content, "html.parser")
     aside = soup.find("aside", attrs={"aria-label": "Account navigation"})
     return {span.get_text(strip=True) for span in aside.find_all("span") if span.find_parent("li")}
-
-
-@pytest.mark.django_db
-class TestBreadcrumbSurvivesHiddenEntry:
-    def test_section_page_breadcrumb_survives_hidden_entry(self, ungated_client):
-        """The gated entry's own page still carries its section breadcrumb
-        for the person the entry is hidden from."""
-        response = ungated_client.get(reverse("testapp_gated"))
-        content = response.content.decode()
-        assert 'aria-label="Breadcrumbs"' in content
-        assert "Gated" in content
-
-    def test_subpage_breadcrumb_survives_hidden_entry(self, ungated_client):
-        """A sub-page of the hidden entry's section still names the section
-        and links back to it, for the person the entry is hidden from."""
-        response = ungated_client.get(reverse("testapp_gated_sub"))
-        content = response.content.decode()
-        assert 'aria-label="Breadcrumbs"' in content
-        assert "Gated" in content
-        assert f'href="{reverse("testapp_gated")}"' in content
 
 
 @pytest.mark.django_db

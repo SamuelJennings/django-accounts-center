@@ -625,3 +625,28 @@ green (node steps skipped, not configured). `forge tamper-check` — 4 flags, al
 **Next:** PR gate.
 
 **Watch:** nothing new.
+
+## 2026-07-31 · Spec amendment · FR-006a withdrawn
+
+Sam reversed the breadcrumb requirement before merge, after asking why `dac/menus.py` carries its
+own tree walk and section resolver when the menu library already computes that. He was right on the
+evidence: `process()` marks the matched item and every ancestor `selected`, verified against a live
+menu, and `_iter_leaves()` returns exactly what anytree's `.leaves` returns.
+
+Reverted:
+
+- `dac/menus.py` restored to `main`, byte-identical.
+- `TestBreadcrumbSurvivesHiddenEntry` removed from `tests/test_menus.py`; the module docstring no
+  longer frames the file around a withdrawn requirement.
+- `testapp_gated_sub` and the `gated` entry's `url_names` removed — scaffolding for the deleted
+  tests and referenced by nothing else.
+- FR-006a and US-2 scenario 5 struck from `spec.md`; the clarification is marked superseded in
+  place rather than deleted.
+- ADR 0002 and `docs/index.md` corrected: breadcrumbs follow visibility, and a person who
+  deep-links to a page whose entry is hidden gets no section crumb.
+
+Filed rather than fixed here: django-flex-menus #34 (sub-page selection, reading the trail) and #35
+(path-equality URL matching), plus dac #48 tracking the breadcrumb redesign — likely templates
+rather than Python, since allauth ships overridable base templates for it.
+
+Verified: `poetry run pytest` 264 passed · `ruff check .` clean · `djlint .` 36 files, 0 errors.

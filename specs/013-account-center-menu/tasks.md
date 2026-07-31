@@ -44,6 +44,9 @@ inventing a second party. This phase builds that party.
 
 ## Phase 2 — US-2 (P1): the menu lists only what applies to me · issue #44
 
+> **T007 to T009 were reverted before merge.** FR-006a was withdrawn (decisions.md D9), so the
+> breadcrumb tests are removed and `dac/menus.py` is restored to `main`. T010 to T012 stand.
+
 **Independent test:** sign in as each of the two people and compare rendered menus and page frames.
 
 - **T007** — Write the failing breadcrumb test in `tests/test_menus.py`: the person the gated entry
@@ -155,7 +158,7 @@ behaviour, covered by flex-menus.
 | FR-004 | covered by the dependency; asserted incidentally by T010 |
 | FR-005 | T002, T014 |
 | FR-006 | T011 |
-| FR-006a | T007, T008, T009 |
+| ~~FR-006a~~ | withdrawn — T007 to T009 reverted |
 | FR-007 | T015 |
 | FR-008 | T003, T016, T017, T018 |
 | FR-009 | T019 |

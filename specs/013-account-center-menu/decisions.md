@@ -106,13 +106,30 @@ roadmap item with its own feature. Widening US-3 to cover it would take work R4 
 Both were found by the taxonomy scan rather than while drafting, which is the argument for running
 the scan at all — drafting only surfaces what the author already thought to question.
 
-### D9 — A hidden entry must not degrade the page frame
+### D9 — A hidden entry must not degrade the page frame — ~~accepted~~ **REVERSED 2026-07-31**
+
+**Reversed by the maintainer before merge.** The requirement is withdrawn, `get_active_section()`
+is restored to the implementation on `main`, and its tests are removed. A person who deep-links to
+a page whose entry is hidden from them now gets no section breadcrumb. What follows is kept as the
+record of why it was taken and why it was wrong.
+
+The reversal: satisfying this meant resolving sections from the *declared* menu instead of the
+processed one, which meant this package hand-rolling a tree walk and a URL match that the menu
+library already owns — `process()` marks the matched item and every ancestor `selected`, verified
+against a live menu. Carrying a private navigation layer to serve one edge case is a cost the
+package should not pay, and the maintainer declined it. The genuine gaps it papered over are now
+filed where they belong: django-flex-menus #34 (pages with no menu item of their own select
+nothing, and the selected trail is not readable) and #35 (URL matching compares raw paths). The
+breadcrumb itself is likely a template problem rather than a Python one — allauth ships overridable
+base templates for exactly this — and that redesign is tracked on this repo's own tracker.
+
+*Original reasoning, superseded:*
 
 **Ambiguous:** the spec said a page whose entry is hidden "behaves exactly as it did before", which
 covered the view but said nothing about the page furniture around it.
 
-**Chosen:** the page renders the same frame for everyone who reaches it, breadcrumbs included
-(FR-006a, US-2 scenario 5).
+**Chosen:** ~~the page renders the same frame for everyone who reaches it, breadcrumbs included
+(FR-006a, US-2 scenario 5).~~
 
 **Why:** `get_active_section()` resolves the breadcrumb by walking the *processed* menu and keeping
 leaves where `item.visible` is true. A check returning false removes the entry from that tree

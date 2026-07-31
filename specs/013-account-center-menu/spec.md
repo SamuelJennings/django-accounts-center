@@ -14,7 +14,7 @@
 
 ### Session 2026-07-31
 
-- Q: When someone opens a management page whose menu entry is hidden from them, does the page frame degrade? → A: No. The breadcrumb and the sub menu render as they do for anyone else on that page.
+- Q: When someone opens a management page whose menu entry is hidden from them, does the page frame degrade? → A: ~~No. The breadcrumb and the sub menu render as they do for anyone else on that page.~~ **Superseded 2026-07-31:** the requirement is dropped. Resolving a section independently of visibility means this package re-deriving navigation state the menu library already owns, and the maintainer declined to carry that. A person who deep-links to a page whose entry is hidden from them gets no section crumb. Tracked for a template-based redesign; see D9.
 - Q: What is this feature's canonical name for an integration's per-request answer? → A: **Visibility check**, matching the word CONTEXT.md and ADR 0002 already use.
 
 ## User Scenarios & Testing *(mandatory)*
@@ -70,13 +70,10 @@ rendered menus.
 2. **Given** a person for whom every entry in one section does not apply, **When** they load an
    Account Center page, **Then** neither the entries nor the section heading appear.
 3. **Given** a person for whom an entry does not apply, **When** they load an Account Center
-   page, **Then** the rest of the menu, the breadcrumbs and the page content are unaffected.
+   page, **Then** the rest of the menu and the page content are unaffected.
 4. **Given** a person following a link to a page whose menu entry is hidden from them, **When**
    they open it, **Then** the page behaves exactly as it did before this feature, because the
    integration alone decides who may open it.
-5. **Given** that same person on that same page, **When** the page renders, **Then** its
-   breadcrumbs name the section as they do for anyone else on that page, rather than falling back
-   to a page with no section.
 
 ---
 
@@ -168,9 +165,6 @@ description of the code match what the package does.
 - **FR-006**: Hiding a menu entry MUST NOT change whether the URL behind it resolves, nor what
   the view behind it does. Access to the page remains the contributing integration's
   responsibility. *(US-2)*
-- **FR-006a**: A page whose menu entry is hidden from the person viewing it MUST render the same
-  page frame as it does for anyone else, including its section breadcrumb. Breadcrumb resolution
-  MUST NOT depend on whether the entry is visible to the current person. *(US-2)*
 - **FR-007**: The entries `dac.allauth` contributes today MUST continue to appear exactly as they
   do now for a person to whom they apply. *(US-2)*
 - **FR-008**: An integration other than `dac.allauth` MUST be able to serve a management view

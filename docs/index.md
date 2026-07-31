@@ -72,13 +72,11 @@ A few things to know before you write one:
 - Hiding is presentation only. Whether an entry shows in the menu and whether its page may be
   opened are separate questions — the URL still resolves whether or not the current person's menu
   shows the entry leading to it, so your view still owns who may open it.
-- Give a section root — an entry other pages' breadcrumbs resolve against — a `view_name`, not a
-  bare `url=`. The Account Center names the current page's section by reading the menu's declared
-  entries, and a `url=` entry has no resolved URL for it to read there.
 - List your sub-pages' URL-name prefixes in `url_names` if the section has pages below its root.
   A page whose URL name starts with one of them is named as belonging to that section, so it gets
   the section's breadcrumb and, on a narrow screen, the section's name on the menu button. Leave
-  `url_names` off and only the section root itself is recognised.
+  `url_names` off and only the section root itself is recognised. A section whose entry is hidden
+  from the current person is not named for them — breadcrumbs follow the menu they actually get.
 
 ## Installation
 

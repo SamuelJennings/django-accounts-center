@@ -34,7 +34,12 @@ MenuItem(name="billing", view_name="billing_overview", check=viewer_has_a_plan, 
 **Not tested here.** Every bullet above is the dependency's own behaviour and is covered by the
 dependency's suite (Sam's rule against cross-package test duplication).
 
-## R2 — Making breadcrumb resolution independent of visibility
+## R2 — Making breadcrumb resolution independent of visibility — **SUPERSEDED 2026-07-31**
+
+> The requirement this research served (FR-006a) was withdrawn by the maintainer before merge, and
+> `get_active_section()` was restored to the implementation on `main`. Option C below was built and
+> then reverted. The reasoning is kept because it is what surfaced the two upstream gaps now filed as
+> django-flex-menus #34 and #35. See decisions.md D9.
 
 **Question:** `get_active_section()` must name the current page's section even when the entry for
 that section is hidden from the person viewing it (FR-006a). How?

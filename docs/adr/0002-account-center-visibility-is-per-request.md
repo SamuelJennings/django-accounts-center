@@ -49,11 +49,12 @@ not apply", because an entry that silently disappears leaves a developer with a 
 and no stack trace, and swallowing the exception would also hide genuine failures in the
 integration's own data access.
 
-Breadcrumb resolution (`get_active_section()`) reads the menu's declared entries rather than the
-per-request tree django-flex-menus builds from them, so which section a URL belongs to does not
-depend on whether the current person can see that section's entry — the breadcrumb and the mobile
-menu's button label name the section for everyone who reaches one of its pages, whether or not
-their menu shows the entry that leads there.
+Breadcrumbs follow visibility rather than working around it. A section is named from the menu the
+current person actually gets, so someone who opens a page whose entry is hidden from them gets no
+section crumb. Naming it anyway would mean this package re-deriving navigation state that
+django-flex-menus already owns, and that is not a layer worth carrying here. The gaps that make the
+alternative tempting are filed upstream (django-flex-menus #34 and #35), and a template-based
+breadcrumb is tracked on this repo's tracker.
 
 Cards are unchanged. The overview page still decides which cards to render from
 `app_is_installed()` alone, with no per-request check, so that half of this decision stays decided,

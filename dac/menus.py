@@ -11,7 +11,6 @@ URL-name prefixes identifying their sub-pages — which breadcrumbs use to
 resolve the active section on pages below a section root.
 """
 
-from django.urls import NoReverseMatch, reverse
 from django.utils.translation import gettext_lazy as _
 from flex_menu import Menu, MenuItem
 
@@ -28,8 +27,10 @@ AccountCenterMenu = Menu(
 
 
 def _iter_leaves(node):
-    """Yield the leaf items of a menu tree (groups descend)."""
-    children = list(node.children or [])
+    """Yield the leaf items of a processed menu tree (groups descend)."""
+    children = getattr(node, "_processed_children", None)
+    if children is None:
+        children = list(node.children or [])
     if children:
         for child in children:
             yield from _iter_leaves(child)
@@ -45,45 +46,26 @@ def get_active_section(request):
     text), otherwise the request is a sub-page of the section (render the
     crumb as a link). Returns ``None`` on the overview page or when no
     section matches.
-
-    Resolved from ``AccountCenterMenu``'s *declared* children, matched on URL
-    name, rather than the per-request processed tree: which section a URL
-    belongs to has nothing to do with whether the current person can see its
-    menu entry, so this must not depend on any entry's visibility check
-    (FR-006a). See specs/013-account-center-menu/research.md R2.
     """
-    resolver_match = getattr(request, "resolver_match", None)
-    if resolver_match is None:
-        return None
+    processed = AccountCenterMenu.process(request)
+    leaves = [item for item in _iter_leaves(processed) if item.visible and item.name != "overview"]
 
-    leaves = [item for item in _iter_leaves(AccountCenterMenu) if item.view_name and item.name != "overview"]
-
-    # Exact match first, across every leaf, before any prefix match is
-    # considered: a section root's own name (e.g. "mfa_index") must never
-    # lose to another entry's url_names prefix (e.g. "mfa_").
     for item in leaves:
-        current_name = resolver_match.view_name if ":" in item.view_name else resolver_match.url_name
-        if current_name == item.view_name:
+        if item.selected:
             return {
                 "label": item.extra_context.get("label", item.name),
-                "url": None,
+                "url": item.url,
                 "is_current": True,
             }
 
-    url_name = resolver_match.url_name
+    url_name = getattr(request.resolver_match, "url_name", None)
     if url_name:
         for item in leaves:
             for prefix in item.extra_context.get("url_names", ()):
                 if url_name.startswith(prefix):
-                    try:
-                        url = reverse(item.view_name)
-                    except NoReverseMatch:
-                        # An unreachable entry degrades to no breadcrumb
-                        # rather than a 500.
-                        return None
                     return {
                         "label": item.extra_context.get("label", item.name),
-                        "url": url,
+                        "url": item.url,
                         "is_current": False,
                     }
     return None
