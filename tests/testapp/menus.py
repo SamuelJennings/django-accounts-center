@@ -44,7 +44,11 @@ AccountCenterMenu.append(
         children=[
             MenuItem(
                 name="gated",
-                extra_context={"label": _("Gated")},
+                view_name="testapp_gated",
+                extra_context={
+                    "label": _("Gated"),
+                    "url_names": ("testapp_gated",),
+                },
                 check=_visible_to_gated_group,
             ),
             MenuItem(
