@@ -39,3 +39,17 @@ not yet imported).
 
 **Watch:** `sectioned`'s `view_name="testapp_settings"` doesn't resolve to a real URL yet — that
 lands in T003/T004. Harmless until the app is installed and the menu is actually rendered.
+
+### 2026-07-31 · Implementer US0 · T003
+
+**Did:** Added `tests/testapp/views.py` (`SettingsView`, a bare `LoginRequiredMixin` +
+`TemplateView`) and `templates/testapp/settings.html`, which extends `dac/base.html` and fills
+only `{% block content %}`. References no template belonging to any integration.
+
+**Verified:** `poetry run ruff check tests/testapp/`, `poetry run djlint
+tests/testapp/templates/testapp/settings.html`, `poetry run mypy tests/testapp/` — all clean.
+`poetry run pytest -q` — 252 passed (still not installed).
+
+**Next:** T004 — register the app and mount its URLs.
+
+**Watch:** nothing new.
