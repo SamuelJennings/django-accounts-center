@@ -83,3 +83,17 @@ occupies every search result and milestone view.
 
 **Recorded at source** so it cannot recur: the contract, the issue-graph and pipeline references,
 and the ledger schema were all amended the same day.
+
+## D7 — The stylesheet mismatch is left unfixed *(2026-07-31)*
+
+**Observed**: the committed `dac/static/css/dac.css` is unminified and stale relative to what
+`npm run build:css` produces. It predates this branch and is unrelated to this feature.
+
+**Chosen**: file it (#40) and leave it. Not fixed here, and not worth fixing on its own.
+
+**Defensible because**: correcting it rewrites a 7,000-line generated artifact inside a feature PR,
+which buries the reviewable change. Sam then confirmed the package is moving towards distributing
+no custom CSS at all, so the artifact is scheduled for deletion — spending effort regenerating it
+has a negative return. Recorded on the issue so the next person to look does not start work on it.
+
+**Revisit if**: the stylesheet is still shipped when someone next has reason to touch the build.
