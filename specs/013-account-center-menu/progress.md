@@ -53,3 +53,26 @@ tests/testapp/templates/testapp/settings.html`, `poetry run mypy tests/testapp/`
 **Next:** T004 — register the app and mount its URLs.
 
 **Watch:** nothing new.
+
+### 2026-07-31 · Implementer US0 · T004
+
+**Did:** Added `tests/testapp/urls.py` (`testapp_settings`, `testapp_settings_sub` — the sub-page
+matching `sectioned`'s `url_names` prefix). Added `"tests.testapp"` to `INSTALLED_APPS` in
+`tests/settings.py` and mounted its URLs at `test/testapp/` in `tests/urls.py`'s test-only
+section.
+
+Wiring the app in surfaced a real bug in T002's check: `tests/test_components/test_dac_base.py`
+renders `dac/base.html` through a bare `RequestFactory` request with no `user` attribute at all
+(no `AuthenticationMiddleware`), and `_visible_to_gated_group` raised `AttributeError` on ten
+pre-existing, off-limits tests. Fixed by reading `request.user` through `getattr(..., None)` — see
+decisions.md D14.
+
+**Verified:** `poetry run ruff check tests/`, `poetry run djlint tests/testapp/`, `poetry run mypy
+tests/testapp/` — all clean. `poetry run pytest -q` — 252 passed, all pre-existing tests
+(including `test_dac_base.py` and `test_breadcrumbs.py`) unmodified and green.
+
+**Next:** T005 — fixtures for two signed-in people, gated and ungated.
+
+**Watch:** any future check added to this test app should account for the same
+no-`AuthenticationMiddleware` rendering path until dac/base.html tests move to
+`cotton_render_string_soup_authenticated` or an equivalent.

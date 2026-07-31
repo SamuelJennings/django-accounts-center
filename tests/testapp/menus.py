@@ -21,8 +21,20 @@ GATED_GROUP_NAME = "testapp-gated"
 
 
 def _visible_to_gated_group(request, **kwargs):
-    """Visibility check for the "gated" entry: membership in a group."""
-    return request.user.groups.filter(name=GATED_GROUP_NAME).exists()
+    """Visibility check for the "gated" entry: membership in a group.
+
+    ``getattr`` rather than ``request.user`` directly: some structural tests
+    render ``dac/base.html`` through a bare ``RequestFactory`` request with no
+    ``AuthenticationMiddleware`` in the chain, so ``request`` may carry no
+    ``user`` at all (not even ``AnonymousUser``). That is a rendering-harness
+    artifact, not the "no anonymous case" the Account Center itself needs to
+    answer for (D7) — the page is behind a sign-in requirement in every real
+    request.
+    """
+    user = getattr(request, "user", None)
+    if user is None:
+        return False
+    return user.groups.filter(name=GATED_GROUP_NAME).exists()
 
 
 AccountCenterMenu.append(

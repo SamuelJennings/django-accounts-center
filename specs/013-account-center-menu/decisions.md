@@ -186,3 +186,23 @@ ever consults `url_names`.
 
 **Why:** consistency with the one existing integration's pattern, and it needed no third URL name
 just to exclude the redundant self-match.
+
+### D14 — The gated check tolerates a request with no `user` attribute
+
+**Ambiguous:** none at design time — found by running the full suite after wiring the app in
+(T004). `tests/test_components/test_dac_base.py`'s `cotton_render_string_soup` fixture renders
+`dac/base.html` through a bare `RequestFactory` request with no `AuthenticationMiddleware` in the
+chain, so `request` carries no `user` attribute at all — not even `AnonymousUser`. The
+straightforward `request.user.groups...` raised `AttributeError` on every one of those tests, none
+of which this story is allowed to touch.
+
+**Chosen:** `_visible_to_gated_group` reads `getattr(request, "user", None)` and treats a missing
+user as "does not apply" (`False`), before falling through to the real group-membership check.
+
+**Why:** this is a rendering-harness artifact — the fixture is deliberately unauthenticated
+(there is a sibling `cotton_render_string_soup_authenticated` fixture for tests that need
+`request.user`) — not a case the Account Center's own requests can be in (D7: it is behind
+`LoginRequiredMixin`, so `request.user` is always at least populated by
+`AuthenticationMiddleware`). Handling a request with no `user` attribute at all is not the same as
+swallowing a broken check (D5 still holds: a check that raises for a signed-in person's request
+still propagates the error).
