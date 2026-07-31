@@ -49,6 +49,7 @@ urlpatterns = [
     # register every allauth URL name twice and resolve by last registration.
     path("account-center/", include("dac.urls")),
     # Test-only URLs — not part of the production URL configuration
+    path("test/testapp/", include("tests.testapp.urls")),
     path(
         "test/email-change/",
         EmailChangeTestView.as_view(),
