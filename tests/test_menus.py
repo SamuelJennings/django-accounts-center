@@ -16,14 +16,18 @@ def _menu_labels(response):
     """The set of menu-entry labels rendered in the Account Center nav.
 
     Every entry and group heading renders its label inside a ``<span>``
-    within ``<aside aria-label="Account navigation">`` (mvp's
-    ``cotton/menu/item.html`` and ``cotton/menu/group.html``) — one ``aside``
-    holds both the mobile dropdown and the desktop card, so this counts each
-    label once regardless of which of the two render sites shows it.
+    nested in an ``<li>`` within ``<aside aria-label="Account navigation">``
+    (mvp's ``cotton/menu/item.html`` and ``cotton/menu/group.html``) — one
+    ``aside`` holds both the mobile dropdown and the desktop card, so this
+    counts each label once regardless of which of the two render sites shows
+    it. The ``<li>`` filter excludes the mobile dropdown's own toggle button,
+    which also carries a ``<span>`` with the active section's label
+    (``dac/base.html``'s ``account_section`` mobile button, FR-006a) but is
+    not itself a menu entry.
     """
     soup = BeautifulSoup(response.content, "html.parser")
     aside = soup.find("aside", attrs={"aria-label": "Account navigation"})
-    return {span.get_text(strip=True) for span in aside.find_all("span")}
+    return {span.get_text(strip=True) for span in aside.find_all("span") if span.find_parent("li")}
 
 
 @pytest.mark.django_db
@@ -58,3 +62,32 @@ class TestMenuDiffersByPerson:
         assert "Gated" not in ungated_labels
         assert gated_labels - ungated_labels == {"Gated"}
         assert ungated_labels - gated_labels == set()
+
+
+@pytest.mark.django_db
+class TestPageUnaffectedByHiddenEntry:
+    def test_other_entries_content_and_messages_render_the_same(self, gated_client, ungated_client):
+        """The gated entry's own page renders the same for the person it is
+        hidden from as for the person it applies to, apart from that one
+        entry (FR-006): the other menu entries, the content region and the
+        messages region are unaffected."""
+        gated_response = gated_client.get(reverse("testapp_gated"))
+        ungated_response = ungated_client.get(reverse("testapp_gated"))
+
+        assert _menu_labels(gated_response) - {"Gated"} == _menu_labels(ungated_response)
+
+        gated_soup = BeautifulSoup(gated_response.content, "html.parser")
+        ungated_soup = BeautifulSoup(ungated_response.content, "html.parser")
+
+        gated_h1 = gated_soup.find("h1")
+        ungated_h1 = ungated_soup.find("h1")
+        assert gated_h1 is not None
+        assert gated_h1.get_text(strip=True) == "Test App Settings"
+        assert ungated_h1 is not None
+        assert ungated_h1.get_text(strip=True) == gated_h1.get_text(strip=True)
+
+        gated_messages = gated_soup.find("div", class_="toast")
+        ungated_messages = ungated_soup.find("div", class_="toast")
+        assert gated_messages is not None
+        assert ungated_messages is not None
+        assert str(gated_messages) == str(ungated_messages)
