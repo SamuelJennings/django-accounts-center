@@ -4,8 +4,6 @@
      (human-gated), never mid-feature. Read at the Constitution Check in /plan and by
      reviewers. -->
 
-**Version:** 2.0.0 | **Ratified:** 2026-05-07 | **Last amended:** 2026-07-27
-
 ## Core articles
 
 ### Article I — Test-First
@@ -237,3 +235,7 @@ the package index (absolute URLs); the public API honors the deprecation policy.
   approver, then merges. Identity is scoped per GitHub account, never shared across accounts.
 - Machine verification (tests/build/lint) gates every stage exit; no LLM judgment can
   override a red gate.
+
+---
+
+**Version**: 2.0.0 | **Ratified**: 2026-05-07 | **Last Amended**: 2026-07-27
