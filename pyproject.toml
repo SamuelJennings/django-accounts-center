@@ -27,7 +27,7 @@ allauth = [
 ]
 
 [tool.poetry]
-version = "0.7.0"
+version = "0.7.1"
 packages = [{ include = "dac" }]
 requires-poetry = '>=2.0,<3.0'
 
