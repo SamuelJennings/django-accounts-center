@@ -686,14 +686,14 @@ files = [
 
 [[package]]
 name = "django"
-version = "5.2.16"
+version = "5.2.17"
 description = "A high-level Python web framework that encourages rapid development and clean, pragmatic design."
 optional = false
 python-versions = ">=3.10"
 groups = ["main", "dev"]
 files = [
-    {file = "django-5.2.16-py3-none-any.whl", hash = "sha256:04f354bf9d807a86ad1a8392fe3808d362358a8eafc322848e0e43e59b24371d"},
-    {file = "django-5.2.16.tar.gz", hash = "sha256:59ea02020c3136fce14bef0bbece21a10a4febef5eed1c51c22ae468efa22200"},
+    {file = "django-5.2.17-py3-none-any.whl", hash = "sha256:f04fb3b36ee119e1af4fa1d397d5fd6cf12700f49321e84d4f4c642c5b1973db"},
+    {file = "django-5.2.17.tar.gz", hash = "sha256:9d4d93be539a18ab80d058eb515900e10951e04c537c5a6b394fc49528d3251f"},
 ]
 
 [package.dependencies]
@@ -707,14 +707,14 @@ bcrypt = ["bcrypt"]
 
 [[package]]
 name = "django-allauth"
-version = "65.18.0"
+version = "65.19.0"
 description = "Integrated set of Django applications addressing authentication, registration, account management as well as 3rd party (social) account authentication."
 optional = false
 python-versions = ">=3.10"
 groups = ["main", "dev"]
 files = [
-    {file = "django_allauth-65.18.0-py3-none-any.whl", hash = "sha256:e508640c83b94eaf1a9b4e9ac5332dc310dcdc83fca40d58a3f670e15bad1e84"},
-    {file = "django_allauth-65.18.0.tar.gz", hash = "sha256:afb82e2c545b9a5539370ad120468faaed84715e095a7b6e76972dacdc6376fe"},
+    {file = "django_allauth-65.19.0-py3-none-any.whl", hash = "sha256:e37efea604d0bf40a6b16edd5b00e1560414e2c3ed07c2431b6e5bb058e2a771"},
+    {file = "django_allauth-65.19.0.tar.gz", hash = "sha256:9a615fd7f48f31985e1e3d886f8983e12d09e189f8d00d7a9750b3d300b7b366"},
 ]
 markers = {main = "extra == \"allauth\""}
 
@@ -898,14 +898,14 @@ rich = ">=13"
 
 [[package]]
 name = "django-mvp"
-version = "0.15.0"
+version = "0.16.1"
 description = "MVP framework for Django - scaffold production-ready applications with sophisticated layouts and UI patterns designed for data-centric applications."
 optional = false
 python-versions = "<4.0,>=3.12"
 groups = ["main"]
 files = [
-    {file = "django_mvp-0.15.0-py3-none-any.whl", hash = "sha256:b8bf2038accc7c881d050246f476de46265a0384c054f832bd4744ce3751cfbb"},
-    {file = "django_mvp-0.15.0.tar.gz", hash = "sha256:a9a02dabb17902eae2aa4531dd94b733a6b70c9a136b16d71bf0f55ccd7c261c"},
+    {file = "django_mvp-0.16.1-py3-none-any.whl", hash = "sha256:7512cfe24e650b569603c9dc5c92cf2b7669972108a3e95c8ad011936eac8a2b"},
+    {file = "django_mvp-0.16.1.tar.gz", hash = "sha256:82fa71a6c075d731dc51706bb8129ae6691ff02b15c363d235c1ef5311ea37fe"},
 ]
 
 [package.dependencies]
@@ -3100,4 +3100,4 @@ allauth = ["crispy-tailwind", "django-allauth", "django-crispy-forms"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<4.0"
-content-hash = "40740448cea565daf6584dbdb8e73a5f684dbd69975d4c2add1b0b80d46c2bb2"
+content-hash = "b53cb800a17ddf84f6db40ceb08effae72847dfccd9f4bf4ba00bf61b75a2f2e"
