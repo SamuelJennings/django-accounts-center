@@ -12,4 +12,4 @@ jobs:
   call-tag-release:
     uses: django-mvp/shared/.github/workflows/tag-release.yml@v0.3.3
     secrets:
-      release-token: ${{ secrets.RELEASE_TOKEN }}
+      RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
